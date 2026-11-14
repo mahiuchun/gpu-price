@@ -16,7 +16,7 @@ import json
 import pickle
 import time
 import zlib
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 
 import pandas as pd
@@ -41,8 +41,9 @@ def unpack_world(blob: bytes) -> dict:
     return pickle.loads(zlib.decompress(blob))
 
 
-def research_local(blob: bytes, state: dict, kind: str, n_ideas: int, seed: int) -> dict:
-    """One research step. Receives only a world cut at its wall."""
+def research_local(blob: bytes, state: dict, kind: str, n_ideas: int, seed: int, replay: list | None = None) -> dict:
+    """One research step. Receives only a world cut at its wall.
+    With `replay`, the ideas recorded in an earlier run are fed back in (no AI calls)."""
     world = unpack_world(blob)
     data.assert_walled(world, world["wall"])
     logs: list[str] = []
@@ -51,7 +52,11 @@ def research_local(blob: bytes, state: dict, kind: str, n_ideas: int, seed: int)
         print(msg, flush=True)
         logs.append(msg)
 
-    state = scientist.run_step(world, state, scientist.make_proposer(kind), n_ideas=n_ideas, seed=seed, log=log)
+    if replay is not None:
+        proposer, n_ideas = scientist.ReplayProposer(replay), len(replay)
+    else:
+        proposer = scientist.make_proposer(kind)
+    state = scientist.run_step(world, state, proposer, n_ideas=n_ideas, seed=seed, log=log)
     state.setdefault("logs", []).extend(logs)
     return state
 
@@ -91,7 +96,8 @@ def examine(full: dict, versions: list[dict], steps: list[str]) -> tuple[pd.Data
     return pd.DataFrame(rows), cells_out
 
 
-def run_arm(full: dict, kind: str, steps: list[str], n_ideas: int, seed: int, research, out: Path) -> dict:
+def run_arm(full: dict, kind: str, steps: list[str], n_ideas: int, seed: int, research, out: Path,
+            replay_ledger: list | None = None) -> dict:
     """One world x one arm through all steps, then the examiner."""
     out.mkdir(parents=True, exist_ok=True)
     state = scientist.new_state()
@@ -102,7 +108,11 @@ def run_arm(full: dict, kind: str, steps: list[str], n_ideas: int, seed: int, re
         blob = pack_world(cut)
         for attempt in range(3):  # a failed container produced no state, so retrying the step is clean
             try:
-                state = research(blob, state, kind, n_ideas, seed)
+                if replay_ledger is not None:
+                    state = research_local(blob, state, kind, n_ideas, seed,
+                                           replay=[e for e in replay_ledger if e["wall"] == T])
+                else:
+                    state = research(blob, state, kind, n_ideas, seed)
                 break
             except Exception as e:
                 print(f"[{full['name']} {kind} {T}] attempt {attempt + 1} failed: {type(e).__name__}: {e}", flush=True)
@@ -135,7 +145,14 @@ def main(argv=None) -> int:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--modal", action="store_true", help="run each research step in its own Modal container")
     ap.add_argument("--workers", type=int, default=12)
+    ap.add_argument("--replay", default=None, help="directory of an earlier run: replay its recorded ideas, no AI calls")
     a = ap.parse_args(argv)
+    src_meta = None
+    if a.replay:
+        src = Path(a.replay) if Path(a.replay).is_absolute() else data.REPO / a.replay
+        src_meta = json.loads((src / "meta.json").read_text())
+        a.full_wall, a.steps, a.arms = src_meta["full_wall"], ",".join(src_meta["steps"]), ",".join(src_meta["arms"])
+        a.placebos, a.ideas, a.seed, a.modal = src_meta["placebos"], src_meta["ideas"], src_meta["seed"], False
 
     from dotenv import load_dotenv
 
@@ -158,10 +175,17 @@ def main(argv=None) -> int:
     print(f"run {a.name}: {len(worlds)} worlds x {len(arms)} arms, steps {steps}, {a.ideas} ideas per step, "
           f"{'Modal' if a.modal else 'local'}", flush=True)
 
+    def ledger_of(w, arm):
+        if not a.replay:
+            return None
+        return json.loads((src / f"{w['name']}_{arm}" / "state.json").read_text())["ledger"]
+
     def go(research):
-        with ThreadPoolExecutor(max_workers=a.workers) as ex:
-            futs = [ex.submit(run_arm, w, arm, steps, a.ideas, a.seed, research, out / f"{w['name']}_{arm}")
-                    for w, arm in jobs]
+        # Modal calls wait on the network, so threads are enough; local runs are CPU-bound, so processes
+        pool = ThreadPoolExecutor if a.modal else ProcessPoolExecutor
+        with pool(max_workers=a.workers) as ex:
+            futs = [ex.submit(run_arm, w, arm, steps, a.ideas, a.seed, research, out / f"{w['name']}_{arm}",
+                              ledger_of(w, arm)) for w, arm in jobs]
             return [f.result() for f in futs]
 
     if a.modal:

@@ -1,0 +1,2045 @@
+{
+ "spec": {
+  "lookback_days": 60,
+  "halflife_days": 0.0,
+  "replay_exits": true,
+  "replay_entries": true,
+  "momentum": 0.0,
+  "momentum_window": 7,
+  "active_share": 0.3,
+  "blend_drift": 0.0,
+  "width_scale": 1.0,
+  "center": "engine",
+  "min_scenarios": 10,
+  "floor_up": 0.0,
+  "floor_down": 0.0,
+  "peer_pull": 0.0,
+  "peer_window": 3,
+  "by_class": {
+   "neocloud_rate_card": {
+    "lookback_days": 34
+   }
+  },
+  "by_horizon": {}
+ },
+ "fallback": [],
+ "ledger": [
+  {
+   "n": 1,
+   "world": "real",
+   "wall": "2026-10-16",
+   "idea": 1,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "center",
+     "value": "last"
+    },
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "replay_exits",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.13484867247341703,
+    "after_total": 0.1392798083511182,
+    "before_avg": 0.11245747394035807,
+    "after_avg": 0.13679218983914604,
+    "before_loss": 0.015259717521826045,
+    "after_loss": 0.015181560233449843,
+    "inside_after": 0.7156981436642453
+   },
+   "dev_ok": true,
+   "hidden": "FAIL",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017374032841018378,
+   "_hidden_loss_after": 0.018390622716748385
+  },
+  {
+   "n": 2,
+   "world": "real",
+   "wall": "2026-10-16",
+   "idea": 2,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:1",
+     "dial": "momentum",
+     "value": "0.136"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.13484867247341703,
+    "after_total": 0.1347089058372133,
+    "before_avg": 0.11245747394035807,
+    "after_avg": 0.11211924027700364,
+    "before_loss": 0.015259717521826045,
+    "after_loss": 0.01526218275457734,
+    "inside_after": 0.7062146892655368
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017374032841018378,
+   "_hidden_loss_after": 0.017348616834545416
+  },
+  {
+   "n": 3,
+   "world": "real",
+   "wall": "2026-10-16",
+   "idea": 3,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_spot",
+     "dial": "momentum_window",
+     "value": "30"
+    },
+    {
+     "scope": "class:neocloud_spot",
+     "dial": "center",
+     "value": "engine"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.13484867247341703,
+    "after_total": 0.13484867247341703,
+    "before_avg": 0.11245747394035807,
+    "after_avg": 0.11245747394035807,
+    "before_loss": 0.015259717521826045,
+    "after_loss": 0.015259717521826045,
+    "inside_after": 0.7142857142857143
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017374032841018378,
+   "_hidden_loss_after": 0.017374032841018378
+  },
+  {
+   "n": 4,
+   "world": "real",
+   "wall": "2026-10-16",
+   "idea": 4,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "peer_window",
+     "value": "4"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.13484867247341703,
+    "after_total": 0.13484867247341703,
+    "before_avg": 0.11245747394035807,
+    "after_avg": 0.11245747394035807,
+    "before_loss": 0.015259717521826045,
+    "after_loss": 0.015259717521826045,
+    "inside_after": 0.7142857142857143
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017374032841018378,
+   "_hidden_loss_after": 0.017374032841018378
+  },
+  {
+   "n": 5,
+   "world": "real",
+   "wall": "2026-10-16",
+   "idea": 5,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:hyperscaler_spot",
+     "dial": "replay_entries",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.13484867247341703,
+    "after_total": 0.13466220083705305,
+    "before_avg": 0.11245747394035807,
+    "after_avg": 0.11244425526315298,
+    "before_loss": 0.015259717521826045,
+    "after_loss": 0.015263006547001424,
+    "inside_after": 0.7130750605326877
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017374032841018378,
+   "_hidden_loss_after": 0.017384885067813098
+  },
+  {
+   "n": 6,
+   "world": "real",
+   "wall": "2026-10-16",
+   "idea": 6,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "replay_exits",
+     "value": "false"
+    },
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "lookback_days",
+     "value": "101"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.13484867247341703,
+    "after_total": 0.13383258637727724,
+    "before_avg": 0.11245747394035807,
+    "after_avg": 0.10950205100458299,
+    "before_loss": 0.015259717521826045,
+    "after_loss": 0.015277639457921637,
+    "inside_after": 0.7126715092816788
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017374032841018378,
+   "_hidden_loss_after": 0.017416233259302763
+  },
+  {
+   "n": 7,
+   "world": "real",
+   "wall": "2026-10-16",
+   "idea": 7,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "lookback_days",
+     "value": "53"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.13484867247341703,
+    "after_total": 0.13538754693583677,
+    "before_avg": 0.11245747394035807,
+    "after_avg": 0.11306050210747617,
+    "before_loss": 0.015259717521826045,
+    "after_loss": 0.015250212742934055,
+    "inside_after": 0.7146892655367232
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017374032841018378,
+   "_hidden_loss_after": 0.017196438545969465
+  },
+  {
+   "n": 8,
+   "world": "real",
+   "wall": "2026-10-16",
+   "idea": 8,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "blend_drift",
+     "value": "0.794"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.13484867247341703,
+    "after_total": 0.12821949969925805,
+    "before_avg": 0.11245747394035807,
+    "after_avg": 0.11111312951383595,
+    "before_loss": 0.015259717521826045,
+    "after_loss": 0.015376644238249464,
+    "inside_after": 0.7140839386602098
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017374032841018378,
+   "_hidden_loss_after": 0.017421685360284395
+  },
+  {
+   "n": 9,
+   "world": "real",
+   "wall": "2026-10-23",
+   "idea": 1,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:1",
+     "dial": "floor_down",
+     "value": "0.070"
+    },
+    {
+     "scope": "horizon:3",
+     "dial": "halflife_days",
+     "value": "93.395"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.17435550927099353,
+    "after_total": 0.1010502305947647,
+    "before_avg": 0.18441090580889485,
+    "after_avg": 0.06544098749022326,
+    "before_loss": 0.015529543011425487,
+    "after_loss": 0.016908341623842648,
+    "inside_after": 0.7236402041894032
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.02403382650229339,
+   "_hidden_loss_after": 0.02451673444593321
+  },
+  {
+   "n": 10,
+   "world": "real",
+   "wall": "2026-10-23",
+   "idea": 2,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "blend_drift",
+     "value": "0.619"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.17435550927099353,
+    "after_total": 0.15716413518444072,
+    "before_avg": 0.18441090580889485,
+    "after_avg": 0.1588121681283673,
+    "before_loss": 0.015529543011425487,
+    "after_loss": 0.01585289547886205,
+    "inside_after": 0.6864988558352403
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.02403382650229339,
+   "_hidden_loss_after": 0.025194923013206826
+  },
+  {
+   "n": 11,
+   "world": "real",
+   "wall": "2026-10-23",
+   "idea": 3,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "lookback_days",
+     "value": "34"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.17435550927099353,
+    "after_total": 0.18628369912560372,
+    "before_avg": 0.18441090580889485,
+    "after_avg": 0.20139753958173948,
+    "before_loss": 0.015529543011425487,
+    "after_loss": 0.015305185749340373,
+    "inside_after": 0.7162471395881007
+   },
+   "dev_ok": true,
+   "hidden": "PASS",
+   "kept": true,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.02403382650229339,
+   "_hidden_loss_after": 0.023765423528109335
+  },
+  {
+   "n": 12,
+   "world": "real",
+   "wall": "2026-10-23",
+   "idea": 4,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:1",
+     "dial": "peer_window",
+     "value": "4"
+    },
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "floor_up",
+     "value": "0.051"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.18628369912560372,
+    "after_total": 0.18645037578417922,
+    "before_avg": 0.20139753958173948,
+    "after_avg": 0.20143566475140298,
+    "before_loss": 0.015305185749340373,
+    "after_loss": 0.015302050728920068,
+    "inside_after": 0.7162471395881007
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.023765423528109335,
+   "_hidden_loss_after": 0.02361452244832541
+  },
+  {
+   "n": 13,
+   "world": "real",
+   "wall": "2026-10-23",
+   "idea": 5,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "replay_exits",
+     "value": "true"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.18628369912560372,
+    "after_total": 0.18628369912560372,
+    "before_avg": 0.20139753958173948,
+    "after_avg": 0.20139753958173948,
+    "before_loss": 0.015305185749340373,
+    "after_loss": 0.015305185749340373,
+    "inside_after": 0.7162471395881007
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.023765423528109335,
+   "_hidden_loss_after": 0.023765423528109335
+  },
+  {
+   "n": 14,
+   "world": "real",
+   "wall": "2026-10-23",
+   "idea": 6,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "halflife_days",
+     "value": "69.490"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.18628369912560372,
+    "after_total": 0.18890115734316038,
+    "before_avg": 0.20139753958173948,
+    "after_avg": 0.20301517951473727,
+    "before_loss": 0.015305185749340373,
+    "after_loss": 0.01525595399108778,
+    "inside_after": 0.7185354691075515
+   },
+   "dev_ok": true,
+   "hidden": "FAIL",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.023765423528109335,
+   "_hidden_loss_after": 0.023736547038091003
+  },
+  {
+   "n": 15,
+   "world": "real",
+   "wall": "2026-10-23",
+   "idea": 7,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:1",
+     "dial": "halflife_days",
+     "value": "34.322"
+    },
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "lookback_days",
+     "value": "148"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.18628369912560372,
+    "after_total": 0.1870503974623814,
+    "before_avg": 0.20139753958173948,
+    "after_avg": 0.2019740007043068,
+    "before_loss": 0.015305185749340373,
+    "after_loss": 0.015290764924237714,
+    "inside_after": 0.7176553423693012
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.023765423528109335,
+   "_hidden_loss_after": 0.023729454642022318
+  },
+  {
+   "n": 16,
+   "world": "real",
+   "wall": "2026-10-23",
+   "idea": 8,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:3",
+     "dial": "center",
+     "value": "engine"
+    },
+    {
+     "scope": "horizon:7",
+     "dial": "blend_drift",
+     "value": "0.878"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.18628369912560372,
+    "after_total": 0.15127134286811628,
+    "before_avg": 0.20139753958173948,
+    "after_avg": 0.1520579907133583,
+    "before_loss": 0.015305185749340373,
+    "after_loss": 0.01596373297945865,
+    "inside_after": 0.7070938215102975
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.023765423528109335,
+   "_hidden_loss_after": 0.026563943300423554
+  },
+  {
+   "n": 17,
+   "world": "real",
+   "wall": "2026-10-30",
+   "idea": 1,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:3",
+     "dial": "momentum_window",
+     "value": "6"
+    },
+    {
+     "scope": "all",
+     "dial": "floor_down",
+     "value": "0.025"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2048833167050227,
+    "after_total": 0.1866248855007705,
+    "before_avg": 0.24262984742576077,
+    "after_avg": 0.18553438058021954,
+    "before_loss": 0.016185765615920965,
+    "after_loss": 0.016557442747334904,
+    "inside_after": 0.7609209903800662
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.031598361636561476,
+   "_hidden_loss_after": 0.029139067370907653
+  },
+  {
+   "n": 18,
+   "world": "real",
+   "wall": "2026-10-30",
+   "idea": 2,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "all",
+     "dial": "momentum_window",
+     "value": "18"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2048833167050227,
+    "after_total": 0.2048833167050227,
+    "before_avg": 0.24262984742576077,
+    "after_avg": 0.24262984742576077,
+    "before_loss": 0.016185765615920965,
+    "after_loss": 0.016185765615920965,
+    "inside_after": 0.7055669452767702
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.031598361636561476,
+   "_hidden_loss_after": 0.031598361636561476
+  },
+  {
+   "n": 19,
+   "world": "real",
+   "wall": "2026-10-30",
+   "idea": 3,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "width_scale",
+     "value": "2.070"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2048833167050227,
+    "after_total": 0.21455504036764983,
+    "before_avg": 0.24262984742576077,
+    "after_avg": 0.2552392351784879,
+    "before_loss": 0.016185765615920965,
+    "after_loss": 0.015988883503403193,
+    "inside_after": 0.7583977290648163
+   },
+   "dev_ok": true,
+   "hidden": "FAIL",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.031598361636561476,
+   "_hidden_loss_after": 0.032848845309774076
+  },
+  {
+   "n": 20,
+   "world": "real",
+   "wall": "2026-10-30",
+   "idea": 4,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:1",
+     "dial": "replay_exits",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2048833167050227,
+    "after_total": 0.20472451133596814,
+    "before_avg": 0.24262984742576077,
+    "after_avg": 0.2425282244331496,
+    "before_loss": 0.016185765615920965,
+    "after_loss": 0.01618899833199405,
+    "inside_after": 0.705251537612364
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.031598361636561476,
+   "_hidden_loss_after": 0.031587294839447395
+  },
+  {
+   "n": 21,
+   "world": "real",
+   "wall": "2026-10-30",
+   "idea": 5,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "momentum_window",
+     "value": "13"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2048833167050227,
+    "after_total": 0.2048833167050227,
+    "before_avg": 0.24262984742576077,
+    "after_avg": 0.24262984742576077,
+    "before_loss": 0.016185765615920965,
+    "after_loss": 0.016185765615920965,
+    "inside_after": 0.7055669452767702
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.031598361636561476,
+   "_hidden_loss_after": 0.031598361636561476
+  },
+  {
+   "n": 22,
+   "world": "real",
+   "wall": "2026-10-30",
+   "idea": 6,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "all",
+     "dial": "peer_pull",
+     "value": "0.410"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2048833167050227,
+    "after_total": 0.00845135521320961,
+    "before_avg": 0.24262984742576077,
+    "after_avg": -0.022674661101453733,
+    "before_loss": 0.016185765615920965,
+    "after_loss": 0.020184426133276232,
+    "inside_after": 0.5166377542974294
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.031598361636561476,
+   "_hidden_loss_after": 0.04413453248523044
+  },
+  {
+   "n": 23,
+   "world": "real",
+   "wall": "2026-10-30",
+   "idea": 7,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:hyperscaler_spot",
+     "dial": "momentum",
+     "value": "1.292"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2048833167050227,
+    "after_total": 0.201420858501003,
+    "before_avg": 0.24262984742576077,
+    "after_avg": 0.2318629946705607,
+    "before_loss": 0.016185765615920965,
+    "after_loss": 0.0162562490281328,
+    "inside_after": 0.7032013877937234
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.031598361636561476,
+   "_hidden_loss_after": 0.03233020392386723
+  },
+  {
+   "n": 24,
+   "world": "real",
+   "wall": "2026-10-30",
+   "idea": 8,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:3",
+     "dial": "blend_drift",
+     "value": "0.232"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2048833167050227,
+    "after_total": 0.20226016560639126,
+    "before_avg": 0.24262984742576077,
+    "after_avg": 0.23813870509647492,
+    "before_loss": 0.016185765615920965,
+    "after_loss": 0.016239163701698322,
+    "inside_after": 0.6997319034852547
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.031598361636561476,
+   "_hidden_loss_after": 0.031502027937414565
+  },
+  {
+   "n": 25,
+   "world": "real",
+   "wall": "2026-11-06",
+   "idea": 1,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "all",
+     "dial": "halflife_days",
+     "value": "110.943"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19712591663864243,
+    "after_total": 0.19993631691621094,
+    "before_avg": 0.2661865332882057,
+    "after_avg": 0.26827687296975555,
+    "before_loss": 0.01763874567214475,
+    "after_loss": 0.017577002571003142,
+    "inside_after": 0.7048993000999857
+   },
+   "dev_ok": true,
+   "hidden": "FAIL",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.025572712729418225,
+   "_hidden_loss_after": 0.02554819582956665
+  },
+  {
+   "n": 26,
+   "world": "real",
+   "wall": "2026-11-06",
+   "idea": 2,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_spot",
+     "dial": "center",
+     "value": "engine"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19712591663864243,
+    "after_total": 0.19712591663864243,
+    "before_avg": 0.2661865332882057,
+    "after_avg": 0.2661865332882057,
+    "before_loss": 0.01763874567214475,
+    "after_loss": 0.01763874567214475,
+    "inside_after": 0.7023282388230253
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.025572712729418225,
+   "_hidden_loss_after": 0.025572712729418225
+  },
+  {
+   "n": 27,
+   "world": "real",
+   "wall": "2026-11-06",
+   "idea": 3,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "replay_entries",
+     "value": "true"
+    },
+    {
+     "scope": "horizon:1",
+     "dial": "replay_exits",
+     "value": "true"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19712591663864243,
+    "after_total": 0.19712591663864243,
+    "before_avg": 0.2661865332882057,
+    "after_avg": 0.2661865332882057,
+    "before_loss": 0.01763874567214475,
+    "after_loss": 0.01763874567214475,
+    "inside_after": 0.7023282388230253
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.025572712729418225,
+   "_hidden_loss_after": 0.025572712729418225
+  },
+  {
+   "n": 28,
+   "world": "real",
+   "wall": "2026-11-06",
+   "idea": 4,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:1",
+     "dial": "halflife_days",
+     "value": "37.967"
+    },
+    {
+     "scope": "all",
+     "dial": "floor_down",
+     "value": "0.057"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19712591663864243,
+    "after_total": 0.14056764507897157,
+    "before_avg": 0.2661865332882057,
+    "after_avg": 0.03721447104547934,
+    "before_loss": 0.01763874567214475,
+    "after_loss": 0.018881302865572207,
+    "inside_after": 0.7991715469218683
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.025572712729418225,
+   "_hidden_loss_after": 0.024420457437572186
+  },
+  {
+   "n": 29,
+   "world": "real",
+   "wall": "2026-11-06",
+   "idea": 5,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "all",
+     "dial": "active_share",
+     "value": "0.835"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19712591663864243,
+    "after_total": 0.19712591663864243,
+    "before_avg": 0.2661865332882057,
+    "after_avg": 0.2661865332882057,
+    "before_loss": 0.01763874567214475,
+    "after_loss": 0.01763874567214475,
+    "inside_after": 0.7023282388230253
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.025572712729418225,
+   "_hidden_loss_after": 0.025572712729418225
+  },
+  {
+   "n": 30,
+   "world": "real",
+   "wall": "2026-11-06",
+   "idea": 6,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:1",
+     "dial": "momentum",
+     "value": "0.786"
+    },
+    {
+     "scope": "all",
+     "dial": "peer_window",
+     "value": "1"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19712591663864243,
+    "after_total": 0.19361358303783804,
+    "before_avg": 0.2661865332882057,
+    "after_avg": 0.2614615644634288,
+    "before_loss": 0.01763874567214475,
+    "after_loss": 0.017715909900489175,
+    "inside_after": 0.6906156263390945
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.025572712729418225,
+   "_hidden_loss_after": 0.025652495772263327
+  },
+  {
+   "n": 31,
+   "world": "real",
+   "wall": "2026-11-06",
+   "idea": 7,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:neocloud_spot",
+     "dial": "replay_exits",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19712591663864243,
+    "after_total": 0.19712591663864243,
+    "before_avg": 0.2661865332882057,
+    "after_avg": 0.2661865332882057,
+    "before_loss": 0.01763874567214475,
+    "after_loss": 0.01763874567214475,
+    "inside_after": 0.7023282388230253
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.025572712729418225,
+   "_hidden_loss_after": 0.025572712729418225
+  },
+  {
+   "n": 32,
+   "world": "real",
+   "wall": "2026-11-06",
+   "idea": 8,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "min_scenarios",
+     "value": "29"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19712591663864243,
+    "after_total": 0.19437500263679708,
+    "before_avg": 0.2661865332882057,
+    "after_avg": 0.26551052775915046,
+    "before_loss": 0.01763874567214475,
+    "after_loss": 0.017699181889292703,
+    "inside_after": 0.7003285244965005
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.025572712729418225,
+   "_hidden_loss_after": 0.025572712729418225
+  }
+ ],
+ "versions": [
+  {
+   "wall": "2026-10-16",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "fallback": [],
+   "switch_alt": [
+    "afhubbard.hyperscaler_spot.A100_40GB.spot.median",
+    "fastgpu_daily.hyperscaler_spot.T4.spot.median",
+    "fastgpu_daily.neocloud_rate_card.H100_PCIe_80GB.on_demand.median",
+    "fastgpu_daily.neocloud_rate_card.H200.on_demand.median",
+    "fastgpu_daily.neocloud_spot.A100_80GB.spot.median",
+    "fastgpu_daily.neocloud_spot.H100_SXM_80GB.spot.median",
+    "gpurentalprices.neocloud_rate_card.H100_80GB.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.H100_SXM_80GB.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.L4.on_demand.median"
+   ],
+   "dev": {
+    "skill_total": 0.13484867247341703,
+    "skill_avg_series": 0.11245747394035807,
+    "drift_skill_total": 0.0943524054088225,
+    "inside": 0.7142857142857143,
+    "n_cells": 4956
+   }
+  },
+  {
+   "wall": "2026-10-23",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "fallback": [],
+   "switch_alt": [
+    "afhubbard.hyperscaler_spot.A100_40GB.spot.median",
+    "fastgpu_daily.hyperscaler_spot.T4.spot.median",
+    "fastgpu_daily.neocloud_rate_card.H100_PCIe_80GB.on_demand.median",
+    "fastgpu_daily.neocloud_rate_card.H200.on_demand.median",
+    "fastgpu_daily.neocloud_spot.A100_80GB.spot.median",
+    "fastgpu_daily.neocloud_spot.H100_SXM_80GB.spot.median",
+    "gpurentalprices.neocloud_rate_card.H100_80GB.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.L4.on_demand.median"
+   ],
+   "dev": {
+    "skill_total": 0.18628369912560372,
+    "skill_avg_series": 0.20139753958173948,
+    "drift_skill_total": 0.11145328375975827,
+    "inside": 0.7162471395881007,
+    "n_cells": 5681
+   }
+  },
+  {
+   "wall": "2026-10-30",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "fallback": [],
+   "switch_alt": [
+    "fastgpu_daily.hyperscaler_spot.T4.spot.median",
+    "fastgpu_daily.neocloud_rate_card.H200.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.H100_80GB.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.L4.on_demand.median"
+   ],
+   "dev": {
+    "skill_total": 0.2048833167050227,
+    "skill_avg_series": 0.24262984742576077,
+    "drift_skill_total": 0.11939391174679581,
+    "inside": 0.7055669452767702,
+    "n_cells": 6341
+   }
+  },
+  {
+   "wall": "2026-11-06",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "neocloud_rate_card": {
+      "lookback_days": 34
+     }
+    },
+    "by_horizon": {}
+   },
+   "fallback": [],
+   "switch_alt": [
+    "afhubbard.hyperscaler_spot.A100_40GB.spot.median",
+    "fastgpu_daily.hyperscaler_spot.T4.spot.median",
+    "fastgpu_daily.neocloud_rate_card.B200.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.H100_80GB.on_demand.median"
+   ],
+   "dev": {
+    "skill_total": 0.19712591663864243,
+    "skill_avg_series": 0.2661865332882057,
+    "drift_skill_total": 0.10932512191917432,
+    "inside": 0.7023282388230253,
+    "n_cells": 7001
+   }
+  }
+ ],
+ "usage": {
+  "calls": 32,
+  "input_tokens": 0,
+  "output_tokens": 0
+ },
+ "logs": [
+  "[real 2026-10-16] start: dev total +0.135 avg +0.112 (drift +0.094), 4956 dev cells, 725 hidden",
+  "[real 2026-10-16] idea 1: rejected | dev +0.135->+0.139 | hidden FAIL | horizon:7 center=last; class:neocloud_rate_card replay_exits=false",
+  "[real 2026-10-16] idea 2: rejected | dev +0.135->+0.135 | hidden not run (failed development) | horizon:1 momentum=0.136",
+  "[real 2026-10-16] idea 3: rejected | dev +0.135->+0.135 | hidden not run (failed development) | class:neocloud_spot momentum_window=30; class:neocloud_spot center=engine",
+  "[real 2026-10-16] idea 4: rejected | dev +0.135->+0.135 | hidden not run (failed development) | class:neocloud_rate_card peer_window=4",
+  "[real 2026-10-16] idea 5: rejected | dev +0.135->+0.135 | hidden not run (failed development) | class:hyperscaler_spot replay_entries=false",
+  "[real 2026-10-16] idea 6: rejected | dev +0.135->+0.134 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false; class:marketplace_ask lookback_days=101",
+  "[real 2026-10-16] idea 7: rejected | dev +0.135->+0.135 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=53",
+  "[real 2026-10-16] idea 8: rejected | dev +0.135->+0.128 | hidden not run (failed development) | class:marketplace_ask blend_drift=0.794",
+  "[real 2026-10-23] start: dev total +0.174 avg +0.184 (drift +0.111), 5681 dev cells, 660 hidden",
+  "[real 2026-10-23] idea 1: rejected | dev +0.174->+0.101 | hidden not run (failed development) | horizon:1 floor_down=0.070; horizon:3 halflife_days=93.395",
+  "[real 2026-10-23] idea 2: rejected | dev +0.174->+0.157 | hidden not run (failed development) | class:neocloud_rate_card blend_drift=0.619",
+  "[real 2026-10-23] idea 3: KEPT | dev +0.174->+0.186 | hidden PASS | class:neocloud_rate_card lookback_days=34",
+  "[real 2026-10-23] idea 4: rejected | dev +0.186->+0.186 | hidden not run (failed development) | horizon:1 peer_window=4; class:marketplace_ask floor_up=0.051",
+  "[real 2026-10-23] idea 5: rejected | dev +0.186->+0.186 | hidden not run (failed development) | horizon:7 replay_exits=true",
+  "[real 2026-10-23] idea 6: rejected | dev +0.186->+0.189 | hidden FAIL | class:neocloud_rate_card halflife_days=69.490",
+  "[real 2026-10-23] idea 7: rejected | dev +0.186->+0.187 | hidden not run (failed development) | horizon:1 halflife_days=34.322; class:marketplace_ask lookback_days=148",
+  "[real 2026-10-23] idea 8: rejected | dev +0.186->+0.151 | hidden not run (failed development) | horizon:3 center=engine; horizon:7 blend_drift=0.878",
+  "[real 2026-10-30] start: dev total +0.205 avg +0.243 (drift +0.119), 6341 dev cells, 660 hidden",
+  "[real 2026-10-30] idea 1: rejected | dev +0.205->+0.187 | hidden not run (failed development) | horizon:3 momentum_window=6; all floor_down=0.025",
+  "[real 2026-10-30] idea 2: rejected | dev +0.205->+0.205 | hidden not run (failed development) | all momentum_window=18",
+  "[real 2026-10-30] idea 3: rejected | dev +0.205->+0.215 | hidden FAIL | class:neocloud_rate_card width_scale=2.070",
+  "[real 2026-10-30] idea 4: rejected | dev +0.205->+0.205 | hidden not run (failed development) | horizon:1 replay_exits=false",
+  "[real 2026-10-30] idea 5: rejected | dev +0.205->+0.205 | hidden not run (failed development) | class:neocloud_rate_card momentum_window=13",
+  "[real 2026-10-30] idea 6: rejected | dev +0.205->+0.008 | hidden not run (failed development) | all peer_pull=0.410",
+  "[real 2026-10-30] idea 7: rejected | dev +0.205->+0.201 | hidden not run (failed development) | class:hyperscaler_spot momentum=1.292",
+  "[real 2026-10-30] idea 8: rejected | dev +0.205->+0.202 | hidden not run (failed development) | horizon:3 blend_drift=0.232",
+  "[real 2026-11-06] start: dev total +0.197 avg +0.266 (drift +0.109), 7001 dev cells, 660 hidden",
+  "[real 2026-11-06] idea 1: rejected | dev +0.197->+0.200 | hidden FAIL | all halflife_days=110.943",
+  "[real 2026-11-06] idea 2: rejected | dev +0.197->+0.197 | hidden not run (failed development) | class:neocloud_spot center=engine",
+  "[real 2026-11-06] idea 3: rejected | dev +0.197->+0.197 | hidden not run (failed development) | class:marketplace_ask replay_entries=true; horizon:1 replay_exits=true",
+  "[real 2026-11-06] idea 4: rejected | dev +0.197->+0.141 | hidden not run (failed development) | horizon:1 halflife_days=37.967; all floor_down=0.057",
+  "[real 2026-11-06] idea 5: rejected | dev +0.197->+0.197 | hidden not run (failed development) | all active_share=0.835",
+  "[real 2026-11-06] idea 6: rejected | dev +0.197->+0.194 | hidden not run (failed development) | horizon:1 momentum=0.786; all peer_window=1",
+  "[real 2026-11-06] idea 7: rejected | dev +0.197->+0.197 | hidden not run (failed development) | class:neocloud_spot replay_exits=false",
+  "[real 2026-11-06] idea 8: rejected | dev +0.197->+0.194 | hidden not run (failed development) | class:marketplace_ask min_scenarios=29"
+ ]
+}

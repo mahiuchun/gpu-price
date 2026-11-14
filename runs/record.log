@@ -1,0 +1,589 @@
+run record: 6 worlds x 2 arms, steps ['2026-10-16', '2026-10-23', '2026-10-30', '2026-11-06'], 8 ideas per step, Modal
+✓ Initialized. View run at 
+https://modal.com/apps/mahiuchun/main/ap-t8SQKOk4PB75OwdyxscF6v
+✓ Created objects.
+├── ✓ Uploaded PythonPackage:gpuval
+└── ✓ Created Function research_step.
+[real 2026-10-16] start: dev total +0.135 avg +0.112 (drift +0.094), 4956 dev cells, 725 hidden
+[placebo2 2026-10-16] start: dev total +0.227 avg +0.225 (drift +0.149), 4956 dev cells, 725 hidden
+[placebo2 2026-10-16] start: dev total +0.227 avg +0.225 (drift +0.149), 4956 dev cells, 725 hidden
+[placebo1 2026-10-16] start: dev total +0.194 avg +0.220 (drift +0.115), 4956 dev cells, 725 hidden
+[real 2026-10-16] start: dev total +0.135 avg +0.112 (drift +0.094), 4956 dev cells, 725 hidden
+[placebo4 2026-10-16] start: dev total +0.235 avg +0.230 (drift +0.119), 4956 dev cells, 725 hidden
+[placebo4 2026-10-16] start: dev total +0.235 avg +0.230 (drift +0.119), 4956 dev cells, 725 hidden
+[placebo1 2026-10-16] start: dev total +0.194 avg +0.220 (drift +0.115), 4956 dev cells, 725 hidden
+[placebo5 2026-10-16] start: dev total +0.219 avg +0.231 (drift +0.122), 4956 dev cells, 725 hidden
+[placebo3 2026-10-16] start: dev total +0.223 avg +0.190 (drift +0.135), 4956 dev cells, 725 hidden
+[placebo3 2026-10-16] start: dev total +0.223 avg +0.190 (drift +0.135), 4956 dev cells, 725 hidden
+[placebo2 2026-10-16] idea 1: rejected | dev +0.227->+0.208 | hidden not run (failed development) | class:neocloud_rate_card width_scale=2.446; class:neocloud_rate_card active_share=0.054
+[real 2026-10-16] idea 1: KEPT | dev +0.135->+0.145 | hidden PASS | class:neocloud_rate_card width_scale=1.5
+[placebo5 2026-10-16] start: dev total +0.219 avg +0.231 (drift +0.122), 4956 dev cells, 725 hidden
+[placebo4 2026-10-16] idea 1: rejected | dev +0.235->+0.134 | hidden not run (failed development) | class:neocloud_rate_card momentum=1.008; all lookback_days=30
+[placebo2 2026-10-16] idea 1: rejected | dev +0.227->+0.213 | hidden not run (failed development) | horizon:7 width_scale=1.5
+[real 2026-10-16] idea 1: rejected | dev +0.135->+0.139 | hidden FAIL | horizon:7 center=last; class:neocloud_rate_card replay_exits=false
+[placebo1 2026-10-16] idea 1: rejected | dev +0.194->+0.194 | hidden not run (failed development) | class:neocloud_rate_card active_share=0.812
+[placebo5 2026-10-16] idea 1: rejected | dev +0.219->+0.197 | hidden not run (failed development) | horizon:3 center=last; class:neocloud_rate_card center=last
+[placebo2 2026-10-16] idea 2: rejected | dev +0.227->+0.191 | hidden not run (failed development) | horizon:7 peer_pull=0.617
+[placebo3 2026-10-16] idea 1: rejected | dev +0.223->+0.223 | hidden not run (failed development) | horizon:7 active_share=0.105
+[placebo1 2026-10-16] idea 1: rejected | dev +0.194->+0.190 | hidden not run (failed development) | horizon:7 width_scale=1.5
+[placebo4 2026-10-16] idea 2: rejected | dev +0.235->+0.230 | hidden not run (failed development) | class:neocloud_rate_card blend_drift=0.157; horizon:1 blend_drift=0.257
+[placebo4 2026-10-16] idea 1: rejected | dev +0.235->+0.233 | hidden not run (failed development) | horizon:7 width_scale=1.3
+[placebo1 2026-10-16] idea 2: rejected | dev +0.194->+0.194 | hidden not run (failed development) | class:marketplace_ask blend_drift=0.703
+[real 2026-10-16] idea 2: rejected | dev +0.135->+0.135 | hidden not run (failed development) | horizon:1 momentum=0.136
+[placebo2 2026-10-16] idea 3: rejected | dev +0.227->+0.219 | hidden not run (failed development) | horizon:7 halflife_days=15.712
+[placebo3 2026-10-16] idea 1: rejected | dev +0.223->+0.219 | hidden not run (failed development) | horizon:7 width_scale=1.5
+[real 2026-10-16] idea 2: KEPT | dev +0.145->+0.151 | hidden PASS | class:neocloud_rate_card width_scale=2.0
+[placebo5 2026-10-16] idea 2: rejected | dev +0.219->+0.219 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false
+[placebo2 2026-10-16] idea 2: rejected | dev +0.227->+0.208 | hidden not run (failed development) | class:neocloud_rate_card momentum=0.5
+[placebo3 2026-10-16] idea 2: rejected | dev +0.223->+0.223 | hidden not run (failed development) | class:neocloud_spot center=engine
+[placebo4 2026-10-16] idea 3: rejected | dev +0.235->+0.204 | hidden not run (failed development) | class:hyperscaler_spot floor_up=0.061; class:hyperscaler_spot floor_down=0.047
+[placebo5 2026-10-16] idea 1: rejected | dev +0.219->+0.219 | hidden not run (failed development) | horizon:7 width_scale=1.3
+[placebo2 2026-10-16] idea 4: rejected | dev +0.227->+0.227 | hidden not run (failed development) | class:marketplace_ask floor_down=0.085
+[placebo1 2026-10-16] idea 3: rejected | dev +0.194->+0.187 | hidden not run (failed development) | class:marketplace_ask peer_pull=0.361
+[real 2026-10-16] idea 3: rejected | dev +0.135->+0.135 | hidden not run (failed development) | class:neocloud_spot momentum_window=30; class:neocloud_spot center=engine
+[placebo1 2026-10-16] idea 2: KEPT | dev +0.194->+0.204 | hidden PASS | horizon:7 floor_up=0.01; horizon:7 floor_down=0.01
+[placebo5 2026-10-16] idea 3: rejected | dev +0.219->+0.176 | hidden not run (failed development) | horizon:1 floor_down=0.048
+[placebo4 2026-10-16] idea 4: rejected | dev +0.235->+0.148 | hidden not run (failed development) | all momentum=0.893; class:neocloud_rate_card momentum_window=18
+[real 2026-10-16] idea 3: rejected | dev +0.151->+0.154 | hidden not run (failed development) | class:neocloud_rate_card width_scale=2.5
+[placebo2 2026-10-16] idea 5: rejected | dev +0.227->+0.201 | hidden not run (failed development) | class:neocloud_spot floor_down=0.098; horizon:1 width_scale=1.618
+[placebo2 2026-10-16] idea 3: rejected | dev +0.227->+0.219 | hidden not run (failed development) | class:neocloud_rate_card halflife_days=21
+[placebo3 2026-10-16] idea 3: rejected | dev +0.223->+0.223 | hidden not run (failed development) | horizon:7 lookback_days=291
+[placebo1 2026-10-16] idea 4: rejected | dev +0.194->+0.194 | hidden not run (failed development) | class:neocloud_spot width_scale=0.766
+[placebo4 2026-10-16] idea 2: rejected | dev +0.235->+0.200 | hidden not run (failed development) | class:neocloud_rate_card momentum=0.5
+[placebo3 2026-10-16] idea 2: KEPT | dev +0.223->+0.230 | hidden PASS | horizon:7 floor_up=0.01; horizon:7 floor_down=0.01
+[real 2026-10-16] idea 4: rejected | dev +0.135->+0.135 | hidden not run (failed development) | class:neocloud_rate_card peer_window=4
+[placebo4 2026-10-16] idea 5: rejected | dev +0.235->+0.168 | hidden not run (failed development) | all blend_drift=0.710; all min_scenarios=10
+[placebo5 2026-10-16] idea 4: rejected | dev +0.219->+0.219 | hidden not run (failed development) | horizon:3 halflife_days=111.394
+[placebo2 2026-10-16] idea 6: rejected | dev +0.227->+0.226 | hidden not run (failed development) | class:neocloud_rate_card halflife_days=70.303
+[placebo5 2026-10-16] idea 2: rejected | dev +0.219->+0.196 | hidden not run (failed development) | class:neocloud_rate_card momentum=0.5
+[placebo3 2026-10-16] idea 4: rejected | dev +0.223->+0.223 | hidden not run (failed development) | class:neocloud_rate_card center=engine
+[placebo1 2026-10-16] idea 5: rejected | dev +0.194->+0.194 | hidden not run (failed development) | class:neocloud_spot momentum_window=4
+[real 2026-10-16] idea 4: rejected | dev +0.151->+0.163 | hidden not run (failed development) | class:neocloud_rate_card floor_up=0.01
+[placebo1 2026-10-16] idea 3: rejected | dev +0.204->+0.208 | hidden FAIL | horizon:3 floor_up=0.01; horizon:3 floor_down=0.01
+[placebo2 2026-10-16] idea 4: rejected | dev +0.227->+0.233 | hidden FAIL | class:marketplace_ask blend_drift=0.5
+[real 2026-10-16] idea 5: rejected | dev +0.135->+0.135 | hidden not run (failed development) | class:hyperscaler_spot replay_entries=false
+[placebo4 2026-10-16] idea 6: rejected | dev +0.235->+0.238 | hidden FAIL | class:neocloud_spot floor_up=0.033
+[placebo2 2026-10-16] idea 7: rejected | dev +0.227->+0.170 | hidden not run (failed development) | all momentum=0.722
+[placebo5 2026-10-16] idea 5: rejected | dev +0.219->+0.219 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false
+[placebo4 2026-10-16] idea 3: rejected | dev +0.235->+0.229 | hidden not run (failed development) | class:neocloud_rate_card halflife_days=21
+[placebo3 2026-10-16] idea 3: rejected | dev +0.230->+0.232 | hidden FAIL | horizon:3 floor_up=0.005; horizon:3 floor_down=0.005[placebo3 2026-10-16] idea 5: rejected | dev +0.223->+0.218 | hidden not run (failed development) | horizon:3 blend_drift=0.603
+[placebo1 2026-10-16] idea 6: rejected | dev +0.194->+0.199 | hidden not run (failed development) | all floor_up=0.042; class:neocloud_spot halflife_days=2.295
+
+[placebo2 2026-10-16] idea 8: rejected | dev +0.227->+0.207 | hidden not run (failed development) | all replay_entries=false
+[placebo4 2026-10-16] idea 7: rejected | dev +0.235->+0.219 | hidden not run (failed development) | all center=last
+[real 2026-10-16] idea 6: rejected | dev +0.135->+0.134 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false; class:marketplace_ask lookback_days=101
+[real 2026-10-16] idea 5: KEPT | dev +0.151->+0.164 | hidden PASS | horizon:7 floor_up=0.01
+[placebo5 2026-10-16] idea 6: rejected | dev +0.219->+0.179 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=38
+[placebo2 2026-10-16] idea 5: rejected | dev +0.227->+0.203 | hidden not run (failed development) | class:neocloud_rate_card center=last[placebo1 2026-10-16] idea 7: rejected | dev +0.194->+0.193 | hidden not run (failed development) | horizon:7 halflife_days=26.799
+
+[placebo1 2026-10-16] idea 4: rejected | dev +0.204->+0.173 | hidden not run (failed development) | class:neocloud_rate_card momentum=0.5
+[placebo3 2026-10-16] idea 6: KEPT | dev +0.223->+0.225 | hidden PASS | class:hyperscaler_spot center=last
+[placebo5 2026-10-16] idea 3: rejected | dev +0.219->+0.198 | hidden not run (failed development) | class:neocloud_rate_card center=last
+[placebo2 2026-10-23] start: dev total +0.225 avg +0.252 (drift +0.141), 5681 dev cells, 660 hidden
+[placebo4 2026-10-16] idea 8: rejected | dev +0.235->+0.234 | hidden not run (failed development) | horizon:1 floor_up=0.005; horizon:3 floor_down=0.007
+[real 2026-10-16] idea 7: rejected | dev +0.135->+0.135 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=53
+[placebo4 2026-10-16] idea 4: rejected | dev +0.235->+0.216 | hidden not run (failed development) | class:neocloud_rate_card center=last
+[placebo5 2026-10-16] idea 7: rejected | dev +0.219->+0.193 | hidden not run (failed development) | class:hyperscaler_spot min_scenarios=41
+[real 2026-10-16] idea 6: rejected | dev +0.164->+0.175 | hidden FAIL | horizon:7 floor_up=0.02
+[placebo1 2026-10-16] idea 8: rejected | dev +0.194->+0.180 | hidden not run (failed development) | horizon:7 width_scale=1.944
+[placebo3 2026-10-16] idea 7: rejected | dev +0.225->+0.225 | hidden not run (failed development) | horizon:7 replay_exits=true
+[placebo2 2026-10-23] idea 1: rejected | dev +0.225->+0.181 | hidden not run (failed development) | horizon:7 min_scenarios=60
+[placebo3 2026-10-16] idea 4: rejected | dev +0.230->+0.195 | hidden not run (failed development) | class:neocloud_rate_card momentum=0.5
+[placebo2 2026-10-16] idea 6: rejected | dev +0.227->+0.227 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false
+[placebo4 2026-10-23] start: dev total +0.239 avg +0.252 (drift +0.118), 5681 dev cells, 660 hidden
+[real 2026-10-16] idea 8: rejected | dev +0.135->+0.128 | hidden not run (failed development) | class:marketplace_ask blend_drift=0.794
+[placebo5 2026-10-16] idea 8: rejected | dev +0.219->+0.209 | hidden not run (failed development) | all replay_exits=false; horizon:3 momentum_window=13
+[placebo1 2026-10-16] idea 5: rejected | dev +0.204->+0.203 | hidden not run (failed development) | class:neocloud_rate_card halflife_days=30
+[placebo2 2026-10-23] idea 2: rejected | dev +0.225->+0.111 | hidden not run (failed development) | class:marketplace_ask active_share=0.347; horizon:7 peer_pull=0.984
+[placebo3 2026-10-16] idea 8: rejected | dev +0.225->-0.027 | hidden not run (failed development) | horizon:1 peer_pull=0.884
+[placebo5 2026-10-16] idea 4: rejected | dev +0.219->+0.218 | hidden not run (failed development) | class:neocloud_rate_card halflife_days=21[placebo1 2026-10-23] start: dev total +0.195 avg +0.252 (drift +0.105), 5681 dev cells, 660 hidden
+
+[real 2026-10-16] idea 7: KEPT | dev +0.164->+0.167 | hidden PASS | horizon:7 floor_down=0.005
+[placebo4 2026-10-23] idea 1: rejected | dev +0.239->+0.232 | hidden not run (failed development) | horizon:7 peer_window=2; horizon:3 center=last
+[placebo4 2026-10-16] idea 5: KEPT | dev +0.235->+0.238 | hidden PASS | class:neocloud_rate_card floor_up=0.01
+[real 2026-10-23] start: dev total +0.174 avg +0.184 (drift +0.111), 5681 dev cells, 660 hidden
+[placebo2 2026-10-23] idea 3: rejected | dev +0.225->+0.225 | hidden not run (failed development) | horizon:3 center=engine
+[placebo2 2026-10-16] idea 7: rejected | dev +0.227->+0.227 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false
+[placebo5 2026-10-23] start: dev total +0.203 avg +0.255 (drift +0.114), 5681 dev cells, 660 hidden
+[placebo3 2026-10-16] idea 5: rejected | dev +0.230->+0.229 | hidden not run (failed development) | class:neocloud_rate_card halflife_days=30
+[placebo1 2026-10-23] idea 1: rejected | dev +0.195->+0.195 | hidden not run (failed development) | horizon:3 peer_window=5
+[placebo3 2026-10-23] start: dev total +0.227 avg +0.220 (drift +0.133), 5681 dev cells, 660 hidden
+[placebo4 2026-10-23] idea 2: rejected | dev +0.239->+0.234 | hidden not run (failed development) | class:neocloud_spot floor_up=0.057
+[placebo1 2026-10-16] idea 6: rejected | dev +0.204->+0.204 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=120
+[placebo2 2026-10-23] idea 4: rejected | dev +0.225->+0.225 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=164
+[real 2026-10-16] idea 8: rejected | dev +0.167->+0.186 | hidden not run (failed development) | class:neocloud_rate_card momentum=0.5
+[real 2026-10-23] idea 1: rejected | dev +0.174->+0.101 | hidden not run (failed development) | horizon:1 floor_down=0.070; horizon:3 halflife_days=93.395
+[placebo5 2026-10-23] idea 1: rejected | dev +0.203->+0.195 | hidden not run (failed development) | horizon:3 width_scale=1.750; horizon:7 replay_exits=false
+[placebo4 2026-10-16] idea 6: rejected | dev +0.238->+0.233 | hidden not run (failed development) | class:neocloud_rate_card floor_down=0.01
+[placebo1 2026-10-23] idea 2: rejected | dev +0.195->+0.053 | hidden not run (failed development) | horizon:1 peer_pull=0.544
+[placebo3 2026-10-23] idea 1: rejected | dev +0.227->+0.221 | hidden not run (failed development) | class:hyperscaler_spot min_scenarios=23
+[placebo4 2026-10-23] idea 3: rejected | dev +0.239->+0.239 | hidden not run (failed development) | class:marketplace_ask momentum_window=6
+[real 2026-10-23] start: dev total +0.205 avg +0.218 (drift +0.111), 5681 dev cells, 660 hidden
+[placebo2 2026-10-23] idea 5: KEPT | dev +0.225->+0.231 | hidden PASS | class:marketplace_ask blend_drift=0.627
+[placebo5 2026-10-16] idea 5: rejected | dev +0.219->+0.219 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false
+[placebo2 2026-10-16] idea 8: rejected | dev +0.227->+0.186 | hidden not run (failed development) | class:neocloud_rate_card peer_pull=0.2
+[placebo3 2026-10-16] idea 6: rejected | dev +0.230->+0.210 | hidden not run (failed development) | class:neocloud_rate_card center=last
+[real 2026-10-23] idea 2: rejected | dev +0.174->+0.157 | hidden not run (failed development) | class:neocloud_rate_card blend_drift=0.619
+[placebo5 2026-10-23] idea 2: rejected | dev +0.203->+0.201 | hidden not run (failed development) | horizon:7 momentum=0.084
+[placebo1 2026-10-23] idea 3: rejected | dev +0.195->+0.202 | hidden not run (failed development) | all floor_up=0.010; class:neocloud_spot center=engine
+[placebo2 2026-10-23] start: dev total +0.225 avg +0.252 (drift +0.141), 5681 dev cells, 660 hidden
+[placebo2 2026-10-23] idea 6: rejected | dev +0.231->+0.221 | hidden not run (failed development) | horizon:7 width_scale=0.758; class:hyperscaler_spot blend_drift=0.518
+[placebo4 2026-10-23] idea 4: rejected | dev +0.239->+0.186 | hidden not run (failed development) | horizon:7 peer_pull=0.265; horizon:3 min_scenarios=48
+[placebo3 2026-10-23] idea 2: rejected | dev +0.227->+0.227 | hidden not run (failed development) | class:neocloud_spot lookback_days=245
+[placebo1 2026-10-16] idea 7: rejected | dev +0.204->+0.204 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false
+[real 2026-10-23] idea 1: KEPT | dev +0.205->+0.212 | hidden PASS | class:neocloud_rate_card halflife_days=21
+[placebo2 2026-10-23] idea 7: rejected | dev +0.231->+0.164 | hidden not run (failed development) | horizon:7 peer_pull=0.719
+[placebo2 2026-10-23] idea 8: rejected | dev +0.231->+0.231 | hidden not run (no change) | all replay_entries=true
+[real 2026-10-23] idea 3: KEPT | dev +0.174->+0.186 | hidden PASS | class:neocloud_rate_card lookback_days=34
+[placebo1 2026-10-23] idea 4: rejected | dev +0.195->+0.195 | hidden not run (failed development) | class:marketplace_ask active_share=0.069
+[placebo5 2026-10-23] idea 3: rejected | dev +0.203->+0.183 | hidden not run (failed development) | all center=last
+[placebo4 2026-10-23] idea 5: rejected | dev +0.239->+0.239 | hidden not run (failed development) | class:neocloud_rate_card peer_window=5
+[placebo3 2026-10-23] idea 3: rejected | dev +0.227->+0.223 | hidden not run (failed development) | class:marketplace_ask momentum=0.419
+[placebo4 2026-10-16] idea 7: rejected | dev +0.238->+0.238 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=120
+[placebo2 2026-10-23] idea 1: rejected | dev +0.225->+0.225 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=120
+[placebo3 2026-10-16] idea 7: rejected | dev +0.230->+0.230 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=120
+[placebo5 2026-10-16] idea 6: rejected | dev +0.219->+0.219 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=120
+[placebo2 2026-10-30] start: dev total +0.233 avg +0.275 (drift +0.143), 6341 dev cells, 660 hidden
+[placebo1 2026-10-23] idea 5: rejected | dev +0.195->+0.187 | hidden not run (failed development) | horizon:1 min_scenarios=31
+[real 2026-10-23] idea 2: rejected | dev +0.212->+0.210 | hidden not run (failed development) | class:hyperscaler_spot halflife_days=21
+[placebo4 2026-10-23] idea 6: rejected | dev +0.239->+0.186 | hidden not run (failed development) | class:hyperscaler_spot width_scale=2.924
+[real 2026-10-23] idea 4: rejected | dev +0.186->+0.186 | hidden not run (failed development) | horizon:1 peer_window=4; class:marketplace_ask floor_up=0.051
+[placebo5 2026-10-23] idea 4: rejected | dev +0.203->+0.203 | hidden not run (failed development) | class:neocloud_spot halflife_days=66.985
+[placebo3 2026-10-23] idea 4: rejected | dev +0.227->+0.214 | hidden not run (failed development) | horizon:7 center=last
+[placebo1 2026-10-16] idea 8: KEPT | dev +0.204->+0.217 | hidden PASS | horizon:7 floor_up=0.02; horizon:7 floor_down=0.02
+[placebo2 2026-10-30] idea 1: rejected | dev +0.233->+0.218 | hidden not run (failed development) | all replay_entries=false
+[placebo2 2026-10-23] idea 2: KEPT | dev +0.225->+0.237 | hidden PASS | horizon:7 floor_up=0.01; horizon:7 floor_down=0.01
+[placebo1 2026-10-23] idea 6: rejected | dev +0.195->+0.187 | hidden not run (failed development) | horizon:1 momentum_window=16; horizon:1 width_scale=2.184
+[placebo4 2026-10-23] idea 7: rejected | dev +0.239->+0.219 | hidden not run (failed development) | class:hyperscaler_spot floor_up=0.016; class:hyperscaler_spot min_scenarios=26
+[placebo4 2026-10-16] idea 8: rejected | dev +0.238->+0.236 | hidden not run (failed development) | class:hyperscaler_spot halflife_days=21
+[real 2026-10-23] idea 5: rejected | dev +0.186->+0.186 | hidden not run (failed development) | horizon:7 replay_exits=true
+[placebo3 2026-10-23] idea 5: rejected | dev +0.227->+0.226 | hidden not run (failed development) | class:hyperscaler_spot halflife_days=56.616
+[placebo5 2026-10-23] idea 5: rejected | dev +0.203->+0.207 | hidden FAIL | class:neocloud_spot floor_up=0.018
+[real 2026-10-23] idea 3: rejected | dev +0.212->+0.213 | hidden not run (failed development) | class:neocloud_rate_card halflife_days=14
+[placebo2 2026-10-30] idea 2: rejected | dev +0.233->+0.207 | hidden not run (failed development) | horizon:7 floor_down=0.083
+[placebo3 2026-10-16] idea 8: rejected | dev +0.230->+0.230 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false
+[placebo1 2026-10-23] start: dev total +0.217 avg +0.253 (drift +0.105), 5681 dev cells, 660 hidden
+[placebo1 2026-10-23] idea 7: rejected | dev +0.195->+0.174 | hidden not run (failed development) | all blend_drift=0.556; class:hyperscaler_spot floor_up=0.026
+[placebo4 2026-10-23] idea 8: rejected | dev +0.239->+0.186 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=48
+[placebo5 2026-10-16] idea 7: KEPT | dev +0.219->+0.234 | hidden PASS | horizon:7 floor_up=0.02
+[placebo2 2026-10-23] idea 3: KEPT | dev +0.237->+0.239 | hidden PASS | horizon:3 floor_up=0.005; horizon:3 floor_down=0.005
+[placebo4 2026-10-23] start: dev total +0.242 avg +0.251 (drift +0.118), 5681 dev cells, 660 hidden
+[real 2026-10-23] idea 6: rejected | dev +0.186->+0.189 | hidden FAIL | class:neocloud_rate_card halflife_days=69.490
+[placebo3 2026-10-23] idea 6: rejected | dev +0.227->+0.213 | hidden not run (failed development) | horizon:7 peer_pull=0.214
+[placebo5 2026-10-23] idea 6: rejected | dev +0.203->+0.203 | hidden not run (failed development) | horizon:7 halflife_days=56.482; horizon:3 replay_entries=true
+[placebo2 2026-10-30] idea 3: rejected | dev +0.233->+0.230 | hidden not run (failed development) | horizon:1 lookback_days=156
+[placebo3 2026-10-23] start: dev total +0.233 avg +0.224 (drift +0.133), 5681 dev cells, 660 hidden[placebo1 2026-10-23] idea 8: rejected | dev +0.195->+0.195 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=218
+
+[real 2026-10-23] idea 4: rejected | dev +0.212->+0.215 | hidden FAIL | horizon:3 floor_up=0.005
+[placebo4 2026-10-30] start: dev total +0.237 avg +0.258 (drift +0.114), 6341 dev cells, 660 hidden
+[real 2026-10-23] idea 7: rejected | dev +0.186->+0.187 | hidden not run (failed development) | horizon:1 halflife_days=34.322; class:marketplace_ask lookback_days=148
+[placebo1 2026-10-23] idea 1: rejected | dev +0.217->+0.225 | hidden not run (failed development) | horizon:7 floor_up=0.03
+[placebo2 2026-10-23] idea 4: KEPT | dev +0.239->+0.245 | hidden PASS | horizon:7 floor_up=0.02
+[placebo3 2026-10-23] idea 7: rejected | dev +0.227->+0.227 | hidden not run (failed development) | class:neocloud_rate_card peer_window=7
+[placebo3 2026-10-23] idea 8: rejected | dev +0.227->+0.227 | hidden not run (no change) | class:hyperscaler_spot center=last
+[placebo2 2026-10-30] idea 4: rejected | dev +0.233->+0.224 | hidden not run (failed development) | class:neocloud_spot peer_pull=0.091; horizon:3 blend_drift=0.483
+[placebo5 2026-10-23] idea 7: rejected | dev +0.203->+0.202 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false; class:marketplace_ask peer_window=11
+[placebo5 2026-10-16] idea 8: rejected | dev +0.234->+0.238 | hidden not run (failed development) | horizon:7 floor_down=0.02
+[placebo1 2026-10-30] start: dev total +0.195 avg +0.260 (drift +0.099), 6341 dev cells, 660 hidden
+[placebo4 2026-10-23] idea 1: rejected | dev +0.242->+0.205 | hidden not run (failed development) | class:neocloud_rate_card peer_pull=0.2
+[placebo4 2026-10-30] idea 1: rejected | dev +0.237->+0.185 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=35; class:marketplace_ask replay_entries=true
+[real 2026-10-23] idea 8: rejected | dev +0.186->+0.151 | hidden not run (failed development) | horizon:3 center=engine; horizon:7 blend_drift=0.878
+[placebo2 2026-10-30] idea 5: rejected | dev +0.233->+0.074 | hidden not run (failed development) | class:marketplace_ask momentum_window=6; all momentum=1.363
+[placebo2 2026-10-23] idea 5: rejected | dev +0.245->+0.246 | hidden not run (failed development) | horizon:7 floor_down=0.02
+[real 2026-10-23] idea 5: rejected | dev +0.212->+0.194 | hidden not run (failed development) | class:neocloud_rate_card center=last
+[placebo3 2026-10-23] idea 1: rejected | dev +0.233->+0.176 | hidden not run (failed development) | class:neocloud_rate_card peer_pull=0.2
+[placebo3 2026-10-30] start: dev total +0.225 avg +0.246 (drift +0.125), 6341 dev cells, 660 hidden
+[placebo5 2026-10-23] idea 8: rejected | dev +0.203->+0.195 | hidden not run (failed development) | class:marketplace_ask width_scale=2.865
+[placebo1 2026-10-30] idea 1: rejected | dev +0.195->+0.146 | hidden not run (failed development) | all peer_window=13; horizon:3 floor_up=0.089
+[placebo5 2026-10-23] start: dev total +0.220 avg +0.264 (drift +0.114), 5681 dev cells, 660 hidden
+[placebo4 2026-10-30] idea 2: rejected | dev +0.237->+0.227 | hidden not run (failed development) | horizon:7 peer_pull=0.091; class:neocloud_spot floor_up=0.049
+[placebo2 2026-10-30] idea 6: rejected | dev +0.233->+0.233 | hidden not run (failed development) | horizon:1 width_scale=1.105; class:marketplace_ask replay_entries=true
+[placebo1 2026-10-23] idea 2: rejected | dev +0.217->+0.199 | hidden not run (failed development) | class:neocloud_rate_card center=last
+[real 2026-10-30] start: dev total +0.205 avg +0.243 (drift +0.119), 6341 dev cells, 660 hidden
+[placebo4 2026-10-23] idea 2: rejected | dev +0.242->+0.242 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false
+[placebo3 2026-10-30] idea 1: rejected | dev +0.225->+0.092 | hidden not run (failed development) | all floor_down=0.086
+[placebo1 2026-10-30] idea 2: rejected | dev +0.195->+0.193 | hidden not run (failed development) | horizon:1 blend_drift=0.268
+[placebo4 2026-10-30] idea 3: rejected | dev +0.237->+0.237 | hidden not run (failed development) | class:neocloud_spot blend_drift=0.100
+[placebo2 2026-10-23] idea 6: rejected | dev +0.245->+0.246 | hidden not run (failed development) | horizon:3 floor_up=0.01
+[placebo2 2026-10-30] idea 7: rejected | dev +0.233->+0.233 | hidden not run (failed development) | horizon:3 center=engine
+[real 2026-10-23] idea 6: rejected | dev +0.212->+0.212 | hidden not run (failed development) | class:hyperscaler_spot blend_drift=0.25
+[placebo5 2026-10-30] start: dev total +0.200 avg +0.259 (drift +0.110), 6341 dev cells, 660 hidden
+[placebo3 2026-10-23] idea 2: rejected | dev +0.233->+0.240 | hidden not run (failed development) | horizon:7 floor_up=0.02; horizon:7 floor_down=0.02
+[placebo5 2026-10-23] idea 1: rejected | dev +0.220->+0.223 | hidden FAIL | horizon:3 floor_up=0.01
+[real 2026-10-30] idea 1: rejected | dev +0.205->+0.187 | hidden not run (failed development) | horizon:3 momentum_window=6; all floor_down=0.025
+[placebo1 2026-10-30] idea 3: rejected | dev +0.195->+0.188 | hidden not run (failed development) | class:marketplace_ask width_scale=0.565; all halflife_days=15.321
+[placebo3 2026-10-30] idea 2: rejected | dev +0.225->+0.225 | hidden not run (failed development) | class:marketplace_ask active_share=0.812
+[placebo4 2026-10-30] idea 4: rejected | dev +0.237->+0.237 | hidden not run (failed development) | class:neocloud_spot momentum_window=22
+[placebo2 2026-10-30] idea 8: rejected | dev +0.233->+0.215 | hidden not run (failed development) | class:neocloud_spot floor_up=0.083
+[placebo2 2026-10-23] idea 7: rejected | dev +0.245->+0.244 | hidden not run (failed development) | horizon:1 floor_up=0.005
+[placebo5 2026-10-30] idea 1: rejected | dev +0.200->+0.200 | hidden not run (failed development) | class:neocloud_spot min_scenarios=11
+[placebo1 2026-10-23] idea 3: rejected | dev +0.217->+0.143 | hidden not run (failed development) | class:neocloud_rate_card peer_pull=0.25
+[real 2026-10-23] idea 7: KEPT | dev +0.212->+0.220 | hidden PASS | class:neocloud_rate_card momentum=0.5; class:neocloud_rate_card active_share=0.6[placebo1 2026-10-30] idea 4: rejected | dev +0.195->+0.163 | hidden not run (failed development) | class:hyperscaler_spot width_scale=2.332; class:neocloud_spot momentum=0.354
+
+[real 2026-10-30] idea 2: rejected | dev +0.205->+0.205 | hidden not run (failed development) | all momentum_window=18
+[placebo4 2026-10-23] idea 3: rejected | dev +0.242->+0.242 | hidden not run (failed development) | class:hyperscaler_spot floor_up=0.01
+[placebo3 2026-10-30] idea 3: rejected | dev +0.225->+0.225 | hidden not run (failed development) | class:marketplace_ask peer_window=2
+[placebo4 2026-10-30] idea 5: rejected | dev +0.237->+0.217 | hidden not run (failed development) | class:neocloud_rate_card center=last
+[placebo2 2026-11-06] start: dev total +0.217 avg +0.259 (drift +0.133), 7001 dev cells, 660 hidden
+[placebo5 2026-10-30] idea 2: rejected | dev +0.200->+0.193 | hidden not run (failed development) | horizon:1 width_scale=2.315; class:marketplace_ask peer_window=13
+[placebo5 2026-10-23] idea 2: rejected | dev +0.220->+0.220 | hidden not run (failed development) | class:marketplace_ask blend_drift=0.5
+[placebo3 2026-10-23] idea 3: rejected | dev +0.233->+0.234 | hidden not run (failed development) | class:marketplace_ask width_scale=1.25
+[placebo1 2026-10-30] idea 5: rejected | dev +0.195->+0.195 | hidden not run (failed development) | class:marketplace_ask peer_window=6
+[placebo2 2026-11-06] idea 1: rejected | dev +0.217->+0.217 | hidden not run (failed development) | horizon:3 center=engine
+[placebo4 2026-10-30] idea 6: rejected | dev +0.237->+0.091 | hidden not run (failed development) | class:hyperscaler_spot peer_pull=0.999
+[placebo3 2026-10-30] idea 4: rejected | dev +0.225->+0.225 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=true
+[real 2026-10-30] idea 3: rejected | dev +0.205->+0.215 | hidden FAIL | class:neocloud_rate_card width_scale=2.070
+[placebo2 2026-10-23] idea 8: rejected | dev +0.245->+0.249 | hidden not run (failed development) | horizon:7 floor_up=0.03
+[real 2026-10-23] idea 8: rejected | dev +0.220->+0.218 | hidden not run (failed development) | class:neocloud_rate_card momentum=0.75
+[placebo1 2026-10-23] idea 4: rejected | dev +0.217->+0.218 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false
+[placebo1 2026-10-30] idea 6: rejected | dev +0.195->+0.195 | hidden not run (failed development) | class:neocloud_spot peer_window=7
+[placebo2 2026-11-06] idea 2: rejected | dev +0.217->+0.217 | hidden not run (failed development) | horizon:3 center=engine[placebo5 2026-10-30] idea 3: rejected | dev +0.200->+0.203 | hidden not run (failed development) | class:hyperscaler_spot floor_up=0.043; class:hyperscaler_spot min_scenarios=4
+
+[placebo2 2026-10-30] start: dev total +0.247 avg +0.297 (drift +0.143), 6341 dev cells, 660 hidden
+[real 2026-10-30] start: dev total +0.235 avg +0.271 (drift +0.119), 6341 dev cells, 660 hidden
+[placebo4 2026-10-23] idea 4: rejected | dev +0.242->+0.238 | hidden not run (failed development) | class:hyperscaler_spot blend_drift=0.2
+[placebo4 2026-10-30] idea 7: rejected | dev +0.237->+0.128 | hidden not run (failed development) | all blend_drift=0.175; all momentum=1.226
+[placebo3 2026-10-30] idea 5: rejected | dev +0.225->+0.137 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=true; horizon:1 floor_down=0.098[real 2026-10-30] idea 4: rejected | dev +0.205->+0.205 | hidden not run (failed development) | horizon:1 replay_exits=false
+
+[placebo3 2026-10-23] idea 4: rejected | dev +0.233->+0.230 | hidden not run (failed development) | class:hyperscaler_spot halflife_days=14
+[placebo1 2026-10-30] idea 7: rejected | dev +0.195->+0.196 | hidden not run (failed development) | class:marketplace_ask floor_up=0.064
+[placebo2 2026-11-06] idea 3: rejected | dev +0.217->+0.205 | hidden not run (failed development) | all floor_up=0.036
+[placebo5 2026-10-23] idea 3: rejected | dev +0.220->+0.140 | hidden not run (failed development) | class:neocloud_rate_card peer_pull=0.25
+[placebo4 2026-10-30] idea 8: rejected | dev +0.237->+0.162 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=22; horizon:1 floor_down=0.054
+[placebo5 2026-10-30] idea 4: rejected | dev +0.200->+0.183 | hidden not run (failed development) | horizon:3 width_scale=2.675
+[placebo3 2026-10-30] idea 6: rejected | dev +0.225->+0.217 | hidden not run (failed development) | class:hyperscaler_spot min_scenarios=30
+[real 2026-10-30] idea 5: rejected | dev +0.205->+0.205 | hidden not run (failed development) | class:neocloud_rate_card momentum_window=13
+[real 2026-10-30] idea 1: rejected | dev +0.235->+0.190 | hidden not run (failed development) | class:neocloud_rate_card peer_pull=0.2
+[placebo2 2026-10-30] idea 1: rejected | dev +0.247->+0.247 | hidden not run (failed development) | class:marketplace_ask replay_entries=false
+[placebo1 2026-10-23] idea 5: rejected | dev +0.217->+0.219 | hidden not run (failed development) | class:hyperscaler_spot halflife_days=14
+[placebo2 2026-11-06] idea 4: rejected | dev +0.217->+0.209 | hidden not run (failed development) | horizon:1 min_scenarios=38
+[placebo4 2026-10-23] idea 5: rejected | dev +0.242->+0.237 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false
+[placebo1 2026-10-30] idea 8: KEPT | dev +0.195->+0.198 | hidden PASS | class:neocloud_rate_card floor_down=0.005; class:neocloud_spot floor_up=0.019
+[placebo4 2026-11-06] start: dev total +0.233 avg +0.267 (drift +0.107), 7001 dev cells, 660 hidden
+[placebo3 2026-10-30] idea 7: rejected | dev +0.225->-0.204 | hidden not run (failed development) | all peer_pull=0.774; class:marketplace_ask momentum=1.066
+[placebo5 2026-10-30] idea 5: rejected | dev +0.200->+0.149 | hidden not run (failed development) | horizon:7 momentum=0.807
+[real 2026-10-30] idea 6: rejected | dev +0.205->+0.008 | hidden not run (failed development) | all peer_pull=0.410
+[placebo2 2026-11-06] idea 5: rejected | dev +0.217->+0.199 | hidden not run (failed development) | all min_scenarios=15
+[placebo5 2026-10-23] idea 4: rejected | dev +0.220->+0.219 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false
+[real 2026-10-30] idea 2: rejected | dev +0.235->+0.235 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=90
+[placebo1 2026-11-06] start: dev total +0.190 avg +0.260 (drift +0.089), 7001 dev cells, 660 hidden
+[placebo2 2026-10-30] idea 2: KEPT | dev +0.247->+0.252 | hidden PASS | class:marketplace_ask center=last
+[placebo3 2026-10-23] idea 5: rejected | dev +0.233->+0.168 | hidden not run (failed development) | all min_scenarios=20
+[placebo4 2026-11-06] idea 1: rejected | dev +0.233->+0.233 | hidden not run (failed development) | horizon:1 momentum_window=25
+[placebo3 2026-10-30] idea 8: rejected | dev +0.225->+0.180 | hidden not run (failed development) | horizon:3 floor_down=0.086; horizon:1 center=last
+[placebo4 2026-10-23] idea 6: rejected | dev +0.242->+0.242 | hidden not run (failed development) | class:marketplace_ask floor_up=0.01
+[placebo2 2026-11-06] idea 6: rejected | dev +0.217->+0.217 | hidden not run (failed development) | all active_share=0.604
+[real 2026-10-30] idea 7: rejected | dev +0.205->+0.201 | hidden not run (failed development) | class:hyperscaler_spot momentum=1.292
+[placebo1 2026-10-23] idea 6: rejected | dev +0.217->+0.218 | hidden not run (failed development) | class:hyperscaler_spot blend_drift=0.25
+[placebo5 2026-10-30] idea 6: rejected | dev +0.200->+0.027 | hidden not run (failed development) | all momentum=1.347; horizon:7 halflife_days=40.907
+[placebo1 2026-11-06] idea 1: rejected | dev +0.190->+0.186 | hidden not run (failed development) | class:hyperscaler_spot blend_drift=0.910
+[placebo4 2026-11-06] idea 2: rejected | dev +0.233->+0.200 | hidden not run (failed development) | all min_scenarios=16; class:marketplace_ask active_share=0.667
+[placebo2 2026-11-06] idea 7: rejected | dev +0.217->+0.203 | hidden not run (failed development) | class:marketplace_ask peer_pull=0.594
+[placebo5 2026-10-23] idea 5: rejected | dev +0.220->+0.220 | hidden not run (failed development) | class:hyperscaler_spot halflife_days=21
+[real 2026-10-30] idea 3: rejected | dev +0.235->+0.231 | hidden not run (failed development) | class:hyperscaler_spot lookback_days=90
+[placebo2 2026-10-30] idea 3: rejected | dev +0.252->+0.251 | hidden not run (failed development) | class:marketplace_ask halflife_days=21
+[real 2026-10-30] idea 8: rejected | dev +0.205->+0.202 | hidden not run (failed development) | horizon:3 blend_drift=0.232
+[placebo3 2026-11-06] start: dev total +0.214 avg +0.253 (drift +0.110), 7001 dev cells, 660 hidden
+[placebo1 2026-11-06] idea 2: rejected | dev +0.190->+0.190 | hidden not run (failed development) | class:marketplace_ask center=last
+[placebo3 2026-10-23] idea 6: KEPT | dev +0.233->+0.242 | hidden PASS | all min_scenarios=5
+[placebo5 2026-10-30] idea 7: rejected | dev +0.200->+0.200 | hidden not run (failed development) | class:neocloud_spot lookback_days=94
+[placebo2 2026-11-06] idea 8: rejected | dev +0.217->+0.219 | hidden not run (failed development) | class:marketplace_ask center=last
+[placebo4 2026-11-06] idea 3: rejected | dev +0.233->+0.230 | hidden not run (failed development) | horizon:1 halflife_days=82.107; class:hyperscaler_spot momentum=0.629
+[placebo4 2026-10-23] idea 7: rejected | dev +0.242->+0.212 | hidden not run (failed development) | class:hyperscaler_spot replay_entries=false
+[placebo3 2026-11-06] idea 1: rejected | dev +0.214->+0.213 | hidden not run (failed development) | class:neocloud_spot blend_drift=0.250
+[placebo1 2026-11-06] idea 3: rejected | dev +0.190->+0.190 | hidden not run (failed development) | horizon:1 peer_window=3; horizon:7 replay_exits=true
+[real 2026-11-06] start: dev total +0.197 avg +0.266 (drift +0.109), 7001 dev cells, 660 hidden
+[real 2026-10-30] idea 4: rejected | dev +0.235->+0.231 | hidden not run (failed development) | class:neocloud_rate_card momentum_window=14
+[placebo4 2026-11-06] idea 4: rejected | dev +0.233->+0.156 | hidden not run (failed development) | horizon:1 floor_down=0.086
+[placebo5 2026-10-30] idea 8: rejected | dev +0.200->+0.200 | hidden not run (failed development) | class:marketplace_ask center=engine
+[placebo2 2026-10-30] idea 4: rejected | dev +0.252->+0.247 | hidden not run (failed development) | class:marketplace_ask width_scale=1.25
+[placebo1 2026-10-23] idea 7: rejected | dev +0.217->+0.218 | hidden not run (failed development) | class:neocloud_rate_card floor_up=0.005
+[placebo3 2026-10-23] idea 7: rejected | dev +0.242->+0.242 | hidden not run (failed development) | all min_scenarios=3
+[placebo5 2026-10-23] idea 6: rejected | dev +0.220->+0.217 | hidden not run (failed development) | class:neocloud_rate_card floor_down=0.01
+[placebo1 2026-11-06] idea 4: rejected | dev +0.190->+0.190 | hidden not run (failed development) | horizon:1 active_share=0.139
+[placebo4 2026-10-23] idea 8: rejected | dev +0.242->+0.242 | hidden not run (no change) | no change
+[placebo3 2026-11-06] idea 2: rejected | dev +0.214->+0.123 | hidden not run (failed development) | horizon:3 peer_pull=0.534
+[real 2026-11-06] idea 1: rejected | dev +0.197->+0.200 | hidden FAIL | all halflife_days=110.943
+[placebo4 2026-11-06] idea 5: rejected | dev +0.233->+0.204 | hidden not run (failed development) | class:neocloud_spot floor_down=0.075; class:neocloud_rate_card blend_drift=0.154
+[placebo1 2026-10-23] idea 8: rejected | dev +0.217->+0.217 | hidden not run (no change) | no change
+[placebo5 2026-11-06] start: dev total +0.194 avg +0.256 (drift +0.107), 7001 dev cells, 660 hidden
+[placebo2 2026-10-30] idea 5: rejected | dev +0.252->+0.250 | hidden not run (failed development) | class:hyperscaler_spot halflife_days=21
+[placebo1 2026-11-06] idea 5: rejected | dev +0.190->+0.184 | hidden not run (failed development) | class:neocloud_spot momentum=0.418
+[placebo4 2026-10-30] start: dev total +0.241 avg +0.257 (drift +0.114), 6341 dev cells, 660 hidden
+[placebo3 2026-11-06] idea 3: rejected | dev +0.214->+0.214 | hidden not run (failed development) | horizon:3 center=engine
+[real 2026-10-30] idea 5: rejected | dev +0.235->+0.235 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false
+[real 2026-11-06] idea 2: rejected | dev +0.197->+0.197 | hidden not run (failed development) | class:neocloud_spot center=engine
+[placebo4 2026-11-06] idea 6: rejected | dev +0.233->+0.233 | hidden not run (failed development) | horizon:3 active_share=0.958
+[placebo1 2026-10-30] start: dev total +0.216 avg +0.272 (drift +0.099), 6341 dev cells, 660 hidden
+[placebo3 2026-10-23] idea 8: rejected | dev +0.242->+0.242 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false
+[placebo1 2026-11-06] idea 6: rejected | dev +0.190->+0.186 | hidden not run (failed development) | horizon:1 replay_entries=false
+[placebo5 2026-11-06] idea 1: rejected | dev +0.194->+0.139 | hidden not run (failed development) | class:neocloud_spot peer_pull=0.753
+[placebo3 2026-11-06] idea 4: rejected | dev +0.214->+0.212 | hidden not run (failed development) | all halflife_days=54.983; class:marketplace_ask halflife_days=27.090
+[placebo4 2026-11-06] idea 7: rejected | dev +0.233->+0.137 | hidden not run (failed development) | horizon:3 width_scale=2.671; horizon:7 peer_pull=0.575
+[placebo5 2026-10-23] idea 7: rejected | dev +0.220->+0.185 | hidden not run (failed development) | horizon:7 min_scenarios=20
+[real 2026-11-06] idea 3: rejected | dev +0.197->+0.197 | hidden not run (failed development) | class:marketplace_ask replay_entries=true; horizon:1 replay_exits=true
+[placebo2 2026-10-30] idea 6: rejected | dev +0.252->+0.212 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=20
+[real 2026-10-30] idea 6: KEPT | dev +0.235->+0.237 | hidden PASS | class:neocloud_rate_card replay_exits=false
+[placebo1 2026-11-06] idea 7: rejected | dev +0.190->+0.190 | hidden not run (failed development) | class:neocloud_spot active_share=0.781; class:neocloud_spot floor_down=0.003
+[placebo3 2026-10-30] start: dev total +0.240 avg +0.236 (drift +0.125), 6341 dev cells, 660 hidden
+[placebo4 2026-10-30] idea 1: rejected | dev +0.241->+0.202 | hidden not run (failed development) | horizon:7 min_scenarios=20
+[placebo4 2026-11-06] idea 8: rejected | dev +0.233->+0.224 | hidden not run (failed development) | class:hyperscaler_spot blend_drift=0.458
+[placebo3 2026-11-06] idea 5: rejected | dev +0.214->+0.208 | hidden not run (failed development) | class:marketplace_ask min_scenarios=40
+[placebo5 2026-11-06] idea 2: rejected | dev +0.194->+0.194 | hidden not run (failed development) | class:neocloud_spot momentum_window=23
+[real 2026-11-06] idea 4: rejected | dev +0.197->+0.141 | hidden not run (failed development) | horizon:1 halflife_days=37.967; all floor_down=0.057
+[placebo1 2026-10-30] idea 1: rejected | dev +0.216->+0.217 | hidden not run (failed development) | class:marketplace_ask blend_drift=0.25
+[placebo1 2026-11-06] idea 8: rejected | dev +0.190->+0.185 | hidden not run (failed development) | class:marketplace_ask width_scale=1.716; class:marketplace_ask peer_window=10
+[placebo2 2026-10-30] idea 7: KEPT | dev +0.252->+0.260 | hidden PASS | class:neocloud_rate_card min_scenarios=5
+[placebo5 2026-10-23] idea 8: rejected | dev +0.220->+0.231 | hidden FAIL | horizon:7 min_scenarios=5
+[real 2026-10-30] idea 7: rejected | dev +0.237->+0.237 | hidden not run (failed development) | class:marketplace_ask floor_up=0.005
+[placebo3 2026-11-06] idea 6: rejected | dev +0.214->+0.210 | hidden not run (failed development) | all momentum=0.074
+[placebo4 2026-10-30] idea 2: rejected | dev +0.241->+0.245 | hidden FAIL | horizon:7 min_scenarios=5
+[placebo5 2026-11-06] idea 3: rejected | dev +0.194->+0.053 | hidden not run (failed development) | horizon:1 peer_pull=0.522; horizon:7 halflife_days=15.677
+[placebo3 2026-10-30] idea 1: rejected | dev +0.240->+0.232 | hidden not run (failed development) | class:hyperscaler_spot replay_exits=false
+[real 2026-11-06] idea 5: rejected | dev +0.197->+0.197 | hidden not run (failed development) | all active_share=0.835
+[placebo2 2026-10-30] idea 8: KEPT | dev +0.260->+0.261 | hidden PASS | class:hyperscaler_spot min_scenarios=5
+[placebo1 2026-10-30] idea 2: rejected | dev +0.216->+0.216 | hidden not run (failed development) | class:marketplace_ask replay_exits=false
+[placebo5 2026-10-30] start: dev total +0.217 avg +0.271 (drift +0.110), 6341 dev cells, 660 hidden
+[placebo3 2026-11-06] idea 7: rejected | dev +0.214->+0.214 | hidden not run (failed development) | horizon:1 momentum_window=20
+[real 2026-11-06] idea 6: rejected | dev +0.197->+0.194 | hidden not run (failed development) | horizon:1 momentum=0.786; all peer_window=1
+[placebo5 2026-11-06] idea 4: rejected | dev +0.194->+0.175 | hidden not run (failed development) | horizon:7 blend_drift=0.616
+[real 2026-10-30] idea 8: rejected | dev +0.237->+0.237 | hidden not run (failed development) | class:neocloud_spot momentum=0.5; class:neocloud_spot active_share=0.6
+[placebo2 2026-11-06] start: dev total +0.243 avg +0.284 (drift +0.133), 7001 dev cells, 660 hidden
+[placebo4 2026-10-30] idea 3: rejected | dev +0.241->+0.243 | hidden not run (failed development) | class:hyperscaler_spot center=last
+[placebo3 2026-10-30] idea 2: rejected | dev +0.240->+0.242 | hidden not run (failed development) | horizon:7 floor_down=0.015
+[placebo3 2026-11-06] idea 8: rejected | dev +0.214->+0.212 | hidden not run (failed development) | class:marketplace_ask peer_window=1; class:marketplace_ask lookback_days=48
+[real 2026-11-06] idea 7: rejected | dev +0.197->+0.197 | hidden not run (failed development) | class:neocloud_spot replay_exits=false
+[placebo5 2026-11-06] idea 5: rejected | dev +0.194->+0.189 | hidden not run (failed development) | horizon:7 floor_up=0.093
+[real 2026-11-06] start: dev total +0.225 avg +0.287 (drift +0.109), 7001 dev cells, 660 hidden
+[placebo1 2026-10-30] idea 3: rejected | dev +0.216->+0.215 | hidden not run (failed development) | class:neocloud_spot momentum=0.25
+[placebo5 2026-10-30] idea 1: rejected | dev +0.217->+0.213 | hidden not run (failed development) | class:neocloud_rate_card blend_drift=0.25
+[real 2026-11-06] idea 8: rejected | dev +0.197->+0.194 | hidden not run (failed development) | class:marketplace_ask min_scenarios=29
+[placebo5 2026-11-06] idea 6: rejected | dev +0.194->+0.194 | hidden not run (failed development) | all momentum_window=14
+[placebo3 2026-10-30] idea 3: rejected | dev +0.240->+0.239 | hidden not run (failed development) | all blend_drift=0.15
+[placebo2 2026-11-06] idea 1: rejected | dev +0.243->+0.242 | hidden not run (failed development) | class:hyperscaler_spot min_scenarios=3
+[placebo4 2026-10-30] idea 4: rejected | dev +0.241->+0.229 | hidden not run (failed development) | class:hyperscaler_spot replay_exits=false
+[placebo1 2026-10-30] idea 4: rejected | dev +0.216->+0.215 | hidden not run (failed development) | horizon:3 width_scale=1.2
+[real 2026-11-06] idea 1: rejected | dev +0.225->+0.210 | hidden not run (failed development) | horizon:7 width_scale=2.0
+[placebo5 2026-10-30] idea 2: rejected | dev +0.217->+0.215 | hidden not run (failed development) | class:hyperscaler_spot width_scale=1.2
+[placebo5 2026-11-06] idea 7: rejected | dev +0.194->+0.188 | hidden not run (failed development) | class:hyperscaler_spot floor_up=0.053
+[placebo3 2026-10-30] idea 4: rejected | dev +0.240->+0.240 | hidden not run (failed development) | class:marketplace_ask replay_entries=false
+[placebo2 2026-11-06] idea 2: rejected | dev +0.243->+0.236 | hidden not run (failed development) | class:neocloud_rate_card blend_drift=0.25
+[placebo4 2026-10-30] idea 5: rejected | dev +0.241->+0.239 | hidden not run (failed development) | class:marketplace_ask momentum=0.25
+[placebo5 2026-11-06] idea 8: rejected | dev +0.194->+0.195 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=242
+[placebo1 2026-10-30] idea 5: rejected | dev +0.216->+0.170 | hidden not run (failed development) | horizon:7 min_scenarios=20
+[placebo5 2026-10-30] idea 3: rejected | dev +0.217->+0.222 | hidden not run (failed development) | horizon:7 floor_up=0.03
+[real 2026-11-06] idea 2: rejected | dev +0.225->+0.226 | hidden not run (failed development) | class:marketplace_ask halflife_days=21
+[placebo3 2026-10-30] idea 5: rejected | dev +0.240->+0.240 | hidden not run (failed development) | class:hyperscaler_spot blend_drift=0.2
+[placebo2 2026-11-06] idea 3: rejected | dev +0.243->+0.243 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=3
+[placebo4 2026-10-30] idea 6: KEPT | dev +0.241->+0.243 | hidden PASS | horizon:1 floor_up=0.0
+[placebo1 2026-10-30] idea 6: rejected | dev +0.216->+0.220 | hidden FAIL | horizon:7 min_scenarios=5
+[placebo5 2026-10-30] idea 4: rejected | dev +0.217->+0.216 | hidden not run (failed development) | class:hyperscaler_spot center=last
+[real 2026-11-06] idea 3: rejected | dev +0.225->+0.228 | hidden FAIL | class:neocloud_rate_card momentum_window=3
+[placebo1 2026-10-30] idea 7: rejected | dev +0.216->+0.216 | hidden not run (no change) | no change
+[placebo1 2026-10-30] idea 8: rejected | dev +0.216->+0.216 | hidden not run (no change) | no change
+[placebo3 2026-10-30] idea 6: rejected | dev +0.240->+0.240 | hidden not run (failed development) | class:marketplace_ask center=last
+[placebo2 2026-11-06] idea 4: rejected | dev +0.243->+0.233 | hidden not run (failed development) | class:hyperscaler_spot replay_exits=false
+[placebo5 2026-10-30] idea 5: rejected | dev +0.217->+0.217 | hidden not run (failed development) | class:hyperscaler_spot momentum=0.25
+[placebo4 2026-10-30] idea 7: rejected | dev +0.243->+0.231 | hidden not run (failed development) | class:hyperscaler_spot lookback_days=120
+[real 2026-11-06] idea 4: rejected | dev +0.225->+0.225 | hidden not run (failed development) | class:marketplace_ask replay_exits=false
+[placebo1 2026-11-06] start: dev total +0.209 avg +0.268 (drift +0.089), 7001 dev cells, 660 hidden
+[placebo4 2026-10-30] idea 8: rejected | dev +0.243->+0.243 | hidden not run (no change) | no change
+[placebo4 2026-11-06] start: dev total +0.239 avg +0.273 (drift +0.107), 7001 dev cells, 660 hidden
+[placebo3 2026-10-30] idea 7: rejected | dev +0.240->+0.243 | hidden not run (failed development) | horizon:7 floor_up=0.015
+[placebo3 2026-10-30] idea 8: rejected | dev +0.240->+0.240 | hidden not run (no change) | no change
+[real 2026-11-06] idea 5: rejected | dev +0.225->+0.215 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=20
+[placebo5 2026-10-30] idea 6: rejected | dev +0.217->+0.211 | hidden not run (failed development) | class:hyperscaler_spot replay_exits=false
+[placebo2 2026-11-06] idea 5: rejected | dev +0.243->+0.242 | hidden not run (failed development) | class:neocloud_rate_card width_scale=0.85
+[placebo3 2026-11-06] start: dev total +0.229 avg +0.267 (drift +0.110), 7001 dev cells, 660 hidden
+[placebo1 2026-11-06] idea 1: rejected | dev +0.209->+0.208 | hidden not run (failed development) | class:neocloud_rate_card blend_drift=0.15
+[placebo4 2026-11-06] idea 1: KEPT | dev +0.239->+0.241 | hidden PASS | class:marketplace_ask width_scale=1.3
+[real 2026-11-06] idea 6: rejected | dev +0.225->+0.226 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=5
+[placebo5 2026-10-30] idea 7: rejected | dev +0.217->+0.217 | hidden not run (failed development) | class:marketplace_ask floor_up=0.01
+[placebo4 2026-11-06] idea 2: rejected | dev +0.241->+0.240 | hidden not run (failed development) | class:hyperscaler_spot width_scale=1.2
+[placebo2 2026-11-06] idea 6: rejected | dev +0.243->+0.243 | hidden not run (failed development) | class:marketplace_ask replay_exits=false
+[placebo3 2026-11-06] idea 1: rejected | dev +0.229->+0.228 | hidden not run (failed development) | class:hyperscaler_spot momentum=0.25
+[placebo5 2026-10-30] idea 8: rejected | dev +0.217->+0.217 | hidden not run (no change) | no change
+[placebo1 2026-11-06] idea 2: rejected | dev +0.209->+0.210 | hidden not run (failed development) | class:neocloud_rate_card floor_down=0.005
+[placebo4 2026-11-06] idea 3: rejected | dev +0.241->+0.243 | hidden FAIL | class:neocloud_spot floor_up=0.01
+[real 2026-11-06] idea 7: rejected | dev +0.225->+0.225 | hidden not run (failed development) | class:neocloud_rate_card active_share=0.8
+[placebo5 2026-11-06] start: dev total +0.209 avg +0.268 (drift +0.107), 7001 dev cells, 660 hidden
+[placebo2 2026-11-06] idea 7: rejected | dev +0.243->+0.244 | hidden not run (failed development) | class:neocloud_spot min_scenarios=5
+[real 2026-11-06] idea 8: rejected | dev +0.225->+0.225 | hidden not run (no change) | no change
+[placebo3 2026-11-06] idea 2: KEPT | dev +0.229->+0.232 | hidden PASS | class:hyperscaler_spot center=last
+[placebo4 2026-11-06] idea 4: rejected | dev +0.241->+0.240 | hidden not run (failed development) | class:neocloud_rate_card width_scale=1.2
+[placebo2 2026-11-06] idea 8: rejected | dev +0.243->+0.243 | hidden not run (no change) | no change
+[placebo1 2026-11-06] idea 3: rejected | dev +0.209->+0.206 | hidden not run (failed development) | class:marketplace_ask halflife_days=14
+[placebo5 2026-11-06] idea 1: rejected | dev +0.209->+0.208 | hidden not run (failed development) | class:marketplace_ask replay_entries=false
+[placebo4 2026-11-06] idea 5: rejected | dev +0.241->+0.240 | hidden not run (failed development) | class:neocloud_spot momentum=0.25
+[placebo3 2026-11-06] idea 3: rejected | dev +0.232->+0.230 | hidden not run (failed development) | horizon:7 width_scale=0.85
+[placebo1 2026-11-06] idea 4: rejected | dev +0.209->+0.209 | hidden not run (failed development) | horizon:7 width_scale=0.8
+[placebo5 2026-11-06] idea 2: rejected | dev +0.209->+0.209 | hidden not run (failed development) | class:marketplace_ask halflife_days=14
+[placebo4 2026-11-06] idea 6: rejected | dev +0.241->+0.237 | hidden not run (failed development) | class:hyperscaler_spot width_scale=0.85
+[placebo3 2026-11-06] idea 4: rejected | dev +0.232->+0.230 | hidden not run (failed development) | class:hyperscaler_spot width_scale=1.2
+[placebo5 2026-11-06] idea 3: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo1 2026-11-06] idea 5: rejected | dev +0.209->+0.208 | hidden not run (failed development) | class:neocloud_rate_card floor_down=0.01
+[placebo5 2026-11-06] idea 4: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo4 2026-11-06] idea 7: rejected | dev +0.241->+0.240 | hidden not run (failed development) | class:marketplace_ask replay_entries=false
+[placebo3 2026-11-06] idea 5: rejected | dev +0.232->+0.231 | hidden not run (failed development) | class:marketplace_ask halflife_days=14
+[placebo5 2026-11-06] idea 5: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo4 2026-11-06] idea 8: rejected | dev +0.241->+0.241 | hidden not run (no change) | no change
+[placebo1 2026-11-06] idea 6: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo5 2026-11-06] idea 6: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo5 2026-11-06] idea 7: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo1 2026-11-06] idea 7: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo3 2026-11-06] idea 6: rejected | dev +0.232->+0.230 | hidden not run (failed development) | class:hyperscaler_spot width_scale=0.85
+[placebo5 2026-11-06] idea 8: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo1 2026-11-06] idea 8: rejected | dev +0.209->+0.209 | hidden not run (no change) | no change
+[placebo3 2026-11-06] idea 7: rejected | dev +0.232->+0.232 | hidden not run (no change) | no change
+[placebo3 2026-11-06] idea 8: rejected | dev +0.232->+0.232 | hidden not run (no change) | no change
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/mahiuchun/main/ap-t8SQKOk4PB75OwdyxscF6v
+[
+ {
+  "world": "real",
+  "arm": "gpt",
+  "minutes": 9.1,
+  "kept": 7,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 159417,
+   "output_tokens": 11684
+  }
+ },
+ {
+  "world": "real",
+  "arm": "random",
+  "minutes": 6.7,
+  "kept": 1,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 0,
+   "output_tokens": 0
+  }
+ },
+ {
+  "world": "placebo1",
+  "arm": "gpt",
+  "minutes": 10.6,
+  "kept": 2,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 159285,
+   "output_tokens": 11660
+  }
+ },
+ {
+  "world": "placebo1",
+  "arm": "random",
+  "minutes": 6.0,
+  "kept": 1,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 0,
+   "output_tokens": 0
+  }
+ },
+ {
+  "world": "placebo2",
+  "arm": "gpt",
+  "minutes": 9.3,
+  "kept": 6,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 159886,
+   "output_tokens": 10761
+  }
+ },
+ {
+  "world": "placebo2",
+  "arm": "random",
+  "minutes": 5.0,
+  "kept": 1,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 0,
+   "output_tokens": 0
+  }
+ },
+ {
+  "world": "placebo3",
+  "arm": "gpt",
+  "minutes": 10.8,
+  "kept": 3,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 158226,
+   "output_tokens": 11710
+  }
+ },
+ {
+  "world": "placebo3",
+  "arm": "random",
+  "minutes": 6.5,
+  "kept": 1,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 0,
+   "output_tokens": 0
+  }
+ },
+ {
+  "world": "placebo4",
+  "arm": "gpt",
+  "minutes": 10.2,
+  "kept": 3,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 158642,
+   "output_tokens": 11871
+  }
+ },
+ {
+  "world": "placebo4",
+  "arm": "random",
+  "minutes": 5.9,
+  "kept": 0,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 0,
+   "output_tokens": 0
+  }
+ },
+ {
+  "world": "placebo5",
+  "arm": "gpt",
+  "minutes": 10.6,
+  "kept": 1,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 157256,
+   "output_tokens": 10579
+  }
+ },
+ {
+  "world": "placebo5",
+  "arm": "random",
+  "minutes": 7.2,
+  "kept": 0,
+  "ideas": 32,
+  "usage": {
+   "calls": 32,
+   "input_tokens": 0,
+   "output_tokens": 0
+  }
+ }
+]
+done: runs/record/exam_all.csv
+exit code 0

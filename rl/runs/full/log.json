@@ -1,0 +1,1152 @@
+{
+ "args": {
+  "name": "full",
+  "trial": false,
+  "rounds": 31,
+  "trial_rounds": 3,
+  "worlds_per_round": 8,
+  "samples": 8,
+  "lr": 4e-05,
+  "temperature": 1.0,
+  "reward_scale": 0.01,
+  "seed": 0,
+  "workers": 24
+ },
+ "base_model": "Qwen/Qwen3-8B",
+ "rounds": [
+  {
+   "mean_reward": -0.346,
+   "median_reward": -0.0008,
+   "share_helpful": 0.203,
+   "share_harmful": 0.5,
+   "readable": 1.0,
+   "no_change": 0.016,
+   "distinct_share": 0.453,
+   "top_answer_share": 0.234,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     15
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     11
+    ],
+    [
+     "class:neocloud_rate_card replay_entries=false; class:neocloud_rate_card replay_exits=false",
+     6
+    ],
+    [
+     "all lookback_days=90",
+     3
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.552,
+    "real": -0.003
+   },
+   "round": 0,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 6.9
+  },
+  {
+   "mean_reward": -0.5198,
+   "median_reward": 0.0,
+   "share_helpful": 0.156,
+   "share_harmful": 0.391,
+   "readable": 1.0,
+   "no_change": 0.016,
+   "distinct_share": 0.484,
+   "top_answer_share": 0.375,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     24
+    ],
+    [
+     "all replay_exits=false",
+     3
+    ],
+    [
+     "all lookback_days=90",
+     3
+    ],
+    [
+     "class:neocloud_rate_card replay_entries=false; class:neocloud_rate_card replay_exits=false",
+     2
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.795,
+    "real": 0.307
+   },
+   "round": 1,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.2
+  },
+  {
+   "mean_reward": -0.3725,
+   "median_reward": 0.0,
+   "share_helpful": 0.328,
+   "share_harmful": 0.391,
+   "readable": 1.0,
+   "no_change": 0.031,
+   "distinct_share": 0.516,
+   "top_answer_share": 0.172,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     11
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     9
+    ],
+    [
+     "all replay_exits=false",
+     5
+    ],
+    [
+     "all momentum=0.5",
+     4
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.807,
+    "real": 0.062
+   },
+   "round": 2,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.0
+  },
+  {
+   "mean_reward": -0.0095,
+   "median_reward": 0.0,
+   "share_helpful": 0.219,
+   "share_harmful": 0.359,
+   "readable": 1.0,
+   "no_change": 0.109,
+   "distinct_share": 0.375,
+   "top_answer_share": 0.25,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     16
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     7
+    ],
+    [
+     "no change",
+     7
+    ],
+    [
+     "all lookback_days=90",
+     6
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.358,
+    "real": 0.339
+   },
+   "round": 3,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.0
+  },
+  {
+   "mean_reward": 0.1047,
+   "median_reward": 0.0,
+   "share_helpful": 0.234,
+   "share_harmful": 0.391,
+   "readable": 1.0,
+   "no_change": 0.125,
+   "distinct_share": 0.344,
+   "top_answer_share": 0.203,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     13
+    ],
+    [
+     "all lookback_days=90",
+     9
+    ],
+    [
+     "no change",
+     8
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     6
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.301,
+    "real": 0.51
+   },
+   "round": 4,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.0
+  },
+  {
+   "mean_reward": 0.2132,
+   "median_reward": 0.0,
+   "share_helpful": 0.328,
+   "share_harmful": 0.422,
+   "readable": 1.0,
+   "no_change": 0.078,
+   "distinct_share": 0.344,
+   "top_answer_share": 0.297,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     19
+    ],
+    [
+     "all replay_entries=true; all replay_exits=true",
+     9
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     7
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     5
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.448,
+    "real": 0.875
+   },
+   "round": 5,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.1
+  },
+  {
+   "mean_reward": 0.4113,
+   "median_reward": 0.0405,
+   "share_helpful": 0.5,
+   "share_harmful": 0.344,
+   "readable": 1.0,
+   "no_change": 0.125,
+   "distinct_share": 0.25,
+   "top_answer_share": 0.5,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     32
+    ],
+    [
+     "no change",
+     8
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     7
+    ],
+    [
+     "all lookback_days=90",
+     4
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.15,
+    "real": 0.972
+   },
+   "round": 6,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 6.7
+  },
+  {
+   "mean_reward": 0.9531,
+   "median_reward": 0.5401,
+   "share_helpful": 0.562,
+   "share_harmful": 0.203,
+   "readable": 1.0,
+   "no_change": 0.219,
+   "distinct_share": 0.188,
+   "top_answer_share": 0.516,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     33
+    ],
+    [
+     "no change",
+     14
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     4
+    ],
+    [
+     "class:hyperscaler_spot lookback_days=30",
+     3
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.111,
+    "real": 1.592
+   },
+   "round": 7,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 6.8
+  },
+  {
+   "mean_reward": 1.0643,
+   "median_reward": 0.6754,
+   "share_helpful": 0.562,
+   "share_harmful": 0.344,
+   "readable": 1.0,
+   "no_change": 0.094,
+   "distinct_share": 0.172,
+   "top_answer_share": 0.562,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     36
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     9
+    ],
+    [
+     "no change",
+     6
+    ],
+    [
+     "all lookback_days=90",
+     5
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.563,
+    "real": 2.692
+   },
+   "round": 8,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 6.2
+  },
+  {
+   "mean_reward": 0.9759,
+   "median_reward": 1.3626,
+   "share_helpful": 0.625,
+   "share_harmful": 0.297,
+   "readable": 1.0,
+   "no_change": 0.078,
+   "distinct_share": 0.141,
+   "top_answer_share": 0.688,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     44
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     7
+    ],
+    [
+     "no change",
+     5
+    ],
+    [
+     "class:neocloud_rate_card halflife_days=7; class:neocloud_rate_card lookback_days=30",
+     3
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.596,
+    "real": 2.548
+   },
+   "round": 9,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 3.6
+  },
+  {
+   "mean_reward": 1.5781,
+   "median_reward": 0.9203,
+   "share_helpful": 0.672,
+   "share_harmful": 0.203,
+   "readable": 1.0,
+   "no_change": 0.109,
+   "distinct_share": 0.094,
+   "top_answer_share": 0.766,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     49
+    ],
+    [
+     "no change",
+     7
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     4
+    ],
+    [
+     "class:neocloud_rate_card halflife_days=7; class:neocloud_rate_card lookback_days=30",
+     2
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.235,
+    "real": 2.921
+   },
+   "round": 10,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.8
+  },
+  {
+   "mean_reward": 1.4255,
+   "median_reward": 0.9203,
+   "share_helpful": 0.672,
+   "share_harmful": 0.234,
+   "readable": 1.0,
+   "no_change": 0.094,
+   "distinct_share": 0.109,
+   "top_answer_share": 0.703,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     45
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     7
+    ],
+    [
+     "no change",
+     6
+    ],
+    [
+     "horizon:1 lookback_days=30; horizon:3 lookback_days=45; horizon:7 lookback_days=60",
+     3
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.328,
+    "real": 2.523
+   },
+   "round": 11,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 3.7
+  },
+  {
+   "mean_reward": 1.0398,
+   "median_reward": -0.3724,
+   "share_helpful": 0.359,
+   "share_harmful": 0.562,
+   "readable": 1.0,
+   "no_change": 0.078,
+   "distinct_share": 0.078,
+   "top_answer_share": 0.672,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     43
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     12
+    ],
+    [
+     "no change",
+     5
+    ],
+    [
+     "class:neocloud_spot lookback_days=30",
+     3
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.708,
+    "real": 3.952
+   },
+   "round": 12,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.8
+  },
+  {
+   "mean_reward": 1.1066,
+   "median_reward": 0.7849,
+   "share_helpful": 0.594,
+   "share_harmful": 0.328,
+   "readable": 1.0,
+   "no_change": 0.078,
+   "distinct_share": 0.062,
+   "top_answer_share": 0.703,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     45
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     13
+    ],
+    [
+     "no change",
+     5
+    ],
+    [
+     "all lookback_days=90",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.664,
+    "real": 2.169
+   },
+   "round": 13,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.0
+  },
+  {
+   "mean_reward": 1.6464,
+   "median_reward": 1.0766,
+   "share_helpful": 0.75,
+   "share_harmful": 0.219,
+   "readable": 1.0,
+   "no_change": 0.031,
+   "distinct_share": 0.062,
+   "top_answer_share": 0.812,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     52
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     9
+    ],
+    [
+     "no change",
+     2
+    ],
+    [
+     "class:neocloud_rate_card halflife_days=7.0; class:neocloud_rate_card lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.029,
+    "real": 2.651
+   },
+   "round": 14,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.0
+  },
+  {
+   "mean_reward": 0.9843,
+   "median_reward": 0.8748,
+   "share_helpful": 0.547,
+   "share_harmful": 0.203,
+   "readable": 1.0,
+   "no_change": 0.25,
+   "distinct_share": 0.062,
+   "top_answer_share": 0.594,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     38
+    ],
+    [
+     "no change",
+     16
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     9
+    ],
+    [
+     "class:marketplace_ask lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.373,
+    "real": 2.342
+   },
+   "round": 15,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.2
+  },
+  {
+   "mean_reward": 1.4197,
+   "median_reward": 0.0,
+   "share_helpful": 0.469,
+   "share_harmful": 0.234,
+   "readable": 1.0,
+   "no_change": 0.297,
+   "distinct_share": 0.062,
+   "top_answer_share": 0.5,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     32
+    ],
+    [
+     "no change",
+     19
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     12
+    ],
+    [
+     "class:neocloud_rate_card halflife_days=7.0; class:neocloud_rate_card lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.411,
+    "real": 3.251
+   },
+   "round": 16,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 3.7
+  },
+  {
+   "mean_reward": -0.129,
+   "median_reward": 0.0,
+   "share_helpful": 0.141,
+   "share_harmful": 0.406,
+   "readable": 1.0,
+   "no_change": 0.453,
+   "distinct_share": 0.078,
+   "top_answer_share": 0.453,
+   "top_answers": [
+    [
+     "no change",
+     29
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     17
+    ],
+    [
+     "all lookback_days=30",
+     16
+    ],
+    [
+     "horizon:1 lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.301,
+    "real": 1.076
+   },
+   "round": 17,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.1
+  },
+  {
+   "mean_reward": 0.6291,
+   "median_reward": 0.0,
+   "share_helpful": 0.422,
+   "share_harmful": 0.25,
+   "readable": 1.0,
+   "no_change": 0.328,
+   "distinct_share": 0.078,
+   "top_answer_share": 0.469,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     30
+    ],
+    [
+     "no change",
+     21
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     10
+    ],
+    [
+     "class:neocloud_spot lookback_days=30",
+     2
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.19,
+    "real": 1.361
+   },
+   "round": 18,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.1
+  },
+  {
+   "mean_reward": 0.9994,
+   "median_reward": 0.4601,
+   "share_helpful": 0.5,
+   "share_harmful": 0.234,
+   "readable": 1.0,
+   "no_change": 0.25,
+   "distinct_share": 0.078,
+   "top_answer_share": 0.5,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     32
+    ],
+    [
+     "no change",
+     16
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     14
+    ],
+    [
+     "class:hyperscaler_spot lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.4,
+    "real": 2.398
+   },
+   "round": 19,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.2
+  },
+  {
+   "mean_reward": 1.1008,
+   "median_reward": 0.0,
+   "share_helpful": 0.406,
+   "share_harmful": 0.016,
+   "readable": 1.0,
+   "no_change": 0.578,
+   "distinct_share": 0.062,
+   "top_answer_share": 0.578,
+   "top_answers": [
+    [
+     "no change",
+     37
+    ],
+    [
+     "all lookback_days=30",
+     25
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     1
+    ],
+    [
+     "class:neocloud_rate_card halflife_days=7.0; class:neocloud_rate_card lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.02,
+    "real": 2.222
+   },
+   "round": 20,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 3.6
+  },
+  {
+   "mean_reward": 0.3526,
+   "median_reward": 0.0,
+   "share_helpful": 0.281,
+   "share_harmful": 0.062,
+   "readable": 1.0,
+   "no_change": 0.656,
+   "distinct_share": 0.062,
+   "top_answer_share": 0.656,
+   "top_answers": [
+    [
+     "no change",
+     42
+    ],
+    [
+     "all lookback_days=30",
+     17
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     4
+    ],
+    [
+     "class:neocloud_rate_card halflife_days=7.0; class:neocloud_rate_card lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.084,
+    "real": 1.158
+   },
+   "round": 21,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 3.7
+  },
+  {
+   "mean_reward": 1.3681,
+   "median_reward": 0.6496,
+   "share_helpful": 0.531,
+   "share_harmful": 0.016,
+   "readable": 1.0,
+   "no_change": 0.453,
+   "distinct_share": 0.047,
+   "top_answer_share": 0.516,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     33
+    ],
+    [
+     "no change",
+     29
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     2
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.038,
+    "real": 2.212
+   },
+   "round": 22,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.0
+  },
+  {
+   "mean_reward": 0.4958,
+   "median_reward": 0.0,
+   "share_helpful": 0.438,
+   "share_harmful": 0.188,
+   "readable": 1.0,
+   "no_change": 0.375,
+   "distinct_share": 0.047,
+   "top_answer_share": 0.562,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     36
+    ],
+    [
+     "no change",
+     24
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     4
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.43,
+    "real": 0.694
+   },
+   "round": 23,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.0
+  },
+  {
+   "mean_reward": 0.5904,
+   "median_reward": 0.0,
+   "share_helpful": 0.422,
+   "share_harmful": 0.219,
+   "readable": 1.0,
+   "no_change": 0.359,
+   "distinct_share": 0.047,
+   "top_answer_share": 0.625,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     40
+    ],
+    [
+     "no change",
+     23
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.369,
+    "real": 2.19
+   },
+   "round": 24,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 3.9
+  },
+  {
+   "mean_reward": 0.9893,
+   "median_reward": 0.8748,
+   "share_helpful": 0.672,
+   "share_harmful": 0.203,
+   "readable": 1.0,
+   "no_change": 0.125,
+   "distinct_share": 0.047,
+   "top_answer_share": 0.859,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     55
+    ],
+    [
+     "no change",
+     8
+    ],
+    [
+     "class:neocloud_spot lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.417,
+    "real": 1.561
+   },
+   "round": 25,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 3.7
+  },
+  {
+   "mean_reward": 0.7311,
+   "median_reward": 0.4601,
+   "share_helpful": 0.5,
+   "share_harmful": 0.359,
+   "readable": 1.0,
+   "no_change": 0.141,
+   "distinct_share": 0.031,
+   "top_answer_share": 0.859,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     55
+    ],
+    [
+     "no change",
+     9
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.369,
+    "real": 2.565
+   },
+   "round": 26,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 3.7
+  },
+  {
+   "mean_reward": 1.9372,
+   "median_reward": 1.7348,
+   "share_helpful": 0.859,
+   "share_harmful": 0.109,
+   "readable": 1.0,
+   "no_change": 0.031,
+   "distinct_share": 0.031,
+   "top_answer_share": 0.969,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     62
+    ],
+    [
+     "no change",
+     2
+    ]
+   ],
+   "by_kind": {
+    "placebo": 1.032,
+    "real": 2.843
+   },
+   "round": 27,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.1
+  },
+  {
+   "mean_reward": 0.6719,
+   "median_reward": 0.0,
+   "share_helpful": 0.438,
+   "share_harmful": 0.234,
+   "readable": 1.0,
+   "no_change": 0.328,
+   "distinct_share": 0.047,
+   "top_answer_share": 0.641,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     41
+    ],
+    [
+     "no change",
+     21
+    ],
+    [
+     "class:neocloud_rate_card lookback_days=30",
+     2
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.008,
+    "real": 2.711
+   },
+   "round": 28,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.2
+  },
+  {
+   "mean_reward": 0.3122,
+   "median_reward": 0.0,
+   "share_helpful": 0.312,
+   "share_harmful": 0.156,
+   "readable": 1.0,
+   "no_change": 0.531,
+   "distinct_share": 0.031,
+   "top_answer_share": 0.531,
+   "top_answers": [
+    [
+     "no change",
+     34
+    ],
+    [
+     "all lookback_days=30",
+     30
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.115,
+    "real": 1.695
+   },
+   "round": 29,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.5
+  },
+  {
+   "mean_reward": 1.6483,
+   "median_reward": 0.9203,
+   "share_helpful": 0.719,
+   "share_harmful": 0.031,
+   "readable": 1.0,
+   "no_change": 0.25,
+   "distinct_share": 0.031,
+   "top_answer_share": 0.75,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     48
+    ],
+    [
+     "no change",
+     16
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.685,
+    "real": 2.226
+   },
+   "round": 30,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.3
+  }
+ ],
+ "checkpoint": "tinker://0b23a888-1fb4-5a85-b230-831bbf4f1832:train:0/sampler_weights/full-final",
+ "control": {
+  "base": {
+   "mean_reward": -0.4529,
+   "median_reward": 0.0,
+   "share_helpful": 0.195,
+   "share_harmful": 0.477,
+   "readable": 1.0,
+   "no_change": 0.008,
+   "distinct_share": 0.414,
+   "top_answer_share": 0.211,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     27
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     14
+    ],
+    [
+     "all replay_exits=false",
+     8
+    ],
+    [
+     "class:neocloud_rate_card replay_entries=false; class:neocloud_rate_card replay_exits=false",
+     7
+    ]
+   ],
+   "by_kind": {
+    "placebo": -0.944,
+    "real": 0.178
+   }
+  },
+  "trained": {
+   "mean_reward": 1.2912,
+   "median_reward": 0.6496,
+   "share_helpful": 0.547,
+   "share_harmful": 0.039,
+   "readable": 1.0,
+   "no_change": 0.414,
+   "distinct_share": 0.023,
+   "top_answer_share": 0.578,
+   "top_answers": [
+    [
+     "all lookback_days=30",
+     74
+    ],
+    [
+     "no change",
+     53
+    ],
+    [
+     "class:neocloud_spot lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "placebo": 0.34,
+    "real": 2.514
+   }
+  }
+ },
+ "usage": {
+  "prefill_tokens": 783919,
+  "sample_tokens": 151594,
+  "train_tokens": 4186790
+ },
+ "cost_estimate_usd": 2.086008205,
+ "minutes": 7.0
+}

@@ -12,3 +12,9 @@
 __pycache__/
 *.pyc
 runs/_cache/
+
+# Regenerable outputs
+longview/out/aws_series.csv
+rl/.venv/
+rl/__pycache__/
+.claude/

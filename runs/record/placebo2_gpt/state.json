@@ -1,0 +1,2268 @@
+{
+ "spec": {
+  "lookback_days": 60,
+  "halflife_days": 0.0,
+  "replay_exits": true,
+  "replay_entries": true,
+  "momentum": 0.0,
+  "momentum_window": 7,
+  "active_share": 0.3,
+  "blend_drift": 0.0,
+  "width_scale": 1.0,
+  "center": "engine",
+  "min_scenarios": 10,
+  "floor_up": 0.0,
+  "floor_down": 0.0,
+  "peer_pull": 0.0,
+  "peer_window": 3,
+  "by_class": {
+   "marketplace_ask": {
+    "center": "last"
+   },
+   "neocloud_rate_card": {
+    "min_scenarios": 5
+   },
+   "hyperscaler_spot": {
+    "min_scenarios": 5
+   }
+  },
+  "by_horizon": {
+   "7": {
+    "floor_up": 0.02,
+    "floor_down": 0.01
+   },
+   "3": {
+    "floor_up": 0.005,
+    "floor_down": 0.005
+   }
+  }
+ },
+ "fallback": [],
+ "ledger": [
+  {
+   "n": 1,
+   "world": "placebo2",
+   "wall": "2026-10-16",
+   "idea": 1,
+   "proposer": "gpt",
+   "hypothesis": "Seven-day forecasts understate the size of median price moves, making their ranges too narrow, especially for neocloud rate cards.",
+   "test": "Increase only the seven-day range width by 50%, leaving middle forecasts unchanged. The hypothesis is weakened if seven-day error does not fall or wider ranges reduce per-series average skill.",
+   "prediction": "Total skill should rise modestly, with the largest improvement in seven-day neocloud rate cards, which account for 30% of current error and cover only 51% of outcomes.",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "width_scale",
+     "value": "1.5"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.22663995855498031,
+    "after_total": 0.2126731974183237,
+    "before_avg": 0.2249541987516814,
+    "after_avg": 0.2198965164129076,
+    "before_loss": 0.015288099943596013,
+    "after_loss": 0.015564200632411753,
+    "inside_after": 0.7304277643260694
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Widening seven-day ranges increased coverage but worsened both skill measures. Missing direction, rather than range width alone, may explain the errors.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.013390554223573017,
+   "_hidden_loss_after": 0.01365065139504584
+  },
+  {
+   "n": 2,
+   "world": "placebo2",
+   "wall": "2026-10-16",
+   "idea": 2,
+   "proposer": "gpt",
+   "hypothesis": "Frequently repriced neocloud rate-card offers continue their recent direction, and ignoring that trend causes errors when those offers move the list median.",
+   "test": "Apply half-strength momentum only to neocloud rate cards, leaving the active-offer threshold and other settings unchanged. Lower total skill or lower per-series average skill would count against this hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through three- and seven-day neocloud rate-card forecasts, which together account for 47% of current error.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "momentum",
+     "value": "0.5"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.22663995855498031,
+    "after_total": 0.2082382405813189,
+    "before_avg": 0.2249541987516814,
+    "after_avg": 0.19110785301552188,
+    "before_loss": 0.015288099943596013,
+    "after_loss": 0.015651872686482424,
+    "inside_after": 0.6656577885391445
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Carrying recent offer trends forward worsened both skill measures. Wider seven-day ranges also failed, so neither stronger trends nor wider ranges alone explain the misses.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.013390554223573017,
+   "_hidden_loss_after": 0.014193354803224152
+  },
+  {
+   "n": 3,
+   "world": "placebo2",
+   "wall": "2026-10-16",
+   "idea": 3,
+   "proposer": "gpt",
+   "hypothesis": "Older replay pairs misrepresent current offer turnover and repricing patterns in neocloud rate cards, where much of the forecast error is concentrated.",
+   "test": "Give recent rate-card replay pairs more weight without adding momentum or widening ranges. Lower total error with no decline in per-series skill would support the hypothesis; unchanged or worse error would count against it.",
+   "prediction": "Total skill will improve modestly, mainly through three- and seven-day neocloud rate-card forecasts.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "halflife_days",
+     "value": "21"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.22663995855498031,
+    "after_total": 0.21888105037228434,
+    "before_avg": 0.2249541987516814,
+    "after_avg": 0.21848671915482581,
+    "before_loss": 0.015288099943596013,
+    "after_loss": 0.01544148123742211,
+    "inside_after": 0.7070217917675545
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Giving recent neocloud rate-card history more weight worsened both skill measures. Marketplace asks remain a large source of error, and the engine trails drift there at every horizon.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.013390554223573017,
+   "_hidden_loss_after": 0.013096583160278702
+  },
+  {
+   "n": 4,
+   "world": "placebo2",
+   "wall": "2026-10-16",
+   "idea": 4,
+   "proposer": "gpt",
+   "hypothesis": "Replaying individual offer changes adds noise to marketplace median forecasts, so blending with the median's own historical moves will reduce error.",
+   "test": "Give drift half the weight for marketplace asks, leaving everything else unchanged. Failure to reduce total error by at least 0.2% without lowering per-series average skill would count against this hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through marketplace asks at seven days, with per-series average skill holding steady or improving.",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "blend_drift",
+     "value": "0.5"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.22663995855498031,
+    "after_total": 0.23322561924117036,
+    "before_avg": 0.2249541987516814,
+    "after_avg": 0.22594883808934066,
+    "before_loss": 0.015288099943596013,
+    "after_loss": 0.015157911889689117,
+    "inside_after": 0.7048022598870056
+   },
+   "dev_ok": true,
+   "hidden": "FAIL",
+   "kept": false,
+   "lesson": "Blending marketplace forecasts with drift helped development scores but failed the recent-week check, so that gain was not reliable. Earlier tests also found no benefit from wider seven-day ranges, offer momentum, or favoring recent rate-card history.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.013390554223573017,
+   "_hidden_loss_after": 0.013426379093096527
+  },
+  {
+   "n": 5,
+   "world": "placebo2",
+   "wall": "2026-10-16",
+   "idea": 5,
+   "proposer": "gpt",
+   "hypothesis": "For neocloud rate cards, historical offer changes push the forecast middle away from today's median too readily, while their main useful information is the possible size of future moves.",
+   "test": "Set only the neocloud rate-card forecast middle to the last observed median, retaining the replay-based ranges. Lower total error without lower per-series skill would support this explanation; worse scores would count against it.",
+   "prediction": "I expect a modest increase in total skill, mainly from three- and seven-day neocloud rate-card forecasts, which account for much of the error.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "center",
+     "value": "last"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.22663995855498031,
+    "after_total": 0.20268673739853815,
+    "before_avg": 0.2249541987516814,
+    "after_avg": 0.2015863664129601,
+    "before_loss": 0.015288099943596013,
+    "after_loss": 0.015761617088762326,
+    "inside_after": 0.7217514124293786
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Anchoring rate-card forecasts to today's median worsened both scores, so the replay's predicted direction contains useful information. The remaining errors may come from how particular list changes are replayed.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.013390554223573017,
+   "_hidden_loss_after": 0.013446703848007292
+  },
+  {
+   "n": 6,
+   "world": "placebo2",
+   "wall": "2026-10-16",
+   "idea": 6,
+   "proposer": "gpt",
+   "hypothesis": "Replaying joining offers at their last known prices introduces stale prices into neocloud rate-card scenarios and distorts their forecast medians.",
+   "test": "Disable entry replay only for neocloud rate cards, leaving exits and repricing unchanged; failure to reduce total error without lowering per-series average skill would count against the hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through three- and seven-day neocloud rate-card forecasts, with per-series average skill stable or higher.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "replay_entries",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.22663995855498031,
+    "after_total": 0.22663995855498031,
+    "before_avg": 0.2249541987516814,
+    "after_avg": 0.2249541987516814,
+    "before_loss": 0.015288099943596013,
+    "after_loss": 0.015288099943596013,
+    "inside_after": 0.7050040355125101
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Turning off replayed entries for neocloud rate cards did not improve either score. That test found no benefit from removing joins, but did not test departures.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.013390554223573017,
+   "_hidden_loss_after": 0.013390554223573017
+  },
+  {
+   "n": 7,
+   "world": "placebo2",
+   "wall": "2026-10-16",
+   "idea": 7,
+   "proposer": "gpt",
+   "hypothesis": "Historical offer departures transfer poorly to today's neocloud rate-card lists, creating misleading median shifts when different offers now sit near the middle.",
+   "test": "Disable replayed departures only for neocloud rate cards, leaving repricing and entries unchanged. No improvement in total error, or a decline in per-series average skill, would count against this explanation.",
+   "prediction": "I expect a small improvement in total skill, mainly in three- and seven-day rate-card forecasts, with per-series average skill roughly unchanged or slightly higher.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "replay_exits",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.22663995855498031,
+    "after_total": 0.22668835577104496,
+    "before_avg": 0.2249541987516814,
+    "after_avg": 0.22511652594836784,
+    "before_loss": 0.015288099943596013,
+    "after_loss": 0.015287143207487945,
+    "inside_after": 0.7029862792574657
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Removing replayed rate-card departures did not improve either score. Earlier failures tested an offer's own trend, but not whether price changes elsewhere for the same GPU lead this list.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.013390554223573017,
+   "_hidden_loss_after": 0.013389119605344843
+  },
+  {
+   "n": 8,
+   "world": "placebo2",
+   "wall": "2026-10-16",
+   "idea": 8,
+   "proposer": "gpt",
+   "hypothesis": "Neocloud rate-card lists partly lag price changes for the same GPU family elsewhere, so a small move toward peer prices will improve their forecasts.",
+   "test": "Set rate-card peer pull to 0.2, retaining the default three-day peer window and all replay settings. Failure to reduce total error by at least 0.2% without lowering per-series average skill, or failure on the recent-week check, would count against this lead-lag hypothesis.",
+   "prediction": "I expect a small increase in total skill, mainly from three- and seven-day neocloud rate-card forecasts, with per-series average skill stable or slightly higher.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "peer_pull",
+     "value": "0.2"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.22663995855498031,
+    "after_total": 0.18641257719395987,
+    "before_avg": 0.2249541987516814,
+    "after_avg": 0.17049652434522727,
+    "before_loss": 0.015288099943596013,
+    "after_loss": 0.01608333139306075,
+    "inside_after": 0.6174334140435835
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Pulling rate-card forecasts toward peer price moves sharply worsened both scores. Earlier tests also found that favoring recent rate-card history hurt, leaving a longer history untested.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.013390554223573017,
+   "_hidden_loss_after": 0.014917909373908316
+  },
+  {
+   "n": 9,
+   "world": "placebo2",
+   "wall": "2026-10-23",
+   "idea": 1,
+   "proposer": "gpt",
+   "hypothesis": "Neocloud rate-card repricing is infrequent enough that 60 days provides too few examples to forecast median moves reliably.",
+   "test": "Extend only the rate-card replay history to 120 days, leaving all other settings unchanged. No reduction in total error, or a decline in per-series average skill, would count against the hypothesis.",
+   "prediction": "Total skill should improve modestly, mainly through better three- and seven-day rate-card forecasts, where most error is concentrated.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "lookback_days",
+     "value": "120"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2249288059546527,
+    "after_total": 0.22523243465192133,
+    "before_avg": 0.25160708983614033,
+    "after_avg": 0.2521949893129442,
+    "before_loss": 0.015045938238435533,
+    "after_loss": 0.015040044097791914,
+    "inside_after": 0.7111424045062489
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Extending rate-card history to 120 days did not improve either score. Earlier range widening also failed, but it could not add uncertainty where replayed prices showed no movement.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.017262907874464342,
+   "_hidden_loss_after": 0.017147343422604135
+  },
+  {
+   "n": 10,
+   "world": "placebo2",
+   "wall": "2026-10-23",
+   "idea": 2,
+   "proposer": "gpt",
+   "hypothesis": "Seven-day forecasts miss occasional price steps because unchanged replay medians can leave the forecast range too close to its middle.",
+   "test": "Set a minimum seven-day range of 1% on each side of the middle. Unlike the failed width multiplier, this adds room even when replayed movement is zero; worse total error or lower per-series skill would count against the hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through fewer seven-day misses in neocloud rate cards, while per-series average skill will not decline.",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "floor_up",
+     "value": "0.01"
+    },
+    {
+     "scope": "horizon:7",
+     "dial": "floor_down",
+     "value": "0.01"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2249288059546527,
+    "after_total": 0.23677216759600872,
+    "before_avg": 0.25160708983614033,
+    "after_avg": 0.27368865514757096,
+    "before_loss": 0.015045938238435533,
+    "after_loss": 0.014816030987127115,
+    "inside_after": 0.7331455729625066
+   },
+   "dev_ok": true,
+   "hidden": "PASS",
+   "kept": true,
+   "lesson": "Adding a 1% minimum range on each side improved seven-day forecasts and passed the hidden check. This supports allowing for price steps when replayed medians show little movement, rather than widening every range.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.01,
+      "floor_down": 0.01
+     }
+    }
+   },
+   "_hidden_loss_before": 0.017262907874464342,
+   "_hidden_loss_after": 0.016902111923626284
+  },
+  {
+   "n": 11,
+   "world": "placebo2",
+   "wall": "2026-10-23",
+   "idea": 3,
+   "proposer": "gpt",
+   "hypothesis": "Three-day forecasts also miss occasional price steps because unchanged replay medians leave some ranges too close to their middle.",
+   "test": "Add a smaller, 0.5% minimum distance on each side at three days, leaving other horizons unchanged. Failure to reduce total error without lowering per-series average skill would count against extending this explanation to three-day forecasts.",
+   "prediction": "Total skill will improve modestly, mainly through three-day neocloud rate-card forecasts, with fewer truths outside the range.",
+   "changes": [
+    {
+     "scope": "horizon:3",
+     "dial": "floor_up",
+     "value": "0.005"
+    },
+    {
+     "scope": "horizon:3",
+     "dial": "floor_down",
+     "value": "0.005"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.23677216759600872,
+    "after_total": 0.2390683578793359,
+    "before_avg": 0.27368865514757096,
+    "after_avg": 0.2765553275288886,
+    "before_loss": 0.014816030987127115,
+    "after_loss": 0.014771456582282681,
+    "inside_after": 0.7431790177785601
+   },
+   "dev_ok": true,
+   "hidden": "PASS",
+   "kept": true,
+   "lesson": "Minimum ranges improved both three- and seven-day forecasts and passed the hidden checks. Seven-day forecasts still miss upward moves especially often in neocloud prices.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.01,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.016902111923626284,
+   "_hidden_loss_after": 0.016816177535403785
+  },
+  {
+   "n": 12,
+   "world": "placebo2",
+   "wall": "2026-10-23",
+   "idea": 4,
+   "proposer": "gpt",
+   "hypothesis": "A 1% minimum upward allowance is still too small for occasional seven-day price increases that historical replays do not capture.",
+   "test": "Raise only the seven-day upward floor to 2%, leaving the middle and downward allowance unchanged. No improvement in total error, or a decline in per-series average skill, would count against this hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through seven-day neocloud rate-card forecasts, with fewer outcomes above the high forecast.",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "floor_up",
+     "value": "0.02"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2390683578793359,
+    "after_total": 0.24474884406370867,
+    "before_avg": 0.2765553275288886,
+    "after_avg": 0.2804254036844467,
+    "before_loss": 0.014771456582282681,
+    "after_loss": 0.014661185106641493,
+    "inside_after": 0.7569089948952649
+   },
+   "dev_ok": true,
+   "hidden": "PASS",
+   "kept": true,
+   "lesson": "Raising the seven-day upward floor to 2% improved both skill measures and passed the hidden check. Seven-day forecasts still miss downward moves, especially for marketplace asks and neocloud prices.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.016816177535403785,
+   "_hidden_loss_after": 0.0167071194092566
+  },
+  {
+   "n": 13,
+   "world": "placebo2",
+   "wall": "2026-10-23",
+   "idea": 5,
+   "proposer": "gpt",
+   "hypothesis": "The seven-day 1% downward floor is too small to cover occasional price cuts that unchanged replay medians fail to represent.",
+   "test": "Raise only the seven-day downward floor to 2%, leaving the upward floor and other horizons unchanged. Failure to reduce total error without lowering per-series average skill would count against the hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through fewer costly seven-day downside misses in marketplace asks and neocloud rate cards.",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "floor_down",
+     "value": "0.02"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24474884406370867,
+    "after_total": 0.24600204389056168,
+    "before_avg": 0.2804254036844467,
+    "after_avg": 0.27584291520373516,
+    "before_loss": 0.014661185106641493,
+    "after_loss": 0.014636857577325333,
+    "inside_after": 0.768526667840169
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Increasing the seven-day downward floor slightly improved total skill but hurt average series skill, so it was rejected. Extra allowance should not be added equally in both directions; three-day forecasts still miss upward moves more often than downward moves.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.0167071194092566,
+   "_hidden_loss_after": 0.016619818060512572
+  },
+  {
+   "n": 14,
+   "world": "placebo2",
+   "wall": "2026-10-23",
+   "idea": 6,
+   "proposer": "gpt",
+   "hypothesis": "The three-day 0.5% upward floor is too small for occasional price increases that leave little trace in replayed median moves.",
+   "test": "Raise only the three-day upward floor to 1%, leaving the downward floor unchanged. No meaningful reduction in total error, or a decline in average series skill, would count against this hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through three-day neocloud rate-card forecasts, without reducing average series skill.",
+   "changes": [
+    {
+     "scope": "horizon:3",
+     "dial": "floor_up",
+     "value": "0.01"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24474884406370867,
+    "after_total": 0.24605907520520132,
+    "before_avg": 0.2804254036844467,
+    "after_avg": 0.28112185391496686,
+    "before_loss": 0.014661185106641493,
+    "after_loss": 0.014635750466592387,
+    "inside_after": 0.7625418060200669
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Increasing the three-day upward floor improved both scores, but not enough to meet the acceptance threshold. One-day minimum ranges remain untested, and those forecasts miss upward moves more often than downward moves.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.0167071194092566,
+   "_hidden_loss_after": 0.016748892249877745
+  },
+  {
+   "n": 15,
+   "world": "placebo2",
+   "wall": "2026-10-23",
+   "idea": 7,
+   "proposer": "gpt",
+   "hypothesis": "One-day forecasts understate occasional upward price steps when replayed medians show little or no movement.",
+   "test": "Add only a 0.5% minimum upward allowance at one day, leaving the middle and lower forecast unchanged. A total-error reduction below 0.2% or a decline in average series skill would count against this change.",
+   "prediction": "Total skill should improve slightly, mainly in one-day hyperscaler spot and neocloud rate-card forecasts, while average series skill should not fall.",
+   "changes": [
+    {
+     "scope": "horizon:1",
+     "dial": "floor_up",
+     "value": "0.005"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24474884406370867,
+    "after_total": 0.24384525427976822,
+    "before_avg": 0.2804254036844467,
+    "after_avg": 0.27781670499372146,
+    "before_loss": 0.014661185106641493,
+    "after_loss": 0.01467872589023208,
+    "inside_after": 0.7643020594965675
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Adding a one-day upward floor worsened both scores, so minimum ranges do not help at every horizon. The seven-day upward floor has helped twice, and seven-day forecasts still miss upward moves more often than intended.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.0167071194092566,
+   "_hidden_loss_after": 0.016808495837800128
+  },
+  {
+   "n": 16,
+   "world": "placebo2",
+   "wall": "2026-10-23",
+   "idea": 8,
+   "proposer": "gpt",
+   "hypothesis": "Some weekly upward price steps exceed the current 2% minimum allowance even when replayed medians show little movement.",
+   "test": "Raise only the seven-day upward floor from 2% to 3%, leaving downward allowances unchanged. No meaningful error reduction, a decline in average series skill, or a failed hidden check would count against this extension.",
+   "prediction": "I expect a small increase in total skill, mainly from seven-day neocloud rate-card forecasts, with little change to other horizons.",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "floor_up",
+     "value": "0.03"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24474884406370867,
+    "after_total": 0.24904563594007234,
+    "before_avg": 0.2804254036844467,
+    "after_avg": 0.2781635039300358,
+    "before_loss": 0.014661185106641493,
+    "after_loss": 0.014577774362322956,
+    "inside_after": 0.7665903890160183
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Raising the seven-day upward floor to 3% improved total skill but hurt average series skill. Marketplace asks remain a large error source, with seven-day outcomes falling below the forecast range much more often than above it.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.0167071194092566,
+   "_hidden_loss_after": 0.01659080024650325
+  },
+  {
+   "n": 17,
+   "world": "placebo2",
+   "wall": "2026-10-30",
+   "idea": 1,
+   "proposer": "gpt",
+   "hypothesis": "Replaying marketplace offers joining at stale, high prices pushes forecast medians upward and contributes to missed price declines.",
+   "test": "Disable replayed entries only for marketplace asks. The earlier entries test covered rate cards, not marketplaces; unchanged or worse marketplace error, especially at seven days, would count against this explanation.",
+   "prediction": "Total skill will improve modestly, mainly through lower three- and seven-day marketplace error, without reducing average series skill.",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "replay_entries",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24662055286438855,
+    "after_total": 0.24662055286438855,
+    "before_avg": 0.29676860634148583,
+    "after_avg": 0.29676860634148583,
+    "before_loss": 0.014874135215413923,
+    "after_loss": 0.014874135215413923,
+    "inside_after": 0.7598170635546444
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Removing marketplace entries changed neither score, so stale joining prices did not explain the errors. Marketplace forecasts still miss declines much more often than increases at seven days.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.025508413536646252,
+   "_hidden_loss_after": 0.02578443932547662
+  },
+  {
+   "n": 18,
+   "world": "placebo2",
+   "wall": "2026-10-30",
+   "idea": 2,
+   "proposer": "gpt",
+   "hypothesis": "The replay pushes marketplace forecast middles upward too readily, making today's median a better central forecast for this class.",
+   "test": "Set only marketplace centering to the last observed median. Unlike the earlier failed drift blend, this retains replay-based uncertainty; worse marketplace loss or lower average series skill would count against the hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through three- and seven-day marketplace forecasts, without reducing average series skill.",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "center",
+     "value": "last"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24662055286438855,
+    "after_total": 0.25160562632583516,
+    "before_avg": 0.29676860634148583,
+    "after_avg": 0.29761906921884745,
+    "before_loss": 0.014874135215413923,
+    "after_loss": 0.014775713819653468,
+    "inside_after": 0.7598170635546444
+   },
+   "dev_ok": true,
+   "hidden": "PASS",
+   "kept": true,
+   "lesson": "Anchoring marketplace forecasts to today's median improved both scores and passed the hidden check, supporting the view that replayed changes were shifting the middle too readily. Marketplace ranges still miss declines disproportionately at seven days.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.025508413536646252,
+   "_hidden_loss_after": 0.025508413536646252
+  },
+  {
+   "n": 19,
+   "world": "placebo2",
+   "wall": "2026-10-30",
+   "idea": 3,
+   "proposer": "gpt",
+   "hypothesis": "Recent marketplace offer changes better represent current price-cut risk than older changes, even when today's median remains the forecast middle.",
+   "test": "Give marketplace replay pairs a 21-day half-life while retaining the last-value middle. Unlike the failed recency test on provider rate cards, this targets marketplace range estimates; unchanged or worse scores would argue against the hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through lower marketplace error at three and seven days, without reducing average series skill.",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "halflife_days",
+     "value": "21"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.25160562632583516,
+    "after_total": 0.2514767325049224,
+    "before_avg": 0.29761906921884745,
+    "after_avg": 0.29759707969138005,
+    "before_loss": 0.014775713819653468,
+    "after_loss": 0.014778258598553364,
+    "inside_after": 0.75808232140041
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Giving recent marketplace history more weight did not improve forecasts. Anchoring its middle to today's price helped, but marketplace ranges still miss too many declines.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.025508413536646252,
+   "_hidden_loss_after": 0.025318590827654617
+  },
+  {
+   "n": 20,
+   "world": "placebo2",
+   "wall": "2026-10-30",
+   "idea": 4,
+   "proposer": "gpt",
+   "hypothesis": "Marketplace replay ranges understate the size of price moves around today's median, particularly downward moves over seven days.",
+   "test": "Increase only marketplace range width by 25%, keeping the middle fixed. Unlike the earlier failed widening across all seven-day forecasts, this tests one class after its middle was corrected; worse total error or lower average series skill would count against it.",
+   "prediction": "Total skill will improve modestly, mainly through fewer costly marketplace downside misses at three and seven days, with average series skill roughly unchanged or slightly higher.",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "width_scale",
+     "value": "1.25"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.25160562632583516,
+    "after_total": 0.24702497369046794,
+    "before_avg": 0.29761906921884745,
+    "after_avg": 0.2968376012925276,
+    "before_loss": 0.014775713819653468,
+    "after_loss": 0.01486615064658356,
+    "inside_after": 0.7615518057088787
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Widening marketplace ranges worsened both scores, so their missed declines do not justify broader ranges overall. Recent-history weighting failed for marketplace asks and rate cards, but has not been tested for hyperscaler spot prices.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.025508413536646252,
+   "_hidden_loss_after": 0.025418154633068936
+  },
+  {
+   "n": 21,
+   "world": "placebo2",
+   "wall": "2026-10-30",
+   "idea": 5,
+   "proposer": "gpt",
+   "hypothesis": "Hyperscaler spot repricing patterns change quickly enough that equally weighting older replay pairs makes forecasts less accurate.",
+   "test": "Give hyperscaler spot replay pairs a 21-day half-life while leaving other classes unchanged; unchanged or higher error would count against the hypothesis.",
+   "prediction": "Total skill should improve modestly, with gains concentrated in hyperscaler spot forecasts at three and seven days and no decline in average series skill.",
+   "changes": [
+    {
+     "scope": "class:hyperscaler_spot",
+     "dial": "halflife_days",
+     "value": "21"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.25160562632583516,
+    "after_total": 0.24977657911043694,
+    "before_avg": 0.29761906921884745,
+    "after_avg": 0.29582177031873463,
+    "before_loss": 0.014775713819653468,
+    "after_loss": 0.01481182509890411,
+    "inside_after": 0.7546128370919414
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Giving recent hyperscaler spot history more weight worsened both scores. The engine still adds little over drift for some expensive rate-card series, and requiring more replay examples has not been tested.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.025508413536646252,
+   "_hidden_loss_after": 0.02551499435949323
+  },
+  {
+   "n": 22,
+   "world": "placebo2",
+   "wall": "2026-10-30",
+   "idea": 6,
+   "proposer": "gpt",
+   "hypothesis": "Rate-card forecasts based on too few replay pairs are unreliable, so falling back to drift for those forecasts will reduce error.",
+   "test": "Raise the minimum replay count only for neocloud rate cards, from 10 to 20. The hypothesis is not supported if total error fails to fall by 0.2% or average series skill declines.",
+   "prediction": "Total skill will improve modestly, mainly for seven-day rate-card forecasts with limited history, while forecasts with at least 20 replay pairs remain unchanged.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "min_scenarios",
+     "value": "20"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.25160562632583516,
+    "after_total": 0.2122165948239515,
+    "before_avg": 0.29761906921884745,
+    "after_avg": 0.24094101974651375,
+    "before_loss": 0.014775713819653468,
+    "after_loss": 0.01555338008436344,
+    "inside_after": 0.7257530357987699
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Requiring more replay pairs for rate cards sharply worsened both scores. This suggests that even limited offer-level history can be more useful than falling back to drift.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.025508413536646252,
+   "_hidden_loss_after": 0.025508413536646252
+  },
+  {
+   "n": 23,
+   "world": "placebo2",
+   "wall": "2026-10-30",
+   "idea": 7,
+   "proposer": "gpt",
+   "hypothesis": "Rate-card forecasts with five to nine usable replay pairs still contain useful information about today's list, so falling back to drift discards valuable information.",
+   "test": "Lower the rate-card fallback threshold from ten pairs to five, the opposite of the previous test. The hypothesis is weakened if using these additional replay forecasts fails to reduce total error or lowers average series skill.",
+   "prediction": "A modest increase in total skill, mainly in seven-day rate-card forecasts where fallback is most common, without a decrease in average series skill.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "min_scenarios",
+     "value": "5"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.25160562632583516,
+    "after_total": 0.2596531972063103,
+    "before_avg": 0.29761906921884745,
+    "after_avg": 0.3071238481237871,
+    "before_loss": 0.014775713819653468,
+    "after_loss": 0.014616828867473097,
+    "inside_after": 0.7632865478631131
+   },
+   "dev_ok": true,
+   "hidden": "PASS",
+   "kept": true,
+   "lesson": "Using rate-card replays with five to nine usable pairs improved both skill measures and passed the hidden check. Limited offer-level history can be more useful than falling back to drift.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.025508413536646252,
+   "_hidden_loss_after": 0.025508413536646252
+  },
+  {
+   "n": 24,
+   "world": "placebo2",
+   "wall": "2026-10-30",
+   "idea": 8,
+   "proposer": "gpt",
+   "hypothesis": "Hyperscaler spot forecasts also discard useful information about today's offer list when five to nine replay pairs are available.",
+   "test": "Lower the minimum replay count only for hyperscaler spot prices from ten to five. The hypothesis would be weakened if the newly enabled forecasts fail to reduce error or lower average series skill.",
+   "prediction": "I expect a small improvement in total skill, concentrated in seven-day hyperscaler spot forecasts, where fallback is most frequent, with average series skill holding steady or improving.",
+   "changes": [
+    {
+     "scope": "class:hyperscaler_spot",
+     "dial": "min_scenarios",
+     "value": "5"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.2596531972063103,
+    "after_total": 0.26140756848251534,
+    "before_avg": 0.3071238481237871,
+    "after_avg": 0.3096960036437766,
+    "before_loss": 0.014616828867473097,
+    "after_loss": 0.014582191931624203,
+    "inside_after": 0.7650212900173474
+   },
+   "dev_ok": true,
+   "hidden": "PASS",
+   "kept": true,
+   "lesson": "Using hyperscaler spot replays with five to nine usable pairs improved both scores and passed the hidden check. Some hyperscaler forecasts still fall back to drift, especially at seven days.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.025508413536646252,
+   "_hidden_loss_after": 0.025508413536646252
+  },
+  {
+   "n": 25,
+   "world": "placebo2",
+   "wall": "2026-11-06",
+   "idea": 1,
+   "proposer": "gpt",
+   "hypothesis": "Even three or four replay pairs can capture useful information about today's hyperscaler offer list that is lost when the engine falls back to drift.",
+   "test": "Lower the hyperscaler minimum from five replay pairs to three, leaving everything else unchanged. Worse total error or lower per-series average skill would count against trusting these smaller samples.",
+   "prediction": "Total skill will improve modestly, mainly in seven-day hyperscaler spot forecasts, without reducing per-series average skill.",
+   "changes": [
+    {
+     "scope": "class:hyperscaler_spot",
+     "dial": "min_scenarios",
+     "value": "3"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24263827777597613,
+    "after_total": 0.24242863649942115,
+    "before_avg": 0.28406045701300064,
+    "after_avg": 0.28396514804019635,
+    "before_loss": 0.015612231391603427,
+    "after_loss": 0.015616552930470214,
+    "inside_after": 0.7616054849307242
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Using hyperscaler replays with only three or four pairs worsened total skill, so the five-pair minimum should stay. Rate cards account for most remaining error, and blending their forecasts with drift has not been tested.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.023364185871450758,
+   "_hidden_loss_after": 0.023364185871450758
+  },
+  {
+   "n": 26,
+   "world": "placebo2",
+   "wall": "2026-11-06",
+   "idea": 2,
+   "proposer": "gpt",
+   "hypothesis": "Some rate-card replays overstate how much today's list median will move, so a small contribution from the median's own historical moves will reduce those errors.",
+   "test": "Give drift a 25% weight for rate cards only. Unlike the earlier marketplace blend, this tests a class where the replay's predicted direction has proved useful; lower total skill or lower average series skill would count against the hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly in expensive rate-card series at three and seven days, without reducing average series skill.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "blend_drift",
+     "value": "0.25"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24263827777597613,
+    "after_total": 0.23619098045776177,
+    "before_avg": 0.28406045701300064,
+    "after_avg": 0.2744072967388799,
+    "before_loss": 0.015612231391603427,
+    "after_loss": 0.01574513578144616,
+    "inside_after": 0.7583202399657192
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Blending rate-card forecasts with drift worsened both scores, reinforcing the value of replaying today's offer list. Lowering the replay minimum from five to three failed for hyperscaler spot, but has not been tested for rate cards.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.023364185871450758,
+   "_hidden_loss_after": 0.02328894304473767
+  },
+  {
+   "n": 27,
+   "world": "placebo2",
+   "wall": "2026-11-06",
+   "idea": 3,
+   "proposer": "gpt",
+   "hypothesis": "Because rate-card offers reprice infrequently, even three or four replay pairs can contain more useful information than falling back to drift.",
+   "test": "Lower only the rate-card replay minimum from five pairs to three. This tests whether the earlier benefit from using fewer rate-card pairs extends further; higher error or lower average series skill would count against it.",
+   "prediction": "Total skill will improve modestly, mainly on seven-day rate-card forecasts that currently fall back to drift, without reducing average series skill.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "min_scenarios",
+     "value": "3"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24263827777597613,
+    "after_total": 0.24263827777597613,
+    "before_avg": 0.28406045701300064,
+    "after_avg": 0.28406045701300064,
+    "before_loss": 0.015612231391603427,
+    "after_loss": 0.015612231391603427,
+    "inside_after": 0.762033995143551
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Lowering the rate-card replay minimum to three changed neither score, so the five-pair minimum should stay. Removing departures has been tested for rate cards, but not for hyperscaler spot lists.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.023364185871450758,
+   "_hidden_loss_after": 0.023364185871450758
+  },
+  {
+   "n": 28,
+   "world": "placebo2",
+   "wall": "2026-11-06",
+   "idea": 4,
+   "proposer": "gpt",
+   "hypothesis": "Some hyperscaler spot offers disappear only temporarily, so replaying historical departures creates median shifts that do not reliably recur.",
+   "test": "Disable departure replay only for hyperscaler spot, leaving repricing and entries unchanged. Unchanged or higher error would count against the hypothesis.",
+   "prediction": "Total skill should improve modestly, mainly in three- and seven-day hyperscaler spot forecasts, without reducing average series skill.",
+   "changes": [
+    {
+     "scope": "class:hyperscaler_spot",
+     "dial": "replay_exits",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24263827777597613,
+    "after_total": 0.23308297482990714,
+    "before_avg": 0.28406045701300064,
+    "after_avg": 0.2789233869151948,
+    "before_loss": 0.015612231391603427,
+    "after_loss": 0.015809204114456157,
+    "inside_after": 0.7470361376946151
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Removing hyperscaler departures worsened both scores, so replaying those list changes is useful. Earlier widening tests also hurt, showing that missed coverage alone does not establish that ranges should be broader.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.023364185871450758,
+   "_hidden_loss_after": 0.023473733606044333
+  },
+  {
+   "n": 29,
+   "world": "placebo2",
+   "wall": "2026-11-06",
+   "idea": 5,
+   "proposer": "gpt",
+   "hypothesis": "Rate-card replay ranges sometimes reflect unusually large historical moves, making their tails too costly even though they still miss some price steps.",
+   "test": "Shrink only rate-card ranges by 15%, leaving their middle forecasts and the existing horizon floors unchanged. Lower coverage accompanied by higher error, or a decline in average series skill, would count against the hypothesis.",
+   "prediction": "Total skill will improve slightly, mainly in three- and seven-day rate-card forecasts, while average series skill stays level or improves.",
+   "changes": [
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "width_scale",
+     "value": "0.85"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24263827777597613,
+    "after_total": 0.2421597844951805,
+    "before_avg": 0.28406045701300064,
+    "after_avg": 0.28324713332882917,
+    "before_loss": 0.015612231391603427,
+    "after_loss": 0.015622095037467615,
+    "inside_after": 0.7247536066276247
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Shrinking rate-card ranges worsened both scores, so their current width should stay. Removing departures hurt hyperscaler forecasts, but marketplace departures have not been tested.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.023364185871450758,
+   "_hidden_loss_after": 0.02342071020340237
+  },
+  {
+   "n": 30,
+   "world": "placebo2",
+   "wall": "2026-11-06",
+   "idea": 6,
+   "proposer": "gpt",
+   "hypothesis": "Marketplace offer departures mainly reflect temporary seller availability, so replaying them on today's list adds misleading price-move scenarios.",
+   "test": "Disable replayed departures only for marketplace asks, keeping their middle anchored to today's price. No reduction in total error, or a decline in average series skill, would count against the hypothesis.",
+   "prediction": "Total skill will improve modestly, mainly through marketplace asks at three and seven days, without lowering average series skill.",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "replay_exits",
+     "value": "false"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24263827777597613,
+    "after_total": 0.24263827777597613,
+    "before_avg": 0.28406045701300064,
+    "after_avg": 0.28406045701300064,
+    "before_loss": 0.015612231391603427,
+    "after_loss": 0.015612231391603427,
+    "inside_after": 0.762033995143551
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Removing marketplace departures changed neither score. Earlier tests showed that five to nine replay pairs were useful for rate cards and hyperscaler spot, although reducing the minimum further did not help.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.023364185871450758,
+   "_hidden_loss_after": 0.02336452325862105
+  },
+  {
+   "n": 31,
+   "world": "placebo2",
+   "wall": "2026-11-06",
+   "idea": 7,
+   "proposer": "gpt",
+   "hypothesis": "Neocloud spot forecasts also discard useful information about today's offer list when five to nine replay pairs are available.",
+   "test": "Lower only the neocloud spot replay minimum from ten pairs to five. No improvement in total error, or a decline in average series skill, would count against extending the earlier finding to this class.",
+   "prediction": "I expect a small increase in total skill, concentrated in seven-day neocloud spot forecasts, where some forecasts still fall back to drift despite the engine's strong overall advantage.",
+   "changes": [
+    {
+     "scope": "class:neocloud_spot",
+     "dial": "min_scenarios",
+     "value": "5"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.24263827777597613,
+    "after_total": 0.24390915990016815,
+    "before_avg": 0.28406045701300064,
+    "after_avg": 0.28765616483261314,
+    "before_loss": 0.015612231391603427,
+    "after_loss": 0.015586033466342466,
+    "inside_after": 0.7621768318811598
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "Lowering the neocloud spot replay minimum improved both scores, but not enough to qualify. Broader changes to range width, recent-history weighting, and rate-card direction have repeatedly failed.",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.023364185871450758,
+   "_hidden_loss_after": 0.023364185871450758
+  },
+  {
+   "n": 32,
+   "world": "placebo2",
+   "wall": "2026-11-06",
+   "idea": 8,
+   "proposer": "gpt",
+   "hypothesis": "The remaining errors are more likely to reflect series-specific price steps than a shared forecast setting that is consistently wrong.",
+   "test": "Make no further change: the diagnostics do not identify a sufficiently supported adjustment, and trying nearby values after repeated failures risks selecting a chance improvement.",
+   "prediction": "Total skill should remain at +0.243, with no change across classes or horizons.",
+   "changes": [],
+   "no_change": true,
+   "dev": {
+    "before_total": 0.24263827777597613,
+    "after_total": 0.24263827777597613,
+    "before_avg": 0.28406045701300064,
+    "after_avg": 0.28406045701300064,
+    "before_loss": 0.015612231391603427,
+    "after_loss": 0.015612231391603427,
+    "inside_after": 0.762033995143551
+   },
+   "dev_ok": false,
+   "hidden": "not run (no change)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "_hidden_loss_before": 0.023364185871450758,
+   "_hidden_loss_after": 0.023364185871450758
+  }
+ ],
+ "versions": [
+  {
+   "wall": "2026-10-16",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "fallback": [],
+   "switch_alt": [
+    "fastgpu_daily.hyperscaler_spot.A100_80GB.spot.median",
+    "fastgpu_daily.neocloud_rate_card.A100_80GB.on_demand.median",
+    "fastgpu_daily.neocloud_rate_card.B200.on_demand.median",
+    "fastgpu_daily.neocloud_rate_card.B300.on_demand.median",
+    "fastgpu_daily.neocloud_rate_card.H100_PCIe_80GB.on_demand.median",
+    "fastgpu_daily.neocloud_spot.A100_80GB.spot.median",
+    "fastgpu_daily.neocloud_spot.H100_SXM_80GB.spot.median",
+    "gpurentalprices.marketplace_ask.H100_80GB.spot.median"
+   ],
+   "dev": {
+    "skill_total": 0.22663995855498031,
+    "skill_avg_series": 0.2249541987516814,
+    "drift_skill_total": 0.14929210282397143,
+    "inside": 0.7050040355125101,
+    "n_cells": 4956
+   }
+  },
+  {
+   "wall": "2026-10-23",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {},
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "fallback": [],
+   "switch_alt": [
+    "fastgpu_daily.neocloud_rate_card.B300.on_demand.median",
+    "fastgpu_daily.neocloud_spot.A100_80GB.spot.median",
+    "gpurentalprices.marketplace_ask.H100_80GB.spot.median"
+   ],
+   "dev": {
+    "skill_total": 0.24474884406370867,
+    "skill_avg_series": 0.2804254036844467,
+    "drift_skill_total": 0.14060247941028015,
+    "inside": 0.7569089948952649,
+    "n_cells": 5681
+   }
+  },
+  {
+   "wall": "2026-10-30",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "fallback": [],
+   "switch_alt": [
+    "fastgpu_daily.hyperscaler_spot.A100_80GB.spot.median",
+    "fastgpu_daily.neocloud_rate_card.B300.on_demand.median",
+    "fastgpu_daily.neocloud_spot.A100_80GB.spot.median"
+   ],
+   "dev": {
+    "skill_total": 0.26140756848251534,
+    "skill_avg_series": 0.3096960036437766,
+    "drift_skill_total": 0.14294682171568518,
+    "inside": 0.7650212900173474,
+    "n_cells": 6341
+   }
+  },
+  {
+   "wall": "2026-11-06",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "floor_up": 0.0,
+    "floor_down": 0.0,
+    "peer_pull": 0.0,
+    "peer_window": 3,
+    "by_class": {
+     "marketplace_ask": {
+      "center": "last"
+     },
+     "neocloud_rate_card": {
+      "min_scenarios": 5
+     },
+     "hyperscaler_spot": {
+      "min_scenarios": 5
+     }
+    },
+    "by_horizon": {
+     "7": {
+      "floor_up": 0.02,
+      "floor_down": 0.01
+     },
+     "3": {
+      "floor_up": 0.005,
+      "floor_down": 0.005
+     }
+    }
+   },
+   "fallback": [],
+   "switch_alt": [
+    "fastgpu_daily.hyperscaler_spot.A100_80GB.spot.median",
+    "fastgpu_daily.neocloud_rate_card.B300.on_demand.median",
+    "gpurentalprices.marketplace_ask.H100_80GB.spot.median"
+   ],
+   "dev": {
+    "skill_total": 0.24263827777597613,
+    "skill_avg_series": 0.28406045701300064,
+    "drift_skill_total": 0.13281163621840053,
+    "inside": 0.762033995143551,
+    "n_cells": 7001
+   }
+  }
+ ],
+ "usage": {
+  "calls": 32,
+  "input_tokens": 159886,
+  "output_tokens": 10761
+ },
+ "logs": [
+  "[placebo2 2026-10-16] start: dev total +0.227 avg +0.225 (drift +0.149), 4956 dev cells, 725 hidden",
+  "[placebo2 2026-10-16] idea 1: rejected | dev +0.227->+0.213 | hidden not run (failed development) | horizon:7 width_scale=1.5",
+  "[placebo2 2026-10-16] idea 2: rejected | dev +0.227->+0.208 | hidden not run (failed development) | class:neocloud_rate_card momentum=0.5",
+  "[placebo2 2026-10-16] idea 3: rejected | dev +0.227->+0.219 | hidden not run (failed development) | class:neocloud_rate_card halflife_days=21",
+  "[placebo2 2026-10-16] idea 4: rejected | dev +0.227->+0.233 | hidden FAIL | class:marketplace_ask blend_drift=0.5",
+  "[placebo2 2026-10-16] idea 5: rejected | dev +0.227->+0.203 | hidden not run (failed development) | class:neocloud_rate_card center=last",
+  "[placebo2 2026-10-16] idea 6: rejected | dev +0.227->+0.227 | hidden not run (failed development) | class:neocloud_rate_card replay_entries=false",
+  "[placebo2 2026-10-16] idea 7: rejected | dev +0.227->+0.227 | hidden not run (failed development) | class:neocloud_rate_card replay_exits=false",
+  "[placebo2 2026-10-16] idea 8: rejected | dev +0.227->+0.186 | hidden not run (failed development) | class:neocloud_rate_card peer_pull=0.2",
+  "[placebo2 2026-10-23] start: dev total +0.225 avg +0.252 (drift +0.141), 5681 dev cells, 660 hidden",
+  "[placebo2 2026-10-23] idea 1: rejected | dev +0.225->+0.225 | hidden not run (failed development) | class:neocloud_rate_card lookback_days=120",
+  "[placebo2 2026-10-23] idea 2: KEPT | dev +0.225->+0.237 | hidden PASS | horizon:7 floor_up=0.01; horizon:7 floor_down=0.01",
+  "[placebo2 2026-10-23] idea 3: KEPT | dev +0.237->+0.239 | hidden PASS | horizon:3 floor_up=0.005; horizon:3 floor_down=0.005",
+  "[placebo2 2026-10-23] idea 4: KEPT | dev +0.239->+0.245 | hidden PASS | horizon:7 floor_up=0.02",
+  "[placebo2 2026-10-23] idea 5: rejected | dev +0.245->+0.246 | hidden not run (failed development) | horizon:7 floor_down=0.02",
+  "[placebo2 2026-10-23] idea 6: rejected | dev +0.245->+0.246 | hidden not run (failed development) | horizon:3 floor_up=0.01",
+  "[placebo2 2026-10-23] idea 7: rejected | dev +0.245->+0.244 | hidden not run (failed development) | horizon:1 floor_up=0.005",
+  "[placebo2 2026-10-23] idea 8: rejected | dev +0.245->+0.249 | hidden not run (failed development) | horizon:7 floor_up=0.03",
+  "[placebo2 2026-10-30] start: dev total +0.247 avg +0.297 (drift +0.143), 6341 dev cells, 660 hidden",
+  "[placebo2 2026-10-30] idea 1: rejected | dev +0.247->+0.247 | hidden not run (failed development) | class:marketplace_ask replay_entries=false",
+  "[placebo2 2026-10-30] idea 2: KEPT | dev +0.247->+0.252 | hidden PASS | class:marketplace_ask center=last",
+  "[placebo2 2026-10-30] idea 3: rejected | dev +0.252->+0.251 | hidden not run (failed development) | class:marketplace_ask halflife_days=21",
+  "[placebo2 2026-10-30] idea 4: rejected | dev +0.252->+0.247 | hidden not run (failed development) | class:marketplace_ask width_scale=1.25",
+  "[placebo2 2026-10-30] idea 5: rejected | dev +0.252->+0.250 | hidden not run (failed development) | class:hyperscaler_spot halflife_days=21",
+  "[placebo2 2026-10-30] idea 6: rejected | dev +0.252->+0.212 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=20",
+  "[placebo2 2026-10-30] idea 7: KEPT | dev +0.252->+0.260 | hidden PASS | class:neocloud_rate_card min_scenarios=5",
+  "[placebo2 2026-10-30] idea 8: KEPT | dev +0.260->+0.261 | hidden PASS | class:hyperscaler_spot min_scenarios=5",
+  "[placebo2 2026-11-06] start: dev total +0.243 avg +0.284 (drift +0.133), 7001 dev cells, 660 hidden",
+  "[placebo2 2026-11-06] idea 1: rejected | dev +0.243->+0.242 | hidden not run (failed development) | class:hyperscaler_spot min_scenarios=3",
+  "[placebo2 2026-11-06] idea 2: rejected | dev +0.243->+0.236 | hidden not run (failed development) | class:neocloud_rate_card blend_drift=0.25",
+  "[placebo2 2026-11-06] idea 3: rejected | dev +0.243->+0.243 | hidden not run (failed development) | class:neocloud_rate_card min_scenarios=3",
+  "[placebo2 2026-11-06] idea 4: rejected | dev +0.243->+0.233 | hidden not run (failed development) | class:hyperscaler_spot replay_exits=false",
+  "[placebo2 2026-11-06] idea 5: rejected | dev +0.243->+0.242 | hidden not run (failed development) | class:neocloud_rate_card width_scale=0.85",
+  "[placebo2 2026-11-06] idea 6: rejected | dev +0.243->+0.243 | hidden not run (failed development) | class:marketplace_ask replay_exits=false",
+  "[placebo2 2026-11-06] idea 7: rejected | dev +0.243->+0.244 | hidden not run (failed development) | class:neocloud_spot min_scenarios=5",
+  "[placebo2 2026-11-06] idea 8: rejected | dev +0.243->+0.243 | hidden not run (no change) | no change"
+ ]
+}

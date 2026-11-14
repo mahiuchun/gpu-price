@@ -1,0 +1,15 @@
+practice worlds: 1 (1 real cuts, 0 shuffled) built in 8s
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+round  0: mean reward -0.145% | helpful 0.44 harmful 0.19 | readable 1.00 | no change 0.02 | distinct 0.48 | top answer 0.25 | {'real': -0.145}
+round  1: mean reward +0.758% | helpful 0.39 harmful 0.08 | readable 1.00 | no change 0.06 | distinct 0.38 | top answer 0.39 | {'real': 0.758}
+round  2: mean reward +0.940% | helpful 0.52 harmful 0.06 | readable 1.00 | no change 0.03 | distinct 0.36 | top answer 0.34 | {'real': 0.94}
+round  3: mean reward +2.669% | helpful 0.77 harmful 0.08 | readable 1.00 | no change 0.05 | distinct 0.39 | top answer 0.25 | {'real': 2.669}
+round  4: mean reward +4.623% | helpful 0.98 harmful 0.02 | readable 1.00 | no change 0.00 | distinct 0.17 | top answer 0.78 | {'real': 4.623}
+round  5: mean reward +4.926% | helpful 1.00 harmful 0.00 | readable 1.00 | no change 0.00 | distinct 0.06 | top answer 0.91 | {'real': 4.926}
+round  6: mean reward +5.000% | helpful 1.00 harmful 0.00 | readable 1.00 | no change 0.00 | distinct 0.03 | top answer 0.98 | {'real': 5.0}
+round  7: mean reward +4.922% | helpful 0.98 harmful 0.00 | readable 1.00 | no change 0.00 | distinct 0.06 | top answer 0.95 | {'real': 4.922}
+control base   : mean reward +0.598% | helpful 0.39 | no change 0.03 | distinct 0.45 | {'real': 0.598}
+control trained: mean reward +5.000% | helpful 1.00 | no change 0.00 | distinct 0.05 | {'real': 5.0}
+checkpoint tinker://2b1d1fad-7e50-5512-aa77-e2244881375b:train:0/sampler_weights/trial8_lr1e-4-final
+usage {'prefill_tokens': 26390, 'sample_tokens': 44349, 'train_tokens': 1213633} cost about $0.5657539699999999
+wrote /home/hillma/git/gpu-price/rl/runs/trial8_lr1e-4/log.json

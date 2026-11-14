@@ -1,0 +1,32 @@
+{
+ "rl_idea": "all lookback_days=30",
+ "vs_v0": {
+  "n_cells": 1196,
+  "n_series": 37,
+  "n_days": 21,
+  "skill": 0.012634309546884048,
+  "lo90": -0.029819128445114338,
+  "hi90": 0.05842405371205843,
+  "excludes_zero": false
+ },
+ "vs_drift": {
+  "n_cells": 1196,
+  "n_series": 37,
+  "n_days": 21,
+  "skill": 0.0885801860476606,
+  "lo90": 0.02983864600631461,
+  "hi90": 0.15946810258275437,
+  "excludes_zero": true
+ },
+ "total_skill": {
+  "n_cells": 1196,
+  "n_series": 37,
+  "n_days": 21,
+  "skill": 0.14792466413472571,
+  "lo90": 0.0678667041969821,
+  "hi90": 0.2524164120600278,
+  "excludes_zero": true
+ },
+ "avg_series": 0.2983967053955029,
+ "inside": 0.7240802675585284
+}

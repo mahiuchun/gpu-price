@@ -1,0 +1,38 @@
+practice worlds: 16 (7 real cuts, 9 shuffled) built in 85s
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+round  0: mean reward -0.346% | helpful 0.20 harmful 0.50 | readable 1.00 | no change 0.02 | distinct 0.45 | top answer 0.23 | {'placebo': -0.552, 'real': -0.003}
+round  1: mean reward -0.520% | helpful 0.16 harmful 0.39 | readable 1.00 | no change 0.02 | distinct 0.48 | top answer 0.38 | {'placebo': -0.795, 'real': 0.307}
+round  2: mean reward -0.372% | helpful 0.33 harmful 0.39 | readable 1.00 | no change 0.03 | distinct 0.52 | top answer 0.17 | {'placebo': -0.807, 'real': 0.062}
+round  3: mean reward -0.009% | helpful 0.22 harmful 0.36 | readable 1.00 | no change 0.11 | distinct 0.38 | top answer 0.25 | {'placebo': -0.358, 'real': 0.339}
+round  4: mean reward +0.105% | helpful 0.23 harmful 0.39 | readable 1.00 | no change 0.12 | distinct 0.34 | top answer 0.20 | {'placebo': -0.301, 'real': 0.51}
+round  5: mean reward +0.213% | helpful 0.33 harmful 0.42 | readable 1.00 | no change 0.08 | distinct 0.34 | top answer 0.30 | {'placebo': -0.448, 'real': 0.875}
+round  6: mean reward +0.411% | helpful 0.50 harmful 0.34 | readable 1.00 | no change 0.12 | distinct 0.25 | top answer 0.50 | {'placebo': -0.15, 'real': 0.972}
+round  7: mean reward +0.953% | helpful 0.56 harmful 0.20 | readable 1.00 | no change 0.22 | distinct 0.19 | top answer 0.52 | {'placebo': -0.111, 'real': 1.592}
+round  8: mean reward +1.064% | helpful 0.56 harmful 0.34 | readable 1.00 | no change 0.09 | distinct 0.17 | top answer 0.56 | {'placebo': -0.563, 'real': 2.692}
+round  9: mean reward +0.976% | helpful 0.62 harmful 0.30 | readable 1.00 | no change 0.08 | distinct 0.14 | top answer 0.69 | {'placebo': -0.596, 'real': 2.548}
+round 10: mean reward +1.578% | helpful 0.67 harmful 0.20 | readable 1.00 | no change 0.11 | distinct 0.09 | top answer 0.77 | {'placebo': 0.235, 'real': 2.921}
+round 11: mean reward +1.425% | helpful 0.67 harmful 0.23 | readable 1.00 | no change 0.09 | distinct 0.11 | top answer 0.70 | {'placebo': 0.328, 'real': 2.523}
+round 12: mean reward +1.040% | helpful 0.36 harmful 0.56 | readable 1.00 | no change 0.08 | distinct 0.08 | top answer 0.67 | {'placebo': -0.708, 'real': 3.952}
+round 13: mean reward +1.107% | helpful 0.59 harmful 0.33 | readable 1.00 | no change 0.08 | distinct 0.06 | top answer 0.70 | {'placebo': -0.664, 'real': 2.169}
+round 14: mean reward +1.646% | helpful 0.75 harmful 0.22 | readable 1.00 | no change 0.03 | distinct 0.06 | top answer 0.81 | {'placebo': -0.029, 'real': 2.651}
+round 15: mean reward +0.984% | helpful 0.55 harmful 0.20 | readable 1.00 | no change 0.25 | distinct 0.06 | top answer 0.59 | {'placebo': -0.373, 'real': 2.342}
+round 16: mean reward +1.420% | helpful 0.47 harmful 0.23 | readable 1.00 | no change 0.30 | distinct 0.06 | top answer 0.50 | {'placebo': -0.411, 'real': 3.251}
+round 17: mean reward -0.129% | helpful 0.14 harmful 0.41 | readable 1.00 | no change 0.45 | distinct 0.08 | top answer 0.45 | {'placebo': -0.301, 'real': 1.076}
+round 18: mean reward +0.629% | helpful 0.42 harmful 0.25 | readable 1.00 | no change 0.33 | distinct 0.08 | top answer 0.47 | {'placebo': 0.19, 'real': 1.361}
+round 19: mean reward +0.999% | helpful 0.50 harmful 0.23 | readable 1.00 | no change 0.25 | distinct 0.08 | top answer 0.50 | {'placebo': -0.4, 'real': 2.398}
+round 20: mean reward +1.101% | helpful 0.41 harmful 0.02 | readable 1.00 | no change 0.58 | distinct 0.06 | top answer 0.58 | {'placebo': -0.02, 'real': 2.222}
+round 21: mean reward +0.353% | helpful 0.28 harmful 0.06 | readable 1.00 | no change 0.66 | distinct 0.06 | top answer 0.66 | {'placebo': 0.084, 'real': 1.158}
+round 22: mean reward +1.368% | helpful 0.53 harmful 0.02 | readable 1.00 | no change 0.45 | distinct 0.05 | top answer 0.52 | {'placebo': -0.038, 'real': 2.212}
+round 23: mean reward +0.496% | helpful 0.44 harmful 0.19 | readable 1.00 | no change 0.38 | distinct 0.05 | top answer 0.56 | {'placebo': 0.43, 'real': 0.694}
+round 24: mean reward +0.590% | helpful 0.42 harmful 0.22 | readable 1.00 | no change 0.36 | distinct 0.05 | top answer 0.62 | {'placebo': -0.369, 'real': 2.19}
+round 25: mean reward +0.989% | helpful 0.67 harmful 0.20 | readable 1.00 | no change 0.12 | distinct 0.05 | top answer 0.86 | {'placebo': 0.417, 'real': 1.561}
+round 26: mean reward +0.731% | helpful 0.50 harmful 0.36 | readable 1.00 | no change 0.14 | distinct 0.03 | top answer 0.86 | {'placebo': -0.369, 'real': 2.565}
+round 27: mean reward +1.937% | helpful 0.86 harmful 0.11 | readable 1.00 | no change 0.03 | distinct 0.03 | top answer 0.97 | {'placebo': 1.032, 'real': 2.843}
+round 28: mean reward +0.672% | helpful 0.44 harmful 0.23 | readable 1.00 | no change 0.33 | distinct 0.05 | top answer 0.64 | {'placebo': -0.008, 'real': 2.711}
+round 29: mean reward +0.312% | helpful 0.31 harmful 0.16 | readable 1.00 | no change 0.53 | distinct 0.03 | top answer 0.53 | {'placebo': 0.115, 'real': 1.695}
+round 30: mean reward +1.648% | helpful 0.72 harmful 0.03 | readable 1.00 | no change 0.25 | distinct 0.03 | top answer 0.75 | {'placebo': 0.685, 'real': 2.226}
+control base   : mean reward -0.453% | helpful 0.20 | no change 0.01 | distinct 0.41 | {'placebo': -0.944, 'real': 0.178}
+control trained: mean reward +1.291% | helpful 0.55 | no change 0.41 | distinct 0.02 | {'placebo': 0.34, 'real': 2.514}
+checkpoint tinker://0b23a888-1fb4-5a85-b230-831bbf4f1832:train:0/sampler_weights/full-final
+usage {'prefill_tokens': 783919, 'sample_tokens': 151594, 'train_tokens': 4186790} cost about $2.086008205
+wrote /home/hillma/git/gpu-price/rl/runs/full/log.json

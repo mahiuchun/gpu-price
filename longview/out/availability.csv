@@ -1,0 +1,8 @@
+chip,instance_type,first_tick_utc,first_usd_per_gpu_hour,first_zone,n_ticks,n_zones_ever,chip_release_date_epoch,months_release_to_aws_spot
+A100,p4d.24xlarge,2022-05-31 19:29:19,4.096575,use2-az2,68772,31,2020-05-14,24.5
+H100,p5.48xlarge,2023-07-26 11:51:38,8.603,use1-az5,62504,30,2022-09-20,10.2
+H200,p5en.48xlarge,2024-12-12 00:03:53,1.325,apne1-az4,33678,19,2024-11-18,0.8
+A100_80GB,p4de.24xlarge,2025-04-28 17:49:00,0.512075,usw2-az1,17812,12,2020-11-16,53.4
+H200_p5e,p5e.48xlarge,2025-04-30 23:07:17,1.3519,use2-az1,9549,11,2024-11-18,5.4
+B200,p6-b200.48xlarge,2025-07-24 22:05:06,1.4241625,use1-az6,9622,12,2024-11-15,8.2
+B300,p6-b300.48xlarge,2025-11-20 22:55:23,8.79465,usw2-az2,3961,13,2025-08-22,3.0

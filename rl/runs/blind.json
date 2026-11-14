@@ -1,0 +1,988 @@
+{
+ "checkpoint": "tinker://0b23a888-1fb4-5a85-b230-831bbf4f1832:train:0/sampler_weights/full-final",
+ "base_model": "Qwen/Qwen3-8B",
+ "steps": [
+  "2026-10-16",
+  "2026-10-23",
+  "2026-10-30"
+ ],
+ "arms": {
+  "small model, untrained": {
+   "all": {
+    "n": 48,
+    "share_helpful": 0.5,
+    "share_harmful": 0.271,
+    "share_no_effect": 0.229,
+    "mean_change_pct": -0.123,
+    "median_change_pct": 0.009
+   },
+   "by_step": {
+    "2026-10-16": {
+     "n": 16,
+     "share_helpful": 0.688,
+     "share_harmful": 0.125,
+     "share_no_effect": 0.188,
+     "mean_change_pct": 0.334,
+     "median_change_pct": 0.183
+    },
+    "2026-10-23": {
+     "n": 16,
+     "share_helpful": 0.5,
+     "share_harmful": 0.25,
+     "share_no_effect": 0.25,
+     "mean_change_pct": 0.017,
+     "median_change_pct": 0.014
+    },
+    "2026-10-30": {
+     "n": 16,
+     "share_helpful": 0.312,
+     "share_harmful": 0.438,
+     "share_no_effect": 0.25,
+     "mean_change_pct": -0.72,
+     "median_change_pct": 0.0
+    }
+   },
+   "readable": 1.0
+  },
+  "small model, RL-trained": {
+   "all": {
+    "n": 48,
+    "share_helpful": 0.854,
+    "share_harmful": 0.146,
+    "share_no_effect": 0.0,
+    "mean_change_pct": 1.268,
+    "median_change_pct": 1.411
+   },
+   "by_step": {
+    "2026-10-16": {
+     "n": 16,
+     "share_helpful": 1.0,
+     "share_harmful": 0.0,
+     "share_no_effect": 0.0,
+     "mean_change_pct": 0.172,
+     "median_change_pct": 0.172
+    },
+    "2026-10-23": {
+     "n": 16,
+     "share_helpful": 1.0,
+     "share_harmful": 0.0,
+     "share_no_effect": 0.0,
+     "mean_change_pct": 2.845,
+     "median_change_pct": 2.928
+    },
+    "2026-10-30": {
+     "n": 16,
+     "share_helpful": 0.562,
+     "share_harmful": 0.438,
+     "share_no_effect": 0.0,
+     "mean_change_pct": 0.786,
+     "median_change_pct": 1.411
+    }
+   },
+   "readable": 1.0
+  },
+  "random control": {
+   "all": {
+    "n": 48,
+    "share_helpful": 0.333,
+    "share_harmful": 0.375,
+    "share_no_effect": 0.292,
+    "mean_change_pct": -0.157,
+    "median_change_pct": 0.0
+   },
+   "by_step": {
+    "2026-10-16": {
+     "n": 16,
+     "share_helpful": 0.5,
+     "share_harmful": 0.312,
+     "share_no_effect": 0.188,
+     "mean_change_pct": 0.314,
+     "median_change_pct": 0.004
+    },
+    "2026-10-23": {
+     "n": 16,
+     "share_helpful": 0.25,
+     "share_harmful": 0.438,
+     "share_no_effect": 0.312,
+     "mean_change_pct": -0.677,
+     "median_change_pct": 0.0
+    },
+    "2026-10-30": {
+     "n": 16,
+     "share_helpful": 0.25,
+     "share_harmful": 0.375,
+     "share_no_effect": 0.375,
+     "mean_change_pct": -0.11,
+     "median_change_pct": 0.0
+    }
+   },
+   "readable": 1.0
+  }
+ },
+ "ideas": [
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=90",
+   "change_pct": 0.18346259620245825
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "all halflife_days=3.0",
+   "change_pct": 2.37967995561254
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "no change",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_spot replay_entries=false; class:neocloud_spot replay_exits=false",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "all halflife_days=14.0",
+   "change_pct": 0.9346990833771027
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_spot replay_entries=false; class:neocloud_spot replay_exits=false",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=90",
+   "change_pct": 0.18346259620245825
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": -0.32606022843409155
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "horizon:1 replay_entries=false; horizon:1 replay_exits=false",
+   "change_pct": 0.018520262436408422
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "class:hyperscaler_spot halflife_days=7; class:hyperscaler_spot width_scale=1.5",
+   "change_pct": 0.8894190876331787
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_spot blend_drift=0.3; class:neocloud_spot replay_entries=false; class:neocloud_spot replay_exits=false",
+   "change_pct": -0.9215836316109084
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_spot lookback_days=30",
+   "change_pct": 0.07703996977143089
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "horizon:7 momentum=0.5",
+   "change_pct": 0.6437152993452473
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "all replay_entries=false; all replay_exits=false",
+   "change_pct": 0.5469105758268783
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "all replay_entries=false; all replay_exits=false",
+   "change_pct": 0.5469105758268783
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=90",
+   "change_pct": 0.18346259620245825
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all momentum=0.5",
+   "change_pct": -4.696229922264753
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all replay_entries=true; all replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "horizon:7 replay_exits=false",
+   "change_pct": 0.028602958270295735
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "horizon:7 replay_exits=false",
+   "change_pct": 0.028602958270295735
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all replay_entries=true; all replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all replay_entries=true; all replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all halflife_days=14.0",
+   "change_pct": 1.8588369460357956
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all peer_pull=0.3; all peer_window=7",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "horizon:7 lookback_days=90",
+   "change_pct": 0.21528017147903636
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all replay_entries=true; all replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card replay_entries=false; class:neocloud_rate_card replay_exits=false; class:neocloud_spot replay_entries=false",
+   "change_pct": 3.665750916788327
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "all momentum=0.5; class:neocloud_spot peer_pull=0.2",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card replay_entries=false; class:neocloud_rate_card replay_exits=false",
+   "change_pct": 3.665750916788327
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_spot momentum=0.5; class:neocloud_spot momentum_window=3; horizon:7 replay_entries=false",
+   "change_pct": -0.3536266782053807
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_entries=false; all replay_exits=false",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_entries=true; all replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_exits=false",
+   "change_pct": -0.5303991529464379
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_entries=true; all replay_exits=true; all width_scale=1.5",
+   "change_pct": 2.5812443529863236
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all halflife_days=14.0; horizon:7 lookback_days=90",
+   "change_pct": 2.516393763833338
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all peer_pull=0.3; all peer_window=7",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_rate_card active_share=0.5; class:neocloud_rate_card momentum=0.5",
+   "change_pct": -2.0389211115507373
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all momentum=1.0; all replay_entries=false; all replay_exits=false",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_entries=true; all replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_entries=true; all replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all halflife_days=14.0",
+   "change_pct": 2.5164791407614935
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_entries=true; all replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all halflife_days=14.0",
+   "change_pct": 2.5164791407614935
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "horizon:7 momentum=1.0; horizon:7 momentum_window=14",
+   "change_pct": -1.6670700431175702
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_entries=false; all replay_exits=false",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "small model, untrained",
+   "step": "2026-10-30",
+   "idea": "all replay_entries=true; all replay_exits=true; all width_scale=1.5",
+   "change_pct": 2.5812443529863236
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-16",
+   "idea": "all lookback_days=30",
+   "change_pct": 0.17238317035679954
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": 2.4815541559253234
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": 2.4815541559253234
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": 2.4815541559253234
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-23",
+   "idea": "all lookback_days=30",
+   "change_pct": 2.928499529281056
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": -0.018517071612879545
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": -0.018517071612879545
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": -0.018517071612879545
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": -0.018517071612879545
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": -0.018517071612879545
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": -0.018517071612879545
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_rate_card lookback_days=30",
+   "change_pct": -0.018517071612879545
+  },
+  {
+   "arm": "small model, RL-trained",
+   "step": "2026-10-30",
+   "idea": "all lookback_days=30",
+   "change_pct": 1.4112715518869463
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "all floor_down=0.089",
+   "change_pct": 5.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:marketplace_ask width_scale=1.612",
+   "change_pct": 0.32653998571149234
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:hyperscaler_spot momentum_window=21",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:marketplace_ask floor_down=0.009; class:neocloud_spot replay_exits=false",
+   "change_pct": -0.033857507747110674
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_rate_card momentum=0.148; class:neocloud_spot floor_up=0.081",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_rate_card momentum_window=18; horizon:1 momentum_window=16",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:marketplace_ask blend_drift=0.865; horizon:7 min_scenarios=16",
+   "change_pct": 1.052679733794727
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "all floor_down=0.092",
+   "change_pct": 5.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "all floor_up=0.084",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_rate_card replay_entries=false; horizon:1 blend_drift=0.828",
+   "change_pct": -0.5170546586196826
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:hyperscaler_spot peer_window=10",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "horizon:7 floor_down=0.097",
+   "change_pct": 5.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "horizon:7 halflife_days=119.187",
+   "change_pct": 0.058760930701422846
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:neocloud_rate_card momentum=0.827",
+   "change_pct": -0.9353678395166408
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "class:hyperscaler_spot momentum_window=29; class:marketplace_ask floor_down=0.060",
+   "change_pct": 0.007578011855428323
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-16",
+   "idea": "horizon:3 halflife_days=71.554",
+   "change_pct": 0.06669190347354464
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:marketplace_ask center=engine",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "all replay_entries=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_spot halflife_days=10.779; horizon:7 min_scenarios=19",
+   "change_pct": 0.09079822668350784
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card peer_window=1",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:marketplace_ask peer_pull=0.705; horizon:3 peer_window=14",
+   "change_pct": -3.4012706927810044
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:hyperscaler_spot floor_down=0.024; horizon:3 peer_window=11",
+   "change_pct": 1.7945043047204663
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card halflife_days=38.919; horizon:1 momentum=0.676",
+   "change_pct": -3.0920554341323707
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:hyperscaler_spot center=last",
+   "change_pct": 0.9994301692625579
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card lookback_days=152",
+   "change_pct": -0.4676940692365156
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "all momentum_window=16; class:neocloud_spot replay_entries=false",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:hyperscaler_spot floor_down=0.015",
+   "change_pct": 1.0684805841522687
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card peer_pull=0.574",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card halflife_days=76.200",
+   "change_pct": -1.1349929165655093
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:neocloud_rate_card halflife_days=44.417",
+   "change_pct": -1.4885754138504934
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:hyperscaler_spot center=engine",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-23",
+   "idea": "class:hyperscaler_spot floor_up=0.012",
+   "change_pct": -0.19488589676803797
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "all floor_down=0.006; class:neocloud_rate_card width_scale=1.449",
+   "change_pct": 1.036609656297152
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "class:marketplace_ask halflife_days=26.500",
+   "change_pct": 1.5043789478545841
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "horizon:7 active_share=0.221",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "horizon:3 center=engine",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "horizon:7 momentum=0.538",
+   "change_pct": -0.30061207953069446
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "all replay_exits=true; class:neocloud_spot floor_down=0.068",
+   "change_pct": -5.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "horizon:7 width_scale=0.977",
+   "change_pct": -0.015893479180355545
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "class:marketplace_ask min_scenarios=29; horizon:7 replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "class:marketplace_ask momentum_window=15; horizon:7 replay_exits=true",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "all halflife_days=40.310; class:hyperscaler_spot width_scale=1.058",
+   "change_pct": 1.4129645265860307
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "class:marketplace_ask momentum_window=22",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_spot momentum_window=21; horizon:3 floor_up=0.031",
+   "change_pct": -2.167576480768976
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "class:hyperscaler_spot floor_up=0.033; class:hyperscaler_spot halflife_days=0.183",
+   "change_pct": 3.697094472521796
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "horizon:3 min_scenarios=31",
+   "change_pct": 0.0
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "horizon:3 lookback_days=219; horizon:3 peer_window=11",
+   "change_pct": -1.7997673662261517
+  },
+  {
+   "arm": "random control",
+   "step": "2026-10-30",
+   "idea": "class:neocloud_spot halflife_days=31.107; horizon:7 floor_up=0.005",
+   "change_pct": -0.12320375357156974
+  }
+ ]
+}

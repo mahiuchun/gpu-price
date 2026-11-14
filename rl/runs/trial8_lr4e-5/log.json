@@ -1,0 +1,370 @@
+{
+ "args": {
+  "name": "trial8_lr4e-5",
+  "trial": true,
+  "rounds": 31,
+  "trial_rounds": 8,
+  "worlds_per_round": 8,
+  "samples": 8,
+  "lr": 4e-05,
+  "temperature": 1.0,
+  "reward_scale": 0.01,
+  "seed": 0,
+  "workers": 24
+ },
+ "base_model": "Qwen/Qwen3-8B",
+ "rounds": [
+  {
+   "mean_reward": 0.3441,
+   "median_reward": 0.0,
+   "share_helpful": 0.375,
+   "share_harmful": 0.094,
+   "readable": 1.0,
+   "no_change": 0.016,
+   "distinct_share": 0.406,
+   "top_answer_share": 0.406,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     26
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     5
+    ],
+    [
+     "class:neocloud_rate_card replay_entries=false; class:neocloud_rate_card replay_exits=false",
+     4
+    ],
+    [
+     "all momentum=0.5",
+     3
+    ]
+   ],
+   "by_kind": {
+    "real": 0.344
+   },
+   "round": 0,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.9
+  },
+  {
+   "mean_reward": 0.9797,
+   "median_reward": 0.0,
+   "share_helpful": 0.484,
+   "share_harmful": 0.125,
+   "readable": 1.0,
+   "no_change": 0.0,
+   "distinct_share": 0.297,
+   "top_answer_share": 0.344,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     22
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     11
+    ],
+    [
+     "class:hyperscaler_spot replay_entries=false; class:hyperscaler_spot replay_exits=false",
+     6
+    ],
+    [
+     "all active_share=0.5; all momentum=0.5",
+     4
+    ]
+   ],
+   "by_kind": {
+    "real": 0.98
+   },
+   "round": 1,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 4.5
+  },
+  {
+   "mean_reward": 0.6085,
+   "median_reward": 0.0,
+   "share_helpful": 0.469,
+   "share_harmful": 0.109,
+   "readable": 1.0,
+   "no_change": 0.047,
+   "distinct_share": 0.438,
+   "top_answer_share": 0.344,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     22
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     4
+    ],
+    [
+     "all lookback_days=90",
+     4
+    ],
+    [
+     "class:neocloud_rate_card replay_entries=false; class:neocloud_rate_card replay_exits=false",
+     3
+    ]
+   ],
+   "by_kind": {
+    "real": 0.608
+   },
+   "round": 2,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.7
+  },
+  {
+   "mean_reward": 1.6399,
+   "median_reward": 0.2362,
+   "share_helpful": 0.641,
+   "share_harmful": 0.094,
+   "readable": 1.0,
+   "no_change": 0.031,
+   "distinct_share": 0.391,
+   "top_answer_share": 0.219,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     14
+    ],
+    [
+     "all momentum=0.5",
+     10
+    ],
+    [
+     "all lookback_days=90",
+     5
+    ],
+    [
+     "all active_share=0.5; all momentum=0.5",
+     4
+    ]
+   ],
+   "by_kind": {
+    "real": 1.64
+   },
+   "round": 3,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.2
+  },
+  {
+   "mean_reward": 2.436,
+   "median_reward": 3.4597,
+   "share_helpful": 0.766,
+   "share_harmful": 0.031,
+   "readable": 1.0,
+   "no_change": 0.031,
+   "distinct_share": 0.438,
+   "top_answer_share": 0.188,
+   "top_answers": [
+    [
+     "all momentum=0.5",
+     12
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     6
+    ],
+    [
+     "all active_share=0.5; all momentum=0.5",
+     6
+    ],
+    [
+     "all replay_entries=true; all replay_exits=true",
+     5
+    ]
+   ],
+   "by_kind": {
+    "real": 2.436
+   },
+   "round": 4,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 5.2
+  },
+  {
+   "mean_reward": 4.5321,
+   "median_reward": 5.0,
+   "share_helpful": 0.938,
+   "share_harmful": 0.047,
+   "readable": 1.0,
+   "no_change": 0.0,
+   "distinct_share": 0.172,
+   "top_answer_share": 0.516,
+   "top_answers": [
+    [
+     "all momentum=0.5",
+     33
+    ],
+    [
+     "all active_share=0.5; all momentum=0.5",
+     17
+    ],
+    [
+     "all momentum=0.5; all momentum_window=14",
+     3
+    ],
+    [
+     "all halflife_days=14.0",
+     3
+    ]
+   ],
+   "by_kind": {
+    "real": 4.532
+   },
+   "round": 5,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 6.9
+  },
+  {
+   "mean_reward": 4.5312,
+   "median_reward": 5.0,
+   "share_helpful": 0.938,
+   "share_harmful": 0.031,
+   "readable": 1.0,
+   "no_change": 0.0,
+   "distinct_share": 0.125,
+   "top_answer_share": 0.688,
+   "top_answers": [
+    [
+     "all momentum=0.5",
+     44
+    ],
+    [
+     "all active_share=0.5; all momentum=0.5",
+     11
+    ],
+    [
+     "all momentum=0.5; all momentum_window=14",
+     3
+    ],
+    [
+     "all replay_entries=true; all replay_exits=true",
+     2
+    ]
+   ],
+   "by_kind": {
+    "real": 4.531
+   },
+   "round": 6,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 6.3
+  },
+  {
+   "mean_reward": 4.9219,
+   "median_reward": 5.0,
+   "share_helpful": 0.984,
+   "share_harmful": 0.0,
+   "readable": 1.0,
+   "no_change": 0.0,
+   "distinct_share": 0.078,
+   "top_answer_share": 0.75,
+   "top_answers": [
+    [
+     "all momentum=0.5",
+     48
+    ],
+    [
+     "all active_share=0.5; all momentum=0.5",
+     8
+    ],
+    [
+     "all momentum=0.5; all momentum_window=14",
+     6
+    ],
+    [
+     "all lookback_days=30",
+     1
+    ]
+   ],
+   "by_kind": {
+    "real": 4.922
+   },
+   "round": 7,
+   "episodes": 64,
+   "skipped": 0.0,
+   "update_seconds": 7.4
+  }
+ ],
+ "checkpoint": "tinker://159e9503-3d74-5654-9446-16c2616c5487:train:0/sampler_weights/trial8_lr4e-5-final",
+ "control": {
+  "base": {
+   "mean_reward": 0.0451,
+   "median_reward": 0.0,
+   "share_helpful": 0.453,
+   "share_harmful": 0.141,
+   "readable": 1.0,
+   "no_change": 0.047,
+   "distinct_share": 0.422,
+   "top_answer_share": 0.328,
+   "top_answers": [
+    [
+     "all replay_entries=true; all replay_exits=true",
+     21
+    ],
+    [
+     "all replay_exits=false",
+     6
+    ],
+    [
+     "all replay_entries=false; all replay_exits=false",
+     5
+    ],
+    [
+     "no change",
+     3
+    ]
+   ],
+   "by_kind": {
+    "real": 0.045
+   }
+  },
+  "trained": {
+   "mean_reward": 5.0,
+   "median_reward": 5.0,
+   "share_helpful": 1.0,
+   "share_harmful": 0.0,
+   "readable": 1.0,
+   "no_change": 0.0,
+   "distinct_share": 0.062,
+   "top_answer_share": 0.812,
+   "top_answers": [
+    [
+     "all momentum=0.5",
+     52
+    ],
+    [
+     "all active_share=0.5; all momentum=0.5",
+     8
+    ],
+    [
+     "all momentum=0.5; all momentum_window=14",
+     3
+    ],
+    [
+     "all momentum=0.5; all momentum_window=5",
+     1
+    ]
+   ],
+   "by_kind": {
+    "real": 5.0
+   }
+  }
+ },
+ "usage": {
+  "prefill_tokens": 26390,
+  "sample_tokens": 48331,
+  "train_tokens": 1389598
+ },
+ "cost_estimate_usd": 0.64556777,
+ "minutes": 2.1
+}

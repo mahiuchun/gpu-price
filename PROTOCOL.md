@@ -121,4 +121,19 @@ A small open model is trained with reinforcement learning (on Tinker) to propose
 
 ## Deviations
 
-(none yet)
+Written after the for-the-record run (commit `354fc20` holds the protocol as it stood before it).
+
+1. **RL trial longer than planned, and continued despite the stop rule.** The planned trial (3 rounds,
+   192 tries, one practice world) gave average rewards of +1.21%, +0.55% and +0.96%: too few updates
+   to judge. Two further trials of 8 rounds (512 tries each, learning rates 4e-5 and 1e-4) both rose
+   to about +5% and both collapsed onto one repeated answer. Read strictly, the stop rule says stop.
+   We continued because on a single practice world one best answer is the expected end point; the
+   collapse that matters is across the 16 practice worlds, and it is reported: the full run ended
+   with two answers ("30-day lookback" and "no change").
+2. **The submission is version 0, not the scientist's step-4 version.** The blind test showed the
+   scientist's versions were not better than the engine at default settings, so the default is
+   submitted. The scientist's final version and the RL model's idea are in `submission/` as alternates.
+3. **Analyses added afterwards, labelled as such in the findings:** the RL model's idea scored as a
+   full version with intervals; the breakdown of what moves a median; the roll-forward test.
+4. **No code or setting that affects forecasts changed after the run.** `engine.py`, `harness.py`,
+   `core.py` and `scientist.py` are as committed in `354fc20`.

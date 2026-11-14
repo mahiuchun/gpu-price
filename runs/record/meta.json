@@ -1,0 +1,168 @@
+{
+ "name": "record",
+ "full_wall": "2026-11-06",
+ "steps": [
+  "2026-10-16",
+  "2026-10-23",
+  "2026-10-30",
+  "2026-11-06"
+ ],
+ "arms": [
+  "gpt",
+  "random"
+ ],
+ "placebos": 5,
+ "ideas": 8,
+ "seed": 0,
+ "modal": true,
+ "model": "gpt-6.1-sol",
+ "reasoning": "medium",
+ "started_utc": "2026-11-14T20:55:21.653234+00:00",
+ "finished_utc": "2026-11-14T21:06:15.440232+00:00",
+ "results": [
+  {
+   "world": "real",
+   "arm": "gpt",
+   "minutes": 9.1,
+   "kept": 7,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 159417,
+    "output_tokens": 11684
+   }
+  },
+  {
+   "world": "real",
+   "arm": "random",
+   "minutes": 6.7,
+   "kept": 1,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  },
+  {
+   "world": "placebo1",
+   "arm": "gpt",
+   "minutes": 10.6,
+   "kept": 2,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 159285,
+    "output_tokens": 11660
+   }
+  },
+  {
+   "world": "placebo1",
+   "arm": "random",
+   "minutes": 6.0,
+   "kept": 1,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  },
+  {
+   "world": "placebo2",
+   "arm": "gpt",
+   "minutes": 9.3,
+   "kept": 6,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 159886,
+    "output_tokens": 10761
+   }
+  },
+  {
+   "world": "placebo2",
+   "arm": "random",
+   "minutes": 5.0,
+   "kept": 1,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  },
+  {
+   "world": "placebo3",
+   "arm": "gpt",
+   "minutes": 10.8,
+   "kept": 3,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 158226,
+    "output_tokens": 11710
+   }
+  },
+  {
+   "world": "placebo3",
+   "arm": "random",
+   "minutes": 6.5,
+   "kept": 1,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  },
+  {
+   "world": "placebo4",
+   "arm": "gpt",
+   "minutes": 10.2,
+   "kept": 3,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 158642,
+    "output_tokens": 11871
+   }
+  },
+  {
+   "world": "placebo4",
+   "arm": "random",
+   "minutes": 5.9,
+   "kept": 0,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  },
+  {
+   "world": "placebo5",
+   "arm": "gpt",
+   "minutes": 10.6,
+   "kept": 1,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 157256,
+    "output_tokens": 10579
+   }
+  },
+  {
+   "world": "placebo5",
+   "arm": "random",
+   "minutes": 7.2,
+   "kept": 0,
+   "ideas": 32,
+   "usage": {
+    "calls": 32,
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  }
+ ]
+}
