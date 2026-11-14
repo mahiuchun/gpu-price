@@ -95,9 +95,8 @@ META = {
     "utilisation": ("Utilisation", "share of hours billed",
                     "Judgement; no public figure for these fleets was found."),
     "server_kw_per_gpu": ("Server power per GPU", "kW",
-                          "Central: an 8-GPU server's draw divided by 8 (10.2 kW for a DGX H100, "
-                          "https://www.amcompute.com/appraisals/h100; about 6.5 kW per 8 A100s, "
-                          "https://www.amcompute.com/compare/a100-vs-h100; American Compute, October 2026). "
+                          "Central: an 8-GPU server's maximum draw divided by 8 (10.2 kW for an NVIDIA DGX H100, "
+                          "6.5 kW for an NVIDIA DGX A100; NVIDIA's published DGX system specifications). "
                           "Low and high: judgement (little server overhead to added cooling overhead)."),
     "cost_per_kw_month": ("Power, space and operations cost", "USD per kW-month, all-in",
                           "Central: " + AMC_CALC + ". Low and high: judgement (cheap owned power to staffed premium colocation)."),
@@ -462,7 +461,7 @@ def chart(outlook_rows, quotes, anch):
         others = qs[~qs.is_anchor]
         for kind in KIND_STYLE:
             for basis in BASIS_NAME:
-                if ((others.kind == kind) & (others.basis == basis)).any():
+                if ((others["kind"] == kind) & (others["basis"] == basis)).any():
                     h.append(Line2D([], [], label=f"{KIND_STYLE[kind][2]}: {BASIS_NAME[basis]}",
                                     **quote_marker(kind, False, ms=8)))
         h.append(Line2D([], [], color=GREY, lw=7, alpha=0.35, marker="o", ms=8, mfc=GREY, mec=SURFACE, mew=2,
