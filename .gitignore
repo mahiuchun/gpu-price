@@ -2,3 +2,13 @@
 /gpu-price-pack-v0.1.1-handover/
 /gpu-price-pack-v0.1.1-handover_pack-only.zip
 /Track 2 - Pacific - AI Scientist for GPU Value - Brief.pdf
+
+# Secrets
+.env
+.env.*
+
+# Local artefacts
+.venv/
+__pycache__/
+*.pyc
+runs/_cache/

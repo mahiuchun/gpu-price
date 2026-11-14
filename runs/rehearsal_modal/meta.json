@@ -1,0 +1,70 @@
+{
+ "name": "rehearsal_modal",
+ "full_wall": "2026-10-16",
+ "steps": [
+  "2026-10-02",
+  "2026-10-09"
+ ],
+ "arms": [
+  "gpt",
+  "random"
+ ],
+ "placebos": 1,
+ "ideas": 4,
+ "seed": 0,
+ "modal": true,
+ "model": "gpt-6.1-sol",
+ "reasoning": "medium",
+ "started_utc": "2026-11-14T20:49:16.167403+00:00",
+ "finished_utc": "2026-11-14T20:52:25.450510+00:00",
+ "results": [
+  {
+   "world": "real",
+   "arm": "gpt",
+   "minutes": 2.8,
+   "kept": 0,
+   "ideas": 8,
+   "usage": {
+    "calls": 4,
+    "input_tokens": 13590,
+    "output_tokens": 1444
+   }
+  },
+  {
+   "world": "real",
+   "arm": "random",
+   "minutes": 1.4,
+   "kept": 1,
+   "ideas": 8,
+   "usage": {
+    "calls": 4,
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  },
+  {
+   "world": "placebo1",
+   "arm": "gpt",
+   "minutes": 2.8,
+   "kept": 0,
+   "ideas": 8,
+   "usage": {
+    "calls": 4,
+    "input_tokens": 13427,
+    "output_tokens": 1295
+   }
+  },
+  {
+   "world": "placebo1",
+   "arm": "random",
+   "minutes": 1.5,
+   "kept": 0,
+   "ideas": 8,
+   "usage": {
+    "calls": 4,
+    "input_tokens": 0,
+    "output_tokens": 0
+   }
+  }
+ ]
+}

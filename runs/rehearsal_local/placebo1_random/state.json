@@ -1,0 +1,420 @@
+{
+ "spec": {
+  "lookback_days": 60,
+  "halflife_days": 0.0,
+  "replay_exits": true,
+  "replay_entries": true,
+  "momentum": 0.0,
+  "momentum_window": 7,
+  "active_share": 0.3,
+  "blend_drift": 0.0,
+  "width_scale": 1.0,
+  "center": "engine",
+  "min_scenarios": 10,
+  "by_class": {},
+  "by_horizon": {}
+ },
+ "fallback": [
+  "fastgpu_daily.neocloud_rate_card.H100_PCIe_80GB.on_demand.median",
+  "fastgpu_daily.neocloud_spot.A100_80GB.spot.median",
+  "fastgpu_daily.neocloud_spot.H100_SXM_80GB.spot.median",
+  "gpurentalprices.neocloud_rate_card.B300.on_demand.median",
+  "gpurentalprices.neocloud_rate_card.H200.on_demand.median"
+ ],
+ "ledger": [
+  {
+   "n": 1,
+   "world": "placebo1",
+   "wall": "2026-10-02",
+   "idea": 1,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:marketplace_ask",
+     "dial": "momentum_window",
+     "value": "4"
+    },
+    {
+     "scope": "horizon:1",
+     "dial": "active_share",
+     "value": "0.460"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19311635037992725,
+    "after_total": 0.19311635037992725,
+    "before_avg": 0.2995420561510777,
+    "after_avg": 0.2995420561510777,
+    "before_loss": 0.010450425140128446,
+    "after_loss": 0.010450425140128446,
+    "inside_after": 0.7362796071634893
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.019395832377104832,
+   "_hidden_loss_after": 0.019395832377104832
+  },
+  {
+   "n": 2,
+   "world": "placebo1",
+   "wall": "2026-10-02",
+   "idea": 2,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "class:hyperscaler_spot",
+     "dial": "momentum_window",
+     "value": "3"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19311635037992725,
+    "after_total": 0.19311635037992725,
+    "before_avg": 0.2995420561510777,
+    "after_avg": 0.2995420561510777,
+    "before_loss": 0.010450425140128446,
+    "after_loss": 0.010450425140128446,
+    "inside_after": 0.7362796071634893
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.019395832377104832,
+   "_hidden_loss_after": 0.019395832377104832
+  },
+  {
+   "n": 3,
+   "world": "placebo1",
+   "wall": "2026-10-02",
+   "idea": 3,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "replay_exits",
+     "value": "true"
+    },
+    {
+     "scope": "horizon:3",
+     "dial": "min_scenarios",
+     "value": "12"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.19311635037992725,
+    "after_total": 0.19130691940192135,
+    "before_avg": 0.2995420561510777,
+    "after_avg": 0.2991770804246124,
+    "before_loss": 0.010450425140128446,
+    "after_loss": 0.010473860145895119,
+    "inside_after": 0.7354130560369728
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.019395832377104832,
+   "_hidden_loss_after": 0.019395832377104832
+  },
+  {
+   "n": 4,
+   "world": "placebo1",
+   "wall": "2026-10-09",
+   "idea": 1,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:3",
+     "dial": "center",
+     "value": "last"
+    },
+    {
+     "scope": "class:neocloud_rate_card",
+     "dial": "min_scenarios",
+     "value": "34"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.18627985642230172,
+    "after_total": 0.14926108561384832,
+    "before_avg": 0.2320259537088968,
+    "after_avg": 0.14829187464834453,
+    "before_loss": 0.011985207860614706,
+    "after_loss": 0.012530453872263187,
+    "inside_after": 0.7004067958841829
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.03273788651023966,
+   "_hidden_loss_after": 0.03537774900866658
+  },
+  {
+   "n": 5,
+   "world": "placebo1",
+   "wall": "2026-10-09",
+   "idea": 2,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:7",
+     "dial": "blend_drift",
+     "value": "0.698"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.18627985642230172,
+    "after_total": 0.18233691907563,
+    "before_avg": 0.2320259537088968,
+    "after_avg": 0.21811006857517998,
+    "before_loss": 0.011985207860614706,
+    "after_loss": 0.012043283015880576,
+    "inside_after": 0.7296003828667145
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.03273788651023966,
+   "_hidden_loss_after": 0.03480935056529839
+  },
+  {
+   "n": 6,
+   "world": "placebo1",
+   "wall": "2026-10-09",
+   "idea": 3,
+   "proposer": "random",
+   "hypothesis": "(random control: no hypothesis)",
+   "test": "random dial change",
+   "prediction": "none",
+   "changes": [
+    {
+     "scope": "horizon:3",
+     "dial": "replay_exits",
+     "value": "true"
+    },
+    {
+     "scope": "class:hyperscaler_spot",
+     "dial": "halflife_days",
+     "value": "119.034"
+    }
+   ],
+   "no_change": false,
+   "dev": {
+    "before_total": 0.18627985642230172,
+    "after_total": 0.18512091132431474,
+    "before_avg": 0.2320259537088968,
+    "after_avg": 0.23103827338820965,
+    "before_loss": 0.011985207860614706,
+    "after_loss": 0.012002277854528514,
+    "inside_after": 0.7291217994735583
+   },
+   "dev_ok": false,
+   "hidden": "not run (failed development)",
+   "kept": false,
+   "lesson": "",
+   "spec_after": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "_hidden_loss_before": 0.03273788651023966,
+   "_hidden_loss_after": 0.032737384775422915
+  }
+ ],
+ "versions": [
+  {
+   "wall": "2026-10-02",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "fallback": [
+    "fastgpu_daily.hyperscaler_spot.T4.spot.median",
+    "fastgpu_daily.neocloud_rate_card.A100_80GB.on_demand.median",
+    "fastgpu_daily.neocloud_rate_card.H100_PCIe_80GB.on_demand.median",
+    "fastgpu_daily.neocloud_rate_card.L40S.on_demand.median",
+    "fastgpu_daily.neocloud_spot.A100_80GB.spot.median",
+    "fastgpu_daily.neocloud_spot.B200.spot.median",
+    "fastgpu_daily.neocloud_spot.H100_SXM_80GB.spot.median",
+    "gpurentalprices.neocloud_rate_card.H100_80GB.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.H200.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.RTX_A6000.on_demand.median"
+   ],
+   "dev": {
+    "skill_total": 0.19311635037992725,
+    "skill_avg_series": 0.2995420561510777,
+    "drift_skill_total": 0.11515615862849038,
+    "inside": 0.7362796071634893,
+    "n_cells": 3462
+   }
+  },
+  {
+   "wall": "2026-10-09",
+   "spec": {
+    "lookback_days": 60,
+    "halflife_days": 0.0,
+    "replay_exits": true,
+    "replay_entries": true,
+    "momentum": 0.0,
+    "momentum_window": 7,
+    "active_share": 0.3,
+    "blend_drift": 0.0,
+    "width_scale": 1.0,
+    "center": "engine",
+    "min_scenarios": 10,
+    "by_class": {},
+    "by_horizon": {}
+   },
+   "fallback": [
+    "fastgpu_daily.neocloud_rate_card.H100_PCIe_80GB.on_demand.median",
+    "fastgpu_daily.neocloud_spot.A100_80GB.spot.median",
+    "fastgpu_daily.neocloud_spot.H100_SXM_80GB.spot.median",
+    "gpurentalprices.neocloud_rate_card.B300.on_demand.median",
+    "gpurentalprices.neocloud_rate_card.H200.on_demand.median"
+   ],
+   "dev": {
+    "skill_total": 0.18627985642230172,
+    "skill_avg_series": 0.2320259537088968,
+    "drift_skill_total": 0.11444687732324499,
+    "inside": 0.7312754247427614,
+    "n_cells": 4179
+   }
+  }
+ ],
+ "usage": {
+  "calls": 3,
+  "input_tokens": 0,
+  "output_tokens": 0
+ },
+ "logs": [
+  "[placebo1 2026-10-02] start: dev total +0.193 avg +0.300 (drift +0.115), 3462 dev cells, 717 hidden",
+  "[placebo1 2026-10-02] idea 1: rejected | dev +0.193->+0.193 | hidden not run (failed development) | class:marketplace_ask momentum_window=4; horizon:1 active_share=0.460",
+  "[placebo1 2026-10-02] idea 2: rejected | dev +0.193->+0.193 | hidden not run (failed development) | class:hyperscaler_spot momentum_window=3",
+  "[placebo1 2026-10-02] idea 3: rejected | dev +0.193->+0.191 | hidden not run (failed development) | horizon:7 replay_exits=true; horizon:3 min_scenarios=12",
+  "[placebo1 2026-10-09] start: dev total +0.186 avg +0.232 (drift +0.114), 4179 dev cells, 777 hidden",
+  "[placebo1 2026-10-09] idea 1: rejected | dev +0.186->+0.149 | hidden not run (failed development) | horizon:3 center=last; class:neocloud_rate_card min_scenarios=34",
+  "[placebo1 2026-10-09] idea 2: rejected | dev +0.186->+0.182 | hidden not run (failed development) | horizon:7 blend_drift=0.698",
+  "[placebo1 2026-10-09] idea 3: rejected | dev +0.186->+0.185 | hidden not run (failed development) | horizon:3 replay_exits=true; class:hyperscaler_spot halflife_days=119.034"
+ ]
+}
