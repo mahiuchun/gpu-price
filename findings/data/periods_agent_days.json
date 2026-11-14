@@ -1,0 +1,320 @@
+{
+ "before": {
+  "n": 481,
+  "days": 7,
+  "h_counts": {
+   "1": 259,
+   "3": 185,
+   "7": 37
+  },
+  "engine": {
+   "vs_drift": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": 0.10490023202855492,
+    "lo90": -0.0005868582487759,
+    "hi90": 0.23660900485670316,
+    "excludes_zero": false
+   },
+   "vs_engine": null,
+   "per_price": 0.24442329334826252
+  },
+  "ml": {
+   "vs_drift": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": -0.17651486520708848,
+    "lo90": -0.4754319373805988,
+    "hi90": 0.0010853898246029985,
+    "excludes_zero": false
+   },
+   "vs_engine": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": -0.3143952297892014,
+    "lo90": -0.7346089747134381,
+    "hi90": -0.07900651646262202,
+    "excludes_zero": true
+   },
+   "per_price": -2.1819288228619964
+  },
+  "engine_ml": {
+   "vs_drift": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": 0.03728562074944186,
+    "lo90": -0.10943311674350097,
+    "hi90": 0.13621032480568507,
+    "excludes_zero": false
+   },
+   "vs_engine": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": -0.0755386312213524,
+    "lo90": -0.2800016317375344,
+    "hi90": 0.05230212280444703,
+    "excludes_zero": false
+   },
+   "per_price": -0.7889202309609821
+  },
+  "agents": {
+   "vs_drift": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": 0.15523088886466052,
+    "lo90": 0.062303804442887474,
+    "hi90": 0.26665456397514736,
+    "excludes_zero": true
+   },
+   "vs_engine": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": 0.056229102762666905,
+    "lo90": -0.023471301959234213,
+    "hi90": 0.11405835618463711,
+    "excludes_zero": false
+   },
+   "per_price": 0.23561324960539812
+  },
+  "all3": {
+   "vs_drift": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": 0.09751244123357183,
+    "lo90": -0.01964255903229088,
+    "hi90": 0.18603390402594747,
+    "excludes_zero": false
+   },
+   "vs_engine": {
+    "n_cells": 481,
+    "n_series": 37,
+    "n_days": 13,
+    "skill": -0.008253594805108566,
+    "lo90": -0.15621568212665163,
+    "hi90": 0.09285454672496708,
+    "excludes_zero": false
+   },
+   "per_price": -0.4155195168977077
+  }
+ },
+ "test": {
+  "n": 429,
+  "days": 7,
+  "h_counts": {
+   "1": 220,
+   "3": 185,
+   "7": 24
+  },
+  "engine": {
+   "vs_drift": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.05040219504455834,
+    "lo90": -0.04848234358054761,
+    "hi90": 0.12898143209088078,
+    "excludes_zero": false
+   },
+   "vs_engine": null,
+   "per_price": 0.2779810593060139
+  },
+  "ml": {
+   "vs_drift": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.13570618585231198,
+    "lo90": -0.13027128242971747,
+    "hi90": 0.28341885894455715,
+    "excludes_zero": false
+   },
+   "vs_engine": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.08983170597341095,
+    "lo90": -0.18212730880926564,
+    "hi90": 0.2375326752303091,
+    "excludes_zero": false
+   },
+   "per_price": 0.11921029282883533
+  },
+  "engine_ml": {
+   "vs_drift": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.13981086855107716,
+    "lo90": -0.007728063640683802,
+    "hi90": 0.22878446331580998,
+    "excludes_zero": false
+   },
+   "vs_engine": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.09415425461173443,
+    "lo90": -0.03638608322350272,
+    "hi90": 0.16685337889727936,
+    "excludes_zero": false
+   },
+   "per_price": 0.2426849000089542
+  },
+  "agents": {
+   "vs_drift": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.1490083469699116,
+    "lo90": 0.07558519204499288,
+    "hi90": 0.22250338963297128,
+    "excludes_zero": true
+   },
+   "vs_engine": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.10383991139278181,
+    "lo90": 0.028645030076014648,
+    "hi90": 0.19053514723941076,
+    "excludes_zero": true
+   },
+   "per_price": 0.3137041123819616
+  },
+  "all3": {
+   "vs_drift": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.1549226003612877,
+    "lo90": 0.04378220888585658,
+    "hi90": 0.22974600174411838,
+    "excludes_zero": true
+   },
+   "vs_engine": {
+    "n_cells": 429,
+    "n_series": 37,
+    "n_days": 12,
+    "skill": 0.11006807805503904,
+    "lo90": 0.010502121205860068,
+    "hi90": 0.1690151795728669,
+    "excludes_zero": true
+   },
+   "per_price": 0.2829117843259277
+  }
+ },
+ "all": {
+  "n": 910,
+  "days": 14,
+  "h_counts": {
+   "1": 479,
+   "3": 370,
+   "7": 61
+  },
+  "engine": {
+   "vs_drift": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": 0.07486654459184217,
+    "lo90": 0.005612878814517165,
+    "hi90": 0.15380472293324046,
+    "excludes_zero": true
+   },
+   "vs_engine": null,
+   "per_price": 0.2503331185895044
+  },
+  "ml": {
+   "vs_drift": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": -0.004450879463277824,
+    "lo90": -0.2276002455451388,
+    "hi90": 0.1537485403447966,
+    "excludes_zero": false
+   },
+   "vs_engine": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": -0.08573619686051237,
+    "lo90": -0.35699032062400804,
+    "hi90": 0.08756379586941446,
+    "excludes_zero": false
+   },
+   "per_price": -2.241993870107128
+  },
+  "engine_ml": {
+   "vs_drift": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": 0.09378694478337135,
+    "lo90": -0.014939062589122596,
+    "hi90": 0.17799465642257273,
+    "excludes_zero": false
+   },
+   "vs_engine": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": 0.02045153602534222,
+    "lo90": -0.10860807446662593,
+    "hi90": 0.10466674620781856,
+    "excludes_zero": false
+   },
+   "per_price": -0.8250562369835706
+  },
+  "agents": {
+   "vs_drift": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": 0.15180166666380202,
+    "lo90": 0.09453391596862015,
+    "hi90": 0.2150340885738689,
+    "excludes_zero": true
+   },
+   "vs_engine": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": 0.08316110678109356,
+    "lo90": 0.027113476937619986,
+    "hi90": 0.14137384381775667,
+    "excludes_zero": true
+   },
+   "per_price": 0.24370485892065705
+  },
+  "all3": {
+   "vs_drift": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": 0.12915098952550585,
+    "lo90": 0.046632386831402604,
+    "hi90": 0.19619943861862846,
+    "excludes_zero": true
+   },
+   "vs_engine": {
+    "n_cells": 910,
+    "n_series": 37,
+    "n_days": 25,
+    "skill": 0.058677420664366875,
+    "lo90": -0.03282441838538669,
+    "hi90": 0.12301927182901068,
+    "excludes_zero": false
+   },
+   "per_price": -0.4373325013070685
+  }
+ }
+}

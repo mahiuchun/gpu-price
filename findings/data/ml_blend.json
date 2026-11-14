@@ -1,0 +1,31 @@
+{
+ "blend_vs_drift": {
+  "n_cells": 1196,
+  "n_series": 37,
+  "n_days": 21,
+  "skill": 0.12175186783522696,
+  "lo90": 0.045247238264380686,
+  "hi90": 0.1772420921855165,
+  "excludes_zero": true
+ },
+ "blend_vs_engine": {
+  "n_cells": 1196,
+  "n_series": 37,
+  "n_days": 21,
+  "skill": 0.048570087977727106,
+  "lo90": -0.06634057936653263,
+  "hi90": 0.11072503188922621,
+  "excludes_zero": false
+ },
+ "blend_total_skill": {
+  "n_cells": 1196,
+  "n_series": 37,
+  "n_days": 21,
+  "skill": 0.17893646733196744,
+  "lo90": 0.0787509591464078,
+  "hi90": 0.2667602227296362,
+  "excludes_zero": true
+ },
+ "blend_avg_series": 0.18350398879043617,
+ "blend_inside": 0.7951505016722408
+}

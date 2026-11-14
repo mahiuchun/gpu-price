@@ -1,0 +1,255 @@
+<title>GPU Forecast Exa Status</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: one reading column, like a desk note. Verdict first, then the budget, then three provider cases, then the open decision. */
+  :root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --fg: #15222c;
+    --muted: #586874;
+    --line: #d5dde3;
+    --accent: #0d6aa8;
+    --accent-soft: #e2eff8;
+    --warn: #8a5a00;
+    --warn-soft: #fbf0d6;
+    --ok: #1c6b45;
+    --ok-soft: #e0f1e7;
+    --font-text: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e161c; --surface: #16212a; --fg: #e4ecf1; --muted: #98a8b4; --line: #283845;
+      --accent: #63b3ec; --accent-soft: #14303f; --warn: #f0c060; --warn-soft: #33290f;
+      --ok: #6fcf9b; --ok-soft: #13301f; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e161c; --surface: #16212a; --fg: #e4ecf1; --muted: #98a8b4; --line: #283845;
+    --accent: #63b3ec; --accent-soft: #14303f; --warn: #f0c060; --warn-soft: #33290f;
+    --ok: #6fcf9b; --ok-soft: #13301f; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: var(--font-text); font-size: 16px; line-height: 1.55;
+    padding-block: 40px 64px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+  header { display: flex; flex-direction: column; gap: 10px; }
+  .kicker { font-family: var(--font-data); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: clamp(28px, 5vw, 38px); line-height: 1.12; font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+  h2 { font-size: 21px; line-height: 1.25; font-weight: 600; margin: 0; text-wrap: balance; }
+  h3 { font-size: 16px; font-weight: 600; margin: 0; }
+  p { margin: 0; max-width: 66ch; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  section { display: flex; flex-direction: column; gap: 14px; }
+  .lede { font-size: 18px; }
+  .verdict { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .verdict p { max-width: none; }
+  .num, td.n, .mono { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; max-width: 68ch; }
+  li strong { font-weight: 600; }
+
+  .budget { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px 28px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding-block: 18px; }
+  .budget div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .budget .label { font-size: 13px; color: var(--muted); }
+  .budget .big { font-family: var(--font-data); font-size: 24px; font-weight: 500; line-height: 1.2; }
+  .budget .note { font-size: 13px; color: var(--muted); }
+  .meter { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+  .meter span { display: block; height: 100%; width: 11%; background: var(--accent); }
+
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12.5px; font-weight: 600; color: var(--muted); letter-spacing: 0.03em; white-space: nowrap; }
+  td.n, th.n { text-align: right; white-space: nowrap; padding-right: 16px; }
+  tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 2px 8px; border-radius: 3px; white-space: nowrap; }
+  .tag.ok { background: var(--ok-soft); color: var(--ok); }
+  .tag.warn { background: var(--warn-soft); color: var(--warn); }
+  .tag.info { background: var(--accent-soft); color: var(--accent); }
+
+  .steps { list-style: none; padding: 0; gap: 0; max-width: none; }
+  .steps li { display: grid; grid-template-columns: 150px 1fr; gap: 4px 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .steps li:last-child { border-bottom: none; }
+  .steps .when { font-family: var(--font-data); font-size: 13px; color: var(--muted); padding-top: 2px; }
+  @media (max-width: 520px) { .steps li { grid-template-columns: 1fr; } }
+
+  .case { display: flex; flex-direction: column; gap: 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .case-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+  .rank { display: flex; flex-direction: column; gap: 10px; min-width: 640px; }
+  .rank-row { display: grid; grid-template-columns: 150px repeat(17, 1fr); gap: 3px; align-items: stretch; }
+  .rank-row .rl { font-size: 12.5px; color: var(--muted); align-self: center; padding-right: 8px; line-height: 1.3; }
+  .cell { font-family: var(--font-data); font-size: 11px; text-align: center; padding: 6px 0; background: var(--surface); border: 1px solid var(--line); border-radius: 2px; }
+  .cell.mid { border: 2px solid var(--fg); font-weight: 500; }
+  .cell.lam { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 14px; height: 14px; border-radius: 2px; display: inline-block; background: var(--surface); border: 1px solid var(--line); }
+  .sw.mid { border: 2px solid var(--fg); }
+  .sw.lam { background: var(--accent-soft); border-color: var(--accent); }
+
+  .risk { background: var(--warn-soft); border: 1px solid var(--warn); padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+  .risk h3 { color: var(--warn); }
+  .risk p { max-width: none; }
+  .small { font-size: 13.5px; color: var(--muted); }
+  footer { border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+</style>
+
+<div class="page">
+
+  <header>
+    <div class="kicker">Status · Sat 14 Nov 2026 · forecast origin 6 Nov</div>
+    <h1>Where we are with Exa</h1>
+    <p class="lede">Exa is set up, snapshots of past pages now work, and we have used it three ways. It found two price changes that providers announced in advance and confirmed a pattern we suspected. None of it changes the forecast file.</p>
+  </header>
+
+  <div class="verdict">
+    <div><span class="tag ok">Forecast unchanged</span></div>
+    <p>Every lead Exa produced was checked against the data pack. In each case the engine's forecast already allows for it, or the price change does not reach the middle of a list we forecast.</p>
+    <p>The value so far is evidence for the write-up: a published median can jump on an announcement, days before the new price takes effect.</p>
+  </div>
+
+  <section>
+    <h2>Budget</h2>
+    <div class="budget">
+      <div>
+        <span class="label">Snapshot requests used</span>
+        <span class="big">11 <span style="font-size:15px;color:var(--muted)">of 100</span></span>
+        <div class="meter" role="img" aria-label="11 of 100 snapshot requests used"><span></span></div>
+        <span class="note">89 left. One page per request.</span>
+      </div>
+      <div>
+        <span class="label">Ordinary searches</span>
+        <span class="big">15</span>
+        <span class="note">Plus about 20 requests by the resale lookup.</span>
+      </div>
+      <div>
+        <span class="label">Spend we can measure</span>
+        <span class="big">$0.11</span>
+        <span class="note">Exa reported no cost for the snapshot requests. The balance itself needs a service key to read.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How the account got here</h2>
+    <ul class="steps">
+      <li><span class="when">Start</span><span>The key in <span class="mono">.env</span> worked for search. A snapshot request was refused: the account was on Exa's free plan, which leaves snapshots out.</span></li>
+      <li><span class="when">After the $5 top-up</span><span>The account moved to pay-as-you-go and snapshots switched on as a trial: 100 requests, pages from the last 5 months.</span></li>
+      <li><span class="when">Trial cap</span><span>Each snapshot request may fetch one page, or one search of up to 10 results. Exa's documentation suggests several pages per request; the trial does not allow it.</span></li>
+      <li><span class="when">Balance</span><span>Exa's balance endpoint rejects the ordinary key. It needs a service key, created on the API keys page once Exa enables team management.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What we used it for</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Use</th><th class="n">Requests</th><th>Snapshots</th><th>What came back</th></tr></thead>
+        <tbody>
+          <tr><td>Resale quotes for used H100 and A100</td><td class="n">about 20</td><td>No</td><td>15 dated quotes from 6 publishers. Not part of the scored forecast.</td></tr>
+          <tr><td>Search for price changes announced by 6 Nov</td><td class="n">14</td><td>No</td><td>107 pages dated on or before 6 Nov. Two had been edited since and mention 12 and 14 Nov; neither was used.</td></tr>
+          <tr><td>Provider pricing pages as of the end of 6 Nov</td><td class="n">10</td><td>Yes</td><td>9 pages returned: Verda, Lambda, Crusoe, Modal, Nebius, Hyperstack, Together, Runcrate, CoreWeave. Daytona's was not stored.</td></tr>
+          <tr><td>The 6 Nov news story on Lambda, as of 6 Nov</td><td class="n">1</td><td>Yes</td><td>Not stored that early.</td></tr>
+          <tr><td>Setup check</td><td class="n">1</td><td>No</td><td>Worked, $0.007.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>What it found</h2>
+
+    <div class="case">
+      <div class="case-head"><h3>Lambda: a 15% rise that one site already shows</h3><span class="tag info">Verified in the pack</span></div>
+      <p>A report dated 6 Nov says Lambda's price table now shows rises of about 15% that take effect on 16 Nov. A second report, dated 3 Nov, gives different amounts and a 1 Dec start. The pack settles what the tracking sites saw:</p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Lambda, USD per GPU-hour</th><th class="n">gpurentalprices 5 Nov</th><th class="n">gpurentalprices 6 Nov</th><th class="n">FastGPU 6 Nov</th><th class="n">Lambda's page in Exa</th></tr></thead>
+          <tbody>
+            <tr><td>B200</td><td class="n">6.69 to 6.99</td><td class="n">7.69 to 7.99</td><td class="n">6.69</td><td class="n">6.69 to 6.99</td></tr>
+            <tr><td>H100 SXM</td><td class="n">4.09 to 4.29</td><td class="n">4.69 to 4.89</td><td class="n">3.99</td><td class="n">3.99 to 4.29</td></tr>
+            <tr><td>A100 80GB</td><td class="n">2.79</td><td class="n">3.19</td><td class="n">2.79</td><td class="n">2.79</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>gpurentalprices picked up the new prices on the morning of 6 Nov. FastGPU and GPU Price Tracker had not. The copy of Lambda's page that Exa holds was captured before the change, so it cannot say what comes next.</p>
+      <p>The rise does not move any FastGPU median we forecast, because Lambda sits above the middle of each list. The H100 list shows why:</p>
+      <div class="scroll">
+        <div class="rank" role="img" aria-label="FastGPU H100 list on 6 Nov, 17 offers ranked by price. The middle offer is Modal at 3.95 dollars. Lambda is 11th at 3.99 and would move to 14th at 4.69, still above the middle.">
+          <div class="rank-row">
+            <span class="rl">FastGPU H100 list, 6 Nov</span>
+            <span class="cell">1.99</span><span class="cell">2.60</span><span class="cell">2.60</span><span class="cell">2.74</span><span class="cell">2.90</span><span class="cell">3.20</span><span class="cell">3.20</span><span class="cell">3.39</span><span class="cell mid">3.95</span><span class="cell">3.95</span><span class="cell lam">3.99</span><span class="cell">3.99</span><span class="cell">4.41</span><span class="cell">4.50</span><span class="cell">4.89</span><span class="cell">5.49</span><span class="cell">6.16</span>
+          </div>
+          <div class="rank-row">
+            <span class="rl">If FastGPU picks up Lambda's new price</span>
+            <span class="cell">1.99</span><span class="cell">2.60</span><span class="cell">2.60</span><span class="cell">2.74</span><span class="cell">2.90</span><span class="cell">3.20</span><span class="cell">3.20</span><span class="cell">3.39</span><span class="cell mid">3.95</span><span class="cell">3.95</span><span class="cell">3.99</span><span class="cell">4.41</span><span class="cell">4.50</span><span class="cell lam">4.69</span><span class="cell">4.89</span><span class="cell">5.49</span><span class="cell">6.16</span>
+          </div>
+        </div>
+      </div>
+      <div class="legend"><span><i class="sw mid"></i>Middle of the list, the published median</span><span><i class="sw lam"></i>Lambda</span><span>17 offers ranked by price, not drawn to scale</span></div>
+    </div>
+
+    <div class="case">
+      <div class="case-head"><h3>Crusoe: new prices posted for 1 Dec</h3><span class="tag info">From the 6 Nov page</span></div>
+      <p>Crusoe's pricing page as of 6 Nov has two columns, "Current on-demand" and "New on-demand starting Dec 1, 2026". The new column lists the B300 at $13.80 and the B200 at $9.65; the tracking sites currently record Crusoe's B300 at $8.96.</p>
+      <p>The sites have read Crusoe's higher prices once before. From 16 to 21 Oct they recorded its H100 at $4.50 in place of $3.90 and its H200 at $5.40 in place of $4.29, then went back. Because the engine replays that episode, our 7-day high forecasts for the gpurentalprices H200 and B300 lists already sit at the levels a repeat would produce ($5.25 and $10.59).</p>
+    </div>
+
+    <div class="case">
+      <div class="case-head"><h3>Verda: the page confirms the one-day lag</h3><span class="tag info">Verified in the pack</span></div>
+      <p>Verda has been raising prices about 1% a day. Its own page as of 6 Nov matches what gpurentalprices recorded that day and is one step ahead of FastGPU, which records each day's lowest price.</p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Verda, USD per GPU-hour</th><th class="n">Verda's page, 6 Nov</th><th class="n">FastGPU, 6 Nov</th><th class="n">Our 1-day forecast for the FastGPU list (low / middle / high)</th></tr></thead>
+          <tbody>
+            <tr><td>A100 80GB</td><td class="n">2.316</td><td class="n">2.293</td><td class="n">2.291 / 2.304 / 2.316</td></tr>
+            <tr><td>RTX 6000 Ada</td><td class="n">1.543</td><td class="n">1.528</td><td class="n">1.528 / 1.543 / 1.544</td></tr>
+            <tr><td>H100 SXM</td><td class="n">4.938</td><td class="n">4.889</td><td class="n">Verda is not the middle of this list</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>In the two lists where Verda is the middle offer, the forecast already reaches the page price. The engine learned the daily step from Verda's own history.</p>
+    </div>
+
+    <div class="case">
+      <div class="case-head"><h3>A pattern worth keeping</h3></div>
+      <p>When a provider that rarely reprices changed a price by more than 2% on one tracking site, the other site showed the same price within a day in all 32 past cases in the pack. Lambda is the exception so far: FastGPU had not matched a 3 Nov change by 6 Nov, which suggests it reads Lambda's prices from a different place.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What stays open</h2>
+    <div class="risk">
+      <h3>One exposed series: gpurentalprices B200</h3>
+      <p>Its median jumped from <span class="mono">$6.89</span> to <span class="mono">$7.89</span> on 6 Nov, set by Lambda's new prices. Our forecast holds it flat at <span class="mono">$7.89</span>. If the site goes back to reading Lambda's current prices before 13 Nov, the median drops by a dollar and the forecast misses at all three horizons.</p>
+      <p>The only precedent is Crusoe's reversal in October. A rough guess is a 10 to 15% chance, which is too thin to justify changing the forecast by hand. Drift and the last value carry the same exposure.</p>
+    </div>
+    <ul>
+      <li><strong>Decision 1.</strong> Add the Lambda and Crusoe cases to the findings, cited by date, title and link. Recommended.</li>
+      <li><strong>Decision 2.</strong> Leave the forecast file as it is. Recommended.</li>
+      <li><strong>Decision 3.</strong> Whether to spend more of the 89 remaining snapshot requests. Nothing further is needed for the forecast. They would be useful after scoring, to see which pages changed between 7 and 13 Nov.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Rules we kept</h2>
+    <ul>
+      <li><strong>Nothing after 6 Nov.</strong> Every price-related request was pinned to the end of 6 Nov, by snapshot date or by publication date.</li>
+      <li><strong>Search without snapshots can leak.</strong> Exa returns today's copy of a page unless a snapshot date is set. Two search results carried later text and were discarded.</li>
+      <li><strong>Excluded sources stayed excluded.</strong> Nothing was taken from the providers and marketplaces the data pack rules out.</li>
+      <li><strong>Every lead was checked against the pack</strong> before it was treated as a fact.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p class="small">Sources. News: GPUJournal, "Lambda announces GPU price rises of about 15% — B200, H100 and A100 80GB, from Nov 16", 6 Nov 2026, <a href="https://gpujournal.ai/story/lambda-announced-rises-nov-16">gpujournal.ai</a>. AGI Hunt, report of Lambda's 1 Dec price notice, 3 Nov 2026, <a href="https://agihunt.info/p/1a19ecc9069392d8fb299ffc6a9">agihunt.info</a>.</p>
+    <p class="small">Provider pages read through Exa Snapshot as of 6 Nov 2026, 23:59 UTC: <a href="https://verda.com/pricing">verda.com/pricing</a>, <a href="https://lambda.ai/instances">lambda.ai/instances</a>, <a href="https://www.crusoe.ai/cloud/pricing">crusoe.ai/cloud/pricing</a>. Tracking-site readings come from gpu-price-pack v0.1.1-handover (GPU rental price data by gpurentalprices.com; FastGPU GPU cloud pricing dataset; both CC BY 4.0).</p>
+  </footer>
+
+</div>

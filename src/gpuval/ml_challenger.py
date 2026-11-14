@@ -1,0 +1,123 @@
+"""A ready-made ML forecaster as a challenger: Chronos-2, a model pretrained on other time series.
+
+    uv run python -m gpuval.ml_challenger
+
+It is used as it comes (no training on our data, nothing tuned). For every blind forecast in the
+three test weeks it is shown the published price history up to the origin day and asked for the
+10%, 50% and 90% points 1, 3 and 7 days ahead. It runs on a Modal GPU and is scored on exactly the
+same cells as the engine and drift.
+"""
+from __future__ import annotations
+
+import io
+import json
+
+import modal
+import numpy as np
+import pandas as pd
+
+from . import data, harness, report
+from .core import cell_loss, day_of, iso_of
+from .timemachine import RECORD_STEPS, plus_days
+
+MODEL = "amazon/chronos-2"
+app = modal.App("gpuval-ml-challenger")
+image = (modal.Image.debian_slim(python_version="3.12")
+         .pip_install("chronos-forecasting==2.3.2", "pandas[pyarrow]>=2.0", "torch>=2.2"))
+
+
+@app.function(image=image, gpu="T4", timeout=1800, memory=8192)
+def chronos_predict(context_parquet: bytes, prediction_length: int = 7) -> bytes:
+    import pandas as pd
+    import torch
+    from chronos import Chronos2Pipeline
+
+    ctx = pd.read_parquet(io.BytesIO(context_parquet))
+    pipe = Chronos2Pipeline.from_pretrained(MODEL, device_map="cuda" if torch.cuda.is_available() else "cpu")
+    pred = pipe.predict_df(ctx, prediction_length=prediction_length, quantile_levels=[0.1, 0.5, 0.9],
+                           id_column="id", timestamp_column="timestamp", target="target")
+    buf = io.BytesIO()
+    pred.to_parquet(buf)
+    return buf.getvalue()
+
+
+def blind_cells() -> tuple[pd.DataFrame, dict]:
+    full = data.build_world(data.DATA_END)
+    frames = []
+    for j, T in enumerate(RECORD_STEPS, start=1):
+        end = plus_days(T, 7)
+        w = data.cut_world(full, end)
+        c = harness.base_cells(w)
+        c = c[(c.origin >= day_of(T)) & (c.target <= day_of(end))].copy()
+        c["week"] = j
+        frames.append(c)
+    return pd.concat(frames, ignore_index=True), full
+
+
+def contexts(cells: pd.DataFrame, full: dict) -> pd.DataFrame:
+    """One daily history per (series, origin): values up to the origin, missing days carried forward."""
+    rows = []
+    for (sid, origin), _ in cells.groupby(["series_id", "origin"]):
+        s = full["series"][sid]
+        k = int(np.searchsorted(s["days"], origin, side="right"))
+        ser = pd.Series(s["value"][:k], index=pd.to_datetime([iso_of(d) for d in s["days"][:k]]))
+        ser = ser.asfreq("D").ffill()
+        rows.append(pd.DataFrame({"id": f"{sid}|{origin}", "timestamp": ser.index, "target": ser.to_numpy(float)}))
+    return pd.concat(rows, ignore_index=True)
+
+
+def main() -> int:
+    cells, full = blind_cells()
+    ctx = contexts(cells, full)
+    buf = io.BytesIO()
+    ctx.to_parquet(buf)
+    print(f"{len(cells)} blind cells, {ctx.id.nunique()} histories, {len(ctx)} rows sent to the model", flush=True)
+    with modal.enable_output(), app.run():
+        pred = pd.read_parquet(io.BytesIO(chronos_predict.remote(buf.getvalue())))
+    pred["timestamp"] = pd.to_datetime(pred["timestamp"])
+    pred["sid"] = pred["id"].str.rsplit("|", n=1).str[0]
+    pred["origin"] = pred["id"].str.rsplit("|", n=1).str[1].astype(int)
+    pred["target"] = pred["timestamp"].map(pd.Timestamp.toordinal)
+    q = pred.rename(columns={"0.1": "c10", "0.5": "c50", "0.9": "c90"})[["sid", "origin", "target", "c10", "c50", "c90"]]
+    m = cells.merge(q, left_on=["series_id", "origin", "target"], right_on=["sid", "origin", "target"], how="left")
+    missing = int(m.c50.isna().sum())
+    for c, d in (("c10", "d10"), ("c50", "d50"), ("c90", "d90")):   # any cell the model did not return falls back to drift
+        m[c] = m[c].fillna(m[d])
+    m["c50"] = m.c50.clip(lower=1e-6)
+    m["c10"] = np.minimum(m.c10, m.c50).clip(lower=1e-6)
+    m["c90"] = np.maximum(m.c90, m.c50)
+    m["loss_ml"] = cell_loss(m.y, m.c10, m.c50, m.c90)
+    eng = pd.read_parquet(data.REPO / "runs" / "record" / "real_gpt" / "cells.parquet")[["series_id", "origin", "h", "loss_v0"]]
+    m = m.merge(eng, on=["series_id", "origin", "h"], how="left")
+    out = {
+        "model": MODEL, "n_cells": int(len(m)), "cells_without_model_output": missing,
+        "total_skill": {"drift": report.skill_ci(m, "loss_drift", "loss_last"), "engine": report.skill_ci(m, "loss_v0", "loss_last"),
+                        "ml_model": report.skill_ci(m, "loss_ml", "loss_last")},
+        "error_cut_vs_drift": {"engine": report.skill_ci(m, "loss_v0", "loss_drift"), "ml_model": report.skill_ci(m, "loss_ml", "loss_drift")},
+        "ml_vs_engine": report.skill_ci(m, "loss_ml", "loss_v0"),
+        "per_series_average": {"drift": report.avg_series_skill(m, "loss_drift"), "engine": report.avg_series_skill(m, "loss_v0"),
+                               "ml_model": report.avg_series_skill(m, "loss_ml")},
+        "inside_range": {"ml_model": float(((m.y >= m.c10) & (m.y <= m.c90)).mean())},
+        "by_horizon": {str(h): {"ml_vs_drift": report.skill_ci(g, "loss_ml", "loss_drift"), "engine_vs_drift": report.skill_ci(g, "loss_v0", "loss_drift")}
+                       for h, g in m.groupby("h")},
+        "by_week": {str(wk): {"drift": float(1 - g.loss_drift.sum() / g.loss_last.sum()), "engine": float(1 - g.loss_v0.sum() / g.loss_last.sum()),
+                              "ml_model": float(1 - g.loss_ml.sum() / g.loss_last.sum())} for wk, g in m.groupby("week")},
+    }
+    dest = data.REPO / "findings" / "data"
+    dest.mkdir(parents=True, exist_ok=True)
+    (dest / "ml_challenger.json").write_text(json.dumps(out, indent=1))
+    m[["series_id", "cls", "origin", "h", "target", "week", "y", "last", "c10", "c50", "c90", "loss_ml", "loss_v0", "loss_drift", "loss_last"]] \
+        .to_parquet(dest / "ml_challenger_cells.parquet", index=False)
+    f = report.fmt_ci
+    print(f"cells {out['n_cells']} (model returned nothing for {missing})")
+    print("total skill vs last value : drift", f(out["total_skill"]["drift"]), "| engine", f(out["total_skill"]["engine"]), "| ML model", f(out["total_skill"]["ml_model"]))
+    print("error cut against drift   : engine", f(out["error_cut_vs_drift"]["engine"]), "| ML model", f(out["error_cut_vs_drift"]["ml_model"]))
+    print("ML model against engine   :", f(out["ml_vs_engine"]))
+    print("per-series average        :", {k: round(v, 3) for k, v in out["per_series_average"].items()}, "| ML inside range:", round(out["inside_range"]["ml_model"], 3))
+    print("by horizon (vs drift)     :", {h: (round(v["ml_vs_drift"]["skill"], 3), round(v["engine_vs_drift"]["skill"], 3)) for h, v in out["by_horizon"].items()}, "(ML, engine)")
+    print("by week (skill)           :", {w: {k: round(x, 3) for k, x in v.items()} for w, v in out["by_week"].items()})
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,379 @@
+<title>Forecast Test Periods</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: one column. The answer first, then the calendar of periods, then two charts and one table. */
+  :root {
+    --bg: #f4f6f8; --surface: #ffffff; --fg: #15222c; --muted: #586874; --line: #d5dde3;
+    --accent: #0d6aa8; --accent-soft: #e2eff8;
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+    --ok: #1c6b45; --ok-soft: #e0f1e7; --bad: #9c2f2f; --bad-soft: #f8e3e1; --warn: #8a5a00; --warn-soft: #fbf0d6;
+    --font-text: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e161c; --surface: #16212a; --fg: #e4ecf1; --muted: #98a8b4; --line: #2b3c4a;
+      --accent: #63b3ec; --accent-soft: #14303f; --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+      --ok: #6fcf9b; --ok-soft: #13301f; --bad: #f08a84; --bad-soft: #3a1b1a; --warn: #f0c060; --warn-soft: #33290f; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e161c; --surface: #16212a; --fg: #e4ecf1; --muted: #98a8b4; --line: #2b3c4a;
+    --accent: #63b3ec; --accent-soft: #14303f; --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --ok: #6fcf9b; --ok-soft: #13301f; --bad: #f08a84; --bad-soft: #3a1b1a; --warn: #f0c060; --warn-soft: #33290f; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: var(--font-text); font-size: 17px; line-height: 1.55;
+    padding-block: 40px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .page { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+  header, section { display: flex; flex-direction: column; gap: 14px; }
+  .kicker { font-family: var(--font-data); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: clamp(28px, 5.2vw, 38px); line-height: 1.12; font-weight: 700; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+  h2 { font-size: 22px; line-height: 1.25; font-weight: 600; margin: 0; text-wrap: balance; }
+  p { margin: 0; max-width: 64ch; }
+  .lede { font-size: 19px; }
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 9px; max-width: 66ch; }
+  li strong { font-weight: 600; }
+  figure { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .draw { background: var(--surface); border: 1px solid var(--line); padding: 12px; overflow-x: auto; }
+  figcaption { font-size: 14.5px; color: var(--muted); max-width: 66ch; }
+  svg { display: block; width: 100%; min-width: 600px; height: auto; color: var(--fg); font-family: var(--font-text); }
+  svg text { fill: currentColor; font-size: 13px; }
+  svg .mut { fill: var(--muted); } svg .b { font-weight: 600; } svg .num { font-family: var(--font-data); }
+  svg .onacc { fill: var(--surface); font-weight: 600; }
+  svg .rule { stroke: var(--line); stroke-width: 1; } svg .zero { stroke: var(--fg); stroke-width: 1.5; }
+  svg .seen { fill: var(--line); } svg .seen2 { fill: var(--muted); } svg .acc { fill: var(--accent); }
+  svg .hl { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+  svg .band { fill: var(--accent-soft); }
+  svg .s1 { fill: var(--s1); } svg .s2 { fill: var(--s2); } svg .s3 { fill: var(--s3); } svg .dot3 { fill: var(--s3); stroke: var(--surface); stroke-width: 2; }
+  .keys { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14.5px; color: var(--muted); }
+  .keys span { display: inline-flex; align-items: center; gap: 7px; }
+  .sw { width: 13px; height: 13px; display: inline-block; }
+  .k1 { background: var(--s1); } .k2 { background: var(--s2); } .k3 { background: var(--s3); } .kd { background: var(--s3); border-radius: 50%; }
+  .ka { background: var(--accent); } .kl { background: var(--line); }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 14px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12.5px; color: var(--muted); font-weight: 600; letter-spacing: 0.03em; }
+  td.n, th.n { text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  .r { display: block; font-family: var(--font-text); font-size: 12.5px; color: var(--muted); white-space: normal; }
+  .tag { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 2px 8px; border-radius: 3px; white-space: nowrap; }
+  .tag.ok { background: var(--ok-soft); color: var(--ok); } .tag.bad { background: var(--bad-soft); color: var(--bad); } .tag.warn { background: var(--warn-soft); color: var(--warn); }
+  .answer { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .answer p { max-width: none; }
+  .mono { font-family: var(--font-data); }
+</style>
+<div class="page">
+  <header>
+    <div class="kicker">Which dates the results come from · 14 Nov 2026</div>
+    <h1>Until today, every result came from one three-week window</h1>
+    <p class="lede">I have now scored the forecasters on eleven separate weeks of our own prices, and on four years of AWS prices. Two results held everywhere. One was mixed. One did not hold.</p>
+  </header>
+
+  <div class="answer">
+    <p><strong>What changed</strong></p>
+    <p><span class="tag ok">Holds</span> The engine beats drift by about 8% in all three tests: the earlier weeks, the test weeks, and four years of AWS prices.</p>
+    <p><span class="tag ok">Holds</span> The five AI agents beat drift by 15% to 19% in all three. On our own prices they also beat the engine. On AWS prices they are level with it.</p>
+    <p><span class="tag warn">Mixed</span> The ML model. On our prices its good result was two lucky weeks. On AWS prices it works well and beats the engine.</p>
+    <p><span class="tag bad">Does not hold</span> Averaging the engine with the ML model on our prices. I recommended that file earlier and I withdraw that.</p>
+  </div>
+
+  <section>
+    <h2>The periods</h2>
+    <figure>
+      <div class="draw"><svg viewBox="0 0 720 212" role="img" aria-label="Timeline from 21 August to 13 November 2026 with eleven weekly test periods. The last three were the only ones used before today. Dots mark the fourteen days on which the AI agents were scored.">
+<line class="rule" x1="30.0" y1="34" x2="30.0" y2="150"/><text x="30.0" y="26" text-anchor="middle" class="mut num">21 Aug</text>
+<line class="rule" x1="140.6" y1="34" x2="140.6" y2="150"/><text x="140.6" y="26" text-anchor="middle" class="mut num">4 Sep</text>
+<line class="rule" x1="251.2" y1="34" x2="251.2" y2="150"/><text x="251.2" y="26" text-anchor="middle" class="mut num">18 Sep</text>
+<line class="rule" x1="361.8" y1="34" x2="361.8" y2="150"/><text x="361.8" y="26" text-anchor="middle" class="mut num">2 Oct</text>
+<line class="rule" x1="472.4" y1="34" x2="472.4" y2="150"/><text x="472.4" y="26" text-anchor="middle" class="mut num">16 Oct</text>
+<line class="rule" x1="583.0" y1="34" x2="583.0" y2="150"/><text x="583.0" y="26" text-anchor="middle" class="mut num">30 Oct</text>
+<line class="rule" x1="693.6" y1="34" x2="693.6" y2="150"/><text x="693.6" y="26" text-anchor="middle" class="mut num">13 Nov</text>
+<rect class="seen" x="31.5" y="46" width="52.3" height="34"><title>Forecast days 21 Aug to 28 Aug: 221 forecasts on 17 prices</title></rect>
+<text x="57.7" y="68" text-anchor="middle" class=" num" style="font-size:12px">1</text>
+<rect class="seen" x="86.8" y="46" width="52.3" height="34"><title>Forecast days 28 Aug to 4 Sep: 221 forecasts on 17 prices</title></rect>
+<text x="113.0" y="68" text-anchor="middle" class=" num" style="font-size:12px">2</text>
+<rect class="seen" x="142.1" y="46" width="52.3" height="34"><title>Forecast days 4 Sep to 11 Sep: 205 forecasts on 17 prices</title></rect>
+<text x="168.3" y="68" text-anchor="middle" class=" num" style="font-size:12px">3</text>
+<rect class="seen" x="197.4" y="46" width="52.3" height="34"><title>Forecast days 11 Sep to 18 Sep: 221 forecasts on 17 prices</title></rect>
+<text x="223.6" y="68" text-anchor="middle" class=" num" style="font-size:12px">4</text>
+<rect class="seen" x="252.7" y="46" width="52.3" height="34"><title>Forecast days 18 Sep to 25 Sep: 301 forecasts on 37 prices</title></rect>
+<text x="278.9" y="68" text-anchor="middle" class=" num" style="font-size:12px">5</text>
+<rect class="seen" x="308.0" y="46" width="52.3" height="34"><title>Forecast days 25 Sep to 2 Oct: 481 forecasts on 37 prices</title></rect>
+<text x="334.1" y="68" text-anchor="middle" class=" num" style="font-size:12px">6</text>
+<rect class="seen" x="363.3" y="46" width="52.3" height="34"><title>Forecast days 2 Oct to 9 Oct: 481 forecasts on 37 prices</title></rect>
+<text x="389.4" y="68" text-anchor="middle" class=" num" style="font-size:12px">7</text>
+<rect class="seen" x="418.6" y="46" width="52.3" height="34"><title>Forecast days 9 Oct to 16 Oct: 442 forecasts on 37 prices</title></rect>
+<text x="444.8" y="68" text-anchor="middle" class=" num" style="font-size:12px">8</text>
+<rect class="acc" x="473.9" y="46" width="52.3" height="34"><title>Forecast days 16 Oct to 23 Oct: 403 forecasts on 37 prices</title></rect>
+<text x="500.1" y="68" text-anchor="middle" class="onacc num" style="font-size:12px">9</text>
+<rect class="acc" x="529.2" y="46" width="52.3" height="34"><title>Forecast days 23 Oct to 30 Oct: 390 forecasts on 37 prices</title></rect>
+<text x="555.4" y="68" text-anchor="middle" class="onacc num" style="font-size:12px">10</text>
+<rect class="acc" x="584.5" y="46" width="52.3" height="34"><title>Forecast days 30 Oct to 6 Nov: 403 forecasts on 37 prices</title></rect>
+<text x="610.6" y="68" text-anchor="middle" class="onacc num" style="font-size:12px">11</text>
+<rect class="hl" x="639.8" y="46" width="52.3" height="34"/>
+<text x="30.0" y="100" class="mut">weeks 1 to 8: added today</text>
+<text x="555.4" y="100" text-anchor="middle" class="b">weeks 9 to 11</text><text x="555.4" y="116" text-anchor="middle" class="mut">all earlier results</text>
+<text x="666.0" y="100" text-anchor="middle" class="mut">real</text><text x="666.0" y="116" text-anchor="middle" class="mut">forecast</text>
+<circle class="dot3" cx="302.6" cy="140" r="4.5"><title>AI agents scored on 24 Sep</title></circle>
+<circle class="dot3" cx="326.2" cy="140" r="4.5"><title>AI agents scored on 27 Sep</title></circle>
+<circle class="dot3" cx="349.9" cy="140" r="4.5"><title>AI agents scored on 30 Sep</title></circle>
+<circle class="dot3" cx="373.6" cy="140" r="4.5"><title>AI agents scored on 3 Oct</title></circle>
+<circle class="dot3" cx="397.4" cy="140" r="4.5"><title>AI agents scored on 6 Oct</title></circle>
+<circle class="dot3" cx="421.1" cy="140" r="4.5"><title>AI agents scored on 9 Oct</title></circle>
+<circle class="dot3" cx="444.8" cy="140" r="4.5"><title>AI agents scored on 12 Oct</title></circle>
+<circle class="dot3" cx="476.4" cy="140" r="4.5"><title>AI agents scored on 16 Oct</title></circle>
+<circle class="dot3" cx="500.1" cy="140" r="4.5"><title>AI agents scored on 19 Oct</title></circle>
+<circle class="dot3" cx="523.8" cy="140" r="4.5"><title>AI agents scored on 22 Oct</title></circle>
+<circle class="dot3" cx="547.5" cy="140" r="4.5"><title>AI agents scored on 25 Oct</title></circle>
+<circle class="dot3" cx="571.2" cy="140" r="4.5"><title>AI agents scored on 28 Oct</title></circle>
+<circle class="dot3" cx="594.9" cy="140" r="4.5"><title>AI agents scored on 31 Oct</title></circle>
+<circle class="dot3" cx="618.6" cy="140" r="4.5"><title>AI agents scored on 3 Nov</title></circle>
+<text x="30" y="144" class="mut" style="font-size:12px"></text>
+<line class="rule" x1="30" y1="168" x2="710" y2="168"/>
+<rect class="seen" x="30.0" y="176" width="221.2" height="10"/><text x="30.0" y="204" class="mut">17 prices (one site had not started)</text>
+<rect class="seen2" x="251.2" y="176" width="387.1" height="10"/><text x="251.2" y="204" class="mut">all 37 prices</text>
+</svg></div>
+      <div class="keys"><span><i class="sw ka"></i>the three weeks used before today</span><span><i class="sw kl"></i>eight earlier weeks, added today</span><span><i class="sw kd"></i>days the AI agents were scored (14)</span></div>
+      <figcaption>Each block is one week of forecast days. A forecast made on a given day uses only data up to that day, and is scored on the published price 1, 3 or 7 days later. In all there are 3,769 scored forecasts: 2,573 in weeks 1 to 8 and 1,196 in weeks 9 to 11.</figcaption>
+    </figure>
+    <ul>
+      <li><strong>Before today:</strong> the engine, the ML model and every average were scored on weeks 9 to 11 only. The agents were scored on 7 days inside those weeks.</li>
+      <li><strong>Added today:</strong> the same forecasters on weeks 1 to 8, and the agents on 7 more days in weeks 5 to 8.</li>
+      <li><strong>Not extended:</strong> the AI scientist that tunes the engine. Its test needs the week-by-week setup and exists for weeks 9 to 11 only.</li>
+    </ul>
+    <figure>
+      <div class="draw"><svg viewBox="0 0 720 150" role="img" aria-label="Four years of AWS prices from August 2022 to October 2026, with a gap from March to June 2026. Our own eleven weeks sit at the very end. Dots mark the twelve days the AI agents were scored.">
+<line class="rule" x1="93.0" y1="30" x2="93.0" y2="104"/><text x="93.0" y="22" text-anchor="middle" class="mut num">2023</text>
+<line class="rule" x1="247.3" y1="30" x2="247.3" y2="104"/><text x="247.3" y="22" text-anchor="middle" class="mut num">2024</text>
+<line class="rule" x1="402.1" y1="30" x2="402.1" y2="104"/><text x="402.1" y="22" text-anchor="middle" class="mut num">2025</text>
+<line class="rule" x1="556.4" y1="30" x2="556.4" y2="104"/><text x="556.4" y="22" text-anchor="middle" class="mut num">2026</text>
+<rect class="seen2" x="30.0" y="40" width="551.3" height="22"/>
+<rect class="seen2" x="632.9" y="40" width="51.6" height="22"/>
+<text x="30.0" y="80" class="mut">AWS prices: 206 weeks</text>
+<text x="607.1" y="80" text-anchor="middle" class="mut" style="font-size:11.5px">gap</text>
+<rect class="acc" x="654.5" y="88" width="32.6" height="14"/>
+<text x="648.5" y="100" text-anchor="end" class="b">our 37 prices: 11 weeks</text>
+<circle class="dot3" cx="68.5" cy="124" r="4.5"><title>AI agents scored on 2022-11-04</title></circle>
+<circle class="dot3" cx="118.8" cy="124" r="4.5"><title>AI agents scored on 2023-03-03</title></circle>
+<circle class="dot3" cx="172.1" cy="124" r="4.5"><title>AI agents scored on 2023-07-07</title></circle>
+<circle class="dot3" cx="222.4" cy="124" r="4.5"><title>AI agents scored on 2023-11-03</title></circle>
+<circle class="dot3" cx="272.7" cy="124" r="4.5"><title>AI agents scored on 2024-03-01</title></circle>
+<circle class="dot3" cx="326.0" cy="124" r="4.5"><title>AI agents scored on 2024-07-05</title></circle>
+<circle class="dot3" cx="376.3" cy="124" r="4.5"><title>AI agents scored on 2024-11-01</title></circle>
+<circle class="dot3" cx="429.6" cy="124" r="4.5"><title>AI agents scored on 2025-03-07</title></circle>
+<circle class="dot3" cx="479.9" cy="124" r="4.5"><title>AI agents scored on 2025-07-04</title></circle>
+<circle class="dot3" cx="533.1" cy="124" r="4.5"><title>AI agents scored on 2025-11-07</title></circle>
+<circle class="dot3" cx="571.6" cy="124" r="4.5"><title>AI agents scored on 2026-02-06</title></circle>
+<circle class="dot3" cx="660.4" cy="124" r="4.5"><title>AI agents scored on 2026-09-04</title></circle>
+<text x="30" y="144" class="mut" style="font-size:12px">dots: the 12 days the AI agents were scored on AWS prices</text>
+</svg></div>
+      <figcaption>The second test bed. AWS publishes a spot price for each machine type in each of its zones, and the figure we forecast is the middle price across zones, so the zones play the part of providers on a list. 19 machine types, 35,952 forecasts in 206 weekly periods. These are not the prices scored tomorrow.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Week by week: the engine is steady, the ML model is not</h2>
+    <figure>
+      <div class="draw"><svg viewBox="0 0 720 300" role="img" aria-label="Error cut against drift by week for the engine and the ML model. The engine is above zero in ten of eleven weeks. The ML model swings between minus 21 and plus 19 percent.">
+<rect class="band" x="526.0" y="16" width="180.0" height="232"/>
+<text x="616.0" y="29" text-anchor="middle" class="mut" style="font-size:12px">the three test weeks</text>
+<line class="rule" x1="46" y1="224.8" x2="706" y2="224.8"/><text x="40" y="228.8" text-anchor="end" class="mut num" style="font-size:12px">-20%</text>
+<line class="rule" x1="46" y1="178.4" x2="706" y2="178.4"/><text x="40" y="182.4" text-anchor="end" class="mut num" style="font-size:12px">-10%</text>
+<line class="zero" x1="46" y1="132.0" x2="706" y2="132.0"/><text x="40" y="136.0" text-anchor="end" class="mut num" style="font-size:12px">+0%</text>
+<line class="rule" x1="46" y1="85.6" x2="706" y2="85.6"/><text x="40" y="89.6" text-anchor="end" class="mut num" style="font-size:12px">+10%</text>
+<line class="rule" x1="46" y1="39.2" x2="706" y2="39.2"/><text x="40" y="43.2" text-anchor="end" class="mut num" style="font-size:12px">+20%</text>
+<rect class="s1" x="57.0" y="132.0" width="18.0" height="33.5"><title>21 Aug: engine -7.2%</title></rect>
+<rect class="s2" x="77.0" y="132.0" width="18.0" height="17.1"><title>21 Aug: ML model -3.7%</title></rect>
+<text x="76.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">21 Aug</text>
+<rect class="s1" x="117.0" y="93.5" width="18.0" height="38.5"><title>28 Aug: engine +8.3%</title></rect>
+<rect class="s2" x="137.0" y="125.6" width="18.0" height="6.4"><title>28 Aug: ML model +1.4%</title></rect>
+<text x="136.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">28 Aug</text>
+<rect class="s1" x="177.0" y="129.6" width="18.0" height="2.4"><title>4 Sep: engine +0.5%</title></rect>
+<rect class="s2" x="197.0" y="132.0" width="18.0" height="48.9"><title>4 Sep: ML model -10.5%</title></rect>
+<text x="196.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">4 Sep</text>
+<rect class="s1" x="237.0" y="92.6" width="18.0" height="39.4"><title>11 Sep: engine +8.5%</title></rect>
+<rect class="s2" x="257.0" y="88.8" width="18.0" height="43.2"><title>11 Sep: ML model +9.3%</title></rect>
+<text x="256.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">11 Sep</text>
+<rect class="s1" x="297.0" y="63.6" width="18.0" height="68.4"><title>18 Sep: engine +14.7%</title></rect>
+<rect class="s2" x="317.0" y="124.0" width="18.0" height="8.0"><title>18 Sep: ML model +1.7%</title></rect>
+<text x="316.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">18 Sep</text>
+<rect class="s1" x="357.0" y="106.9" width="18.0" height="25.1"><title>25 Sep: engine +5.4%</title></rect>
+<rect class="s2" x="377.0" y="132.0" width="18.0" height="5.3"><title>25 Sep: ML model -1.1%</title></rect>
+<text x="376.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">25 Sep</text>
+<rect class="s1" x="417.0" y="97.0" width="18.0" height="35.0"><title>2 Oct: engine +7.5%</title></rect>
+<rect class="s2" x="437.0" y="132.0" width="18.0" height="96.1"><title>2 Oct: ML model -20.7%</title></rect>
+<text x="436.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">2 Oct</text>
+<rect class="s1" x="477.0" y="67.1" width="18.0" height="64.9"><title>9 Oct: engine +14.0%</title></rect>
+<rect class="s2" x="497.0" y="132.0" width="18.0" height="15.5"><title>9 Oct: ML model -3.3%</title></rect>
+<text x="496.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">9 Oct</text>
+<rect class="s1" x="537.0" y="77.8" width="18.0" height="54.2"><title>16 Oct: engine +11.7%</title></rect>
+<rect class="s2" x="557.0" y="44.9" width="18.0" height="87.1"><title>16 Oct: ML model +18.8%</title></rect>
+<text x="556.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">16 Oct</text>
+<rect class="s1" x="597.0" y="99.2" width="18.0" height="32.8"><title>23 Oct: engine +7.1%</title></rect>
+<rect class="s2" x="617.0" y="132.0" width="18.0" height="87.1"><title>23 Oct: ML model -18.8%</title></rect>
+<text x="616.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">23 Oct</text>
+<rect class="s1" x="657.0" y="116.2" width="18.0" height="15.8"><title>30 Oct: engine +3.4%</title></rect>
+<rect class="s2" x="677.0" y="66.6" width="18.0" height="65.4"><title>30 Oct: ML model +14.1%</title></rect>
+<text x="676.0" y="266" text-anchor="middle" class="mut num" style="font-size:11.5px">30 Oct</text>
+</svg></div>
+      <div class="keys"><span><i class="sw k1"></i>engine</span><span><i class="sw k2"></i>ML model (Chronos-2)</span></div>
+      <figcaption>Percent less error than drift, by week of forecast days. Above zero is better than drift. The engine is above zero in 10 of 11 weeks. The ML model is above zero in 5 of 11, and two of its three best weeks fall inside the test window.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>The AI agents against the engine, on the same days</h2>
+    <figure>
+      <div class="draw"><svg viewBox="0 0 720 280" role="img" aria-label="Error cut against drift on the days the AI agents were scored, engine and agents side by side, for seven weeks.">
+<rect class="band" x="423.1" y="16" width="282.9" height="212"/>
+<text x="564.6" y="29" text-anchor="middle" class="mut" style="font-size:12px">the three test weeks</text>
+<line class="rule" x1="46" y1="208.7" x2="706" y2="208.7"/><text x="40" y="212.7" text-anchor="end" class="mut num" style="font-size:12px">-10%</text>
+<line class="zero" x1="46" y1="170.2" x2="706" y2="170.2"/><text x="40" y="174.2" text-anchor="end" class="mut num" style="font-size:12px">+0%</text>
+<line class="rule" x1="46" y1="131.6" x2="706" y2="131.6"/><text x="40" y="135.6" text-anchor="end" class="mut num" style="font-size:12px">+10%</text>
+<line class="rule" x1="46" y1="93.1" x2="706" y2="93.1"/><text x="40" y="97.1" text-anchor="end" class="mut num" style="font-size:12px">+20%</text>
+<line class="rule" x1="46" y1="54.5" x2="706" y2="54.5"/><text x="40" y="58.5" text-anchor="end" class="mut num" style="font-size:12px">+30%</text>
+<line class="rule" x1="46" y1="16.0" x2="706" y2="16.0"/><text x="40" y="20.0" text-anchor="end" class="mut num" style="font-size:12px">+40%</text>
+<rect class="s1" x="74.1" y="94.8" width="18.0" height="75.3"><title>18 Sep: engine +19.5%</title></rect>
+<rect class="s3" x="94.1" y="38.9" width="18.0" height="131.3"><title>18 Sep: AI agents +34.1%</title></rect>
+<text x="93.1" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">18 Sep</text>
+<rect class="s1" x="168.4" y="144.5" width="18.0" height="25.7"><title>25 Sep: engine +6.7%</title></rect>
+<rect class="s3" x="188.4" y="141.1" width="18.0" height="29.0"><title>25 Sep: AI agents +7.5%</title></rect>
+<text x="187.4" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">25 Sep</text>
+<rect class="s1" x="262.7" y="170.2" width="18.0" height="1.0"><title>2 Oct: engine -0.2%</title></rect>
+<rect class="s3" x="282.7" y="139.0" width="18.0" height="31.2"><title>2 Oct: AI agents +8.1%</title></rect>
+<text x="281.7" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">2 Oct</text>
+<rect class="s1" x="357.0" y="86.6" width="18.0" height="83.5"><title>9 Oct: engine +21.7%</title></rect>
+<rect class="s3" x="377.0" y="73.5" width="18.0" height="96.7"><title>9 Oct: AI agents +25.1%</title></rect>
+<text x="376.0" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">9 Oct</text>
+<rect class="s1" x="451.3" y="125.2" width="18.0" height="45.0"><title>16 Oct: engine +11.7%</title></rect>
+<rect class="s3" x="471.3" y="98.9" width="18.0" height="71.3"><title>16 Oct: AI agents +18.5%</title></rect>
+<text x="470.3" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">16 Oct</text>
+<rect class="s1" x="545.6" y="170.2" width="18.0" height="13.4"><title>23 Oct: engine -3.5%</title></rect>
+<rect class="s3" x="565.6" y="157.7" width="18.0" height="12.5"><title>23 Oct: AI agents +3.2%</title></rect>
+<text x="564.6" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">23 Oct</text>
+<rect class="s1" x="639.9" y="170.2" width="18.0" height="5.8"><title>30 Oct: engine -1.5%</title></rect>
+<rect class="s3" x="659.9" y="115.1" width="18.0" height="55.0"><title>30 Oct: AI agents +14.3%</title></rect>
+<text x="658.9" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">30 Oct</text>
+</svg></div>
+      <div class="keys"><span><i class="sw k1"></i>engine</span><span><i class="sw k3"></i>five AI agents, averaged</span></div>
+      <figcaption>Percent less error than drift on the days the agents ran (one to three days in each week), with the engine scored on exactly the same forecasts. The agents are ahead in 7 of 7 weeks.</figcaption>
+    </figure>
+    <p>Over all 14 days (910 forecasts) the agents cut error by +15.2% against drift (likely +9% to +22%), and by +8.3% against the engine (likely +3% to +14%).</p>
+  </section>
+
+  <section>
+    <h2>Four years of AWS prices: the engine holds, and here the ML model is better</h2>
+    <figure>
+      <div class="draw"><svg viewBox="0 0 720 260" role="img" aria-label="AWS prices by year, forecasts made on Fridays: error cut against drift for the engine and the ML model.">
+<line class="rule" x1="46" y1="208.0" x2="706" y2="208.0"/><text x="40" y="212.0" text-anchor="end" class="mut num" style="font-size:12px">-10%</text>
+<line class="zero" x1="46" y1="169.6" x2="706" y2="169.6"/><text x="40" y="173.6" text-anchor="end" class="mut num" style="font-size:12px">+0%</text>
+<line class="rule" x1="46" y1="131.2" x2="706" y2="131.2"/><text x="40" y="135.2" text-anchor="end" class="mut num" style="font-size:12px">+10%</text>
+<line class="rule" x1="46" y1="92.8" x2="706" y2="92.8"/><text x="40" y="96.8" text-anchor="end" class="mut num" style="font-size:12px">+20%</text>
+<line class="rule" x1="46" y1="54.4" x2="706" y2="54.4"/><text x="40" y="58.4" text-anchor="end" class="mut num" style="font-size:12px">+30%</text>
+<line class="rule" x1="46" y1="16.0" x2="706" y2="16.0"/><text x="40" y="20.0" text-anchor="end" class="mut num" style="font-size:12px">+40%</text>
+<rect class="s1" x="93.0" y="165.4" width="18.0" height="4.2"><title>2022: engine +1.1%</title></rect>
+<rect class="s2" x="113.0" y="74.8" width="18.0" height="94.8"><title>2022: ML model +24.7%</title></rect>
+<text x="112.0" y="226" text-anchor="middle" class="mut num" style="font-size:11.5px">2022</text>
+<rect class="s1" x="225.0" y="45.8" width="18.0" height="123.8"><title>2023: engine +32.2%</title></rect>
+<rect class="s2" x="245.0" y="88.9" width="18.0" height="80.7"><title>2023: ML model +21.0%</title></rect>
+<text x="244.0" y="226" text-anchor="middle" class="mut num" style="font-size:11.5px">2023</text>
+<rect class="s1" x="357.0" y="147.3" width="18.0" height="22.3"><title>2024: engine +5.8%</title></rect>
+<rect class="s2" x="377.0" y="151.3" width="18.0" height="18.3"><title>2024: ML model +4.8%</title></rect>
+<text x="376.0" y="226" text-anchor="middle" class="mut num" style="font-size:11.5px">2024</text>
+<rect class="s1" x="489.0" y="143.7" width="18.0" height="25.9"><title>2025: engine +6.7%</title></rect>
+<rect class="s2" x="509.0" y="97.1" width="18.0" height="72.5"><title>2025: ML model +18.9%</title></rect>
+<text x="508.0" y="226" text-anchor="middle" class="mut num" style="font-size:11.5px">2025</text>
+<rect class="s1" x="621.0" y="169.6" width="18.0" height="7.7"><title>2026: engine -2.0%</title></rect>
+<rect class="s2" x="641.0" y="124.9" width="18.0" height="44.7"><title>2026: ML model +11.6%</title></rect>
+<text x="640.0" y="226" text-anchor="middle" class="mut num" style="font-size:11.5px">2026</text>
+</svg></div>
+      <div class="keys"><span><i class="sw k1"></i>engine</span><span><i class="sw k2"></i>ML model (Chronos-2)</span></div>
+      <figcaption>Percent less error than drift by year, on forecasts made on Fridays (8,221 of them), both scored on the same forecasts. Over all 35,952 AWS forecasts the engine beats drift by +7.9% (likely +5% to +11%) and is ahead in 154 of 206 weeks. The ML model beats the engine here by +10.9% (likely +1% to +19%).</figcaption>
+    </figure>
+    <figure>
+      <div class="draw"><svg viewBox="0 0 720 280" role="img" aria-label="AWS prices on twelve days across four years: error cut against drift for the engine and the AI agents.">
+<line class="rule" x1="46" y1="208.7" x2="706" y2="208.7"/><text x="40" y="212.7" text-anchor="end" class="mut num" style="font-size:12px">-20%</text>
+<line class="zero" x1="46" y1="170.2" x2="706" y2="170.2"/><text x="40" y="174.2" text-anchor="end" class="mut num" style="font-size:12px">+0%</text>
+<line class="rule" x1="46" y1="131.6" x2="706" y2="131.6"/><text x="40" y="135.6" text-anchor="end" class="mut num" style="font-size:12px">+20%</text>
+<line class="rule" x1="46" y1="93.1" x2="706" y2="93.1"/><text x="40" y="97.1" text-anchor="end" class="mut num" style="font-size:12px">+40%</text>
+<line class="rule" x1="46" y1="54.5" x2="706" y2="54.5"/><text x="40" y="58.5" text-anchor="end" class="mut num" style="font-size:12px">+60%</text>
+<line class="rule" x1="46" y1="16.0" x2="706" y2="16.0"/><text x="40" y="20.0" text-anchor="end" class="mut num" style="font-size:12px">+80%</text>
+<rect class="s1" x="54.5" y="170.2" width="18.0" height="12.2"><title>Nov 22: engine -6.3%</title></rect>
+<rect class="s3" x="74.5" y="49.8" width="18.0" height="120.4"><title>Nov 22: AI agents +62.5%</title></rect>
+<text x="73.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Nov 22</text>
+<rect class="s1" x="109.5" y="129.3" width="18.0" height="40.9"><title>Mar 23: engine +21.2%</title></rect>
+<rect class="s3" x="129.5" y="158.6" width="18.0" height="11.6"><title>Mar 23: AI agents +6.0%</title></rect>
+<text x="128.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Mar 23</text>
+<rect class="s1" x="164.5" y="36.2" width="18.0" height="134.0"><title>Jul 23: engine +69.5%</title></rect>
+<rect class="s3" x="184.5" y="25.5" width="18.0" height="144.6"><title>Jul 23: AI agents +75.1%</title></rect>
+<text x="183.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Jul 23</text>
+<rect class="s1" x="219.5" y="159.5" width="18.0" height="10.7"><title>Nov 23: engine +5.5%</title></rect>
+<rect class="s3" x="239.5" y="154.3" width="18.0" height="15.9"><title>Nov 23: AI agents +8.2%</title></rect>
+<text x="238.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Nov 23</text>
+<rect class="s1" x="274.5" y="170.2" width="18.0" height="42.3"><title>Mar 24: engine -21.9%</title></rect>
+<rect class="s3" x="294.5" y="137.6" width="18.0" height="32.6"><title>Mar 24: AI agents +16.9%</title></rect>
+<text x="293.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Mar 24</text>
+<rect class="s1" x="329.5" y="148.4" width="18.0" height="21.7"><title>Jul 24: engine +11.3%</title></rect>
+<rect class="s3" x="349.5" y="157.9" width="18.0" height="12.3"><title>Jul 24: AI agents +6.4%</title></rect>
+<text x="348.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Jul 24</text>
+<rect class="s1" x="384.5" y="122.6" width="18.0" height="47.6"><title>Nov 24: engine +24.7%</title></rect>
+<rect class="s3" x="404.5" y="95.9" width="18.0" height="74.3"><title>Nov 24: AI agents +38.5%</title></rect>
+<text x="403.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Nov 24</text>
+<rect class="s1" x="439.5" y="166.8" width="18.0" height="3.3"><title>Mar 25: engine +1.7%</title></rect>
+<rect class="s3" x="459.5" y="124.2" width="18.0" height="46.0"><title>Mar 25: AI agents +23.9%</title></rect>
+<text x="458.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Mar 25</text>
+<rect class="s1" x="494.5" y="120.9" width="18.0" height="49.3"><title>Jul 25: engine +25.6%</title></rect>
+<rect class="s3" x="514.5" y="142.6" width="18.0" height="27.6"><title>Jul 25: AI agents +14.3%</title></rect>
+<text x="513.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Jul 25</text>
+<rect class="s1" x="549.5" y="146.9" width="18.0" height="23.3"><title>Nov 25: engine +12.1%</title></rect>
+<rect class="s3" x="569.5" y="135.8" width="18.0" height="34.3"><title>Nov 25: AI agents +17.8%</title></rect>
+<text x="568.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Nov 25</text>
+<rect class="s1" x="604.5" y="128.9" width="18.0" height="41.3"><title>Feb 26: engine +21.4%</title></rect>
+<rect class="s3" x="624.5" y="125.3" width="18.0" height="44.9"><title>Feb 26: AI agents +23.3%</title></rect>
+<text x="623.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Feb 26</text>
+<rect class="s1" x="659.5" y="78.7" width="18.0" height="91.5"><title>Sep 26: engine +47.5%</title></rect>
+<rect class="s3" x="679.5" y="157.2" width="18.0" height="13.0"><title>Sep 26: AI agents +6.7%</title></rect>
+<text x="678.5" y="246" text-anchor="middle" class="mut num" style="font-size:11.5px">Sep 26</text>
+</svg></div>
+      <div class="keys"><span><i class="sw k1"></i>engine</span><span><i class="sw k3"></i>five AI agents, averaged</span></div>
+      <figcaption>The AI agents on twelve days spread across the four years (501 forecasts), with the engine on the same forecasts. The agents beat drift on 12 of 12 days and are ahead of the engine on 8 of 12. Pooled, they beat drift by +19.2% (likely +8% to +31%); against the engine the difference is -4.4% (likely -31% to +16%), which is a tie.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>The three tests side by side</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Forecaster</th><th class="n">Our prices, weeks 1 to 8</th><th class="n">Our prices, weeks 9 to 11</th><th class="n">AWS, four years</th><th>Verdict</th></tr></thead>
+        <tbody><tr><td>Engine</td><td class="n">+8.4%<span class="r">+4% to +14%</span></td><td class="n">+7.7%<span class="r">+2% to +14%</span></td><td class="n">+7.9%<span class="r">+5% to +11%</span></td><td><span class="tag ok">Holds</span></td></tr>
+<tr><td>ML model alone <span class='r'>AWS: Friday forecasts only</span></td><td class="n">-7.1%<span class="r">-18% to +1%</span></td><td class="n">+8.6%<span class="r">-9% to +19%</span></td><td class="n">+16.4%<span class="r">+8% to +23%</span></td><td><span class="tag warn">Mixed</span></td></tr>
+<tr><td>Five AI agents <span class='r'>7, 7 and 12 days</span></td><td class="n">+15.5%<span class="r">+6% to +27%</span></td><td class="n">+14.9%<span class="r">+8% to +22%</span></td><td class="n">+19.2%<span class="r">+8% to +31%</span></td><td><span class="tag ok">Holds</span></td></tr></tbody>
+      </table>
+    </div>
+    <p style="font-size:14.5px;color:var(--muted)">Percent less error than drift, with the likely range underneath. A range that includes zero means the result could be chance.</p>
+  </section>
+
+  <section>
+    <h2>What this means for the file we hand in</h2>
+    <ul>
+      <li><strong>Hand in the agents' forecast:</strong> <span class="mono">submission/alt_agent_crowd_2026-11-06.csv</span>. The agents beat drift in all three tests, and on our own prices they clearly beat the engine.</li>
+      <li><strong>Not an average with the ML model.</strong> It is unreliable on the kind of prices scored tomorrow, even though it is good on AWS prices.</li>
+      <li><strong>The engine alone stays the safe fallback.</strong> It has the longest clean record.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What to keep in mind</h2>
+    <ul>
+      <li><strong>Weeks 1 to 8 were not hidden from me.</strong> I designed the engine while looking at data up to 16 Oct. Its settings were not tuned on those weeks, and it scores the same before and after, but only weeks 9 to 11 were blind for it.</li>
+      <li><strong>The agents' model had never seen any of these dates.</strong> Its knowledge ends in April 2026. I wrote the agents' instructions once, after the test weeks had been looked at, and did not change them.</li>
+      <li><strong>The agents were scored on 14 days, not all 77.</strong> Most of those forecasts are 1 and 3 days ahead; only 61 are 7 days ahead.</li>
+      <li><strong>Weeks 1 to 4 cover 17 prices,</strong> because one of the two main sites only started on 8 Sep.</li>
+      <li><strong>AWS prices are a different kind of price.</strong> AWS sets them itself and they move in small steps. A result there says a method is sound; it does not promise the same on provider lists.</li>
+      <li><strong>The agents' model may have met the AWS years in its training,</strong> since its knowledge runs to April 2026. It is unlikely to remember zone-level prices, but only one of the twelve AWS days is after that date.</li>
+      <li><strong>One place the engine does not beat drift:</strong> the few of our prices that go back to January, mostly four large cloud spot lists. Over 1,757 forecasts from January to August it scores -1.8% (likely -6% to +3%), which is no different from drift.</li>
+    </ul>
+  </section>
+</div>

@@ -1,0 +1,98 @@
+{
+ "engine": {
+  "forecast": "engine",
+  "vs_drift": "+0.050 [-0.048, +0.129]",
+  "vs_engine": "-",
+  "per_price_avg": 0.278,
+  "inside": 0.69,
+  "by_h": {
+   "1": -0.03,
+   "3": 0.05,
+   "7": 0.16
+  }
+ },
+ "ML model (Chronos-2)": {
+  "forecast": "ML model (Chronos-2)",
+  "vs_drift": "+0.136 [-0.130, +0.283]",
+  "vs_engine": "+0.090 [-0.182, +0.238]",
+  "per_price_avg": 0.119,
+  "inside": 0.83,
+  "by_h": {
+   "1": 0.02,
+   "3": 0.03,
+   "7": 0.54
+  }
+ },
+ "agent crowd, working alone": {
+  "forecast": "agent crowd, working alone",
+  "vs_drift": "+0.149 [+0.076, +0.223]",
+  "vs_engine": "+0.104 [+0.029, +0.191]",
+  "per_price_avg": 0.314,
+  "inside": 0.69,
+  "by_h": {
+   "1": 0.08,
+   "3": 0.14,
+   "7": 0.26
+  }
+ },
+ "agent crowd, after seeing each other": {
+  "forecast": "agent crowd, after seeing each other",
+  "vs_drift": "+0.138 [+0.071, +0.214]",
+  "vs_engine": "+0.092 [+0.019, +0.175]",
+  "per_price_avg": 0.303,
+  "inside": 0.7,
+  "by_h": {
+   "1": 0.06,
+   "3": 0.14,
+   "7": 0.24
+  }
+ },
+ "engine + ML": {
+  "forecast": "engine + ML",
+  "vs_drift": "+0.140 [-0.008, +0.229]",
+  "vs_engine": "+0.094 [-0.036, +0.167]",
+  "per_price_avg": 0.243,
+  "inside": 0.78,
+  "by_h": {
+   "1": 0.03,
+   "3": 0.09,
+   "7": 0.39
+  }
+ },
+ "agent crowd + ML": {
+  "forecast": "agent crowd + ML",
+  "vs_drift": "+0.177 [+0.021, +0.266]",
+  "vs_engine": "+0.133 [-0.018, +0.222]",
+  "per_price_avg": 0.254,
+  "inside": 0.78,
+  "by_h": {
+   "1": 0.07,
+   "3": 0.12,
+   "7": 0.44
+  }
+ },
+ "agent crowd + engine": {
+  "forecast": "agent crowd + engine",
+  "vs_drift": "+0.116 [+0.048, +0.191]",
+  "vs_engine": "+0.069 [+0.024, +0.130]",
+  "per_price_avg": 0.311,
+  "inside": 0.69,
+  "by_h": {
+   "1": 0.03,
+   "3": 0.13,
+   "7": 0.21
+  }
+ },
+ "all three averaged": {
+  "forecast": "all three averaged",
+  "vs_drift": "+0.155 [+0.044, +0.230]",
+  "vs_engine": "+0.110 [+0.011, +0.169]",
+  "per_price_avg": 0.283,
+  "inside": 0.76,
+  "by_h": {
+   "1": 0.06,
+   "3": 0.13,
+   "7": 0.36
+  }
+ }
+}

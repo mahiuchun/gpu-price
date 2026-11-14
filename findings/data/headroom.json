@@ -1,0 +1,100 @@
+{
+ "n_forecasts": 1196,
+ "share_where_price_moved": 0.5167224080267558,
+ "share_of_drift_error_on_moved": 0.9384374059661049,
+ "share_of_engine_error_on_moved": 0.9847475494675748,
+ "rows": [
+  {
+   "forecast": "Drift",
+   "error_cut_vs_drift": 0.0,
+   "skill_vs_last": 0.0651121219646521,
+   "note": ""
+  },
+  {
+   "forecast": "Our engine, default settings (a real forecast)",
+   "error_cut_vs_drift": 0.07691767825750973,
+   "skill_vs_last": 0.137021526974221,
+   "note": ""
+  },
+  {
+   "forecast": "Hindsight: flat when the price will not move, our engine when it will",
+   "error_cut_vs_drift": 0.09099694570724315,
+   "skill_vs_last": 0.15018406344459445,
+   "note": ""
+  },
+  {
+   "forecast": "Hindsight: flat when it will not move, drift when it will",
+   "error_cut_vs_drift": 0.06156259403389508,
+   "skill_vs_last": 0.12266624486735189,
+   "note": ""
+  },
+  {
+   "forecast": "Hindsight: per forecast, the better of our engine and drift",
+   "error_cut_vs_drift": 0.14531840444815314,
+   "skill_vs_last": 0.20096853673866855,
+   "note": ""
+  },
+  {
+   "forecast": "Hindsight: middle exactly right, our engine's range width kept",
+   "error_cut_vs_drift": 0.949164844138572,
+   "skill_vs_last": 0.9524748290071134,
+   "note": ""
+  },
+  {
+   "forecast": "Hindsight: best 1 dial change(s) of our engine",
+   "error_cut_vs_drift": 0.12256068163364608,
+   "skill_vs_last": 0.1796926175476974,
+   "note": "class:neocloud_rate_card floor_down=0.04"
+  },
+  {
+   "forecast": "Hindsight: best 2 dial change(s) of our engine",
+   "error_cut_vs_drift": 0.15523848282366937,
+   "skill_vs_last": 0.21024269776109927,
+   "note": "class:neocloud_rate_card floor_down=0.04; all halflife_days=7"
+  },
+  {
+   "forecast": "Hindsight: best 3 dial change(s) of our engine",
+   "error_cut_vs_drift": 0.17087772390762346,
+   "skill_vs_last": 0.2248636346721603,
+   "note": "class:neocloud_rate_card floor_down=0.04; all halflife_days=7; class:neocloud_rate_card replay_entries=False"
+  },
+  {
+   "forecast": "Hindsight: best 4 dial change(s) of our engine",
+   "error_cut_vs_drift": 0.18249961902932987,
+   "skill_vs_last": 0.23572880354124182,
+   "note": "class:neocloud_rate_card floor_down=0.04; all halflife_days=7; class:neocloud_rate_card replay_entries=False; horizon:1 floor_down=0.005"
+  },
+  {
+   "forecast": "Ground truth (knowing the answer)",
+   "error_cut_vs_drift": 1.0,
+   "skill_vs_last": 1.0,
+   "note": ""
+  }
+ ],
+ "hindsight_dial_steps": [
+  {
+   "scope": "class:neocloud_rate_card",
+   "dial": "floor_down",
+   "value": 0.04,
+   "error_cut_vs_drift": 0.12256068163364608
+  },
+  {
+   "scope": "all",
+   "dial": "halflife_days",
+   "value": 7,
+   "error_cut_vs_drift": 0.15523848282366937
+  },
+  {
+   "scope": "class:neocloud_rate_card",
+   "dial": "replay_entries",
+   "value": false,
+   "error_cut_vs_drift": 0.17087772390762346
+  },
+  {
+   "scope": "horizon:1",
+   "dial": "floor_down",
+   "value": 0.005,
+   "error_cut_vs_drift": 0.18249961902932987
+  }
+ ]
+}
