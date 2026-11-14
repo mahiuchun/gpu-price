@@ -50,6 +50,29 @@ def forecast_origin(world: dict, spec: dict, origin: str, horizons=HORIZONS, tea
     return df
 
 
+def from_agents(answers_path: Path, origin: str, team_id: str = "team") -> pd.DataFrame:
+    """The five-agent crowd's forecast, rebuilt from the agents' recorded answers (no AI calls).
+    Each number is the average, in log terms, of the five agents' first-round answers."""
+    jobs = json.loads(Path(answers_path).read_text())
+    od = day_of(origin)
+    rows = []
+    for j in sorted(jobs, key=lambda x: x["series_id"]):
+        if j["origin"] != origin:
+            continue
+        for h in HORIZONS:
+            q = np.exp(np.mean(np.log(np.array([a["q"][str(h)] for a in j["r1"].values()], dtype=float)), axis=0))
+            mid = float(q[1])
+            rows.append({"series_id": j["series_id"], "origin_date": origin, "horizon_days": h,
+                         "q10": round(min(float(q[0]), mid), 6), "q50": round(mid, 6), "q90": round(max(float(q[2]), mid), 6),
+                         "target_date": iso_of(od + h), "team_id": team_id,
+                         "method_note": "average of five AI agents forecasting directly (gpt-6.1-sol; answers recorded 14 Nov 2026 from data up to the origin)"})
+    df = pd.DataFrame(rows)
+    df["q10"] = df[["q10", "q50"]].min(axis=1)
+    df["q90"] = df[["q90", "q50"]].max(axis=1)
+    assert len(df) and (df.q10 > 0).all() and (df.q10 <= df.q50).all() and (df.q50 <= df.q90).all()
+    return df
+
+
 def starter_check(forecast_csv: Path, origin: str) -> str:
     """Run the organisers' scorer in frozen mode on the file. With no truth yet every cell is
     'missing truth', but the file is validated and the honesty checks run. Returns the status."""
@@ -72,18 +95,24 @@ def main(argv=None) -> int:
     ap.add_argument("--origin", default=data.DATA_END)
     ap.add_argument("--out", default=str(data.REPO / "submission" / f"forecast_{data.DATA_END}.csv"))
     ap.add_argument("--team-id", default="team")
+    ap.add_argument("--from-agents", default=None, help="rebuild the agent crowd's forecast from its recorded answers")
     a = ap.parse_args(argv)
-    version = json.loads(Path(a.version).read_text())
-    world = data.build_world(a.origin)
+    world = data.build_world(a.origin)   # also builds the history file the organisers' check needs
     data.assert_walled(world, a.origin)
-    df = forecast_origin(world, version["spec"], a.origin, team_id=a.team_id)
+    if a.from_agents:
+        df = from_agents(Path(a.from_agents), a.origin, team_id=a.team_id)
+        assert set(df.series_id) == set(world["series"]), "the recorded answers do not cover every price"
+    else:
+        version = json.loads(Path(a.version).read_text())
+        df = forecast_origin(world, version["spec"], a.origin, team_id=a.team_id)
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(out, index=False)
     sha = hashlib.sha256(out.read_bytes()).hexdigest()
     print(f"wrote {out} ({len(df)} rows, {df.series_id.nunique()} series) sha256 {sha}")
-    print("engine forecasts:", int(df.method_note.str.startswith("engine").sum()), "| drift fallbacks:",
-          int((~df.method_note.str.startswith("engine")).sum()))
+    if not a.from_agents:
+        print("engine forecasts:", int(df.method_note.str.startswith("engine").sum()), "| drift fallbacks:",
+              int((~df.method_note.str.startswith("engine")).sum()))
     print("starter check:", starter_check(out, a.origin))
     return 0
 

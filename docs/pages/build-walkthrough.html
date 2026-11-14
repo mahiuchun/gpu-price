@@ -101,7 +101,7 @@
   <header>
     <div class="kicker">What we built · 14 Nov 2026</div>
     <h1>A GPU price forecaster, and a test of whether an AI can improve it</h1>
-    <p class="lede">Six pictures. The first five show how it works. The sixth shows what happened.</p>
+    <p class="lede">Six pictures show how it works and what the first test found. A seventh section shows what worked better.</p>
   </header>
 
   <section>
@@ -224,7 +224,7 @@
 
   <section>
     <div class="step">6 · WHAT HAPPENED</div>
-    <h2>The engine works. The AI's ideas did not add to it.</h2>
+    <h2>The engine works. Tuning it with an AI did not add to it.</h2>
     <figure>
       <div class="bars" role="img" aria-label="Error cut compared with drift over three blind weeks. Engine alone 7.7 percent. Engine plus the AI scientist's kept ideas 5.0 percent. Engine plus the one idea from the trained small model 8.9 percent.">
         <div class="bar-row"><div class="lab"><strong>Engine alone</strong></div><div class="track"><div class="fill main" style="width:77%"></div><span class="val" style="left:77%">7.7%</span></div></div>
@@ -243,6 +243,26 @@
   </section>
 
   <section>
+    <div class="step">7 · WHAT WORKED BETTER</div>
+    <h2>Five AI agents that forecast each price directly</h2>
+    <figure>
+      <div class="bars" role="img" aria-label="Error cut compared with drift on our 37 prices: engine alone 8 percent, five AI agents averaged 15 percent.">
+        <div class="bar-row"><div class="lab">Engine alone</div><div class="track"><div class="fill" style="width:40%"></div><span class="val" style="left:40%">8%</span></div></div>
+        <div class="bar-row"><div class="lab"><strong>Five AI agents, averaged</strong></div><div class="track"><div class="fill main" style="width:76%"></div><span class="val" style="left:76%">15%</span></div></div>
+        <div class="axis"><span></span><div><span>0%</span><span>10%</span><span>20%</span></div></div>
+      </div>
+      <figcaption>How much less error than drift on our 37 prices, across eleven weeks. The engine is scored on every day, the agents on 14 of those days.</figcaption>
+    </figure>
+    <ul>
+      <li><strong>Each agent has a different job:</strong> read the list, watch the providers that reprice often, stick to how rarely prices move, weigh the other forecasts, look for jumps that may reverse.</li>
+      <li><strong>Each one forecasts every price alone.</strong> Their answers are averaged.</li>
+      <li><strong>They beat drift in three separate tests,</strong> including four years of AWS prices. Their forecast is now the one we hand in.</li>
+      <li><strong>Letting them read each other's answers did not help.</strong></li>
+    </ul>
+    <p>The dates behind every number are on the <a href="https://claude.ai/artifact/M46Y5eFsYUh3ytuuEbMAVG">test periods page</a>.</p>
+  </section>
+
+  <section>
     <h2>Also built</h2>
     <p><strong>What actually moves a published price.</strong> For provider list prices, most day-to-day movement is not providers changing what they charge:</p>
     <div class="split" role="img" aria-label="66 percent providers joining or leaving the list, 25 percent one or two providers that reprice almost daily, 9 percent everyone else.">
@@ -251,7 +271,7 @@
     <div class="keys"><span><i class="sw k1"></i>providers joining or leaving the list</span><span><i class="sw k2"></i>one or two that reprice almost daily</span><span><i class="sw k3"></i>everyone else</span></div>
     <ul>
       <li><strong>Training a small model (on Tinker).</strong> About 2,000 practice tries, about $2. That is where the "30 days" idea came from.</li>
-      <li><strong>A 2 to 3 year view.</strong> H100 rent on AWS spot: <span class="mono">$3.86</span> an hour now, about <span class="mono">$2.56</span> in two years, anywhere from <span class="mono">$0.97</span> to <span class="mono">$7.15</span>. A used H100: about <span class="mono">$24,400</span> now, about <span class="mono">$11,000</span> in two years, with a very wide range.</li>
+      <li><strong>A 2 to 3 year view.</strong> H100 rent on AWS spot: <span class="mono">$3.86</span> an hour now, about <span class="mono">$2.56</span> in two years, anywhere from <span class="mono">$0.97</span> to <span class="mono">$7.15</span>. A used H100 module: about <span class="mono">$12,000</span> now, about <span class="mono">$5,400</span> in two years, with a very wide range.</li>
       <li><strong>Exa lookups.</strong> Covered on its own page: <a href="https://claude.ai/artifact/7kzZ1dLhJbRxzQVeNfh4zE">Exa status</a>.</li>
     </ul>
   </section>
@@ -262,22 +282,22 @@
       <table>
         <thead><tr><th>File</th><th>What it is</th></tr></thead>
         <tbody>
-          <tr><td>submission/forecast_2026-11-06.csv</td><td>The forecast to hand in: 37 prices, 3 horizons, 111 rows. Made by the engine alone.</td></tr>
+          <tr><td>submission/forecast_2026-11-06.csv</td><td>The forecast to hand in: 37 prices, 3 horizons, 111 rows. The average of five AI agents.</td></tr>
+          <tr><td>submission/alt_engine_2026-11-06.csv</td><td>The engine's own forecast, for comparison.</td></tr>
           <tr><td>FINDINGS.md</td><td>The write-up for the judges.</td></tr>
-          <tr><td>reproduce.sh</td><td>One command that rebuilds the forecast file in 14 seconds, with no AI calls.</td></tr>
+          <tr><td>reproduce.sh</td><td>One command that rebuilds both forecast files in 15 seconds, with no AI calls.</td></tr>
           <tr><td>PROTOCOL.md</td><td>The test rules, saved before the test ran.</td></tr>
           <tr><td>runs/record/</td><td>Every idea the AI tried and every blind score.</td></tr>
         </tbody>
       </table>
     </div>
-    <p>All of it is on a branch called <span class="mono">build</span>. Nothing has been pushed or submitted.</p>
+    <p>All of it is pushed to the private GitHub repository. Nothing has been submitted to the organisers.</p>
   </section>
 
   <div class="answer">
-    <p><strong>What you need to decide</strong></p>
-    <p>1. Which forecast file to hand in. I suggest the engine-alone file above.</p>
-    <p>2. Whether I merge <span class="mono">build</span> into <span class="mono">main</span> and push.</p>
-    <p>3. Whether to trim the write-up; it is about 2,500 words.</p>
+    <p><strong>What is left for you</strong></p>
+    <p>1. Hand in <span class="mono">submission/forecast_2026-11-06.csv</span> before the deadline.</p>
+    <p>2. Decide whether to make the GitHub repository public. It is private now.</p>
   </div>
 
 </div>

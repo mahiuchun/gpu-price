@@ -137,3 +137,15 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
    full version with intervals; the breakdown of what moves a median; the roll-forward test.
 4. **No code or setting that affects forecasts changed after the run.** `engine.py`, `harness.py`,
    `core.py` and `scientist.py` are as committed in `354fc20`.
+5. **Two forecasters were added after the blind test:** a pretrained time-series model (Chronos-2) and a
+   crowd of five AI agents that forecast each price directly. Neither is in the protocol above. Both
+   were first scored on the three test weeks after those weeks had been looked at. The agents'
+   instructions were written once and not changed afterwards.
+6. **More test periods were added after the blind test,** because one three-week window is thin: the
+   eight weeks before it (21 Aug to 15 Oct) and four years of AWS spot prices. The eight earlier weeks
+   were visible while the engine was being designed, so they are not blind for the engine.
+7. **The submission is the agent crowd,** not the scientist's step-4 version (the protocol) and not the
+   engine alone (deviation 2). It beat drift in all three tests and beat the engine on our own
+   prices. The engine alone is `submission/alt_engine_2026-11-06.csv`.
+8. **The main forecast is rebuilt from recorded AI answers.** `reproduce.sh` averages the answers saved
+   in `runs/agents/final_answers.json`; asking the agents again gives slightly different numbers.

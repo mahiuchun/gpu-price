@@ -196,6 +196,37 @@ def fig_rl() -> None:
     _save(fig, "fig5_rl.png")
 
 
+def fig_three_tests() -> None:
+    """Engine, ML model and AI agents against drift in three separate tests, with 90% intervals."""
+    d = data.REPO / "findings" / "data"
+    if not (d / "aws_table.json").exists():
+        return
+    t = json.loads((d / "periods_table.json").read_text())["blocks"]
+    ad = json.loads((d / "periods_agent_days.json").read_text())
+    aws = json.loads((d / "aws_table.json").read_text())
+    before, test = t["before the test weeks (21 Aug to 15 Oct)"], t["test weeks (16 Oct to 5 Nov)"]
+    groups = ["Our 37 prices\n8 earlier weeks", "Our 37 prices\n3 test weeks", "AWS spot prices\n4 years"]
+    series = [("Engine", BLUE, [before["engine"]["vs_drift"], test["engine"]["vs_drift"], aws["engine"]["vs_drift"]]),
+              ("ML model (Chronos-2)", ORANGE, [before["ml"]["vs_drift"], test["ml"]["vs_drift"], aws["ml"]["vs_drift"]]),
+              ("Five AI agents", AQUA, [ad["before"]["agents"]["vs_drift"], ad["test"]["agents"]["vs_drift"], aws["agents"]["vs_drift"]])]
+    fig, ax = plt.subplots(figsize=(9.5, 4.2))
+    x = np.arange(len(groups)); w = 0.25
+    for i, (name, col, vals) in enumerate(series):
+        xs = x + (i - 1) * (w + 0.02)
+        v = np.array([100 * q["skill"] for q in vals]); lo = np.array([100 * q["lo90"] for q in vals]); hi = np.array([100 * q["hi90"] for q in vals])
+        ax.bar(xs, v, w, color=col, label=name, edgecolor=SURFACE, linewidth=2)
+        ax.errorbar(xs, v, yerr=[v - lo, hi - v], fmt="none", ecolor=INK, elinewidth=1.2, capsize=3)
+        for xx, vv, hh in zip(xs, v, hi):
+            ax.text(xx, max(hh, vv, 0) + 1.2, f"{vv:+.0f}%", ha="center", va="bottom", fontsize=9, color=INK)
+    ax.axhline(0, color=INK2, linewidth=1)
+    ax.set_xticks(x, groups)
+    ax.set_ylabel("Less error than drift\n(bar = estimate, line = 90% interval)")
+    ax.set_title("Three separate tests")
+    ax.grid(axis="x", visible=False)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=3, fontsize=9)
+    _save(fig, "fig6_three_tests.png")
+
+
 def main() -> int:
     rep = json.loads((data.REPO / "runs" / "record" / "report.json").read_text())
     fig_blind_weeks(rep)
@@ -203,6 +234,7 @@ def main() -> int:
     fig_what_moves()
     fig_rollforward()
     fig_rl()
+    fig_three_tests()
     return 0
 
 

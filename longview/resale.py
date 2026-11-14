@@ -14,10 +14,13 @@ The rent is the AWS spot rental outlook in out/outlook.csv (its 10% / 50% / 90% 
 an input to the model and is never joined to a resale price series.
 
 What the script produces
-  * the model's value in use today (range over the assumptions), set beside the dated public resale
-    quotes in data/resale_quotes.csv as a check on the assumptions. Nothing is fitted to the quotes.
+  * today's quoted resale price of a bare GPU module: the midpoint of the used-price range in American
+    Compute's GPU Prices CSV (two rows of data/resale_quotes.csv).
+  * the model's value in use today (range over the assumptions), reported beside that quote. The two are
+    different things: the model values the rent an installed GPU can still earn, the quote is what a bare
+    module sells for. Nothing is fitted to the quotes and the gap between them is not a calibration check.
   * the model's value at +1, +2, +3 years as a share of its value today, and that share applied to
-    today's quoted resale price (USD per GPU).
+    today's quoted resale price (USD per bare GPU module).
   * one-at-a-time sensitivities, and the same calculation on one other rental benchmark.
 
 Inputs : longview/out/outlook.csv, longview/data/resale_quotes.csv, pack daily_statistics.csv
@@ -52,8 +55,26 @@ HORIZONS = (1, 2, 3)                # years ahead
 MAX_MONTHS = 12 * 9                 # longest life considered, with room to spare
 CHIPS = ("H100", "A100")
 
+# --- today's quoted resale price: one publisher's CSV, used with the attribution its header asks for ----
+AMC_CITE = "American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices"
+ANCHOR_URL = "https://www.amcompute.com/gpu-prices/data.csv"
+
+# --- what each public figure is, read from the words in its `measure` column -------------------------
+KIND_WORDS = (("middle of resale prices", "resale_middle"), ("executed secondary sale", "one_sale"),
+              ("executed trades and firm dealer quotes", "trades_and_quotes"), ("asking price", "ask"),
+              ("appraised", "appraisal"))
+KIND_STYLE = {  # kind: (chart marker, filled, plain name)
+    "resale_middle": ("s", True, "middle of resale prices over 12 months"),
+    "one_sale": ("o", True, "one individual sale"),
+    "trades_and_quotes": ("^", True, "publisher's weekly price from trades and firm dealer quotes"),
+    "ask": ("o", False, "asking price"),
+    "appraisal": ("D", False, "appraisal, one example"),
+    "other": ("v", False, "other public figure"),
+}
+BASIS_NAME = {"server": "8-GPU server price / 8", "module": "bare GPU module"}
+
 # --- assumptions: (low, central, high). Low and high are judgement unless a basis is given. --------
-AMC_CALC = "American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices (calculator default)"
+AMC_CALC = AMC_CITE + " (calculator default)"
 ASSUME = {
     "H100": {
         "utilisation": (0.50, 0.70, 0.90),
@@ -132,21 +153,23 @@ def load_quotes():
     q["mid"] = (q.lo + q.hi) / 2
     q["chip"] = np.where(q.gpu.str.startswith("H100"), "H100", np.where(q.gpu.str.startswith("A100"), "A100", ""))
     q["basis"] = np.where(q.unit.str.contains("8-GPU server"), "server",
-                          np.where(q.unit.str.contains("bare module"), "module", "percent"))
+                          np.where(q.unit.str.contains("bare module"), "module", "other"))
     per = np.where(q.basis == "server", 8.0, 1.0)
     q["lo_gpu"], q["hi_gpu"], q["mid_gpu"] = q.lo / per, q.hi / per, q.mid / per
-    sale_words = ("realized", "executed", "resale prices")
-    q["evidence"] = np.where(q.measure.apply(lambda s: any(w in s for w in sale_words)), "sale", "ask")
+    q["kind"] = [next((k for words, k in KIND_WORDS if words in s), "other") for s in q.measure]
+    q["is_anchor"] = (q.url == ANCHOR_URL) & (q.basis == "module")
     return q
 
 
 def anchors(q, chip):
-    """Today's quoted resale price: the one publisher that reports both chips the same way, from realized sales."""
-    amc = q[(q.chip == chip) & q.publisher.str.startswith("American Compute")]
-    server = amc[amc.basis == "server"].iloc[0]
-    module = amc[(amc.basis == "module") & amc.measure.str.contains("typical realized sale")].iloc[0]
-    return {"server_per_gpu": round(server.mid_gpu, -2), "module": float(module.mid),
-            "server_row": server, "module_row": module}
+    """Today's quoted resale price of a bare GPU module: the midpoint of the used-price range in the publisher's CSV."""
+    rows = q[(q.chip == chip) & q.is_anchor]
+    if len(rows) != 1:
+        raise SystemExit(f"{QUOTES}: expected one bare-module row for {chip} from {ANCHOR_URL}, found {len(rows)}")
+    row = rows.iloc[0]
+    return {"module": float(row.mid), "lo": float(row.lo), "hi": float(row.hi), "gpu": row.gpu,
+            "published": row.published_date,
+            "source": f"midpoint of the used-price range for {row.gpu} ({row.lo:,.0f} to {row.hi:,.0f} USD) in {AMC_CITE}"}
 
 
 def load_alt_benchmark(origin):
@@ -234,24 +257,22 @@ def run_chip(chip, ol, alt, anchor, rng):
     for r in rows:
         mv, sh = r["model_value_in_use_usd"], r["share"]
         d = {"chip": chip, "years_ahead": r["years_ahead"], "target_date": r["target_date"],
-             "unit": "USD per GPU, as one of eight in a working server",
              "rent_input_series": ol["series"],
              "rent_q10_widened": round(r["rent_q10"], 4), "rent_q50": round(r["rent_q50"], 4),
-             "rent_q90_widened": round(r["rent_q90"], 4)}
+             "rent_q90_widened": round(r["rent_q90"], 4),
+             "model_value_unit": "USD per GPU installed in a working server (the rent it can still earn; not a resale price)"}
         for name, val in zip(("low", "central", "high"), mv):
             d[f"model_value_in_use_usd_{name}"] = round(float(val), -2)
         d["model_value_all_assumptions_central_usd"] = round(r["model_value_all_central_usd"], -2)
         for name, val in zip(("low", "central", "high"), sh):
             d[f"share_of_today_{name}"] = round(float(val), 3)
-        d["quote_today_per_gpu_in_server_usd"] = anchor["server_per_gpu"]
-        rnd = (lambda x: x) if r["years_ahead"] == 0 else (lambda x: round(x, -2))
-        for name, val in zip(("low", "central", "high"), sh):
-            d[f"resale_usd_per_gpu_in_server_{name}"] = rnd(float(val) * anchor["server_per_gpu"])
+        d["resale_unit"] = "USD per bare GPU module"
         d["quote_today_bare_module_usd"] = anchor["module"]
+        d["quote_today_source"] = anchor["source"]
+        rnd = (lambda x: x) if r["years_ahead"] == 0 else (lambda x: round(x, -2))
         for name, val in zip(("low", "central", "high"), sh):
             d[f"resale_usd_bare_module_{name}"] = rnd(float(val) * anchor["module"])
         d["share_of_draws_past_end_of_life"] = round(r["share_of_draws_past_end_of_life"], 3)
-        d["model_today_central_over_quote"] = round(float(q3(v0)[1]) / anchor["server_per_gpu"], 2) if r["years_ahead"] == 0 else ""
         out.append(d)
 
     # --- one-at-a-time sensitivities around the all-central case
@@ -355,81 +376,113 @@ def money(x):
     return f"\\${x / 1000:.1f}k" if x < 99950 else f"\\${x / 1000:.0f}k"
 
 
+def usd(x):
+    """Exact dollar label for chart text."""
+    return f"\\${x:,.0f}"
+
+
+def published_span(dates):
+    """'Sep to Oct 2026' from the rows' published dates; empty if no row carries a full date."""
+    d = pd.to_datetime(pd.Series(list(dates), dtype=str), format="%Y-%m-%d", errors="coerce").dropna()
+    if d.empty:
+        return ""
+    a, b = d.min(), d.max()
+    if (a.year, a.month) == (b.year, b.month):
+        return f"{a:%b %Y}"
+    return f"{a:%b} to {b:%b %Y}" if a.year == b.year else f"{a:%b %Y} to {b:%b %Y}"
+
+
+def quote_marker(kind, is_anchor, **kw):
+    """One marker per kind of public figure; the figure used as today's quote is drawn in full ink."""
+    marker, filled, _ = KIND_STYLE[kind]
+    c = INK if is_anchor else INK2
+    return dict(marker=marker, mfc=c if filled else SURFACE, mec=c, mew=1.5, ls="none", **kw)
+
+
 def chart(outlook_rows, quotes, anch):
-    fig, axes = plt.subplots(1, 2, figsize=(13.5, 7.6), facecolor=SURFACE)
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 7.8), facecolor=SURFACE)
     X_QUOTE, X_MODEL, X_H = 0.0, 1.1, {1: 2.5, 2: 3.75, 3: 5.0}
     for ax, chip in zip(axes, CHIPS):
         col = COL[chip]
         rows = [r for r in outlook_rows if r["chip"] == chip]
         today = rows[0]
         a = anch[chip]
-        qs = quotes[(quotes.chip == chip) & (quotes.basis != "percent")].reset_index(drop=True)
-        # public quotes: shape = what was priced, fill = from completed sales or not
+        qs = quotes[(quotes.chip == chip) & quotes.basis.isin(list(BASIS_NAME))].reset_index(drop=True)
+        # public figures: today's quote (a bare module) first, then server prices divided by 8, low to high
         order = list(qs.sort_values(["basis", "mid_gpu"]).index)
         offs = np.linspace(-0.3, 0.3, len(order)) if len(order) > 1 else [0.0]
         x_anchor = X_QUOTE
         for off, i in zip(offs, order):
             r = qs.loc[i]
-            if r.hi_gpu > r.lo_gpu:
-                ax.plot([X_QUOTE + off] * 2, [r.lo_gpu, r.hi_gpu], color=INK2, lw=1.4, solid_capstyle="round", zorder=3)
-            ax.plot(X_QUOTE + off, r.mid_gpu, marker="o" if r.basis == "server" else "s", ms=8.5,
-                    mfc=INK2 if r.evidence == "sale" else SURFACE, mec=INK2, mew=1.5, ls="none", zorder=4)
-            if r.url == a["server_row"].url and r.measure == a["server_row"].measure:
+            if r["hi_gpu"] > r["lo_gpu"]:
+                ax.plot([X_QUOTE + off] * 2, [r["lo_gpu"], r["hi_gpu"]], color=INK if r["is_anchor"] else INK2, lw=1.4,
+                        solid_capstyle="round", zorder=3)
+            ax.plot(X_QUOTE + off, r["mid_gpu"], zorder=4, **quote_marker(r["kind"], r["is_anchor"], ms=8.5))
+            if r["is_anchor"]:
                 x_anchor = X_QUOTE + off
-        # today's quoted price, carried across as the reference level
-        ax.plot([x_anchor, X_H[3] + 1.2], [a["server_per_gpu"]] * 2, color=INK2, lw=0.9, zorder=1)
-        ax.annotate(f"today's quote\n{money(a['server_per_gpu'])}", (X_H[3] + 1.2, a["server_per_gpu"]), xytext=(0, 4),
-                    textcoords="offset points", ha="right", va="bottom", fontsize=8.5, color=INK2, linespacing=1.3)
-        # the model's value in use today, as a check on the assumptions
+        # today's quoted price of a bare module, carried across as the reference level
+        ax.plot([x_anchor, X_H[3] + 1.2], [a["module"]] * 2, color=INK2, lw=0.9, zorder=1)
+        ax.annotate(f"today's quote, bare module\n{usd(a['module'])}\n(range {usd(a['lo'])} to {usd(a['hi'])})",
+                    (X_H[3] + 1.2, a["module"]), xytext=(0, 4), textcoords="offset points", ha="right", va="bottom",
+                    fontsize=8.5, color=INK2, linespacing=1.3)
+        # the model's value in use today: the rent an installed GPU can still earn, a different thing from the quote
         lo, mid, hi = (today[f"model_value_in_use_usd_{k}"] for k in ("low", "central", "high"))
         ax.plot([X_MODEL] * 2, [lo, hi], color=GREY, lw=9, alpha=0.35, solid_capstyle="butt", zorder=2)
         ax.plot(X_MODEL, mid, marker="o", ms=9, mfc=GREY, mec=SURFACE, mew=2, ls="none", zorder=4)
         ax.text(X_MODEL, 0.975, f"model\n{money(mid)}\n{money(lo)} to {money(hi)}", transform=ax.get_xaxis_transform(),
                 ha="center", va="top", fontsize=8.5, color=INK, linespacing=1.35)
-        # outlook: today's quote times the model's share of today's value
+        # outlook: today's quote for a bare module times the model's share of today's value
         for r in rows[1:]:
             x = X_H[r["years_ahead"]]
-            lo, mid, hi = (r[f"resale_usd_per_gpu_in_server_{k}"] for k in ("low", "central", "high"))
+            lo, mid, hi = (r[f"resale_usd_bare_module_{k}"] for k in ("low", "central", "high"))
             ax.plot([x] * 2, [lo, hi], color=col, lw=9, alpha=0.3, solid_capstyle="butt", zorder=2)
             ax.plot(x, mid, marker="o", ms=9, mfc=col, mec=SURFACE, mew=2, ls="none", zorder=4)
             ax.text(x, 0.975, f"{r['share_of_today_central']:.0%} of today\n{money(mid)}\n{money(lo)} to {money(hi)}",
                     transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=8.5, color=INK, linespacing=1.35)
-        style(ax, "USD per GPU (server price / 8, unless a bare module)")
-        ax.set_title(f"{chip}: what a used GPU is worth, today and in 1 to 3 years", color=INK, fontsize=11, loc="left", pad=26)
+        style(ax, "USD per GPU")
+        ax.set_title(f"{chip}: resale price of a bare GPU module, today and in 1 to 3 years", color=INK, fontsize=11,
+                     loc="left", pad=26)
         ax.set_xlim(-0.6, X_H[3] + 1.25)
-        top = max(today["model_value_in_use_usd_high"], max(r["resale_usd_per_gpu_in_server_high"] for r in rows[1:]),
-                  qs.hi_gpu.max())
+        top = max([today["model_value_in_use_usd_high"]] + [r["resale_usd_bare_module_high"] for r in rows[1:]]
+                  + list(qs.hi_gpu))
         ax.set_ylim(0, top * 1.36)
         ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda y, _: f"\\${y / 1000:.0f}k"))
         ax.set_xticks([X_QUOTE, X_MODEL, X_H[1], X_H[2], X_H[3]])
-        ax.set_xticklabels(["public quotes\nAug to Nov 2026", "model\ntoday", "+1 yr", "+2 yr", "+3 yr"], fontsize=9)
+        span = published_span(qs.published_date)
+        ax.set_xticklabels(["public figures" + (f"\n{span}" if span else ""), "model\ntoday", "+1 yr", "+2 yr", "+3 yr"],
+                           fontsize=9)
         ax.axvline(1.8, color="#c9c8c3", lw=0.8)
-        ax.text(0.55, 1.012, "today: a check on the assumptions", transform=ax.get_xaxis_transform(), ha="center",
+        ax.text(-0.55, 1.012, "today: two different things", transform=ax.get_xaxis_transform(), ha="left",
                 va="bottom", fontsize=8.5, color=INK2)
-        ax.text(X_H[2], 1.012, "outlook: resale value per GPU, 10% to 90% range", transform=ax.get_xaxis_transform(), ha="center",
-                va="bottom", fontsize=8.5, color=INK2)
-        h = []
-        present = {(b, e) for b, e in zip(qs.basis, qs.evidence)}
-        lab = {("server", "sale"): "quote from completed sales: 8-GPU server price / 8",
-               ("server", "ask"): "asking price or appraisal: 8-GPU server price / 8",
-               ("module", "sale"): "quote from completed sales: bare GPU module",
-               ("module", "ask"): "indicative dealer range: bare GPU module"}
-        for key in (("server", "sale"), ("server", "ask"), ("module", "sale"), ("module", "ask")):
-            if key in present:
-                h.append(Line2D([], [], marker="o" if key[0] == "server" else "s", ms=8, ls="none",
-                                mfc=INK2 if key[1] == "sale" else SURFACE, mec=INK2, mew=1.5, label=lab[key]))
+        ax.text(1.95, 1.012, "outlook: bare module resale price, 10% to 90% range", transform=ax.get_xaxis_transform(),
+                ha="left", va="bottom", fontsize=8.5, color=INK2)
+        # legend: every public figure is named by what it is
+        h = [Line2D([], [], label="today's quote: bare GPU module, midpoint of the published range of resale prices",
+                    **quote_marker("resale_middle", True, ms=8))]
+        others = qs[~qs.is_anchor]
+        for kind in KIND_STYLE:
+            for basis in BASIS_NAME:
+                if ((others.kind == kind) & (others.basis == basis)).any():
+                    h.append(Line2D([], [], label=f"{KIND_STYLE[kind][2]}: {BASIS_NAME[basis]}",
+                                    **quote_marker(kind, False, ms=8)))
         h.append(Line2D([], [], color=GREY, lw=7, alpha=0.35, marker="o", ms=8, mfc=GREY, mec=SURFACE, mew=2,
-                        label="model: value in use today (discounted net rent), 10% to 90% across the assumptions"))
+                        label="model, not a resale price: discounted net rent an installed GPU can still earn, 10% to 90%"))
         h.append(Line2D([], [], color=col, lw=7, alpha=0.3, marker="o", ms=8, mfc=col, mec=SURFACE, mew=2,
-                        label="resale outlook: today's quote x the model's share of today's value"))
+                        label="resale outlook, bare module: today's quote x the model's share of today's value"))
         ax.legend(handles=h, loc="upper left", bbox_to_anchor=(0.0, -0.12), ncol=1, fontsize=8, frameon=False, labelcolor=INK2)
+    gpus = " and ".join(anch[c]["gpu"] for c in CHIPS)
+    updated = ", ".join(sorted({anch[c]["published"] for c in CHIPS}))
     fig.text(0.012, 0.012,
-             "Rental and resale are different instruments and are not joined: the AWS spot rental outlook only feeds the model. "
-             "Quotes: data/resale_quotes.csv (publishers' summaries of sales, asking prices and appraisals; one individual sale).\n"
+             "The model values the rent an installed GPU can still earn. Today's quote is the resale price of a bare module. "
+             "They are different things, shown side by side; nothing is fitted to the quotes.\n"
+             f"Today's quote: midpoint of the used-price range for {gpus} in {AMC_CITE} "
+             f"(CSV updated {updated}; free to use with attribution).\n"
+             "Other public figures: data/resale_quotes.csv; server prices are divided by 8. Rental and resale are different "
+             "instruments and are not joined: the AWS spot rental outlook only feeds the model.\n"
              "Tops of the ranges assume rents near the top of the rental outlook and may be out of reach. "
              "A range that reaches \\$0 means the GPU has stopped earning in at least 10% of cases; the model gives it no scrap value.",
              fontsize=7.5, color=INK2, ha="left", va="bottom", linespacing=1.4)
-    fig.subplots_adjust(left=0.06, right=0.99, top=0.9, bottom=0.32, wspace=0.17)
+    fig.subplots_adjust(left=0.06, right=0.99, top=0.9, bottom=0.335, wspace=0.17)
     fig.savefig(os.path.join(OUT, "chart4_resale.png"), dpi=150, facecolor=SURFACE)
     plt.close(fig)
 
@@ -473,19 +526,22 @@ def main():
     for chip in CHIPS:
         d = df[df.chip == chip]
         t = d.iloc[0]
-        print(f"\n=== {chip} ===  today's quote per GPU in a server ${anch[chip]['server_per_gpu']:,.0f}; bare module ${anch[chip]['module']:,.0f}")
-        print(f"model value in use today: ${t.model_value_in_use_usd_central:,.0f} "
+        print(f"\n=== {chip} ===  all resale figures below are USD per bare GPU module")
+        print(f"today's quote, bare module: ${anch[chip]['module']:,.0f} ({anch[chip]['source']})")
+        print(f"model value in use today, installed GPU: ${t.model_value_in_use_usd_central:,.0f} "
               f"(${t.model_value_in_use_usd_low:,.0f} to ${t.model_value_in_use_usd_high:,.0f}); all-central "
-              f"${t.model_value_all_assumptions_central_usd:,.0f}; model/quote {t.model_today_central_over_quote}")
-        qs = quotes[(quotes.chip == chip) & (quotes.basis != "percent")]
+              f"${t.model_value_all_assumptions_central_usd:,.0f}")
+        print("   two different things, side by side: the model values the rent an installed GPU can still earn; "
+              "the quote is the resale price of a bare module. Not a calibration check.")
+        qs = quotes[(quotes.chip == chip) & quotes.basis.isin(list(BASIS_NAME))]
         for _, r in qs.iterrows():
-            print(f"   quote {r.publisher[:34]:34s} {r.published_date:10s} {r.basis:6s} {r.evidence:4s} "
-                  f"${r.lo_gpu:>8,.0f} to ${r.hi_gpu:>8,.0f} per GPU   model/quote {t.model_value_in_use_usd_central / r.mid_gpu:.2f}")
+            what = "today's quote" if r["is_anchor"] else KIND_STYLE[r["kind"]][2]
+            print(f"   public figure {r.publisher[:34]:34s} {r.published_date:10s} {BASIS_NAME[r['basis']]:22s} "
+                  f"${r.lo_gpu:>8,.0f} to ${r.hi_gpu:>8,.0f} per GPU   {what}")
         for _, r in d.iloc[1:].iterrows():
             print(f"  +{r.years_ahead}y share {r.share_of_today_central:.0%} ({r.share_of_today_low:.0%} to {r.share_of_today_high:.0%})"
-                  f" | in server ${r.resale_usd_per_gpu_in_server_central:,.0f} (${r.resale_usd_per_gpu_in_server_low:,.0f} to ${r.resale_usd_per_gpu_in_server_high:,.0f})"
-                  f" | module ${r.resale_usd_bare_module_central:,.0f} (${r.resale_usd_bare_module_low:,.0f} to ${r.resale_usd_bare_module_high:,.0f})"
-                  f" | model ${r.model_value_in_use_usd_central:,.0f} (${r.model_value_in_use_usd_low:,.0f} to ${r.model_value_in_use_usd_high:,.0f})"
+                  f" | bare module ${r.resale_usd_bare_module_central:,.0f} (${r.resale_usd_bare_module_low:,.0f} to ${r.resale_usd_bare_module_high:,.0f})"
+                  f" | model, installed GPU ${r.model_value_in_use_usd_central:,.0f} (${r.model_value_in_use_usd_low:,.0f} to ${r.model_value_in_use_usd_high:,.0f})"
                   f" | past end of life {r.share_of_draws_past_end_of_life:.0%}")
         print(a[a.chip == chip][["kind", "name", "low", "central", "high", "value_today_usd_if_low", "value_today_usd_central",
                                  "value_today_usd_if_high", "swing_today_pct", "share_at_2y_if_low", "share_at_2y_central",
