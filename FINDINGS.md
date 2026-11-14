@@ -138,7 +138,21 @@ Details and charts are in [longview/LONGVIEW.md](longview/LONGVIEW.md) and [long
 - **Older chips did not fall faster when a successor arrived.** The A100 fell 20% a year before the H100 arrived and was flat afterwards. Adding a "new chip" effect to the simulation did not improve its test.
 - **Tested horizon.** The method is supported to about six months. One year rests on 2–4 independent windows and three years is untested.
 
-**Resale.** RESALE_PLACEHOLDER
+**Resale (USD per GPU in a working 8-GPU server; a different instrument again).** Public evidence is thin. American Compute puts a used H100 at about $24,400 per GPU and a used A100 at about $11,900, from realized sales to August 2026, and its own forward band has the H100 at 11–19% of list price in 2027 and 5–7% in 2028 (American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices, and its H100 and A100 appraisal pages). Five other publishers' figures are in [longview/RESALE.md](longview/RESALE.md).
+
+We value a used GPU as the rent it can still earn: rent × utilisation, less running cost, over its remaining earning life, discounted. The rent comes from the ranges above. Rent and resale are never joined into one series.
+
+| Middle (10% to 90%) | +1 year | +2 years | +3 years |
+|---|---|---|---|
+| H100, share of today's value | 70% (8–253%) | 45% (4–169%) | 19% (0–94%) |
+| H100, from $24,400 | $17,100 (1,900–61,700) | $11,000 (1,000–41,100) | $4,600 (0–23,100) |
+| A100, share of today's value | 57% (17–182%) | 26% (0–96%) | 0% (0–36%) |
+| A100, from $11,900 | $6,800 (2,000–21,700) | $3,100 (0–11,400) | $0 (0–4,300) |
+
+- **The model's middle looks generous.** With nothing fitted, it values an H100 today at 1.6 times the quote and an A100 at 1.2 times. A two-year earning life or 50% utilisation would match the H100 quote, and the publisher's own band falls faster than our middle.
+- **The ranges are very wide, and the tops are out of reach.** The H100 highs at +1 and +2 years exceed the price of a new server per GPU.
+- **Zero means "stopped earning".** The model gives no scrap value.
+- **What drives it:** the rent path first, the remaining earning life second. Utilisation and running cost move the level but hardly the share.
 
 ## What someone pricing a lease or a loan could use
 
