@@ -18,3 +18,6 @@ longview/out/aws_series.csv
 rl/.venv/
 rl/__pycache__/
 .claude/
+runs/replay/
+runs/replay.log
+runs/record.log

@@ -90,8 +90,8 @@ Ideas the gate rejected, with the evidence in the ledger (`runs/record/real_gpt/
 
 - **Other sites do not lead.** Pulling a series toward recent moves of the same GPU on other sites cut skill on past data from +0.235 to +0.190.
 - **The engine's middle carries information.** Replacing it with the last value cut skill from +0.212 to +0.194.
-- **More history does not help.** Looking back 90 or 120 days changed nothing.
-- **Wider is not better.** Widening all 7-day ranges raised coverage and raised error.
+- **More history does not help.** Looking back 90 days instead of 60 changed nothing.
+- **Wider is not better.** Doubling the width of all 7-day ranges cut skill from +0.225 to +0.210.
 
 ### 4. Reinforcement learning
 
@@ -165,4 +165,4 @@ Listed in [PROTOCOL.md](PROTOCOL.md): the RL trial was lengthened and continued 
 
 ## Reproduce
 
-`bash reproduce.sh` rebuilds the forecast file from the pack in about 15 seconds with no AI calls. `bash reproduce.sh --with-backtest` replays the recorded ideas and reproduces the blind-test table.
+`bash reproduce.sh` rebuilds the forecast file from the pack in about 15 seconds with no AI calls. `bash reproduce.sh --with-backtest` replays the recorded ideas in about 4 minutes and reproduces the blind-test table exactly (checked: all 180 rows match).

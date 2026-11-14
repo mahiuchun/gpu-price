@@ -3,7 +3,7 @@
 # No AI calls, no Modal, no network (after `uv sync` has installed the dependencies).
 #
 #   bash reproduce.sh                 # forecasts only (about 15 seconds)
-#   bash reproduce.sh --with-backtest # also re-run the blind test by replaying the recorded ideas (about 10 minutes)
+#   bash reproduce.sh --with-backtest # also re-run the blind test by replaying the recorded ideas (about 4 minutes on a many-core machine)
 #
 # Needs: uv (https://docs.astral.sh/uv/) and the unchanged pack in ./gpu-price-pack-v0.1.1-handover
 # (or GPUVAL_PACK=/path/to/pack).

@@ -12,7 +12,7 @@ scientist can improve those forecasts on weeks it has not seen.
 
 ```bash
 bash reproduce.sh                  # about 15 seconds; no AI calls, no Modal, no network
-bash reproduce.sh --with-backtest  # also replays the recorded ideas through the blind test
+bash reproduce.sh --with-backtest  # also replays the recorded ideas through the blind test (about 4 minutes)
 ```
 
 Needs [uv](https://docs.astral.sh/uv/) and the unchanged data pack in
