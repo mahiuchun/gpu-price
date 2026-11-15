@@ -10,6 +10,8 @@
 - **Three other ways did not.** An AI scientist tuning the engine made it slightly worse on unseen weeks. A small model trained with reinforcement learning to propose engine settings found one change that is not clearly better. Letting the agents read each other's answers did not help.
 - **Learning from its own past forecasts: three ways, one modest result.** We gave the crowd a memory with no AI in it (range width set from its own resolved forecasts), showed each agent its own scored record, and let each agent write itself a lesson from that record. All three found the fault the coach found, ranges too narrow at 3 and 7 days. They cut error by 1.4% to 2.1%, and in each case the likely range includes zero, so none is established. The no-AI memory also recovers 6 of the 8 points that RL training gave Qwen3-8B.
 - **An AI analyst that writes its own tests found three timing patterns that held on data it never saw.** One is a weekday pattern wider than anything we had found by hand: three scored cloud spot prices move almost only on Mondays and Tuesdays. A simple rule built on it did not make the forecasts better.
+- **One loop over the whole forecaster kept nothing, and it was right to.** Every test above was started by hand, so we added one loop that runs unattended: generation after generation, an AI proposes one change to how the team is put together (a vote that learns each member's weight, the range width, who votes), and the change is kept only if it has less error in 90% of resamples. It kept none of the AI's 6 proposals and none of 30 random ones. On nine later days none of those edits was clearly better and one was clearly worse. Put to the same gate, the coach's wider ranges would have been kept. The one edit that looked promising, a vote for an RL-trained open model, was then tested once on 20 days the crowd had never answered: +0.9% (−0.4% to +2.2%), not established. On those 20 days the team we handed in cut error by 14.8% against drift (+10% to +21%) (section 12).
+- **With RL training inside the loop, one generation was accepted and it held up.** The same keep-or-roll-back loop, this time training Qwen3.5-9B: 8 rounds of RL practice, then a watch set decides whether the new weights are kept. Of five generations one was accepted and four were rolled back. The kept weights, tested once on our 37 prices, cut error by 4.0% against the untrained model (+0.1% to +6.8%) and their ranges held the truth 80% of the time, up from 60% (section 12).
 - **Five AI agents that read the price list beat the engine.** On our own prices the crowd as first written was 8% ahead on the same forecasts (likely 3% to 14%), and the improved crowd 10% ahead (5% to 14%). We did not show that their different jobs, or the averaging, are the reason: the best single agent scored above the average of the five, and the five middles agree within 0.1% on three forecasts in four.
 - **A ready-made ML model, run in its plainest mode, is unreliable on these prices.** It looked good in the three test weeks, failed in the eight weeks before, and works well on AWS prices. We first ran it one price at a time with default settings; letting the prices read each other and adding facts about the list did not repair it (section 10).
 - **Most movement in a published median is not providers changing prices.** For provider list prices, 66% comes from offers joining or leaving the list, 25% from one or two offers that reprice almost daily, and 9% from everyone else.
@@ -17,7 +19,7 @@
 - **Ranges hold far less often when the price moves.** The improved crowd's ranges held the truth 80% of the time on its exam days: 99% when the price did not change and 66% when it did. For the engine the second figure is 49%.
 - **The crowd's result does not depend on which model answers (added 15 Nov).** On the 479 fresh forecasts the five agents as first written cut error by 15% to 22% against drift on five API models from two makers, the cheapest included, and none is clearly better or worse than the model they were built with. On an untrained open model they cut 6%, which is not clearly better than drift (section 11).
 
-The points above on learning from past forecasts, the analyst, the euro, the ranges and the other models, sections 9 to 11, and every note marked "added 15 Nov" were written after the forecast was handed in and after reading the brief's reference list. The forecast file itself is unchanged. The tests in sections 9 and 10 had their rules committed before they first ran; the days they use had all been looked at. Section 11 had no rule written beforehand (deviation 13).
+The points above on learning from past forecasts, the analyst, the single loop, the euro, the ranges and the other models, sections 9 to 12, and every note marked "added 15 Nov" were written after the forecast was handed in and after reading the brief's reference list. The forecast file itself is unchanged. The tests in sections 9, 10 and 12 had their rules committed before they first ran; the days they use had all been looked at. Section 11 had no rule written beforehand (deviation 13).
 
 ## The question
 
@@ -189,6 +191,8 @@ In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as 
 | 16 | ML model with prices reading each other and facts about the list | does not beat drift in both periods |
 | 17 | AI analyst writing its own tests in a sealed container | 12 ideas, 5 passed once, 3 passed again on data it never saw |
 | 18 | A weekday rule built on the analyst's confirmed pattern | −0.1% (−0.5% to +0.1%): no gain |
+| 19 | One loop over the whole forecaster: a vote that learns, range width, who votes; 6 edits proposed by an AI and 30 at random | none kept; on 9 later days none was clearly better and one was clearly worse. The one promising edit, tested once on 20 fresh days: +0.9% (−0.4% to +2.2%), not established |
+| 20 | RL training inside a keep-or-roll-back loop, Qwen3.5-9B: five generations of 8 rounds, each judged on a watch set | 1 accepted, 4 rolled back; the kept weights cut error by 4.0% against the untrained model on our prices (+0.1% to +6.8%) |
 
 - **Tuning on ten weeks of data overfits.** The scientist's ideas passed a gate and a hidden check and still did not hold. With hindsight, the best four setting changes would have reached 18%, and they point the opposite way from the past: earlier misses were upward, later ones downward.
 - **The ideas the gate rejected were also informative.** Following other sites' prices for the same GPU cut skill from +0.235 to +0.190. Replacing the engine's middle with the last value cut it from +0.212 to +0.194.
@@ -373,13 +377,14 @@ The five agents were built with one model, `gpt-6.1-sol`. We asked the 479 fresh
 | gpt-6-astra | +16.6% (+7.4% to +24.8%) | +20.7% (+10.9% to +28.8%) | +4.9% (+0.9% to +8.6%) | 74% → 80% |
 | Claude Sonnet 5.5 | +19.3% (+8.1% to +27.8%) | +18.9% (+7.6% to +27.0%) | −0.5% (−5.8% to +3.6%) | 82% → 87% |
 | Claude Opus 5.5 | +22.0% (+8.1% to +31.8%) | +22.7% (+8.5% to +33.5%) | +0.9% (−4.7% to +5.7%) | 80% → 86% |
+| **Qwen3.5-9B after RL** (one prompt, no agents; the 60-round run of section 3) | **+15.4% (+2.9% to +24.0%)** | not run | | 81% |
 
 Percent less error than drift on the same 479 forecasts (37 prices, 5 days). The last column is first written → with the coach's changes; the aim is 80%.
 
 - **The result does not hang on one model.** Every API model cut error by 15% to 22%. Against gpt-6.1-sol on the same forecasts none is clearly different: gpt-6-luna −1.3% (−8.7% to +5.2%), gpt-6-astra +0.2% (−3.4% to +3.5%), Sonnet +3.4% (−7.0% to +11.9%), Opus +6.7% (−4.9% to +16.1%). The whole gpt-6-luna run cost 17 cents.
 - **A dearer model is not clearly a better forecaster here.** Opus gives the best figure, and it is not clearly ahead of Sonnet either (+3.4%, −4.4% to +9.6%). The dearest GPT model is level with gpt-6.1-sol.
 - **An untrained 9B open model is clearly worse** than gpt-6.1-sol in the same five jobs (−12.0%, −27.9% to −2.1%), and as first written it is not clearly better than drift. Its one-day forecasts are the weak part (−10.9% at one day, +7.0% and +10.8% at 3 and 7 days, none of them clear).
-- **RL training beats five untrained agents on the same open model.** Qwen3.5-9B after RL, which answers a single prompt (section 3), has 9.6% less error than the five untrained agents on the same base model (+2.1% to +16.4%).
+- **RL puts the 9B open model level with the cheaper API models, and behind the best one.** Qwen3.5-9B after RL answers a single prompt, with no agents (section 3). On these 479 forecasts it cut error by 15.4% against drift. Against each API model's five agents as first written, on the same forecasts: gpt-6-luna +0.1% (−11% to +8%), gpt-6.1-sol −1.2% (−14% to +9%), gpt-6-astra −1.4% (−15% to +8%), Claude Sonnet 5.5 −4.8% (−14% to +3%), Claude Opus 5.5 −8.4% (−16% to −0.0%). So it is level with the three GPT models, not clearly behind Sonnet, and behind Opus. Before training the same model scored +3.6% with one prompt and +6.4% as five agents; after RL it has 9.6% less error than those five untrained agents (+2.1% to +16.4%). With the coach's changes the API models reach 19% to 23%, and the trained open model is 5.5% behind the forecast we handed in (−18% to +4.5%).
 - **The coach's changes carry over to the other GPT models and to Qwen, and not to Claude.** The Claude models' ranges already held 82% and 80% of the time. With the coach's stretch they held 87% and 86%, past the 80% aimed for, and error did not fall. A stretch chosen with one model is not free on another.
 - **On these 479 forecasts alone, no model as first written is clearly ahead of the engine.** The engine cut error by 10.1% here (+1.2% to +18.6%). For gpt-6.1-sol the gap is +7.0% (−1.3% to +13.9%): the same size as on the larger sample of section 2 (8%, likely 3% to 14%), with fewer forecasts behind it. Opus comes closest (+13.2%, −0.7% to +22.2%). With the coach's changes the three GPT models are clearly ahead (gpt-6.1-sol +10.8%, +2.1% to +18.2%).
 - **At one day ahead little beats drift on any model.** The gains are at 3 and 7 days. The only one-day ranges that clear zero are gpt-6.1-sol and gpt-6-astra, by a hair (+0.1% and +0.5% at the low end).
@@ -392,6 +397,83 @@ Percent less error than drift on the same 479 forecasts (37 prices, 5 days). The
 - **The untrained Qwen needed two allowances.** The service it runs on cannot force an answer format, so the format was given in words. It also left off the final brace on about half its answers; the reader puts it back. After that all 1,110 answers could be read.
 
 The five new runs cost about $30 of AI calls. Calls, tokens and cost for each are in `runs/other_models/table.json`.
+
+### 12. One loop over the whole forecaster (added 15 Nov)
+
+![The loop's proposed edits](findings/figures/fig13_rsi_loop.png)
+
+Everything above was a separate test, started by hand. This is one loop that runs unattended: propose a change, test it against the current team, keep it or roll back, and go again (`gpuval.rsi`). The rule was committed before the first run (PROTOCOL.md, deviation 14).
+
+**How it works.**
+
+- **A vote that learns.** Each member's weight starts equal and is cut each time an outcome is published, by more the worse the member did, then pulled part of the way back to equal. Until now the crowd was a plain average. A forecast only uses weights learned from outcomes published by its own day.
+- **A stricter accept test.** A change replaces the current team only if it has less error on the practice days and still has less in at least 90% of resamples. The coach's gate asked only for a 0.5% gain. The coach's hidden check is kept as a second step.
+- **One team of different kinds of member.** The five GPT agents, the engine, and the two open models after RL training can all be given a vote. That is how trained weights enter the same loop as prompts and settings.
+- **One kind of thing per generation.** If one generation changed the vote, the ranges and the members together, a gain could not be traced to its cause. So the kinds take turns (the vote, the range width, who votes) and each generation is one edit.
+- **The starting point is the forecast we handed in,** as a bundle of settings: the improved crowd's five agents, equal weights, the coach's stretch. `tests/rsi_checks.py` checks that it gives the recorded numbers exactly on all 1,894 forecasts the improved crowd had been scored on. The loop can only move away from it through the gate.
+- **Days.** The 23 days of our prices the improved crowd has answered, in order. The loop saw outcomes up to 20 Oct (14 days: 640 practice forecasts, 653 check). The exam is the 9 days from 21 Oct to 3 Nov (810 forecasts), scored once after every loop had ended.
+
+**Result: nothing was kept.**
+
+| Loop | Edits proposed | Kept | Team after the loop, exam days |
+|---|---|---|---|
+| AI proposer (`gpt-6.1-sol`), one run | 6 | 0 | unchanged: +15.2% against drift (+8% to +22%) |
+| Random edits, five runs | 30 | 0 | unchanged |
+
+- **The AI's six proposals,** with the gain on the practice days and the share of resamples in which the edit had less error: a slow-learning vote per horizon (−0.01%, 44%); wider ranges still, 1.5 and 2.15 at 3 and 7 days (+0.21%, 62%); drop the base-rate keeper (+0.06%, 58%); a faster vote with one set of weights (+0.05%, 79%); widen where the agents disagree (+0.11%, 73%); drop the list reader (+0.40%, 81%). None reached 90%, so the hidden check never ran, and the loop stopped itself after six generations in a row with nothing kept. Cost: six AI calls, about $0.04.
+- **By the rule, the loop did not improve the forecaster.** The forecast file is unchanged.
+
+**Was the gate right? Three readings made after the result** (not part of the test; `uv run python -m gpuval.rsi exam` prints them).
+
+- **None of the edits it turned away was clearly better on the exam days.** The 36 proposals were 30 different edits. Scored on the exam days against the starting team, 7 had less error and 23 had more; none of the 7 has a likely range that excludes zero. One was clearly worse: a fast-learning vote with no floor under the weights (−6.0%, −10% to −2%). The edit that came nearest to passing, dropping the list reader, would have cost 1.5% (−3.8% to +0.4%); the list reader was the best single agent on those days.
+- **A learning vote did not beat equal weights.** Of the 12 vote edits, 11 had more error on the exam days than equal weights. One more setting, which no loop happened to propose (a middling learning speed, one set of weights per kind of price and horizon): −1.0% (−2.7% to +0.4%). The agents' middles agree too closely, and five weeks is too short a record, for a weight to learn anything that lasts.
+- **The gate can say yes.** Put the coach's two kept changes to it, starting from the crowd as first written. The wider ranges: +1.4% on the practice days, less error in 94% of resamples, hidden check passed, so kept; on the exam days +2.4% (−0.4% to +4.7%). The rewritten agent: +0.7%, 81%, so not kept; on the exam days +0.8% (−0.6% to +2.1%). That matches section 3, where nearly all of the coach's gain was the ranges. Two of the seven practice days were check days in the coach's own gate; with the coach's four days left out the wider ranges reach 85% and would not pass.
+- **One edit points the same way three times and is still not established:** giving Qwen3-8B after RL a vote. Practice +0.9% (72% of resamples), check +1.1%, exam +1.7% (−0.6% to +3.4%). Section 3 found the same for an open model as a sixth agent (+1.4%, −1% to +4%).
+
+**One follow-up on fresh days: the same answer.** A negative result invites trying more edits until one wins, and on days that have all been looked at that is how a false improvement is made. So we tested the one promising edit once, on days the crowd had never been asked about. The rule was committed before any agent was asked (PROTOCOL.md, deviation 14). There are 20 such days between 25 Sep and 5 Nov on which the open models had been scored: 675 price-days, 1,775 forecasts. The improved crowd answered them with the same model, instructions and facts as before (3,375 AI calls, about $13.50; `uv run python -m gpuval.rsi fresh` re-scores the saved answers).
+
+| On the 20 fresh days | Less error than drift | Against the five | Truth inside the range |
+|---|---|---|---|
+| Five agents, the team we handed in | +14.8% (+10% to +21%) | | 74% |
+| Plus Qwen3-8B after RL (the rule) | +15.7% (+11% to +21%) | +0.9% (−0.4% to +2.2%) | 78% |
+| Plus Qwen3.5-9B after RL (outside the rule) | +15.3% (+11% to +21%) | +0.5% (−1.3% to +2.1%) | 77% |
+| Plus both open models (outside the rule) | +15.2% (+11% to +20%) | +0.5% (−2.1% to +2.7%) | 80% |
+
+- **By the rule, the edit is not shown to help.** The likely range includes zero. It is the fifth time this kind of edit has come out slightly ahead (+0.3% and +1.4% in section 3; +0.9%, +1.1% and +1.7% on the loop's three sets of days) and the fifth time the gain was too small to tell from none. By horizon: −1.3% at 1 day (−3.8% to 0.0%), +0.8% at 3 days, +1.7% at 7 days (−0.5% to +3.4%).
+- **The team we handed in held up on days nobody had asked it about.** +14.8% against drift on 1,775 new forecasts, in line with +14% to +20% on its earlier days. On the same forecasts the engine cut 11.0% (+7% to +17%) and the two trained open models 8.5% and 7.9%.
+- **Its lead over the engine was smaller here:** +4.3% (−0.7% to +9.3%), against +8% to +11% on the earlier days. And its ranges were narrower than the target: the truth landed inside 74% of the time, and 57% of the time when the price moved.
+
+**RL training inside the loop.** The loop above only changes how recorded answers are put together. This one trains (`rl/rsi_forecaster.py`, Qwen3.5-9B on Tinker; rule committed before its first run, PROTOCOL.md deviation 14). A generation is 8 rounds of RL practice on AWS prices, starting from the kept weights. The new weights then answer a watch set of 128 later AWS price-days. They are kept only if they score higher there in at least 90% of resamples. Otherwise they are thrown away and the next generation restarts from the kept weights with the learning rate halved or doubled.
+
+| Generation | Starts from | Learning rate | Watch score: kept, then new | Resamples in which new is better | Decision |
+|---|---|---|---|---|---|
+| 1 | untrained | 4e-5 | −0.094, −0.012 | 100% | accepted |
+| 2 | generation 1 | 4e-5 | −0.012, −0.034 | 12% | rolled back |
+| 3 | generation 1 | 2e-5 | −0.012, −0.022 | 28% | rolled back |
+| 4 | generation 1 | 4e-5 | −0.012, −0.027 | 22% | rolled back |
+| 5 | generation 1 | 8e-5 | −0.012, +0.019 | 86% | rolled back |
+
+The loop stopped itself after four rollbacks in a row: 9 minutes, about $11, plus about $1 for the test. The kept weights were then tested once, on prices the loop never used:
+
+| Less error than drift | Our 37 prices (4,074 forecasts, 43 days) | AWS Fridays in 2026 (784 forecasts) |
+|---|---|---|
+| Qwen3.5-9B untrained | +4.6% | −11.8% |
+| Kept weights from the loop (8 rounds of training) | +8.4% (+4% to +12%) | +0.9% (−4% to +6%) |
+| Kept against untrained | **+4.0% (+0.1% to +6.8%)** | +11.3% (+8% to +15%) |
+| Earlier one-shot run of the same model, 60 rounds, no gate | +11.3% (+7% to +15%) | +8.6% (+3% to +14%) |
+
+- **By the rule, the loop trained a better forecaster.** The kept weights have less error than the untrained model on our prices, and the likely range excludes zero, though only just. The truth landed inside their ranges 80% of the time, up from 60%.
+- **The one step the gate accepted held up on the test.** We do not know what the four rolled-back sets of weights would have scored there; they were not tested.
+- **The gate stopped it early.** After 8 rounds the loop kept +8.4%; the earlier run, left to train for 60 rounds, reached +11.3%. Generation 5 scored highest of all on the watch set and was better than the kept weights in 86% of resamples, short of the 90% it needed. After the first big step, what 8 more rounds add is smaller than the noise in 128 watch price-days. It is the same lesson as with the vote: this gate is safe, and it needs more to judge on (a larger watch set, or longer generations) before it will let a slow gain through.
+- **Where the kept weights stand.** Level with the engine on our prices (−2.0%, −11% to +4%) and behind the GPT crowd on the 14 days both answered (−5.5%, −16% to +1%).
+- **Not yet joined up.** The kept weights are not yet a voting member of the team in the loop above; that is one more edit of the "who votes" kind.
+- **The same loop also runs on Modal GPUs** (`rl/modal_forecaster.py`, commands `rsi-launch` and `rsi-collect`; see `rl/README.md`). A short trial on Qwen3.5-9B ran end to end: two generations of one round each, both rolled back, and the saved weights were the untrained ones, as they should be. One full run (five generations of 8 rounds) was started at 1:21 PM on 15 Nov and had not finished when this was written, so there is no Modal result to report.
+
+**What this says about the loop.**
+
+- **The gate is the part worth having.** It let through none of 36 proposals, of which one would have cost 6%, and it would have kept the one earlier change that carried a real gain. The AI scientist's gate (section 5) kept 7 ideas that then did not hold.
+- **It needs more to practise on than five weeks of prices.** The one change that passes was worth 1.4% of the error on the 640 practice forecasts. The largest gain among the 30 edits was 0.9%, and it reached 72%. A loop with this gate is safe on short data, and short data is also why it accepts nothing.
+- **What the loops do not do yet.** Prompt rewrites inside the loop (the coach's lever; each needs about 840 agent calls on these days), several teams side by side, and one loop that both trains and votes. The loop takes any forecaster with recorded answers as a member, so a newly trained model can be given a vote without changing the code.
 
 ## What someone pricing a lease or a loan could use
 
@@ -424,10 +506,10 @@ The five new runs cost about $30 of AI calls. Calls, tokens and cost for each ar
 
 ## Deviations from the protocol
 
-Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent crowd, which was not in the protocol; the ML model, the agents and the extra test periods were added after the blind test; the RL trial was lengthened; the coach and the RL forecaster were added last, and the submission changed from the first crowd to the improved one. On 15 Nov, after the forecast was handed in, we corrected wording in this file and added checks and tests on past data (deviation 12); the forecast file was not touched. The same day we asked the exam forecasts of five other models with no rule written first (deviation 13).
+Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent crowd, which was not in the protocol; the ML model, the agents and the extra test periods were added after the blind test; the RL trial was lengthened; the coach and the RL forecaster were added last, and the submission changed from the first crowd to the improved one. On 15 Nov, after the forecast was handed in, we corrected wording in this file and added checks and tests on past data (deviations 12 and 14); the forecast file was not touched. The same day we ran a second system and five other models on the exam forecasts with no rule written first (deviation 13).
 
 ## Reproduce
 
 `bash reproduce.sh` rebuilds the forecast files in about 15 seconds with no AI calls. The main file is rebuilt from the agents' recorded answers (`runs/coach/final_answers.json`; the first crowd's are in `runs/agents/final_answers.json`). The coach's ledger of all ten changes is `runs/coach/state.json`. `bash reproduce.sh --with-backtest` replays the AI scientist's blind test and reproduces its results table exactly.
 
-The notes added on 15 Nov rebuild from recorded files with no AI calls: `uv run python -m gpuval.checks` (about a minute), `uv run python -m gpuval.checks wide` (a few minutes), `uv run python -m gpuval.range_memory` and `uv run python -m gpuval.weekday_rule`. The three tests that called an AI saved every answer, and their tables rebuild from those: `uv run python -m gpuval.agent_memory table`, `uv run python -m gpuval.recall_probe table` and `uv run python -m gpuval.analyst table`. The long view rebuilds with `uv run python longview/longview.py && uv run python longview/resale.py`.
+The notes added on 15 Nov rebuild from recorded files with no AI calls: `uv run python -m gpuval.checks` (about a minute), `uv run python -m gpuval.checks wide` (a few minutes), `uv run python -m gpuval.range_memory` and `uv run python -m gpuval.weekday_rule`. The three tests that called an AI saved every answer, and their tables rebuild from those: `uv run python -m gpuval.agent_memory table`, `uv run python -m gpuval.recall_probe table` and `uv run python -m gpuval.analyst table`. The long view rebuilds with `uv run python longview/longview.py && uv run python longview/resale.py`. The single loop of section 12 rebuilds with no AI calls: `uv run python tests/rsi_checks.py` (the starting bundle is the handed-in forecast), `uv run python -m gpuval.rsi run --proposer replay` (the recorded edits through the gate again), `uv run python -m gpuval.rsi exam` and `uv run python -m gpuval.rsi fresh` (the follow-up, re-scored from its saved answers).

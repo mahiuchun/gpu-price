@@ -1,0 +1,165 @@
+{
+ "args": {
+  "name": "rsi1",
+  "base_model": "Qwen/Qwen3.5-9B",
+  "generations": 12,
+  "rounds": 8,
+  "prompts": 16,
+  "samples": 8,
+  "lr": 4e-05,
+  "adv_std": 0.02,
+  "plateau": 4,
+  "until": "13:26",
+  "seed": 0
+ },
+ "base_model": "Qwen/Qwen3.5-9B",
+ "watch": {
+  "n": 128,
+  "answers": 4,
+  "from": "2025-07-04",
+  "to": "2026-02-20"
+ },
+ "accept_p": 0.9,
+ "start": {
+  "watch": -0.09370878504641854,
+  "readable": 0.998046875
+ },
+ "generations": [
+  {
+   "generation": 1,
+   "from_generation": 0,
+   "learning_rate": 4e-05,
+   "rounds": [
+    -0.0599,
+    -0.0078,
+    0.0183,
+    0.019,
+    -0.1009,
+    0.0141,
+    -0.0044,
+    -0.0023
+   ],
+   "train_reward": -0.0155,
+   "watch": -0.011822166564179826,
+   "watch_kept_before": -0.09370878504641854,
+   "gain": 0.08188661848223872,
+   "p_better": 0.999,
+   "readable": 0.99609375,
+   "accepted": true,
+   "kept_generation": 1,
+   "next_learning_rate": 4e-05,
+   "seconds": 94
+  },
+  {
+   "generation": 2,
+   "from_generation": 1,
+   "learning_rate": 4e-05,
+   "rounds": [
+    0.0666,
+    0.0078,
+    0.1143,
+    0.0158,
+    0.0519,
+    0.0112,
+    0.0546,
+    0.0601
+   ],
+   "train_reward": 0.0478,
+   "watch": -0.033669222515742614,
+   "watch_kept_before": -0.011822166564179826,
+   "gain": -0.021847055951562788,
+   "p_better": 0.117,
+   "readable": 0.994140625,
+   "accepted": false,
+   "kept_generation": 1,
+   "next_learning_rate": 2e-05,
+   "seconds": 101
+  },
+  {
+   "generation": 3,
+   "from_generation": 1,
+   "learning_rate": 2e-05,
+   "rounds": [
+    0.0669,
+    0.0376,
+    -0.1626,
+    0.0396,
+    0.0498,
+    -0.0298,
+    -0.0301,
+    -0.2176
+   ],
+   "train_reward": -0.0308,
+   "watch": -0.021804055097349402,
+   "watch_kept_before": -0.011822166564179826,
+   "gain": -0.009981888533169576,
+   "p_better": 0.277,
+   "readable": 1.0,
+   "accepted": false,
+   "kept_generation": 1,
+   "next_learning_rate": 4e-05,
+   "seconds": 108
+  },
+  {
+   "generation": 4,
+   "from_generation": 1,
+   "learning_rate": 4e-05,
+   "rounds": [
+    0.1486,
+    -0.2472,
+    -0.0539,
+    0.0477,
+    0.0028,
+    -0.0278,
+    0.0258,
+    0.0101
+   ],
+   "train_reward": -0.0117,
+   "watch": -0.02670316033347926,
+   "watch_kept_before": -0.011822166564179826,
+   "gain": -0.014880993769299435,
+   "p_better": 0.222,
+   "readable": 1.0,
+   "accepted": false,
+   "kept_generation": 1,
+   "next_learning_rate": 8e-05,
+   "seconds": 105
+  },
+  {
+   "generation": 5,
+   "from_generation": 1,
+   "learning_rate": 8e-05,
+   "rounds": [
+    0.0949,
+    -0.6021,
+    -0.0717,
+    0.1299,
+    -0.0474,
+    -0.0074,
+    0.096,
+    -0.2019
+   ],
+   "train_reward": -0.0762,
+   "watch": 0.01909090205005636,
+   "watch_kept_before": -0.011822166564179826,
+   "gain": 0.030913068614236188,
+   "p_better": 0.863,
+   "readable": 0.998046875,
+   "accepted": false,
+   "kept_generation": 1,
+   "next_learning_rate": 4e-05,
+   "seconds": 108
+  }
+ ],
+ "stop": "plateau",
+ "checkpoint": "tinker://ab2b13ad-0d62-5172-9ac2-0a4e422b00fa:train:0/sampler_weights/rsi1-g1",
+ "kept_generation": 1,
+ "kept_watch": -0.011822166564179826,
+ "usage": {
+  "prefill_tokens": 1860841,
+  "sample_tokens": 467619,
+  "train_tokens": 6915117
+ },
+ "cost_estimate_usd": 11.052437004000002,
+ "minutes": 8.9
+}

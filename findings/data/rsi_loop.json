@@ -1,0 +1,2381 @@
+{
+ "rule": {
+  "wall": "2026-10-20",
+  "exam_from": "2026-10-21",
+  "accept_p": 0.9,
+  "check_noise": 0.005,
+  "kinds": [
+   "vote",
+   "range",
+   "members"
+  ],
+  "plateau": 6,
+  "bounds": {
+   "eta": [
+    0.0,
+    10.0
+   ],
+   "decay": [
+    0.0,
+    0.5
+   ],
+   "w_min": [
+    0.0,
+    0.3
+   ],
+   "range_scale": [
+    0.3,
+    3.0
+   ],
+   "widen": [
+    0.0,
+    2.0
+   ]
+  },
+  "pool": [
+   "list_reader",
+   "repricer_watcher",
+   "base_rate_keeper",
+   "combiner",
+   "risk_spotter",
+   "engine",
+   "qwen3_8b_rl",
+   "qwen3_5_9b_rl"
+  ]
+ },
+ "days": {
+  "practice": [
+   "2026-09-24",
+   "2026-09-27",
+   "2026-10-02",
+   "2026-10-06",
+   "2026-10-09",
+   "2026-10-14",
+   "2026-10-18"
+  ],
+  "check": [
+   "2026-09-26",
+   "2026-09-30",
+   "2026-10-03",
+   "2026-10-08",
+   "2026-10-12",
+   "2026-10-16",
+   "2026-10-19"
+  ],
+  "exam": [
+   "2026-10-21",
+   "2026-10-22",
+   "2026-10-25",
+   "2026-10-26",
+   "2026-10-28",
+   "2026-10-29",
+   "2026-10-31",
+   "2026-11-02",
+   "2026-11-03"
+  ]
+ },
+ "n": {
+  "practice": 640,
+  "check": 653,
+  "exam": 810
+ },
+ "start_bundle": {
+  "members": [
+   "list_reader",
+   "repricer_watcher",
+   "base_rate_keeper",
+   "combiner",
+   "risk_spotter"
+  ],
+  "vote": {
+   "eta": 0.0,
+   "decay": 0.05,
+   "w_min": 0.05,
+   "by": "class_h"
+  },
+  "range_scale": {
+   "1": 1.0,
+   "3": 1.25,
+   "7": 1.65
+  },
+  "widen": 0.0
+ },
+ "runs": {
+  "main": {
+   "n": 810,
+   "n_days": 9,
+   "vs_drift": {
+    "start": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    },
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    }
+   },
+   "vs_start": {
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0,
+     "lo90": 0.0,
+     "hi90": 0.0,
+     "excludes_zero": false
+    }
+   },
+   "by_h": {
+    "1": {
+     "final_vs_start": {
+      "n_cells": 294,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "3": {
+     "final_vs_start": {
+      "n_cells": 307,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "7": {
+     "final_vs_start": {
+      "n_cells": 209,
+      "n_series": 37,
+      "n_days": 6,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    }
+   },
+   "inside": {
+    "start": 0.7716049382716049,
+    "final": 0.7716049382716049
+   },
+   "inside_when_moved": {
+    "start": 0.6158798283261803,
+    "final": 0.6158798283261803
+   },
+   "final_vs_engine": {
+    "n_cells": 810,
+    "n_series": 37,
+    "n_days": 16,
+    "skill": 0.10373884045642057,
+    "lo90": 0.025638466880630786,
+    "hi90": 0.16628059741756274,
+    "excludes_zero": true
+   },
+   "weights_last_exam_day": {
+    "1": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    },
+    "3": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    }
+   },
+   "proposer": "gpt",
+   "seed": 0,
+   "stop": "plateau",
+   "generations_run": 6,
+   "kept": [],
+   "final_bundle": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   },
+   "practice": [
+    0.1534332836692568,
+    0.1534332836692568
+   ],
+   "check": [
+    0.14680422788925818,
+    0.14680422788925818
+   ],
+   "curve": [
+    {
+     "n": 1,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 2,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 3,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 4,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 5,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 6,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    }
+   ],
+   "usage": {
+    "calls": 6,
+    "in": 11013,
+    "out": 1850,
+    "flex_calls": 0,
+    "standard_calls": 6,
+    "usd": 0.04
+   },
+   "established": false
+  },
+  "random_1": {
+   "n": 810,
+   "n_days": 9,
+   "vs_drift": {
+    "start": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    },
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    }
+   },
+   "vs_start": {
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0,
+     "lo90": 0.0,
+     "hi90": 0.0,
+     "excludes_zero": false
+    }
+   },
+   "by_h": {
+    "1": {
+     "final_vs_start": {
+      "n_cells": 294,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "3": {
+     "final_vs_start": {
+      "n_cells": 307,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "7": {
+     "final_vs_start": {
+      "n_cells": 209,
+      "n_series": 37,
+      "n_days": 6,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    }
+   },
+   "inside": {
+    "start": 0.7716049382716049,
+    "final": 0.7716049382716049
+   },
+   "inside_when_moved": {
+    "start": 0.6158798283261803,
+    "final": 0.6158798283261803
+   },
+   "final_vs_engine": {
+    "n_cells": 810,
+    "n_series": 37,
+    "n_days": 16,
+    "skill": 0.10373884045642057,
+    "lo90": 0.025638466880630786,
+    "hi90": 0.16628059741756274,
+    "excludes_zero": true
+   },
+   "weights_last_exam_day": {
+    "1": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    },
+    "3": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    }
+   },
+   "proposer": "random",
+   "seed": 1,
+   "stop": "plateau",
+   "generations_run": 6,
+   "kept": [],
+   "final_bundle": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   },
+   "practice": [
+    0.1534332836692568,
+    0.1534332836692568
+   ],
+   "check": [
+    0.14680422788925818,
+    0.14680422788925818
+   ],
+   "curve": [
+    {
+     "n": 1,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 2,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 3,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 4,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 5,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 6,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    }
+   ],
+   "usage": {},
+   "established": false
+  },
+  "random_2": {
+   "n": 810,
+   "n_days": 9,
+   "vs_drift": {
+    "start": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    },
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    }
+   },
+   "vs_start": {
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0,
+     "lo90": 0.0,
+     "hi90": 0.0,
+     "excludes_zero": false
+    }
+   },
+   "by_h": {
+    "1": {
+     "final_vs_start": {
+      "n_cells": 294,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "3": {
+     "final_vs_start": {
+      "n_cells": 307,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "7": {
+     "final_vs_start": {
+      "n_cells": 209,
+      "n_series": 37,
+      "n_days": 6,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    }
+   },
+   "inside": {
+    "start": 0.7716049382716049,
+    "final": 0.7716049382716049
+   },
+   "inside_when_moved": {
+    "start": 0.6158798283261803,
+    "final": 0.6158798283261803
+   },
+   "final_vs_engine": {
+    "n_cells": 810,
+    "n_series": 37,
+    "n_days": 16,
+    "skill": 0.10373884045642057,
+    "lo90": 0.025638466880630786,
+    "hi90": 0.16628059741756274,
+    "excludes_zero": true
+   },
+   "weights_last_exam_day": {
+    "1": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    },
+    "3": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    }
+   },
+   "proposer": "random",
+   "seed": 2,
+   "stop": "plateau",
+   "generations_run": 6,
+   "kept": [],
+   "final_bundle": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   },
+   "practice": [
+    0.1534332836692568,
+    0.1534332836692568
+   ],
+   "check": [
+    0.14680422788925818,
+    0.14680422788925818
+   ],
+   "curve": [
+    {
+     "n": 1,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 2,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 3,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 4,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 5,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 6,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    }
+   ],
+   "usage": {},
+   "established": false
+  },
+  "random_3": {
+   "n": 810,
+   "n_days": 9,
+   "vs_drift": {
+    "start": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    },
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    }
+   },
+   "vs_start": {
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0,
+     "lo90": 0.0,
+     "hi90": 0.0,
+     "excludes_zero": false
+    }
+   },
+   "by_h": {
+    "1": {
+     "final_vs_start": {
+      "n_cells": 294,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "3": {
+     "final_vs_start": {
+      "n_cells": 307,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "7": {
+     "final_vs_start": {
+      "n_cells": 209,
+      "n_series": 37,
+      "n_days": 6,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    }
+   },
+   "inside": {
+    "start": 0.7716049382716049,
+    "final": 0.7716049382716049
+   },
+   "inside_when_moved": {
+    "start": 0.6158798283261803,
+    "final": 0.6158798283261803
+   },
+   "final_vs_engine": {
+    "n_cells": 810,
+    "n_series": 37,
+    "n_days": 16,
+    "skill": 0.10373884045642057,
+    "lo90": 0.025638466880630786,
+    "hi90": 0.16628059741756274,
+    "excludes_zero": true
+   },
+   "weights_last_exam_day": {
+    "1": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    },
+    "3": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    }
+   },
+   "proposer": "random",
+   "seed": 3,
+   "stop": "plateau",
+   "generations_run": 6,
+   "kept": [],
+   "final_bundle": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   },
+   "practice": [
+    0.1534332836692568,
+    0.1534332836692568
+   ],
+   "check": [
+    0.14680422788925818,
+    0.14680422788925818
+   ],
+   "curve": [
+    {
+     "n": 1,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 2,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 3,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 4,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 5,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 6,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    }
+   ],
+   "usage": {},
+   "established": false
+  },
+  "random_4": {
+   "n": 810,
+   "n_days": 9,
+   "vs_drift": {
+    "start": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    },
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    }
+   },
+   "vs_start": {
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0,
+     "lo90": 0.0,
+     "hi90": 0.0,
+     "excludes_zero": false
+    }
+   },
+   "by_h": {
+    "1": {
+     "final_vs_start": {
+      "n_cells": 294,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "3": {
+     "final_vs_start": {
+      "n_cells": 307,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "7": {
+     "final_vs_start": {
+      "n_cells": 209,
+      "n_series": 37,
+      "n_days": 6,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    }
+   },
+   "inside": {
+    "start": 0.7716049382716049,
+    "final": 0.7716049382716049
+   },
+   "inside_when_moved": {
+    "start": 0.6158798283261803,
+    "final": 0.6158798283261803
+   },
+   "final_vs_engine": {
+    "n_cells": 810,
+    "n_series": 37,
+    "n_days": 16,
+    "skill": 0.10373884045642057,
+    "lo90": 0.025638466880630786,
+    "hi90": 0.16628059741756274,
+    "excludes_zero": true
+   },
+   "weights_last_exam_day": {
+    "1": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    },
+    "3": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    }
+   },
+   "proposer": "random",
+   "seed": 4,
+   "stop": "plateau",
+   "generations_run": 6,
+   "kept": [],
+   "final_bundle": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   },
+   "practice": [
+    0.1534332836692568,
+    0.1534332836692568
+   ],
+   "check": [
+    0.14680422788925818,
+    0.14680422788925818
+   ],
+   "curve": [
+    {
+     "n": 1,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 2,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 3,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 4,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 5,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 6,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    }
+   ],
+   "usage": {},
+   "established": false
+  },
+  "random_5": {
+   "n": 810,
+   "n_days": 9,
+   "vs_drift": {
+    "start": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    },
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.15176383770136248,
+     "lo90": 0.0824915460753596,
+     "hi90": 0.21505666551625044,
+     "excludes_zero": true
+    }
+   },
+   "vs_start": {
+    "final": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0,
+     "lo90": 0.0,
+     "hi90": 0.0,
+     "excludes_zero": false
+    }
+   },
+   "by_h": {
+    "1": {
+     "final_vs_start": {
+      "n_cells": 294,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "3": {
+     "final_vs_start": {
+      "n_cells": 307,
+      "n_series": 37,
+      "n_days": 9,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    },
+    "7": {
+     "final_vs_start": {
+      "n_cells": 209,
+      "n_series": 37,
+      "n_days": 6,
+      "skill": 0.0,
+      "lo90": 0.0,
+      "hi90": 0.0,
+      "excludes_zero": false
+     }
+    }
+   },
+   "inside": {
+    "start": 0.7716049382716049,
+    "final": 0.7716049382716049
+   },
+   "inside_when_moved": {
+    "start": 0.6158798283261803,
+    "final": 0.6158798283261803
+   },
+   "final_vs_engine": {
+    "n_cells": 810,
+    "n_series": 37,
+    "n_days": 16,
+    "skill": 0.10373884045642057,
+    "lo90": 0.025638466880630786,
+    "hi90": 0.16628059741756274,
+    "excludes_zero": true
+   },
+   "weights_last_exam_day": {
+    "1": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    },
+    "3": {
+     "list_reader": 0.20000000000000004,
+     "repricer_watcher": 0.20000000000000004,
+     "base_rate_keeper": 0.20000000000000004,
+     "combiner": 0.20000000000000004,
+     "risk_spotter": 0.20000000000000004
+    }
+   },
+   "proposer": "random",
+   "seed": 5,
+   "stop": "plateau",
+   "generations_run": 6,
+   "kept": [],
+   "final_bundle": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   },
+   "practice": [
+    0.1534332836692568,
+    0.1534332836692568
+   ],
+   "check": [
+    0.14680422788925818,
+    0.14680422788925818
+   ],
+   "curve": [
+    {
+     "n": 1,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 2,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 3,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 4,
+     "kind": "vote",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 5,
+     "kind": "range",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    },
+    {
+     "n": 6,
+     "kind": "members",
+     "kept": false,
+     "exam_vs_drift": 0.15176383770136248
+    }
+   ],
+   "usage": {},
+   "established": false
+  }
+ },
+ "members_alone_exam_vs_drift": {
+  "list_reader": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.15147212337714133,
+   "lo90": 0.06266428588869062,
+   "hi90": 0.23246849356140828,
+   "excludes_zero": true
+  },
+  "repricer_watcher": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.08032931145427802,
+   "lo90": 0.017261032709694035,
+   "hi90": 0.1495199351080664,
+   "excludes_zero": true
+  },
+  "base_rate_keeper": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.13231535970441632,
+   "lo90": 0.06528063208631438,
+   "hi90": 0.1948025353812101,
+   "excludes_zero": true
+  },
+  "combiner": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.0915214357776023,
+   "lo90": 0.03711741898099373,
+   "hi90": 0.1586655622738312,
+   "excludes_zero": true
+  },
+  "risk_spotter": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.13027994549511812,
+   "lo90": 0.04744598115881021,
+   "hi90": 0.20860592964960784,
+   "excludes_zero": true
+  },
+  "engine": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.053583709093673715,
+   "lo90": -0.014015899157056111,
+   "hi90": 0.13179532491349566,
+   "excludes_zero": false
+  },
+  "qwen3_8b_rl": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.10024825833569473,
+   "lo90": 0.0016425938615322268,
+   "hi90": 0.17473697546162995,
+   "excludes_zero": true
+  },
+  "qwen3_5_9b_rl": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.11901448181961338,
+   "lo90": 0.025889749531307904,
+   "hi90": 0.1954190069423246,
+   "excludes_zero": true
+  }
+ },
+ "start_on_exam": {
+  "vs_drift": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.15176383770136248,
+   "lo90": 0.0824915460753596,
+   "hi90": 0.21505666551625044,
+   "excludes_zero": true
+  },
+  "vs_engine": {
+   "n_cells": 810,
+   "n_series": 37,
+   "n_days": 16,
+   "skill": 0.10373884045642057,
+   "lo90": 0.025638466880630786,
+   "hi90": 0.16628059741756274,
+   "excludes_zero": true
+  },
+  "inside": 0.7716049382716049,
+  "inside_when_moved": 0.6158798283261803
+ },
+ "random_control": {
+  "runs": 5,
+  "kept_any": 0,
+  "final_vs_start": {
+   "min": 0.0,
+   "median": 0.0,
+   "max": 0.0
+  }
+ },
+ "after_the_result": {
+  "note": "readings made after the result; not part of the pre-stated test",
+  "turned_away": [
+   {
+    "edit": "members: drop list_reader",
+    "kind": "members",
+    "proposers": [
+     "gpt",
+     "random"
+    ],
+    "practice": {
+     "gain": 0.0039607955087545,
+     "p_better": 0.805,
+     "lo90": -0.003610658851938764,
+     "hi90": 0.0131681966064394,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.004536202498393593,
+     "p_better": 0.7685,
+     "lo90": -0.004720896811057873,
+     "hi90": 0.01725391568830655,
+     "n": 481
+    },
+    "check_gain": -0.0022962169166274027,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.014547880078898512,
+     "lo90": -0.038016761576896776,
+     "hi90": 0.003805078725268659,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 1, decay 0.05, w_min 0.08, weights per all",
+    "kind": "vote",
+    "proposers": [
+     "gpt"
+    ],
+    "practice": {
+     "gain": 0.0005483901496151633,
+     "p_better": 0.7855,
+     "lo90": -0.0006630211692188581,
+     "hi90": 0.0019760892066058074,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.0002592438914215123,
+     "p_better": 0.6785,
+     "lo90": -0.0010236581153139634,
+     "hi90": 0.002056711586057191,
+     "n": 481
+    },
+    "check_gain": -0.0006756575237369944,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.003198967800272734,
+     "lo90": -0.0025675191249195485,
+     "hi90": 0.011021146313672913,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 1 / 1.25 / 1.65, widen 0.4",
+    "kind": "range",
+    "proposers": [
+     "gpt"
+    ],
+    "practice": {
+     "gain": 0.001144414630355417,
+     "p_better": 0.729,
+     "lo90": -0.002248604824188538,
+     "hi90": 0.004336464992011163,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.0008187265734465043,
+     "p_better": 0.6005,
+     "lo90": -0.004679275904861724,
+     "hi90": 0.005704690296266222,
+     "n": 481
+    },
+    "check_gain": 0.0014892966023739573,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.00033442609602452045,
+     "lo90": -0.0021546013330072,
+     "hi90": 0.0012152472879508821,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "members: add qwen3_8b_rl",
+    "kind": "members",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": 0.009333055373435872,
+     "p_better": 0.7225,
+     "lo90": -0.015886966683498392,
+     "hi90": 0.030401750828129796,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.001031431575325259,
+     "p_better": 0.4795,
+     "lo90": -0.04821400085978715,
+     "hi90": 0.030014872184240617,
+     "n": 481
+    },
+    "check_gain": 0.011201590982022114,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.01654902607659059,
+     "lo90": -0.005993062701297225,
+     "hi90": 0.0341430773634218,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 1.25 / 1.562 / 2.062, widen 0",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": 0.002189883246583424,
+     "p_better": 0.6325,
+     "lo90": -0.010813941240849645,
+     "hi90": 0.01325193366341538,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0005799445794634206,
+     "p_better": 0.4975,
+     "lo90": -0.02545639450870272,
+     "hi90": 0.016409724883838853,
+     "n": 481
+    },
+    "check_gain": 0.004990064071760281,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0008301914152830658,
+     "lo90": -0.017853755092671418,
+     "hi90": 0.015305034715436736,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 1 / 1.5 / 2.15, widen 0",
+    "kind": "range",
+    "proposers": [
+     "gpt"
+    ],
+    "practice": {
+     "gain": 0.00207205340347405,
+     "p_better": 0.619,
+     "lo90": -0.011419296219210983,
+     "hi90": 0.014187541164126492,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.001172089780169805,
+     "p_better": 0.5595,
+     "lo90": -0.022842540498427388,
+     "hi90": 0.01858545306496058,
+     "n": 481
+    },
+    "check_gain": 0.004188478445888433,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.0005449084460695808,
+     "lo90": -0.021296405998011546,
+     "hi90": 0.015262121564964266,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "members: drop base_rate_keeper",
+    "kind": "members",
+    "proposers": [
+     "gpt"
+    ],
+    "practice": {
+     "gain": 0.0005696590511898858,
+     "p_better": 0.5765,
+     "lo90": -0.017818335375714287,
+     "hi90": 0.013888927918890823,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0014308578194381916,
+     "p_better": 0.5045,
+     "lo90": -0.033888917817700315,
+     "hi90": 0.026032109574707318,
+     "n": 481
+    },
+    "check_gain": -0.0030028164254616296,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.007572569187451084,
+     "lo90": -0.024434370565170848,
+     "hi90": 0.009588266417197122,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 1.25 / 1.125 / 1.815, widen 0",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": 0.0005522087906769668,
+     "p_better": 0.5505,
+     "lo90": -0.005988011012933847,
+     "hi90": 0.0057350482477437565,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0018573377271202673,
+     "p_better": 0.346,
+     "lo90": -0.012801053828114283,
+     "hi90": 0.006664879041401939,
+     "n": 481
+    },
+    "check_gain": 0.0028013061033929088,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0024184111828764454,
+     "lo90": -0.006670086398538078,
+     "hi90": 0.01051226391175858,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 1.25 / 1.562 / 1.65, widen 1",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": 4.242985625968476e-05,
+     "p_better": 0.5235,
+     "lo90": -0.0136563454534521,
+     "hi90": 0.011447161729699628,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0040938585033793995,
+     "p_better": 0.3425,
+     "lo90": -0.027175289282682237,
+     "hi90": 0.01255627732016507,
+     "n": 481
+    },
+    "check_gain": 0.002399045470659389,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.003398093573357075,
+     "lo90": -0.015441279537239682,
+     "hi90": 0.006867059242237966,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 1.25 / 1 / 2.062, widen 0.25",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": 0.0002345246792215816,
+     "p_better": 0.5085,
+     "lo90": -0.012642247109229787,
+     "hi90": 0.010754896557022402,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0025658075602783548,
+     "p_better": 0.4015,
+     "lo90": -0.02531424044466647,
+     "hi90": 0.013836575580063785,
+     "n": 481
+    },
+    "check_gain": 0.003098777690942467,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.0010694126254339187,
+     "lo90": -0.018343595049469252,
+     "hi90": 0.017189878523428275,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 0.8 / 1 / 1.815, widen 0.5",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0002000824122134759,
+     "p_better": 0.4665,
+     "lo90": -0.00813246908384766,
+     "hi90": 0.006611852732154797,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.00017830894495407534,
+     "p_better": 0.519,
+     "lo90": -0.012328172077587095,
+     "hi90": 0.010118507435890631,
+     "n": 481
+    },
+    "check_gain": 0.0011449107858719776,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.005516444353073746,
+     "lo90": -0.02132044151133804,
+     "hi90": 0.0068195354714099725,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 0.5, decay 0.1, w_min 0.08, weights per h",
+    "kind": "vote",
+    "proposers": [
+     "gpt"
+    ],
+    "practice": {
+     "gain": -0.00012153444058626839,
+     "p_better": 0.44,
+     "lo90": -0.0010546720497064954,
+     "hi90": 0.000586567098374896,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 2.3950857695576033e-05,
+     "p_better": 0.6015,
+     "lo90": -0.0012701942669066768,
+     "hi90": 0.001076278630903954,
+     "n": 481
+    },
+    "check_gain": -0.00040356829435861385,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.002784164818122381,
+     "lo90": -0.008108984195503488,
+     "hi90": 0.0022896310195693378,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 1.25 / 1.375 / 1.485, widen 0.25",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0006145322307999912,
+     "p_better": 0.4355,
+     "lo90": -0.007142369015171002,
+     "hi90": 0.005420911028239288,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.002586440531177514,
+     "p_better": 0.2905,
+     "lo90": -0.012894163913263822,
+     "hi90": 0.005702407175254153,
+     "n": 481
+    },
+    "check_gain": -0.001487953374761819,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.0026013399505337986,
+     "lo90": -0.010858497520916888,
+     "hi90": 0.006423269918408197,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 2, decay 0, w_min 0.05, weights per h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0010314213712829812,
+     "p_better": 0.4165,
+     "lo90": -0.007195808232639633,
+     "hi90": 0.0037725407775879845,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0006882534100434157,
+     "p_better": 0.4995,
+     "lo90": -0.009846021558948082,
+     "hi90": 0.0062258829081634545,
+     "n": 481
+    },
+    "check_gain": -0.002579050471134714,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.017829656096486568,
+     "lo90": -0.039234752340568516,
+     "hi90": 0.0013302868056764383,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 0.8 / 1 / 1.815, widen 0.25",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0007222493749243775,
+     "p_better": 0.4145,
+     "lo90": -0.008471171838181756,
+     "hi90": 0.005633779167551534,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0003267980330898812,
+     "p_better": 0.4915,
+     "lo90": -0.01283350779943857,
+     "hi90": 0.008970516325202363,
+     "n": 481
+    },
+    "check_gain": 0.0005818031178014271,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.005585588914684081,
+     "lo90": -0.020957631232161635,
+     "hi90": 0.006618577275299624,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 1, decay 0.2, w_min 0.02, weights per h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0005486704299164646,
+     "p_better": 0.4115,
+     "lo90": -0.003752690029419181,
+     "hi90": 0.0018196029745496329,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.00043478838123123253,
+     "p_better": 0.49,
+     "lo90": -0.0052975741338531996,
+     "hi90": 0.0030697831916424215,
+     "n": 481
+    },
+    "check_gain": -0.00128099040820695,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.008745704048236824,
+     "lo90": -0.02266637796504135,
+     "hi90": 0.003795012251340695,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "members: drop risk_spotter",
+    "kind": "members",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0028324244911384078,
+     "p_better": 0.411,
+     "lo90": -0.01564959711545927,
+     "hi90": 0.00816008975780752,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.0037523998935063974,
+     "p_better": 0.7455,
+     "lo90": -0.009672079347725493,
+     "hi90": 0.016804700946199697,
+     "n": 481
+    },
+    "check_gain": -0.007124355185967879,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.003386531395875636,
+     "lo90": -0.01865488423566708,
+     "hi90": 0.013729516781546021,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 0.25, decay 0.2, w_min 0.02, weights per h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0001551774407371198,
+     "p_better": 0.4075,
+     "lo90": -0.0010575624207365465,
+     "hi90": 0.00047698724322390305,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.00015722022071518182,
+     "p_better": 0.4705,
+     "lo90": -0.0015544935664170366,
+     "hi90": 0.000825639718405119,
+     "n": 481
+    },
+    "check_gain": -0.00032596168369947165,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.002375927006327494,
+     "lo90": -0.006908041097715356,
+     "hi90": 0.0017444597053602401,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "members: drop combiner",
+    "kind": "members",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.002137904899401244,
+     "p_better": 0.3745,
+     "lo90": -0.01399998571570854,
+     "hi90": 0.006799319307882055,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.004810095457556507,
+     "p_better": 0.2565,
+     "lo90": -0.023360402598637798,
+     "hi90": 0.005552481580937245,
+     "n": 481
+    },
+    "check_gain": -0.0026414822142644123,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.006145084336424467,
+     "lo90": -0.010407244528912129,
+     "hi90": 0.020120906552398416,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 0.25, decay 0.02, w_min 0, weights per all",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0014597865624503825,
+     "p_better": 0.3655,
+     "lo90": -0.008380003238590662,
+     "hi90": 0.00458570819727907,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0014620101440174782,
+     "p_better": 0.422,
+     "lo90": -0.012204554836911819,
+     "hi90": 0.006758143537977373,
+     "n": 481
+    },
+    "check_gain": -0.0026634710884625434,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.012932660667065221,
+     "lo90": -0.03623513224236039,
+     "hi90": 0.010526969130343122,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 0.8 / 1.562 / 1.32, widen 0.5",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.002723251634606294,
+     "p_better": 0.3295,
+     "lo90": -0.01364199894803626,
+     "hi90": 0.008567234819190294,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.002708609287564334,
+     "p_better": 0.399,
+     "lo90": -0.02111678685956766,
+     "hi90": 0.013810923815706361,
+     "n": 481
+    },
+    "check_gain": -0.005761721116905871,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.015190687444103235,
+     "lo90": -0.02974799051351904,
+     "hi90": 0.001964050591018931,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 0.9 / 1.562 / 1.32, widen 0.25",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0028521473399718555,
+     "p_better": 0.3205,
+     "lo90": -0.012630464075517456,
+     "hi90": 0.007793123559256298,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.002817906219932498,
+     "p_better": 0.374,
+     "lo90": -0.018688565747294238,
+     "hi90": 0.013653327194357944,
+     "n": 481
+    },
+    "check_gain": -0.0059607659304758975,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.013347163751684654,
+     "lo90": -0.027049234312625292,
+     "hi90": 0.002267991765221949,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 0.5, decay 0.2, w_min 0.02, weights per class_h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0009560641726653607,
+     "p_better": 0.2925,
+     "lo90": -0.0038962988809712828,
+     "hi90": 0.0009536468643910279,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0014361722740714455,
+     "p_better": 0.3315,
+     "lo90": -0.006299779183215171,
+     "hi90": 0.0015656421985610232,
+     "n": 481
+    },
+    "check_gain": -0.0008140406954255663,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.0022182713584131264,
+     "lo90": -0.009071358119493689,
+     "hi90": 0.0035147966027076092,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 8, decay 0.02, w_min 0.05, weights per class_h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.005337117233380928,
+     "p_better": 0.267,
+     "lo90": -0.021410381807129508,
+     "hi90": 0.007476894792521965,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0030475366064610654,
+     "p_better": 0.4295,
+     "lo90": -0.023577274527069737,
+     "hi90": 0.014138053102945086,
+     "n": 481
+    },
+    "check_gain": -0.007428551454275345,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.02130687476749138,
+     "lo90": -0.0462997296055351,
+     "hi90": 0.001211177389371969,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "members: drop repricer_watcher",
+    "kind": "members",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.003387917780810934,
+     "p_better": 0.261,
+     "lo90": -0.012359822476511063,
+     "hi90": 0.005690857629121964,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.007129494873098663,
+     "p_better": 0.1595,
+     "lo90": -0.02081846140012019,
+     "hi90": 0.005081201135804759,
+     "n": 481
+    },
+    "check_gain": 0.000736603714714068,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.004744286159093392,
+     "lo90": -0.008608534735394701,
+     "hi90": 0.016864761254062582,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 4, decay 0.1, w_min 0.1, weights per class_h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.002208883769957426,
+     "p_better": 0.258,
+     "lo90": -0.008682672299556249,
+     "hi90": 0.002290029385733405,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.001900234421803093,
+     "p_better": 0.4205,
+     "lo90": -0.011442143898603508,
+     "hi90": 0.005043241109663165,
+     "n": 481
+    },
+    "check_gain": -0.002487151683601363,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.007435135365599699,
+     "lo90": -0.01948247801209062,
+     "hi90": 0.003907370451394119,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 2, decay 0.2, w_min 0.05, weights per class_h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0023039723964390912,
+     "p_better": 0.2565,
+     "lo90": -0.008679632613324106,
+     "hi90": 0.0018900989414717458,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.002714942470249282,
+     "p_better": 0.3715,
+     "lo90": -0.012801799035440164,
+     "hi90": 0.003792252870700463,
+     "n": 481
+    },
+    "check_gain": -0.0023307785099344613,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.0073171038863732996,
+     "lo90": -0.02018247001283672,
+     "hi90": 0.003956563390984666,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 0.5, decay 0.1, w_min 0.02, weights per class_h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0013796469146472035,
+     "p_better": 0.2415,
+     "lo90": -0.005129971448180648,
+     "hi90": 0.0010857294221840834,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0022130486473035393,
+     "p_better": 0.2365,
+     "lo90": -0.00849413415873882,
+     "hi90": 0.0017036521348441803,
+     "n": 481
+    },
+    "check_gain": -0.0009835396632540405,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.0031098957061448385,
+     "lo90": -0.013444159539630306,
+     "hi90": 0.005306300781572586,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "range: stretch 1.25 / 1.125 / 1.485, widen 0",
+    "kind": "range",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.0025202766946492705,
+     "p_better": 0.2115,
+     "lo90": -0.008691514590241556,
+     "hi90": 0.003498213101963265,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.004489452827200369,
+     "p_better": 0.1705,
+     "lo90": -0.013755698259797689,
+     "hi90": 0.004741131877283705,
+     "n": 481
+    },
+    "check_gain": -0.0032672918132050643,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.0029264230410448455,
+     "lo90": -0.012178686749620093,
+     "hi90": 0.007899351615914495,
+     "excludes_zero": false
+    }
+   },
+   {
+    "edit": "vote: eta 4, decay 0.05, w_min 0, weights per h",
+    "kind": "vote",
+    "proposers": [
+     "random"
+    ],
+    "practice": {
+     "gain": -0.011335413370229697,
+     "p_better": 0.1165,
+     "lo90": -0.028997847770202125,
+     "hi90": 0.0033114224800043167,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.010253130098222485,
+     "p_better": 0.1765,
+     "lo90": -0.03618581929484904,
+     "hi90": 0.007346335916395214,
+     "n": 481
+    },
+    "check_gain": -0.011719714250747693,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.05979777724915114,
+     "lo90": -0.100696672052603,
+     "hi90": -0.020726553701319213,
+     "excludes_zero": true
+    }
+   }
+  ],
+  "coach_changes_through_this_gate": {
+   "wider ranges at 3 and 7 days": {
+    "practice": {
+     "gain": 0.014047095833901735,
+     "p_better": 0.935,
+     "lo90": -0.0015671096615608503,
+     "hi90": 0.030102660066353114,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.015213194871488533,
+     "p_better": 0.8475,
+     "lo90": -0.01091484185677376,
+     "hi90": 0.03892116006832572,
+     "n": 481
+    },
+    "check_gain": 0.018093000071380927,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.02351460512154735,
+     "lo90": -0.00385216155492748,
+     "hi90": 0.04731039876464216,
+     "excludes_zero": false
+    }
+   },
+   "the rewritten agent, on top of the wider ranges": {
+    "practice": {
+     "gain": 0.007003302145587975,
+     "p_better": 0.8075,
+     "lo90": -0.004442243346980168,
+     "hi90": 0.02583890283478733,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.0077016894236595634,
+     "p_better": 0.658,
+     "lo90": -0.013974222654137235,
+     "hi90": 0.03885795396672529,
+     "n": 481
+    },
+    "check_gain": 0.007827907050262817,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.008054176219203235,
+     "lo90": -0.005507766894940103,
+     "hi90": 0.020532068251114574,
+     "excludes_zero": false
+    }
+   },
+   "both changes": {
+    "practice": {
+     "gain": 0.020952021923096975,
+     "p_better": 0.949,
+     "lo90": -0.0002706256143669816,
+     "hi90": 0.046905550140125124,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": 0.022797716993106287,
+     "p_better": 0.848,
+     "lo90": -0.015435433480617978,
+     "hi90": 0.06402700891533045,
+     "n": 481
+    },
+    "check_gain": 0.025779276798824635,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": 0.03137939056737671,
+     "lo90": 0.0017745638226305547,
+     "hi90": 0.058789867713306417,
+     "excludes_zero": true
+    }
+   }
+  },
+  "one_more_vote_setting": {
+   "vote only": {
+    "practice": {
+     "gain": -0.00322551738951371,
+     "p_better": 0.2215,
+     "lo90": -0.01166343673334259,
+     "hi90": 0.0021889204175748844,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.0038672488209772204,
+     "p_better": 0.3185,
+     "lo90": -0.016931322169357277,
+     "hi90": 0.004547135661425721,
+     "n": 481
+    },
+    "check_gain": -0.0032981840605148527,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.010231507021029707,
+     "lo90": -0.027292878036608757,
+     "hi90": 0.0044660037053007124,
+     "excludes_zero": false
+    }
+   },
+   "vote and widen 0.5": {
+    "practice": {
+     "gain": -0.0019724036412096524,
+     "p_better": 0.389,
+     "lo90": -0.011317315261876371,
+     "hi90": 0.004680529934971728,
+     "n": 640
+    },
+    "practice_without_coach_days": {
+     "gain": -0.003006476526477897,
+     "p_better": 0.3825,
+     "lo90": -0.018807967162726303,
+     "hi90": 0.007460780496327023,
+     "n": 481
+    },
+    "check_gain": -0.0016995445659295783,
+    "exam": {
+     "n_cells": 810,
+     "n_series": 37,
+     "n_days": 16,
+     "skill": -0.010220471608573867,
+     "lo90": -0.027193068354567317,
+     "hi90": 0.004201489273908736,
+     "excludes_zero": false
+    }
+   }
+  },
+  "all_edits": {
+   "n": 30,
+   "better_on_exam": 7,
+   "clearly_better_on_exam": 0,
+   "clearly_worse_on_exam": 1
+  },
+  "by_kind": {
+   "vote": {
+    "n": 12,
+    "better_on_exam": 1,
+    "clearly_better_on_exam": 0,
+    "clearly_worse_on_exam": 1
+   },
+   "range": {
+    "n": 12,
+    "better_on_exam": 3,
+    "clearly_better_on_exam": 0,
+    "clearly_worse_on_exam": 0
+   },
+   "members": {
+    "n": 6,
+    "better_on_exam": 3,
+    "clearly_better_on_exam": 0,
+    "clearly_worse_on_exam": 0
+   }
+  },
+  "edits_with_confidence_0.7_or_more": {
+   "n": 4,
+   "better_on_exam": 2,
+   "clearly_better_on_exam": 0,
+   "clearly_worse_on_exam": 0
+  }
+ }
+}

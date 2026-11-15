@@ -483,6 +483,45 @@ def fig_agent_memory() -> None:
     _save(fig, "fig12_agent_memory.png")
 
 
+def fig_rsi_loop() -> None:
+    """Every edit the loop proposed: how sure the gate was on practice days, and what the edit did on the exam days."""
+    r = json.loads((data.REPO / "findings" / "data" / "rsi_loop.json").read_text())
+    a = r["after_the_result"]
+    fig, ax = plt.subplots(figsize=(10.5, 4.8))
+    kinds = {"vote": ("How the vote learns", BLUE), "range": ("Range width", ORANGE), "members": ("Who votes", AQUA)}
+    for kind, (name, col) in kinds.items():
+        rows = [e for e in a["turned_away"] if e["kind"] == kind]
+        for e in rows:
+            ax.plot([e["practice"]["p_better"]] * 2, [100 * e["exam"]["lo90"], 100 * e["exam"]["hi90"]], color=col, linewidth=1.6, alpha=0.55, solid_capstyle="round")
+        ax.plot([e["practice"]["p_better"] for e in rows], [100 * e["exam"]["skill"] for e in rows], "o", color=col, markersize=7.5,
+                markeredgecolor=SURFACE, markeredgewidth=1.6, linestyle="none", label=f"{name} ({len(rows)} edits)")
+    c = a["coach_changes_through_this_gate"]
+    box = {"facecolor": SURFACE, "edgecolor": "none", "pad": 1.5}
+    for key, label, end, off, ha in (("wider ranges at 3 and 7 days", "Coach: wider ranges", "hi90", (-7, -5), "right"),
+                                     ("the rewritten agent, on top of the wider ranges", "Coach: rewritten agent", "lo90", (8, -9), "left")):
+        e = c[key]
+        ax.plot([e["practice"]["p_better"]] * 2, [100 * e["exam"]["lo90"], 100 * e["exam"]["hi90"]], color=INK, linewidth=1.6, solid_capstyle="round")
+        ax.plot(e["practice"]["p_better"], 100 * e["exam"]["skill"], "D", color=INK, markersize=7.5, markeredgecolor=SURFACE, markeredgewidth=1.6,
+                label="The coach's two kept changes, put to the same gate" if key.startswith("wider") else None)
+        ax.annotate(label, (e["practice"]["p_better"], 100 * e["exam"][end]), xytext=off, textcoords="offset points", ha=ha, va="center", fontsize=8.5, color=INK, bbox=box)
+    named = {"members: add qwen3_8b_rl": ("Add Qwen3-8B after RL", "hi90", (0, 8), "center"), "members: drop list_reader": ("Drop the list reader", "skill", (-8, -12), "right"),
+             "vote: eta 4, decay 0.05, w_min 0, weights per h": ("Fast-learning vote, no floor", "skill", (8, 0), "left")}
+    for e in a["turned_away"]:
+        if e["edit"] in named:
+            text, end, off, ha = named[e["edit"]]
+            ax.annotate(text, (e["practice"]["p_better"], 100 * e["exam"][end]), xytext=off, textcoords="offset points", ha=ha, va="center", fontsize=8.5, color=INK2)
+    ax.axhline(0, color=INK2, linewidth=1)
+    ax.axvline(r["rule"]["accept_p"], color=INK2, linewidth=1, linestyle=(0, (4, 3)))
+    ax.text(r["rule"]["accept_p"] + 0.008, ax.get_ylim()[0] + 0.3, "kept only to the right\nof this line", fontsize=8.5, color=INK2, va="bottom")
+    ax.set_xlim(0.05, 1.0)
+    ax.set_xlabel("Share of resamples of the practice days in which the edit had less error (the gate asks for 0.9)")
+    ax.set_ylabel("Error on the 9 exam days against\nthe team before the edit (%, above 0 = less error)")
+    n = a["all_edits"]
+    ax.set_title(f"The gate kept none of {n['n']} proposed edits. On the exam days none was clearly better and {n['clearly_worse_on_exam']} was clearly worse")
+    ax.legend(loc="lower left", fontsize=8.5, handlelength=1.2)
+    _save(fig, "fig13_rsi_loop.png")
+
+
 def main() -> int:
     rep = json.loads((data.REPO / "runs" / "record" / "report.json").read_text())
     fig_blind_weeks(rep)
@@ -497,6 +536,7 @@ def main() -> int:
     fig_euro()
     fig_coverage()
     fig_agent_memory()
+    fig_rsi_loop()
     return 0
 
 

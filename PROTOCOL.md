@@ -352,3 +352,102 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       counts as a miss. Error figures are not affected.
     - Each model was run once. Every run that was made is reported, and all comparisons are in
       `runs/other_models/table.json`.
+14. **One self-improvement loop over the whole forecaster** (`gpuval.rsi`; added 15 Nov, written
+    before its first run). Our own loops were separate one-off tests. This one runs unattended:
+    propose a change, test it against the current team, keep it or roll back, repeat. It has a
+    vote that learns each member's weight from its record, and an accept test stricter than the
+    coach's. Each generation may change one kind of setting only, so that a gain can be traced
+    to its cause. This test is not blind: every day it uses has been looked at. The forecast
+    file is not changed whatever the result.
+    - **What can change (the bundle).** Which members vote; how the weights are learned (`eta`,
+      `decay`, `w_min`, and whether there is one set of weights, one per horizon, or one per kind
+      of price and horizon); the range stretch at each horizon and a widening by how far the
+      members' middles disagree. The starting bundle is the forecast we handed in: the improved
+      crowd's five agents, equal weights, stretch 1.0 / 1.25 / 1.65. `tests/rsi_checks.py` checks
+      that it gives the recorded numbers exactly.
+    - **Members available.** The five agents of the improved crowd, the engine at default
+      settings, and the two open models after RL training (the Tinker runs). All from recorded
+      answers; no forecaster is asked again.
+    - **The vote.** Weights start equal. Each time an outcome is published, a member's weight is
+      multiplied by exp(−eta × its error ÷ the error of "no change", capped at 3), pulled a share
+      `decay` back towards equal, and kept above `w_min`. A forecast uses only weights learned
+      from outcomes published on or before its own day. With eta 0 the weights stay equal.
+    - **Days.** The 23 days of our prices that the improved crowd has answered, in date order.
+      The loop is handed outcomes published up to 20 Oct: forecasts made on 14 days (24 Sep to
+      19 Oct), split by turns into practice days (640 forecasts) and check days (653). The exam is
+      the forecasts made on the 9 days from 21 Oct to 3 Nov (810 forecasts). The loop never sees
+      them; they are scored once, after all loops have ended. On the exam days the weights go on
+      learning; the settings are frozen.
+    - **A generation.** The kinds take turns: vote, range, members. The agents' model (medium
+      effort) is shown the team, its practice scores and the changes tried so far, and proposes
+      one edit of that generation's kind, within fixed bounds. The edit is kept only if (a) on
+      the practice days it has less error than the team before it, and still has less in at least
+      90% of 2,000 resamples of prices and target days, and (b) on the check days its error does
+      not rise (tolerance about half a percent; the proposer is told only pass or fail). Twelve
+      generations, or fewer if six in a row keep nothing.
+    - **Control.** The same loop with random edits in place of the AI's, five seeds.
+    - **How the exam is read.** We will say the loop improved the forecaster only if the final
+      bundle has less error than the starting bundle on the exam days with a 90% interval that
+      excludes zero (dollars, resampled by price and target day). We also report each kept edit
+      on its own, the final bundle with each kept edit taken out, the five control runs, and
+      the bundle after each generation. One run of the AI proposer; nothing is changed and
+      re-run after seeing a result.
+    - **Expectation.** Little or nothing. The five agents' middles agree within 0.1% on three
+      forecasts in four, a weight needs a record to learn from and the record is five weeks, and
+      an open model added as a sixth agent gave +1.4% (−1% to +4%).
+    - **Weaknesses known before the run.** The exam days are days on which the starting bundle
+      was itself judged (four of the coach's exam days and five of the second-check days), which
+      may flatter the start; that works against the loop, not for it. Practice and check days
+      share some outcome days. The open models' recorded answers end on 5 Nov, so a bundle that
+      includes them cannot forecast 6 Nov without running them again.
+    - Outcome of the one run (commit `dfc473b` holds the rule): the AI proposer's loop kept 0 of
+      6 edits and stopped at the six-in-a-row rule (6 AI calls, about $0.04); the five control
+      loops kept 0 of 30. The largest share of resamples any edit reached was 81%. With nothing
+      kept, the final bundle is the starting bundle (+15.2% against drift on the 810 exam
+      forecasts, +8% to +22%). By the rule above, the loop did not improve the forecaster.
+      Nothing was changed and re-run.
+    - Three readings were added after seeing that result and are labelled so in the findings:
+      every proposed edit scored on the exam days (30 different edits: none clearly better, one
+      clearly worse); the coach's two kept changes put to this gate, starting from the first
+      crowd (the wider ranges pass at 94%, the rewritten agent does not at 81%); and one more
+      setting of the vote, which no loop proposed (−1.0%, −2.7% to +0.4%).
+    - **One follow-up, on days the crowd had never answered** (written before it ran; about
+      3,400 AI calls, stopped by code at an estimated $18). One edit was ahead on the practice,
+      check and exam days without passing the gate: giving Qwen3-8B after RL a vote. The improved
+      crowd is asked, once, about the 20 days from 25 Sep to 5 Nov on which the open models were
+      scored and no agent was ever asked (675 price-days, 1,775 forecasts), with the same model,
+      effort, instructions and facts as its other answers. Compared on those forecasts: the team
+      we handed in (five agents, equal weights, the coach's stretch) and the same team with
+      Qwen3-8B after RL as a sixth equal member. We will say the edit helps only if the six have
+      less error than the five with a 90% interval that excludes zero (dollars, resampled by
+      price and target day). Reported beside it, outside the rule: Qwen3.5-9B as the sixth
+      member, and both open models. These days are fresh for the crowd; the open models' own
+      scores on them were already known. One run; the forecast file is not changed.
+    - Outcome of that one run (commit `10640dd` holds the rule; 3,375 calls, an estimated
+      $13.50): six against five +0.9% (−0.4% to +2.2%) on the 1,775 forecasts. By the rule, the
+      edit is not shown to help. Outside the rule: Qwen3.5-9B as the sixth member +0.5% (−1.3%
+      to +2.1%), both open models +0.5% (−2.1% to +2.7%). The five on their own: +14.8% against
+      drift (+10% to +21%).
+    - **RL training inside the loop** (`rl/rsi_forecaster.py`; written before its first run).
+      Qwen3.5-9B on Tinker. A generation is 8 training rounds (16 AWS practice prices x 8 answers
+      a round, as in the earlier RL runs) starting from the kept weights. The new weights then
+      answer a fixed watch set of 128 later AWS price-days (4 Jul 2025 to 20 Feb 2026, 4 answers
+      each). They replace the kept weights only if they score higher there and still do in at
+      least 90% of 2,000 resamples of those price-days. Otherwise they are thrown away, and the
+      next generation restarts from the kept weights with the learning rate halved or doubled
+      (start 4e-5, bounds 1e-5 to 1.6e-4). It stops at a set clock time, after 12 generations, or
+      after four rejections in a row. Our 37 prices are not used inside the loop. The kept
+      weights are tested once on them (24 Sep to 5 Nov) and on AWS Fridays in 2026, against the
+      untrained model's saved answers. One run. We will say the loop trained a better forecaster
+      only if the kept weights have less error than the untrained model on our prices with a 90%
+      interval that excludes zero. The earlier one-shot run of the same model (60 rounds, no
+      gate) is reported beside it.
+    - Outcome of that one run (commit `6da8d27` holds the rule; 8.9 minutes, an estimated $11.05,
+      and $1.18 for the test): generation 1 was accepted (watch score −0.094 to −0.012, higher in
+      100% of resamples); generations 2 to 5 were rolled back (12%, 28%, 22% and 86%), and the
+      loop stopped at four in a row. Kept weights against the untrained model on our prices:
+      +4.0% (+0.1% to +6.8%) on 4,074 forecasts. By the rule, the loop trained a better
+      forecaster. On AWS Fridays: +11.3% (+8% to +15%). The untrained model's answers were the
+      ones saved by the earlier run of the same model.
+    - The opening paragraph of this item was shortened after the run. The rule itself, every
+      point from "What can change" to "Weaknesses known before the run", is as first committed.

@@ -1,0 +1,12 @@
+[main] start: practice +0.1534, check +0.1468 against drift (640 and 653 forecasts)
+[main] gen 1 vote: eta 0.5, decay 0.1, w_min 0.08, weights per h | practice -0.0001, confidence 0.44 | check not run | rejected
+[main] gen 2 range: stretch 1 / 1.5 / 2.15, widen 0 | practice +0.0021, confidence 0.62 | check not run | rejected
+[main] gen 3 members: drop base_rate_keeper | practice +0.0006, confidence 0.58 | check not run | rejected
+[main] gen 4 vote: eta 1, decay 0.05, w_min 0.08, weights per all | practice +0.0005, confidence 0.79 | check not run | rejected
+[main] gen 5 range: stretch 1 / 1.25 / 1.65, widen 0.4 | practice +0.0011, confidence 0.73 | check not run | rejected
+[main] gen 6 members: drop list_reader | practice +0.0040, confidence 0.81 | check not run | rejected
+[main] stopped (plateau): kept 0 of 6; practice +0.1534 -> +0.1534, check +0.1468 -> +0.1468 | usage {'calls': 6, 'in': 11013, 'out': 1850, 'flex_calls': 0, 'standard_calls': 6, 'usd': 0.04}
+
+real	0m55.201s
+user	0m17.016s
+sys	0m2.194s

@@ -47,11 +47,13 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 |---|---|
 | A **coach AI** rewrites the agent crowd (10 changes proposed, 2 kept) | ✅ a further 3% to 4% less error |
 | **RL** teaches a small open model to forecast (practised on AWS only) | ✅ Qwen3-8B: 3% → 5–10%; Qwen3.5-9B: 5% → 9–11% |
+| **RL inside a keep-or-roll-back loop** (Qwen3.5-9B: train 8 rounds, judge on a watch set, keep or roll back; 5 generations) | ✅ 1 kept, 4 rolled back; kept weights 5% → 8% on our prices (+4.0%, +0.1% to +6.8%) |
 | An **AI scientist** tunes the engine's settings | ❌ slightly worse on unseen weeks |
 | **RL** teaches a small model to propose engine settings | ❌ its one change is not clearly better |
 | Agents **read each other's answers** | ❌ no help |
 | **Memory** of the system's own past forecasts (three kinds) | ➖ 1.4% to 2.1% less error, not established |
 | An **AI analyst** writes its own tests on shuffled data | ➖ found real weekday patterns; a rule built on them did not help |
+| **One loop over the whole forecaster**: a vote that learns, range width, who votes (36 changes proposed) | ➖ kept nothing; none was clearly better on later days, one clearly worse. The one promising edit, tested on 20 fresh days: +0.9%, not established |
 
 ## The same forecasts with other models
 
@@ -67,6 +69,7 @@ the same facts, the same five jobs, the same averaging.
 | gpt-6-astra | +16.6% | +20.7% | 74% → 80% | $12.01 |
 | Claude Sonnet 5.5 | +19.3% | +18.9% | 82% → 87% | $5.77 |
 | Claude Opus 5.5 | +22.0% | +22.7% | 80% → 86% | $11.45 |
+| **Qwen3.5-9B after RL** (one prompt, no agents) | **+15.4%** | not run | 81% | about $16 to train |
 
 <sub>Percent less error than drift on the same 479 forecasts (37 prices, 5 days). "Ranges held" is how often the truth fell inside the range, first written → with the coach's changes; the aim is 80%. Likely ranges and caveats are in [FINDINGS.md §11](FINDINGS.md#11-other-models-added-15-nov).</sub>
 
@@ -74,8 +77,10 @@ the same facts, the same five jobs, the same averaging.
   cost 17 cents. None is clearly better or worse than `gpt-6.1-sol`. Only the untrained open model fell clearly behind.
 - **The coach's two changes carry over to the other GPT models and to the open model, but not to Claude.** They were
   chosen while working with `gpt-6.1-sol`. Claude's ranges already held about 80% of the time, so widening them added nothing.
-- **RL still earns its place on the open model.** Qwen3.5-9B after RL has 10% less error than five untrained agents on
-  the same base model (likely 2% to 16%).
+- **RL puts the 9B open model level with the cheaper API models.** Qwen3.5-9B after RL, answering one prompt with no
+  agents, cut error by 15% against drift on the same 479 forecasts (likely 3% to 24%). That is level with the three GPT
+  models as first written (15% to 17%) and behind Claude Opus (22%; the gap is 8%, likely 0% to 16%). Untrained, the
+  same model scored 4% with one prompt and 6% as five agents.
 
 No rule was written before this ran, and each model was run once.
 
@@ -134,7 +139,7 @@ Most of the movement is offers joining or leaving the list, not providers changi
 ![Coverage when the price moved](findings/figures/fig11_coverage_when_moved.png)
 
 <details>
-<summary><b>More figures</b>: blind weeks, shuffled worlds, RL runs, range memory, agent memory, the euro (8 more)</summary>
+<summary><b>More figures</b>: blind weeks, shuffled worlds, RL runs, range memory, agent memory, the euro, the single loop (9 more)</summary>
 
 #### The AI scientist on three blind weeks
 ![Blind weeks](findings/figures/fig1_blind_weeks.png)
@@ -159,6 +164,9 @@ Most of the movement is offers joining or leaving the list, not providers changi
 
 #### Agent memory: no memory, a scored record, a record plus a self-written lesson
 ![Agent memory](findings/figures/fig12_agent_memory.png)
+
+#### One loop over the whole forecaster: every edit it proposed, and what the edit did on later days
+![The loop's proposed edits](findings/figures/fig13_rsi_loop.png)
 
 </details>
 
@@ -207,6 +215,8 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | Recall probe | `src/gpuval/recall_probe.py` | Asks the agents' model, with no data shown, what the AWS prices were on its test days. Days after its knowledge ends are the control. |
 | Analyst | `src/gpuval/analyst.py` | An AI writes one analysis function per idea. It runs in a Modal container with no keys and no network, against 39 shuffled copies of the data, and a passed idea must pass again on newer data the analyst never sees. |
 | Weekday rule | `src/gpuval/weekday_rule.py` | Tests whether the weekday pattern the analyst found makes 1-day forecasts better. No AI calls. It does not. |
+| RL inside a loop | `rl/rsi_forecaster.py` | Generation after generation: train Qwen3.5-9B for 8 rounds from the kept weights, score the new weights on a watch set of later AWS dates, keep them only if they are better in 90% of resamples, otherwise roll back and change the learning rate. The kept weights are then tested once on our prices. The same loop runs on Modal GPUs through `rl/modal_forecaster.py` (`rsi-launch`, `rsi-collect`); only a short trial of that path had finished by the deadline. |
+| One loop | `src/gpuval/rsi.py` | One self-improvement loop that runs unattended over the whole forecaster: a vote that learns each member's weight from its record, a paired accept test, one kind of change per generation, and an exam that takes each kept change out again. It starts from the forecast we handed in and can leave it only through the gate. |
 | AI calls with a meter | `src/gpuval/llm.py` | One helper for the three modules above: cheaper flex tier first, token and cost totals, a budget that stops the run. |
 | Other models | `runs/other_models/run_crowd.py`, `table.py` | `run_crowd.py` asks the five agents' questions of another model (OpenAI, Anthropic, or an open model on Tinker), with a spending limit. `table.py` scores every model on the same 479 forecasts. |
 | Long view | `longview/` | AWS spot rent for H100 and A100 one to three years out (capped at AWS's list price, with hardware-trend paths beside it), and a resale view with a floor. |
@@ -241,6 +251,11 @@ uv run python -m gpuval.agent_memory run                            # about 10,6
 uv run python -m gpuval.analyst run                                 # 12 AI calls and a sealed Modal container; `table` re-prints
 uv run python -m gpuval.weekday_rule                                # the rule that follows from the analyst's finding; no keys needed
 uv run python tests/longview_checks.py                              # the long view's ceiling and successor test; no pack needed
+uv run python -m gpuval.rsi run                                     # the single loop: 12 AI calls at most; `--proposer random` is the control
+uv run python -m gpuval.rsi run --proposer replay && uv run python -m gpuval.rsi exam   # recorded edits through the gate again, then the exam; no keys needed
+uv run python tests/rsi_checks.py                                   # the loop's starting bundle is the handed-in forecast; no look-ahead in the vote
+cd rl && uv run python rsi_forecaster.py --name rsi1 --base-model Qwen/Qwen3.5-9B && uv run python eval_forecaster.py --name rsi1 --base-from fc2   # RL inside the loop, then its test (TINKER_API_KEY)
+uv run python -m gpuval.rsi fresh                                   # the follow-up on 20 fresh days, re-scored from saved answers; `fresh-ask` makes the 3,375 AI calls
 cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
 uv run python runs/other_models/run_crowd.py --env .env --dry                              # rebuilds the prompts and re-scores the recorded answers; nothing paid
@@ -266,6 +281,9 @@ and reproduces the blind-test table exactly.
   caused (`answers.json`), the exam and second-check scores, and the improved crowd's 6 Nov answers.
 - `runs/agent_memory/`, `runs/recall/`, `runs/analyst/`: every answer from the three tests added on 15 Nov
   (the analyst's ledger holds each idea's code and its numbers on the real and shuffled data).
+- `runs/rsi/`: the single loop of 15 Nov. One folder per run (`main` is the AI proposer, `random_1` to `random_5` the control) with every
+  proposed edit and the gate's numbers (`state.json`); `exam_cells.parquet` holds the exam-day forecasts, and `fresh_answers.json` every answer of the follow-up on 20 fresh days.
+- `rl/runs/rsi1/`: the RL loop of 15 Nov. Every generation with its watch score and whether it was kept (`log.json`), and the kept weights' test answers.
 - `rl/runs/fc1/`, `rl/runs/fc2/`: training logs and test answers of the two RL-trained forecasters.
 - `rl/runs/modal/`: every Modal training run (log, test answers, scored cells); `findings/data/modal_rl.json` puts them next to the Tinker runs.
 - `runs/other_models/`: the five agents on five other models. Each `<model>/` folder holds every answer and the run's
