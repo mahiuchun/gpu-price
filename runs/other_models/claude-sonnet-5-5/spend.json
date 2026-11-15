@@ -1,0 +1,12 @@
+{
+ "model": "claude-sonnet-5-5",
+ "effort": "low",
+ "usd": 5.765936000000002,
+ "calls": 1110,
+ "input_tokens": 1796323,
+ "output_tokens": 217329,
+ "thinking_tokens": 30171,
+ "flex_calls": 0,
+ "retries": 0,
+ "bad_answers": 0
+}

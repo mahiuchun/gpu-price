@@ -22,6 +22,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 ## Contents
 
 - [Main results](#main-results)
+- [The same forecasts with other models](#the-same-forecasts-with-other-models)
 - [How it works](#how-it-works)
 - [Results in pictures](#results-in-pictures)
 - [The forecast handed in](#the-forecast-handed-in)
@@ -51,6 +52,32 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 | Agents **read each other's answers** | ❌ no help |
 | **Memory** of the system's own past forecasts (three kinds) | ➖ 1.4% to 2.1% less error, not established |
 | An **AI analyst** writes its own tests on shuffled data | ➖ found real weekday patterns; a rule built on them did not help |
+
+## The same forecasts with other models
+
+Added 15 Nov. The five agents were built with one model, `gpt-6.1-sol`. We asked the same 479 fresh forecasts of five
+other models: an untrained open model, and a cheaper and a dearer model from each of two makers. Nothing else changed:
+the same facts, the same five jobs, the same averaging.
+
+| Model answering | Five agents, as first written | With the coach's two changes | Ranges held | Cost of the run |
+|---|---|---|---|---|
+| Qwen3.5-9B, untrained (open model) | +6.4% | +11.6% | 61% → 70% | $0.65 |
+| gpt-6-luna | +15.3% | +19.2% | 75% → 80% | $0.17 |
+| **gpt-6.1-sol** (the crowd's own) | **+16.4%** | **+19.8%** | 74% → 80% | recorded earlier |
+| gpt-6-astra | +16.6% | +20.7% | 74% → 80% | $12.01 |
+| Claude Sonnet 5.5 | +19.3% | +18.9% | 82% → 87% | $5.77 |
+| Claude Opus 5.5 | +22.0% | +22.7% | 80% → 86% | $11.45 |
+
+<sub>Percent less error than drift on the same 479 forecasts (37 prices, 5 days). "Ranges held" is how often the truth fell inside the range, first written → with the coach's changes; the aim is 80%. Likely ranges and caveats are in [FINDINGS.md §11](FINDINGS.md#11-other-models-added-15-nov).</sub>
+
+- **The result does not hang on one model.** Every API model cut error by 15% to 22%, including one whose whole run
+  cost 17 cents. None is clearly better or worse than `gpt-6.1-sol`. Only the untrained open model fell clearly behind.
+- **The coach's two changes carry over to the other GPT models and to the open model, but not to Claude.** They were
+  chosen while working with `gpt-6.1-sol`. Claude's ranges already held about 80% of the time, so widening them added nothing.
+- **RL still earns its place on the open model.** Qwen3.5-9B after RL has 10% less error than five untrained agents on
+  the same base model (likely 2% to 16%).
+
+No rule was written before this ran, and each model was run once.
 
 ## How it works
 
@@ -181,6 +208,7 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | Analyst | `src/gpuval/analyst.py` | An AI writes one analysis function per idea. It runs in a Modal container with no keys and no network, against 39 shuffled copies of the data, and a passed idea must pass again on newer data the analyst never sees. |
 | Weekday rule | `src/gpuval/weekday_rule.py` | Tests whether the weekday pattern the analyst found makes 1-day forecasts better. No AI calls. It does not. |
 | AI calls with a meter | `src/gpuval/llm.py` | One helper for the three modules above: cheaper flex tier first, token and cost totals, a budget that stops the run. |
+| Other models | `runs/other_models/run_crowd.py`, `table.py` | `run_crowd.py` asks the five agents' questions of another model (OpenAI, Anthropic, or an open model on Tinker), with a spending limit. `table.py` scores every model on the same 479 forecasts. |
 | Long view | `longview/` | AWS spot rent for H100 and A100 one to three years out (capped at AWS's list price, with hardware-trend paths beside it), and a resale view with a floor. |
 
 ## Re-run the research (needs keys in `.env`)
@@ -215,6 +243,10 @@ uv run python -m gpuval.weekday_rule                                # the rule t
 uv run python tests/longview_checks.py                              # the long view's ceiling and successor test; no pack needed
 cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
+uv run python runs/other_models/run_crowd.py --env .env --dry                              # rebuilds the prompts and re-scores the recorded answers; nothing paid
+uv run python runs/other_models/run_crowd.py --env .env --model claude-opus-5-5 --cap 15   # the five agents on another model; --cap is a spending limit in USD
+                                                                                           # (needs `uv pip install anthropic`, or `tinker` for an open model)
+uv run python runs/other_models/table.py                                                   # all six models on the same 479 forecasts; no AI calls
 ```
 
 </details>
@@ -236,6 +268,8 @@ and reproduces the blind-test table exactly.
   (the analyst's ledger holds each idea's code and its numbers on the real and shuffled data).
 - `rl/runs/fc1/`, `rl/runs/fc2/`: training logs and test answers of the two RL-trained forecasters.
 - `rl/runs/modal/`: every Modal training run (log, test answers, scored cells); `findings/data/modal_rl.json` puts them next to the Tinker runs.
+- `runs/other_models/`: the five agents on five other models. Each `<model>/` folder holds every answer and the run's
+  spend; `cells.parquet` has every forecast's error for every model and `table.json` every comparison.
 - `docs/pages/`: three explainer pages (how it works, the test periods, the Exa lookups).
 
 ## Rebuild the figures

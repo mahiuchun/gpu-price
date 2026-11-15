@@ -1,0 +1,12 @@
+{
+ "model": "gpt-6-astra",
+ "effort": "low",
+ "usd": 12.012339999999995,
+ "calls": 1110,
+ "input_tokens": 1130813,
+ "output_tokens": 254331,
+ "thinking_tokens": 112036,
+ "flex_calls": 1110,
+ "retries": 0,
+ "bad_answers": 0
+}
