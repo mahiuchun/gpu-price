@@ -428,5 +428,19 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       edit is not shown to help. Outside the rule: Qwen3.5-9B as the sixth member +0.5% (−1.3%
       to +2.1%), both open models +0.5% (−2.1% to +2.7%). The five on their own: +14.8% against
       drift (+10% to +21%).
+    - **RL training inside the loop** (`rl/rsi_forecaster.py`; written before its first run).
+      Qwen3.5-9B on Tinker. A generation is 8 training rounds (16 AWS practice prices x 8 answers
+      a round, as in the earlier RL runs) starting from the kept weights. The new weights then
+      answer a fixed watch set of 128 later AWS price-days (4 Jul 2025 to 20 Feb 2026, 4 answers
+      each). They replace the kept weights only if they score higher there and still do in at
+      least 90% of 2,000 resamples of those price-days. Otherwise they are thrown away, and the
+      next generation restarts from the kept weights with the learning rate halved or doubled
+      (start 4e-5, bounds 1e-5 to 1.6e-4). It stops at a set clock time, after 12 generations, or
+      after four rejections in a row. Our 37 prices are not used inside the loop. The kept
+      weights are tested once on them (24 Sep to 5 Nov) and on AWS Fridays in 2026, against the
+      untrained model's saved answers. One run. We will say the loop trained a better forecaster
+      only if the kept weights have less error than the untrained model on our prices with a 90%
+      interval that excludes zero. The earlier one-shot run of the same model (60 rounds, no
+      gate) is reported beside it.
     - The opening paragraph of this item was shortened after the run. The rule itself, every
       point from "What can change" to "Weaknesses known before the run", is as first committed.

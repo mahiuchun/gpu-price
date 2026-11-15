@@ -112,6 +112,7 @@ def main() -> int:
     ap.add_argument("--name", required=True)
     ap.add_argument("--checkpoint")
     ap.add_argument("--table", action="store_true")
+    ap.add_argument("--base-from", default=None, help="reuse the untrained model's saved answers from this run (same base model)")
     a = ap.parse_args()
     out = HERE / "runs" / a.name
     log = json.loads((out / "log.json").read_text())
@@ -122,10 +123,17 @@ def main() -> int:
         ans = json.loads(path.read_text())
     else:
         ckpt = a.checkpoint or log["checkpoint"]
-        base = Sampler(base_model=log["base_model"], system_prompt=env.SYSTEM)
         trained = Sampler(checkpoint=ckpt, system_prompt=env.SYSTEM)
-        ans = {"checkpoint": ckpt, "base": answers_for(base, items, "before training"), "trained": answers_for(trained, items, "after training")}
-        usage = {k: base.usage[k] + trained.usage[k] for k in base.usage}
+        if a.base_from:      # the untrained model's answers were saved by an earlier run of the same base model
+            prev = json.loads((HERE / "runs" / a.base_from / "log.json").read_text())
+            assert prev["base_model"] == log["base_model"]
+            ans = {"checkpoint": ckpt, "base": json.loads((HERE / "runs" / a.base_from / "eval_answers.json").read_text())["base"],
+                   "trained": answers_for(trained, items, "after training")}
+            usage = dict(trained.usage)
+        else:
+            base = Sampler(base_model=log["base_model"], system_prompt=env.SYSTEM)
+            ans = {"checkpoint": ckpt, "base": answers_for(base, items, "before training"), "trained": answers_for(trained, items, "after training")}
+            usage = {k: base.usage[k] + trained.usage[k] for k in base.usage}
         ans["usage"], ans["cost_estimate_usd"] = usage, estimate_cost(usage, log["base_model"])
         path.write_text(json.dumps(ans))
     df = cells(items, ans)
