@@ -1,4 +1,4 @@
-# An AI scientist for GPU rental prices
+# RSI4GPR: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting
 
 Entry for "Recursive Self-Improvement by Pacific: An AI Scientist for GPU Value" (Direction A).
 It forecasts 37 posted GPU rental prices 1, 3 and 7 days ahead, and tests which kinds of AI help
@@ -11,6 +11,11 @@ make those forecasts better on data the system has not seen.
 **The forecast we hand in is the average of five AI agents, after two changes that a coach AI proposed and tests kept.**
 On days that neither the agents nor the coach had seen, it made 20% less error than drift, the reference forecast
 (likely range 10% to 28%).
+
+<p align="center">
+  <a href="docs/media/demo/gpu-price-demo.mp4"><img src="docs/media/demo/poster.jpg" alt="RSI4GPR demo video, 3 minutes: the question, the engine, the five AI agents, the training loop with verifiers, the inference pipeline and the results. Click to play." width="640"></a>
+  <br><sub><b>▶ 3-minute demo</b> (narrated, captions embedded): <a href="docs/media/demo/gpu-price-demo.mp4">gpu-price-demo.mp4</a> · <a href="docs/media/demo/script.json">narration script</a> · <a href="docs/media/demo/demo.srt">captions</a></sub>
+</p>
 
 - **Findings:** [FINDINGS.md](FINDINGS.md)
 - **Forecast file:** [submission/forecast_2026-11-06.csv](submission/forecast_2026-11-06.csv), the average of five AI agents
@@ -93,6 +98,31 @@ again. The spread of those replayed medians gives the forecast range.
 <p align="center">
   <img src="docs/media/engine_replay.gif" alt="Animation: today's list of nine offers; past pairs of days are replayed onto it one at a time (offers reprice, leave or rejoin), each giving a new median; the replayed medians pile up into a distribution whose 10th, 50th and 90th percentiles are the forecast." width="820">
   <br><sub>The engine, step by step (illustrative numbers). <a href="docs/media/engine_replay.mp4">MP4 version</a> · code: <code>src/gpuval/engine.py</code></sub>
+</p>
+
+### Our approach: five AI agents and a coach
+
+The forecast we hand in comes from two separate pipelines.
+
+**Training: a recursive self-improvement loop with verifiers.** What is trained is the crowd's configuration
+(each agent's instructions and how far the ranges are stretched), not model weights. Each round, the crowd
+forecasts six practice days and a verifier scores it against drift. The coach AI (the generator) then
+proposes one change. A second verifier re-scores the changed crowd: it must be better on the practice days and
+no worse on five hidden check days, where the coach only ever learns pass or fail. A change that passes becomes
+the next version of the crowd, and the loop runs again, ten rounds in all. The verifiers are fixed code
+(`src/gpuval/harness.py`) that the AI cannot change. A final verifier, an exam on days the loop never saw,
+scored the final crowd 4% better than the first.
+
+<p align="center">
+  <img src="docs/media/training_pipeline.png" alt="Training pipeline. Inputs (facts per price, 6 practice days, 5 hidden check days) feed a loop: 1 Crowd (n) of five AI agents; 2 Forecast the practice days; 3 Score against drift (verifier); 4 Coach AI proposes one change (generator); 5 Verify: better on practice and not worse on hidden check days (verifier); 6 Update to crowd (n+1). Propose, verify, keep, ten rounds: round 1 kept wider ranges, round 3 kept new base rates, rounds 2 and 10 dropped. The final exam (final verifier) gives +4.0% on 5 unseen days, and the final crowd goes to the inference pipeline." width="900">
+</p>
+
+**Inference: the frozen crowd forecasts 6 November.** Nothing changes at this stage. For each of the 37 prices,
+the facts go to the five agents, each with its own job. Their lows, middles and highs are averaged, and the
+ranges are stretched at 3 and 7 days. The result is the 111-cell forecast file.
+
+<p align="center">
+  <img src="docs/media/inference_pipeline.png" alt="Inference pipeline. The final crowd from training is frozen. Facts per price go to five AI agents: list reader (the middle offer), repricer watcher (offers that move often), base-rate keeper (how often, how far), reference weigher (drift, engine, ML) and jump spotter (jumps that reverse). Their answers are averaged, the ranges are stretched (1 day ×1.00, 3 days ×1.25, 7 days ×1.65), and the result is the forecast file: 111 cells, q10, q50, q90. One pass per price; on fresh days 20% less error than drift (likely 10% to 28%)." width="900">
 </p>
 
 The explainer pages walk through the same ideas with real prices:
@@ -278,6 +308,10 @@ and reproduces the blind-test table exactly.
 uv run python -m gpuval.figures          # findings/figures/*.png
 uv run python docs/media/make_media.py   # README visuals in docs/media/; reads only files in this repo
 ```
+
+The two pipeline images (`docs/media/training_pipeline.png`, `inference_pipeline.png`) and the demo video
+(`docs/media/demo/`) are exported from the project's slide deck. The video's narration is
+`docs/media/demo/script.json`, read by the macOS `say` voice Samantha.
 
 ## Data and attribution
 
