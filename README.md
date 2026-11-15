@@ -4,11 +4,143 @@ Entry for "Recursive Self-Improvement by Pacific: An AI Scientist for GPU Value"
 It forecasts 37 posted GPU rental prices 1, 3 and 7 days ahead, and tests which kinds of AI help
 make those forecasts better on data the system has not seen.
 
+<p align="center">
+  <img src="docs/media/hero_scoreboard.png" alt="Every forecaster on the same 479 fresh forecasts: the five AI agents after the coach's changes cut error by 20% against drift, the agents as first written 16%, Qwen3.5-9B after RL 15%, Qwen3-8B after RL 10%, the engine 10%, the untrained open models 2–4%." width="900">
+</p>
+
+**The forecast we hand in is the average of five AI agents, after two changes that a coach AI proposed and tests kept.**
+On days that neither the agents nor the coach had seen, it made 20% less error than drift, the reference forecast
+(likely range 10% to 28%).
+
 - **Findings:** [FINDINGS.md](FINDINGS.md)
 - **Forecast file:** [submission/forecast_2026-11-06.csv](submission/forecast_2026-11-06.csv), the average of five AI agents
   after two changes that a coach AI proposed and tests kept.
   The engine alone is [submission/alt_engine_2026-11-06.csv](submission/alt_engine_2026-11-06.csv).
 - **Test protocol, fixed before the test:** [PROTOCOL.md](PROTOCOL.md)
+- **Explainer pages:** [how it works](docs/pages/build-walkthrough.html) · [the test periods](docs/pages/test-periods.html) · [the Exa lookups](docs/pages/exa-status.html)
+
+## Contents
+
+- [Main results](#main-results)
+- [How it works](#how-it-works)
+- [Results in pictures](#results-in-pictures)
+- [The forecast handed in](#the-forecast-handed-in)
+- [Reproduce the forecasts](#reproduce-the-forecasts)
+- [The pieces, file by file](#the-pieces-file-by-file)
+- [Re-run the research](#re-run-the-research-needs-keys-in-env)
+- [What is in `runs/`](#what-is-in-runs)
+- [Rebuild the figures](#rebuild-the-figures)
+- [Data and attribution](#data-and-attribution)
+
+## Main results
+
+| | Our 37 prices, 8 earlier weeks | Our 37 prices, 3 test weeks | AWS spot, 4 years |
+|---|---|---|---|
+| **Engine** (no AI) | +8.4% | +7.7% | +7.9% |
+| **ML model** (Chronos-2) | −7.1% | +8.6% | +16.4% |
+| **Five AI agents** | **+15.5%** | **+14.9%** | **+19.2%** |
+
+<sub>Percent less error than drift. Likely ranges, sample sizes and caveats are in [FINDINGS.md §1](FINDINGS.md#1-three-separate-tests).</sub>
+
+| What we tried to make the system improve itself | Held up on fresh days? |
+|---|---|
+| A **coach AI** rewrites the agent crowd (10 changes proposed, 2 kept) | ✅ a further 3% to 4% less error |
+| **RL** teaches a small open model to forecast (practised on AWS only) | ✅ Qwen3-8B: 3% → 5–10%; Qwen3.5-9B: 5% → 9–11% |
+| An **AI scientist** tunes the engine's settings | ❌ slightly worse on unseen weeks |
+| **RL** teaches a small model to propose engine settings | ❌ its one change is not clearly better |
+| Agents **read each other's answers** | ❌ no help |
+| **Memory** of the system's own past forecasts (three kinds) | ➖ 1.4% to 2.1% less error, not established |
+| An **AI analyst** writes its own tests on shuffled data | ➖ found real weekday patterns; a rule built on them did not help |
+
+## How it works
+
+<p align="center">
+  <img src="docs/media/pipeline.svg" alt="Pipeline: the GPU price pack and AWS spot history feed four forecasters (engine, five AI agents, RL-trained open models, Chronos-2). Self-improvement loops (AI scientist, coach, RL training, memory and analyst) change them. A fixed test harness scores everything. The improved agent crowd produces the forecast file." width="900">
+</p>
+
+Each scored price is the **median of one site's list of offers** for one GPU. Drift, the reference forecast, only
+replays how that median moved before. The engine looks underneath it: it replays what each *offer* did over
+past pairs of days (repriced, stayed, left the list, rejoined), applies that to today's list and takes the median
+again. The spread of those replayed medians gives the forecast range.
+
+<p align="center">
+  <img src="docs/media/engine_replay.gif" alt="Animation: today's list of nine offers; past pairs of days are replayed onto it one at a time (offers reprice, leave or rejoin), each giving a new median; the replayed medians pile up into a distribution whose 10th, 50th and 90th percentiles are the forecast." width="820">
+  <br><sub>The engine, step by step (illustrative numbers). <a href="docs/media/engine_replay.mp4">MP4 version</a> · code: <code>src/gpuval/engine.py</code></sub>
+</p>
+
+The explainer pages walk through the same ideas with real prices:
+
+<table>
+  <tr>
+    <td width="50%" align="center"><a href="docs/pages/build-walkthrough.html"><img src="docs/media/page_build-walkthrough.png" alt="Explainer page: A GPU price forecaster, and a test of whether an AI can improve it"></a><br><sub><b>How it works</b>: the price is the middle of a list; drift against the engine</sub></td>
+    <td width="50%" align="center"><a href="docs/pages/test-periods.html"><img src="docs/media/page_test-periods.png" alt="Explainer page: which dates the results come from"></a><br><sub><b>The test periods</b>: eleven weeks of our prices and four years of AWS</sub></td>
+  </tr>
+</table>
+
+<sub>GitHub shows `.html` files as source. To view a page, open it locally in a browser.</sub>
+
+## Results in pictures
+
+All figures are made by `uv run python -m gpuval.figures` from files already in `findings/data/`. Each one is
+explained in [FINDINGS.md](FINDINGS.md).
+
+### Three separate tests
+
+The engine beats drift by about 8% everywhere. The five agents beat it by 15% to 19%. The ML model swings from −7% to +16%.
+
+![Three separate tests](findings/figures/fig6_three_tests.png)
+
+### Two improvement loops that held up
+
+Left: the coach's two kept changes, scored on days it never saw. Right: RL training moves two open models from about level with drift to clearly ahead, on prices they never practised on.
+
+![Two improvement loops](findings/figures/fig7_self_improvement.png)
+
+### What moves a published median
+
+Most of the movement is offers joining or leaving the list, not providers changing their prices. That is the engine's reason for existing.
+
+![What moves the median](findings/figures/fig3_what_moves_the_median.png)
+
+### Ranges hold far less often when the price moves
+
+![Coverage when the price moved](findings/figures/fig11_coverage_when_moved.png)
+
+<details>
+<summary><b>More figures</b>: blind weeks, shuffled worlds, RL runs, range memory, agent memory, the euro (8 more)</summary>
+
+#### The AI scientist on three blind weeks
+![Blind weeks](findings/figures/fig1_blind_weeks.png)
+
+#### Real against shuffled worlds
+![Real vs shuffled](findings/figures/fig2_real_vs_shuffled.png)
+
+#### Rolling the engine forward: how far its ranges hold
+![Roll forward](findings/figures/fig4_roll_forward.png)
+
+#### RL: proposing engine settings, and forecasting directly
+![RL](findings/figures/fig5_rl.png)
+
+#### Every RL training run (Tinker and Modal, two seeds)
+![RL runs](findings/figures/fig8_rl_runs.png)
+
+#### Range memory: no AI, ranges set from earlier forecasts whose outcomes are known
+![Range memory](findings/figures/fig9_range_memory.png)
+
+#### A scored price that follows the euro: moves Tuesday to Saturday only
+![Euro weekday](findings/figures/fig10_euro_weekday.png)
+
+#### Agent memory: no memory, a scored record, a record plus a self-written lesson
+![Agent memory](findings/figures/fig12_agent_memory.png)
+
+</details>
+
+## The forecast handed in
+
+From 6 November 2026: a low (10th percentile), middle and high (90th percentile) for each of the 37 prices at 1, 3 and 7 days.
+Most list prices are expected to hold. The wide ranges are on the marketplace and spot prices, where offers come and go.
+
+![The forecast handed in](docs/media/forecast_6nov.png)
 
 ## Reproduce the forecasts
 
@@ -23,7 +155,7 @@ repo's scoring matches the organisers' `starter/scorer.py`, then writes the fore
 their SHA-256. The main file is rebuilt from the agents' recorded answers in
 `runs/coach/final_answers.json` (the crowd before the coach's changes: `runs/agents/final_answers.json`).
 
-## How it works
+## The pieces, file by file
 
 | Piece | File | What it does |
 |---|---|---|
@@ -52,6 +184,9 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | Long view | `longview/` | AWS spot rent for H100 and A100 one to three years out (capped at AWS's list price, with hardware-trend paths beside it), and a resale view with a floor. |
 
 ## Re-run the research (needs keys in `.env`)
+
+<details>
+<summary>All research commands (OpenAI, Modal and Tinker keys as noted)</summary>
 
 ```bash
 uv run python -m gpuval.timemachine --name record --modal \
@@ -82,6 +217,8 @@ cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecast
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
 ```
 
+</details>
+
 A fresh run of the scientist or the agents will not repeat the recorded answers word for word (the
 model is not deterministic). Every answer is saved: `runs/record/` for the scientist,
 `runs/agents/` for the agents and `runs/coach/` for the coach loop. `reproduce.sh --with-backtest` replays the scientist's recorded ideas
@@ -100,6 +237,13 @@ and reproduces the blind-test table exactly.
 - `rl/runs/fc1/`, `rl/runs/fc2/`: training logs and test answers of the two RL-trained forecasters.
 - `rl/runs/modal/`: every Modal training run (log, test answers, scored cells); `findings/data/modal_rl.json` puts them next to the Tinker runs.
 - `docs/pages/`: three explainer pages (how it works, the test periods, the Exa lookups).
+
+## Rebuild the figures
+
+```bash
+uv run python -m gpuval.figures          # findings/figures/*.png
+uv run python docs/media/make_media.py   # README visuals in docs/media/; reads only files in this repo
+```
 
 ## Data and attribution
 
