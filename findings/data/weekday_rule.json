@@ -1,0 +1,201 @@
+{
+ "rule": {
+  "min_cases": 8,
+  "horizon": 1,
+  "from": "2026-08-21",
+  "to": "2026-11-05"
+ },
+ "one_day_forecasts": 2058,
+ "rule_fired": 146,
+ "prices_where_it_fired": 13,
+ "price_moved_when_it_fired": 21,
+ "price_moved_otherwise": [
+  777,
+  1912
+ ],
+ "engine": {
+  "one_day": {
+   "rule_vs_plain": {
+    "n_cells": 2058,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": -0.0011047501969108087,
+    "lo90": -0.005286495790860446,
+    "hi90": 0.001373348456365652,
+    "excludes_zero": false
+   },
+   "plain_vs_drift": {
+    "n_cells": 2058,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": 0.046819550541028376,
+    "lo90": 0.017298970434733087,
+    "hi90": 0.08362881873921686,
+    "excludes_zero": true
+   },
+   "rule_vs_drift": {
+    "n_cells": 2058,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": 0.04576652425179706,
+    "lo90": 0.01642168978659066,
+    "hi90": 0.08227559574647926,
+    "excludes_zero": true
+   }
+  },
+  "all_horizons": {
+   "rule_vs_plain": {
+    "n_cells": 5904,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": -0.00016504562247954269,
+    "lo90": -0.0007425699855599044,
+    "hi90": 0.00019858433773025652,
+    "excludes_zero": false
+   },
+   "plain_vs_drift": {
+    "n_cells": 5904,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": 0.09770809574121075,
+    "lo90": 0.062188267098226266,
+    "hi90": 0.14014546844020406,
+    "excludes_zero": true
+   },
+   "rule_vs_drift": {
+    "n_cells": 5904,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": 0.09755917641221401,
+    "lo90": 0.062131027663780855,
+    "hi90": 0.13984661182205535,
+    "excludes_zero": true
+   }
+  }
+ },
+ "drift": {
+  "one_day": {
+   "rule_vs_plain": {
+    "n_cells": 2058,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": -0.000411012706124092,
+    "lo90": -0.0017896427346571265,
+    "hi90": 0.00014233401171543356,
+    "excludes_zero": false
+   }
+  }
+ },
+ "by_price": {
+  "afhubbard.hyperscaler_spot.A100_40GB.spot": {
+   "fired": 33,
+   "moved": 0,
+   "engine_error_removed_usd": 0.0022559038165451306
+  },
+  "afhubbard.hyperscaler_spot.A100_SXM_80GB.spot": {
+   "fired": 39,
+   "moved": 1,
+   "engine_error_removed_usd": 0.004703267177630067
+  },
+  "afhubbard.hyperscaler_spot.V100.spot": {
+   "fired": 22,
+   "moved": 0,
+   "engine_error_removed_usd": 0.010775507718924581
+  },
+  "fastgpu_daily.neocloud_rate_card.H100_PCIe_80GB.on_demand": {
+   "fired": 1,
+   "moved": 0,
+   "engine_error_removed_usd": 0.0
+  },
+  "fastgpu_daily.neocloud_spot.H100_SXM_80GB.spot": {
+   "fired": 2,
+   "moved": 0,
+   "engine_error_removed_usd": 0.0
+  },
+  "gpurentalprices.neocloud_rate_card.A100_40GB.on_demand": {
+   "fired": 6,
+   "moved": 0,
+   "engine_error_removed_usd": 6.018147993359275e-05
+  },
+  "gpurentalprices.neocloud_rate_card.B200.on_demand": {
+   "fired": 1,
+   "moved": 1,
+   "engine_error_removed_usd": 0.0
+  },
+  "gpurentalprices.neocloud_rate_card.H100_80GB.on_demand": {
+   "fired": 1,
+   "moved": 1,
+   "engine_error_removed_usd": 0.0
+  },
+  "gpurentalprices.neocloud_rate_card.H200.on_demand": {
+   "fired": 8,
+   "moved": 2,
+   "engine_error_removed_usd": 0.0
+  },
+  "gpurentalprices.neocloud_rate_card.L4.on_demand": {
+   "fired": 2,
+   "moved": 0,
+   "engine_error_removed_usd": 0.00037096989080576863
+  },
+  "gpurentalprices.neocloud_rate_card.L40S.on_demand": {
+   "fired": 16,
+   "moved": 6,
+   "engine_error_removed_usd": -0.018999227362434538
+  },
+  "gpurentalprices.neocloud_rate_card.RTX_A6000.on_demand": {
+   "fired": 11,
+   "moved": 7,
+   "engine_error_removed_usd": -0.0069286388398569565
+  },
+  "gpurentalprices.neocloud_rate_card.RTX_PRO_6000.on_demand": {
+   "fired": 4,
+   "moved": 3,
+   "engine_error_removed_usd": -0.013678526748765164
+  }
+ },
+ "first_crowd": {
+  "one_day_forecasts": 651,
+  "rule_fired": 37,
+  "price_moved_when_it_fired": 8,
+  "one_day": {
+   "rule_vs_plain": {
+    "n_cells": 651,
+    "n_series": 37,
+    "n_days": 19,
+    "skill": -0.0017188191797379293,
+    "lo90": -0.0088264617990907,
+    "hi90": 0.0024593978841094873,
+    "excludes_zero": false
+   }
+  },
+  "all_horizons": {
+   "rule_vs_plain": {
+    "n_cells": 1894,
+    "n_series": 37,
+    "n_days": 35,
+    "skill": -0.00023344187099594293,
+    "lo90": -0.0011792263591623663,
+    "hi90": 0.00032358390782493134,
+    "excludes_zero": false
+   },
+   "plain_vs_drift": {
+    "n_cells": 1894,
+    "n_series": 37,
+    "n_days": 35,
+    "skill": 0.1467409862358161,
+    "lo90": 0.10791764093650984,
+    "hi90": 0.19278991356290698,
+    "excludes_zero": true
+   },
+   "rule_vs_drift": {
+    "n_cells": 1894,
+    "n_series": 37,
+    "n_days": 35,
+    "skill": 0.146541799855199,
+    "lo90": 0.10770215233692268,
+    "hi90": 0.1927921407884734,
+    "excludes_zero": true
+   }
+  }
+ }
+}
