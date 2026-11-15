@@ -37,8 +37,73 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 - **Slides (21 pages):** [docs/slides/RSI4GPR-slides.pdf](docs/slides/RSI4GPR-slides.pdf)
 - **Explainer pages:** [how it works](docs/pages/build-walkthrough.html) · [the test periods](docs/pages/test-periods.html) · [the Exa lookups](docs/pages/exa-status.html)
 
+## Overview
+
+### Motivation
+
+GPU compute is now priced, rented, leased and lent against like a commodity, but the prices people quote are thin.
+A "GPU rental price" is usually the **median of one tracking site's list of offers**, and it can move for reasons
+that have little to do with the market: an offer joins or leaves the list, one provider reprices daily, or a euro
+price is converted to dollars each morning. Anyone setting a lease rate, a loan's collateral value or a capacity
+budget needs a forecast of these prices, with honest ranges, a few days ahead.
+
+The brief also asks a harder question: **can an AI improve its own forecaster?** Self-improving systems are easy
+to fool. A loop that keeps whatever scores well on the data it tuned on will "improve" on noise. So the question we
+set ourselves was not only how to forecast GPU prices, but which kinds of AI self-improvement still help on days
+the system has never seen.
+
+### Proposed solution
+
+RSI4GPR has two parts, kept apart on purpose:
+
+1. **A crew of five AI agents forecasts.** Each agent has one job: read the list around the middle offer, watch the
+   offers that reprice often, keep to base rates, weigh the reference forecasts, or look for jumps that may reverse.
+   Each gives a low, middle and high for 1, 3 and 7 days, and the crew's answer is the average.
+2. **One coach AI improves the crew in a recursive loop, and fixed verifiers decide.** Each round the coach reads
+   the crew's scores and worst misses on practice days and proposes one change: rewrite, add or drop an agent, or
+   stretch the ranges. A verifier the AI cannot change keeps the change only if practice days get better **and**
+   hidden check days, where the coach learns only pass or fail, get no worse. The kept change becomes the next
+   crew, and the loop runs again. After ten rounds the crew is frozen and sits an exam on days it never saw.
+
+Under the crew sits a plain **engine** with no AI. It replays what each offer did on past days, applies that to
+today's list and takes the middle again, which captures the fact that most movement in a median is offers coming
+and going. Around everything sits a **test harness fixed before the results**: a committed protocol, a "time
+machine" that runs each step with only past data, shuffled copies of the data as a placebo, and scoring identical
+to the organisers' scorer.
+
+### Results
+
+- **The forecast we hand in made 20% less error than drift on days no model had seen** (likely 10% to 28%),
+  across 479 forecasts of the 37 prices.
+- **The crew beat drift by 15% to 19% in three separate tests**, including four years of AWS spot prices. The
+  no-AI engine was a steady 8% ahead in all three.
+- **The coach's loop held up on fresh days:** a further 4% less error than the crew as first written. Most of
+  the gain came from one change, wider ranges at 3 and 7 days.
+- **The result does not hang on one model.** Four other API models in the same crew cut error by 15% to 22%. An
+  untrained open model fell behind, and RL training lifted small open models clearly above their untrained versions.
+- **Most self-improvement ideas did not survive.** Of seven ways to make the system improve itself, two held up,
+  three did not, and two were not established. Tuning the engine with an AI scientist made it slightly worse.
+- **Ranges are the weak point.** They held the truth 80% of the time overall, but only 66% of the time when the
+  price actually moved.
+
+### Potential impact
+
+- **For people who price GPUs:** a forecast with ranges for lease pricing, GPU-backed lending and capacity
+  planning, and practical rules for reading published prices: read a median together with its list, check the
+  currency of the offer in the middle, and ask how often a range held *when the price moved*.
+- **For recursive self-improvement:** a working pattern in which an AI proposes, a verifier it cannot change
+  decides, and a final exam on unseen data checks the result. The same propose, verify and keep loop can be
+  pointed at other agent crews and other forecasting tasks.
+- **For honest evaluation:** every idea, including the failures, is logged and can be replayed. The forecast
+  rebuilds in about 15 seconds with no AI calls (`bash reproduce.sh`), so the claims can be checked.
+
+The limits are listed in full in [FINDINGS.md](FINDINGS.md#limits). The most important: the crew and the coach
+were added after the blind weeks had been looked at, the tests use samples of days, and these are posted
+prices, not prices anyone actually paid.
+
 ## Contents
 
+- [Overview](#overview)
 - [Main results](#main-results)
 - [The same forecasts with other models](#the-same-forecasts-with-other-models)
 - [How it works](#how-it-works)
