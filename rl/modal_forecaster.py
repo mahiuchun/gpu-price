@@ -519,6 +519,11 @@ def collect(plan: str) -> None:
 
 
 H100_USD_PER_HOUR = 3.95  # modal.com/pricing, read 14 Nov 2026 ($0.001097 per second)
+A100_80GB_USD_PER_HOUR = 2.50  # same page, read 15 Nov 2026 ($0.000694 per second); Modal gave two runs this card
+
+
+def usd_per_hour(gpu: str) -> float:
+    return A100_80GB_USD_PER_HOUR if "A100" in gpu else H100_USD_PER_HOUR
 
 
 def summarize() -> None:
@@ -527,7 +532,7 @@ def summarize() -> None:
     import forecast_env as env
     from gpuval import coach, data, report
 
-    out = {"gpu_usd_per_hour": H100_USD_PER_HOUR, "runs": [], "tinker": {}}
+    out = {"gpu_usd_per_hour": H100_USD_PER_HOUR, "a100_80gb_usd_per_hour": A100_80GB_USD_PER_HOUR, "runs": [], "tinker": {}}
     for tag, run_name in (("Qwen/Qwen3-8B", "fc1"), ("Qwen/Qwen3.5-9B", "fc2")):
         e, l = json.loads((HERE / "runs" / run_name / "eval.json").read_text()), json.loads((HERE / "runs" / run_name / "log.json").read_text())
         out["tinker"][tag] = {"train_usd": l["cost_estimate_usd"], "test_usd": e["cost_estimate_usd"], "train_minutes": l["minutes"],
@@ -543,7 +548,7 @@ def summarize() -> None:
             c = b["cfg"]
             out["runs"].append({"plan": plan, "name": name, "base_model": c["base_model"], "lr": c["lr"], "seed": c["seed"], "rounds": c["rounds"],
                                 "watch": {str(k["round"]): k["mean_reward"] for k in b["checks"]}, "collapsed": sum("grad_norm" not in x for x in r["rounds"]) > len(r["rounds"]) / 4,
-                                "gpu": b["gpu"], "gpu_minutes": minutes, "usd": round(minutes * H100_USD_PER_HOUR / 60, 2),
+                                "gpu": b["gpu"], "gpu_minutes": minutes, "usd": round(minutes * usd_per_hour(b["gpu"]) / 60, 2),
                                 **{w: {k: b["table"][w][k] for k in ("n", "base_vs_drift", "trained_vs_drift", "trained_vs_base", "trained_vs_engine", "engine_vs_drift", "inside")} for w in ("ours", "aws", "all")}})
     sw = [r for r in out["runs"] if r["plan"] == "sweep1"]
     by_lr = {}

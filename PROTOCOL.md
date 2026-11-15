@@ -194,3 +194,7 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       re-run Qwen3.5-9B on Modal at 4e-5 with seeds 0 and 1 (seed 0 has the Tinker run's practice
       prices). Both results are reported whatever they show. If seed 0 lands near +11%, the gap was
       the learning rate; if it lands near +3% to +6%, the Tinker figure was a lucky run.
+    - Outcome: +9.3% (seed 0) and +9.7% (seed 1) on our prices; −2.9% and +2.8% on AWS. Nearer +11%
+      than +3% to +6%, so we read the gap as mostly the learning rate. Modal ran both on A100 80GB
+      cards, not H100s. `rl/runs/modal/newer3/rate_and_model_comparison.json` holds the comparisons
+      of the two rates and the two models on the same forecasts (each rate's two seeds averaged).
