@@ -331,3 +331,52 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       (the ML model's numbers do reach one agent; the agents' different jobs and the averaging are
       not shown to matter; the coach's gain is nearly all range width; the 7-day engine figure is
       72 forecasts from three days). Each is marked "added 15 Nov" or "corrected" where it stands.
+13. **One self-improvement loop over the whole forecaster, taken from our sister repo** (`gpuval.rsi`;
+    added 15 Nov, written before its first run). RSI4GPF (`chengjianglong/gpu-pricing-rsi`) runs a
+    single loop: train, validate, accept or roll back, change, repeat. Our own loops were separate
+    one-off tests. We take three things from it: the loop, a vote that learns each member's weight
+    from its record (`gpr/weights.py`), and the accept test (`gpr/evaluate.paired_bootstrap`). We
+    change one thing: each generation may change one kind of setting only, so that a gain can be
+    traced to its cause. This test is not blind: every day it uses has been looked at. The forecast
+    file is not changed whatever the result.
+    - **What can change (the bundle).** Which members vote; how the weights are learned (`eta`,
+      `decay`, `w_min`, and whether there is one set of weights, one per horizon, or one per kind
+      of price and horizon); the range stretch at each horizon and a widening by how far the
+      members' middles disagree. The starting bundle is the forecast we handed in: the improved
+      crowd's five agents, equal weights, stretch 1.0 / 1.25 / 1.65. `tests/rsi_checks.py` checks
+      that it gives the recorded numbers exactly.
+    - **Members available.** The five agents of the improved crowd, the engine at default
+      settings, and the two open models after RL training (the Tinker runs). All from recorded
+      answers; no forecaster is asked again.
+    - **The vote.** Weights start equal. Each time an outcome is published, a member's weight is
+      multiplied by exp(−eta × its error ÷ the error of "no change", capped at 3), pulled a share
+      `decay` back towards equal, and kept above `w_min`. A forecast uses only weights learned
+      from outcomes published on or before its own day. With eta 0 the weights stay equal.
+    - **Days.** The 23 days of our prices that the improved crowd has answered, in date order.
+      The loop is handed outcomes published up to 20 Oct: forecasts made on 14 days (24 Sep to
+      19 Oct), split by turns into practice days (640 forecasts) and check days (653). The exam is
+      the forecasts made on the 9 days from 21 Oct to 3 Nov (810 forecasts). The loop never sees
+      them; they are scored once, after all loops have ended. On the exam days the weights go on
+      learning; the settings are frozen.
+    - **A generation.** The kinds take turns: vote, range, members. The agents' model (medium
+      effort) is shown the team, its practice scores and the changes tried so far, and proposes
+      one edit of that generation's kind, within fixed bounds. The edit is kept only if (a) on
+      the practice days it has less error than the team before it, and still has less in at least
+      90% of 2,000 resamples of prices and target days, and (b) on the check days its error does
+      not rise (tolerance about half a percent; the proposer is told only pass or fail). Twelve
+      generations, or fewer if six in a row keep nothing.
+    - **Control.** The same loop with random edits in place of the AI's, five seeds.
+    - **How the exam is read.** We will say the loop improved the forecaster only if the final
+      bundle has less error than the starting bundle on the exam days with a 90% interval that
+      excludes zero (dollars, resampled by price and target day). We also report each kept edit
+      on its own, the final bundle with each kept edit taken out, the five control runs, and
+      the bundle after each generation. One run of the AI proposer; nothing is changed and
+      re-run after seeing a result.
+    - **Expectation.** Little or nothing. The five agents' middles agree within 0.1% on three
+      forecasts in four, a weight needs a record to learn from and the record is five weeks, and
+      an open model added as a sixth agent gave +1.4% (−1% to +4%).
+    - **Weaknesses known before the run.** The exam days are days on which the starting bundle
+      was itself judged (four of the coach's exam days and five of the second-check days), which
+      may flatter the start; that works against the loop, not for it. Practice and check days
+      share some outcome days. The open models' recorded answers end on 5 Nov, so a bundle that
+      includes them cannot forecast 6 Nov without running them again.
