@@ -23,10 +23,21 @@ What the script produces
     today's quoted resale price (USD per bare GPU module).
   * one-at-a-time sensitivities, and the same calculation on one other rental benchmark.
 
-Inputs : longview/out/outlook.csv, longview/data/resale_quotes.csv, pack daily_statistics.csv
+Revised 15 Nov 2026, after reading the brief's references (not scored against the 7-13 Nov truth):
+  * a floor: the low, middle and high resale figures cannot fall below 1%, 2% and 5% of the chip's
+    launch price (the model alone lets a GPU that has stopped earning reach $0; old chips still sell);
+  * the rental input is now the outlook capped at AWS's list price (longview.py, step 4);
+  * the same calculation on three steady hardware-trend rent paths (-18%, -25%, -35% a year);
+  * today's quote can be replaced on the command line without storing anyone's figure in the repo.
+`--rent-variant main_nocap --no-floor` reproduces the figures as they were before this revision.
+
+Inputs : longview/out/outlook.csv, longview/data/resale_quotes.csv, pack daily_statistics.csv and
+         hardware_fundamentals/hardware_fundamentals.csv (launch prices)
 Outputs: longview/out/resale_outlook.csv, resale_assumptions.csv, chart4_resale.png
 No network. Fixed seed. Run from the repo root:  uv run python longview/resale.py
+The pack is found at ./gpu-price-pack-v0.1.1-handover or at GPUVAL_PACK.
 """
+import argparse
 import os
 import sys
 
@@ -42,7 +53,7 @@ from matplotlib.lines import Line2D
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-PACK = os.path.join(ROOT, "gpu-price-pack-v0.1.1-handover")
+PACK = os.environ.get("GPUVAL_PACK", os.path.join(ROOT, "gpu-price-pack-v0.1.1-handover"))
 OUT = os.path.join(HERE, "out")
 QUOTES = os.path.join(HERE, "data", "resale_quotes.csv")
 OUTLOOK = os.path.join(OUT, "outlook.csv")
@@ -59,14 +70,20 @@ CHIPS = ("H100", "A100")
 AMC_CITE = "American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices"
 ANCHOR_URL = "https://www.amcompute.com/gpu-prices/data.csv"
 
+# --- the floor: what a GPU still sells for once it has stopped earning its keep, as a share of launch price ----
+# Low / middle / high. A judgement range; RESALE.md says what it leans on. Launch prices are the pack's
+# (Epoch AI, hardware_fundamentals.csv): the H100 figure is a server price divided by eight and the
+# A100 figure is the 40 GB part, the only A100 SXM row with a price.
+FLOOR_SHARE = (0.01, 0.02, 0.05)
+LAUNCH_ROW = {"H100": "NVIDIA H100 SXM5 80GB", "A100": "NVIDIA A100 SXM4 40 GB"}
+SCENARIO_MAIN = "aws_spot_outlook"
+
 # --- what each public figure is, read from the words in its `measure` column -------------------------
 KIND_WORDS = (("middle of resale prices", "resale_middle"), ("executed secondary sale", "one_sale"),
-              ("executed trades and firm dealer quotes", "trades_and_quotes"), ("asking price", "ask"),
-              ("appraised", "appraisal"))
+              ("asking price", "ask"), ("appraised", "appraisal"))
 KIND_STYLE = {  # kind: (chart marker, filled, plain name)
     "resale_middle": ("s", True, "middle of resale prices over 12 months"),
     "one_sale": ("o", True, "one individual sale"),
-    "trades_and_quotes": ("^", True, "publisher's weekly price from trades and firm dealer quotes"),
     "ask": ("o", False, "asking price"),
     "appraisal": ("D", False, "appraisal, one example"),
     "other": ("v", False, "other public figure"),
@@ -123,21 +140,38 @@ GREY = "#8a8984"
 
 
 # ------------------------------------------------------------------ inputs ----
-def load_outlook():
+def load_outlook(variant="main"):
+    """`variant` is "main" (paths capped at AWS's list price) or "main_nocap" (as before the cap)."""
     o = pd.read_csv(OUTLOOK)
+    other = "free_notrend" + ("_nocap" if variant.endswith("_nocap") else "")
     out = {}
     for chip in CHIPS:
-        m = o[(o.chip == chip) & (o.variant == "main")].sort_values("years_ahead")
-        f = o[(o.chip == chip) & (o.variant == "free_notrend")].sort_values("years_ahead")
+        m = o[(o.chip == chip) & (o.variant == variant)].sort_values("years_ahead")
+        f = o[(o.chip == chip) & (o.variant == other)].sort_values("years_ahead")
         assert list(m.years_ahead) == [1, 2, 3] and list(f.years_ahead) == [1, 2, 3]
+        p0 = float(m.price_at_origin.iloc[0])
+        trend = {}
+        for name, g in o[(o.chip == chip) & o.variant.str.startswith("hardware_trend_")].groupby("variant", sort=False):
+            trend[name] = float(g.sort_values("years_ahead").q50.iloc[0]) / p0 - 1.0      # the steady yearly change
         out[chip] = {
             "origin": pd.Timestamp(m.origin.iloc[0]),
             "targets": [str(t) for t in m.target],
             "series": m.series.iloc[0],
-            "p0": float(m.price_at_origin.iloc[0]),
+            "p0": p0,
             "main": (m.q10_widened.to_numpy(float), m.q50.to_numpy(float), m.q90_widened.to_numpy(float)),
             "no_pullback_q50": f.q50.to_numpy(float),
+            "variant": variant, "other_variant": other, "trend": trend,
         }
+    return out
+
+
+def launch_prices():
+    """Launch price per GPU from the pack's hardware table (Epoch AI). Used only for the floor."""
+    hw = pd.read_csv(os.path.join(PACK, "hardware_fundamentals", "hardware_fundamentals.csv"))
+    out = {}
+    for chip, name in LAUNCH_ROW.items():
+        row = hw[hw.accelerator == name].iloc[0]
+        out[chip] = {"usd": float(row.release_price_usd), "row": name, "release_date": str(row.release_date)}
     return out
 
 
@@ -227,8 +261,20 @@ def q3(x):
     return np.quantile(x, [0.1, 0.5, 0.9])
 
 
-def run_chip(chip, ol, alt, anchor, rng):
+def usd_with_floor(share, anchor_usd, floor_usd, years_ahead):
+    """Resale figure in USD: the model's share of today's quote, never below the floor.
+    The unfloored figure keeps its old rounding (nearest $100); a figure sitting on the floor is
+    shown to the nearest $10 so that a floor of $150 does not read as $200."""
+    raw = float(share) * anchor_usd
+    if years_ahead == 0:
+        return raw, raw
+    raw = round(raw, -2)
+    return max(raw, round(floor_usd, -1)), raw
+
+
+def run_chip(chip, ol, alt, anchor, rng, launch_usd, use_floor=True):
     a = ASSUME[chip]
+    floors = [f * launch_usd if use_floor else 0.0 for f in FLOOR_SHARE]
     q10, q50, q90 = ol["main"]
     p0 = ol["p0"]
     rent_c = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, [0.0]))
@@ -241,6 +287,7 @@ def run_chip(chip, ol, alt, anchor, rng):
     rent_z = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, z))
     v0 = v(np.repeat(rent_c, N_DRAWS, axis=0), draw)             # today: central rent path, own assumptions
     rows = [{"chip": chip, "years_ahead": 0, "target_date": ol["origin"].strftime("%Y-%m-%d"),
+             "scenario": SCENARIO_MAIN, "rent_input": ol["series"],
              "rent_q10": p0, "rent_q50": p0, "rent_q90": p0,
              "model_value_in_use_usd": q3(v0), "share": np.array([1.0, 1.0, 1.0]),
              "share_of_draws_past_end_of_life": 0.0,
@@ -248,15 +295,33 @@ def run_chip(chip, ol, alt, anchor, rng):
     for h in HORIZONS:
         vh = v(rent_z, draw, start_year=h)
         rows.append({"chip": chip, "years_ahead": h, "target_date": ol["targets"][h - 1],
+                     "scenario": SCENARIO_MAIN, "rent_input": ol["series"],
                      "rent_q10": q10[h - 1], "rent_q50": q50[h - 1], "rent_q90": q90[h - 1],
                      "model_value_in_use_usd": q3(vh), "share": q3(vh / v0),
                      "share_of_draws_past_end_of_life": float((draw["remaining_life_years"] <= h).mean()),
                      "model_value_all_central_usd": float(v(rent_c, pc, start_year=h)[0])})
+    # --- the same calculation on steady hardware-trend rent paths (comparison, not a forecast): rent falls at
+    #     one yearly rate from today's price for the whole of the GPU's life; the range is over the assumptions only
+    t_mid = (np.arange(MAX_MONTHS) + 0.5) / 12
+    for name, rate in ol["trend"].items():
+        rent_s = (p0 * (1.0 + rate) ** t_mid)[None, :]
+        v0s = v(rent_s, draw)
+        v0sc = float(v(rent_s, pc)[0])
+        label = f"steady {rate * 100:+.0f}% a year from ${p0:.2f} (hardware-trend comparison)"
+        for h in (0,) + HORIZONS:
+            vh = v(rent_s, draw, start_year=h)
+            rh = p0 * (1.0 + rate) ** h
+            rows.append({"chip": chip, "years_ahead": h, "scenario": name, "rent_input": label,
+                         "target_date": ol["origin"].strftime("%Y-%m-%d") if h == 0 else ol["targets"][h - 1],
+                         "rent_q10": rh, "rent_q50": rh, "rent_q90": rh,
+                         "model_value_in_use_usd": q3(vh), "share": q3(vh / v0s) if h else np.array([1.0, 1.0, 1.0]),
+                         "share_of_draws_past_end_of_life": float((draw["remaining_life_years"] <= h).mean()),
+                         "model_value_all_central_usd": float(v(rent_s, pc, start_year=h)[0]) if h else v0sc})
     out = []
     for r in rows:
         mv, sh = r["model_value_in_use_usd"], r["share"]
         d = {"chip": chip, "years_ahead": r["years_ahead"], "target_date": r["target_date"],
-             "rent_input_series": ol["series"],
+             "scenario": r["scenario"], "rent_input_series": r["rent_input"],
              "rent_q10_widened": round(r["rent_q10"], 4), "rent_q50": round(r["rent_q50"], 4),
              "rent_q90_widened": round(r["rent_q90"], 4),
              "model_value_unit": "USD per GPU installed in a working server (the rent it can still earn; not a resale price)"}
@@ -268,10 +333,15 @@ def run_chip(chip, ol, alt, anchor, rng):
         d["resale_unit"] = "USD per bare GPU module"
         d["quote_today_bare_module_usd"] = anchor["module"]
         d["quote_today_source"] = anchor["source"]
-        rnd = (lambda x: x) if r["years_ahead"] == 0 else (lambda x: round(x, -2))
-        for name, val in zip(("low", "central", "high"), sh):
-            d[f"resale_usd_bare_module_{name}"] = rnd(float(val) * anchor["module"])
+        unfloored = {}
+        for name, val, floor in zip(("low", "central", "high"), sh, floors):
+            d[f"resale_usd_bare_module_{name}"], unfloored[name] = usd_with_floor(val, anchor["module"], floor, r["years_ahead"])
         d["share_of_draws_past_end_of_life"] = round(r["share_of_draws_past_end_of_life"], 3)
+        for name, floor in zip(("low", "central", "high"), floors):
+            d[f"floor_usd_{name}"] = round(floor, -1)
+            d[f"resale_usd_bare_module_{name}_no_floor"] = unfloored[name]
+        d["launch_price_usd_for_floor"] = launch_usd
+        d["rent_outlook_variant"] = ol["variant"] if r["scenario"] == SCENARIO_MAIN else ""
         out.append(d)
 
     # --- one-at-a-time sensitivities around the all-central case
@@ -285,7 +355,8 @@ def run_chip(chip, ol, alt, anchor, rng):
                  "unit": "USD per GPU-hour at +1 / +2 / +3 years",
                  "low": " / ".join(f"{x:.2f}" for x in q10), "central": " / ".join(f"{x:.2f}" for x in q50),
                  "high": " / ".join(f"{x:.2f}" for x in q90),
-                 "basis": f"longview/out/outlook.csv, {ol['series']}; 10%, 50% and 90% points; ${p0:.2f} at 31 Oct 2026; flat after year 3.",
+                 "basis": f"longview/out/outlook.csv, {ol['series']}, variant {ol['variant']}; 10%, 50% and 90% points; "
+                          f"${p0:.2f} at 31 Oct 2026; flat after year 3.",
                  "today_low": float(v(rent_lo, pc)[0]), "today_high": float(v(rent_hi, pc)[0]),
                  "share2_low": share2(rent_lo, pc, v0c), "share2_high": share2(rent_hi, pc, v0c)})
     for k in ORDER:
@@ -321,7 +392,7 @@ def run_chip(chip, ol, alt, anchor, rng):
         "hyperscaler_spot; pulls back to the chip's usual level", p0, rent_c)
     nf = ol["no_pullback_q50"]
     add("AWS spot, other reading of the outlook: no pull-back, middle path",
-        "outlook.csv variant free_notrend, 50% point", p0,
+        f"outlook.csv variant {ol['other_variant']}, 50% point", p0,
         np.exp(np.interp(np.minimum((np.arange(MAX_MONTHS) + 0.5) / 12, 3.0), [0, 1, 2, 3],
                          np.log(np.concatenate([[p0], nf]))))[None, :])
     lvl = alt[chip]["level"]
@@ -331,10 +402,28 @@ def run_chip(chip, ol, alt, anchor, rng):
         np.full((1, MAX_MONTHS), lvl))
     add("Neocloud rate-card median, moved in step with the AWS middle path (level effect only)",
         basis + "; a what-if, not a forecast of that instrument", lvl, rent_c * lvl / p0)
+    for name, rate in ol["trend"].items():
+        add(f"AWS spot today, then a steady {rate * 100:+.0f}% a year (hardware-trend comparison)",
+            "outlook.csv variant " + name + "; the fall continues for the GPU's whole life; not a forecast", p0,
+            (p0 * (1.0 + rate) ** t_mid)[None, :])
+
+    # --- today's quote: every unfloored dollar figure scales with it
+    quote = []
+    c_rows = [r for r in rows if r["scenario"] == SCENARIO_MAIN and r["years_ahead"] > 0]
+    for which, val in (("the low end of the published range", anchor["lo"]), ("the value used", anchor["module"]),
+                       ("the high end of the published range", anchor["hi"])):
+        mids = [usd_with_floor(r["share"][1], val, floors[1], r["years_ahead"])[0] for r in c_rows]
+        quote.append({"chip": chip, "kind": "quote_sensitivity", "name": f"Today's quote at {which}", "unit": "USD per bare GPU module",
+                      "low": "", "central": val, "high": "",
+                      "basis": "resale middle at +1 / +2 / +3 years: " + " / ".join(f"{m:,.0f}" for m in mids)
+                               + f"; each extra $1,000 on the quote adds {1000 / anchor['module'] * 100:.1f}% to every unfloored dollar figure"})
 
     # --- choices that are fixed, not ranged
-    fixed = [("Value after the end of economic life (scrap, parts)", "USD", 0,
-              "Set to zero. Understates late-life value by whatever a retired unit fetches for parts."),
+    floor_txt = ("Not zero: the low, middle and high resale figures are floored at "
+                 + ", ".join(f"{f:.0%}" for f in FLOOR_SHARE) + f" of the launch price (${launch_usd:,.0f}; pack hardware table, Epoch AI), "
+                 + "that is $" + ", $".join(f"{round(x, -1):,.0f}" for x in floors) + ". A judgement range; see RESALE.md."
+                 if use_floor else "Set to zero (run with --no-floor).")
+    fixed = [("Value after the end of economic life (scrap, parts, reuse)", "USD", "floor" if use_floor else 0, floor_txt),
              ("Rent after year 3", "USD per GPU-hour", "flat at the +3 year level",
               "The rental outlook stops at +3 years."),
              ("Months when rent x utilisation is below running cost", "USD", 0,
@@ -348,7 +437,7 @@ def run_chip(chip, ol, alt, anchor, rng):
               "today on the middle rent path, same assumptions.")]
     fx = [{"chip": chip, "kind": "fixed_choice", "name": n, "unit": u, "low": "", "central": c, "high": "", "basis": b}
           for n, u, c, b in fixed]
-    return out, sens + bench + fx, v0, v0c
+    return out, sens + bench + quote + fx, v0, v0c
 
 
 # ------------------------------------------------------------------- chart ----
@@ -372,6 +461,8 @@ def money(x):
     """Dollar label for chart text (the sign is escaped so matplotlib does not read it as maths)."""
     if x < 50:
         return "\\$0"
+    if x < 1000:
+        return f"\\${x:,.0f}"
     return f"\\${x / 1000:.1f}k" if x < 99950 else f"\\${x / 1000:.0f}k"
 
 
@@ -398,12 +489,12 @@ def quote_marker(kind, is_anchor, **kw):
     return dict(marker=marker, mfc=c if filled else SURFACE, mec=c, mew=1.5, ls="none", **kw)
 
 
-def chart(outlook_rows, quotes, anch):
+def chart(outlook_rows, quotes, anch, out_dir=OUT, use_floor=True):
     fig, axes = plt.subplots(1, 2, figsize=(13.5, 7.8), facecolor=SURFACE)
     X_QUOTE, X_MODEL, X_H = 0.0, 1.1, {1: 2.5, 2: 3.75, 3: 5.0}
     for ax, chip in zip(axes, CHIPS):
         col = COL[chip]
-        rows = [r for r in outlook_rows if r["chip"] == chip]
+        rows = [r for r in outlook_rows if r["chip"] == chip and r["scenario"] == SCENARIO_MAIN]
         today = rows[0]
         a = anch[chip]
         qs = quotes[(quotes.chip == chip) & quotes.basis.isin(list(BASIS_NAME))].reset_index(drop=True)
@@ -436,8 +527,14 @@ def chart(outlook_rows, quotes, anch):
             lo, mid, hi = (r[f"resale_usd_bare_module_{k}"] for k in ("low", "central", "high"))
             ax.plot([x] * 2, [lo, hi], color=col, lw=9, alpha=0.3, solid_capstyle="butt", zorder=2)
             ax.plot(x, mid, marker="o", ms=9, mfc=col, mec=SURFACE, mew=2, ls="none", zorder=4)
-            ax.text(x, 0.975, f"{r['share_of_today_central']:.0%} of today\n{money(mid)}\n{money(lo)} to {money(hi)}",
+            ax.text(x, 0.975, f"{mid / a['module']:.0%} of today\n{money(mid)}\n{money(lo)} to {money(hi)}",
                     transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=8.5, color=INK, linespacing=1.35)
+            # the same middle if rent instead falls a steady 25% a year (hardware-trend comparison)
+            alt = [s for s in outlook_rows if s["chip"] == chip and s["scenario"] == "hardware_trend_25"
+                   and s["years_ahead"] == r["years_ahead"]]
+            if alt:
+                ax.plot(x + 0.32, alt[0]["resale_usd_bare_module_central"], marker="D", ms=6.5, mfc=SURFACE, mec=col, mew=1.5,
+                        ls="none", zorder=4)
         style(ax, "USD per GPU")
         ax.set_title(f"{chip}: resale price of a bare GPU module, today and in 1 to 3 years", color=INK, fontsize=11,
                      loc="left", pad=26)
@@ -468,6 +565,9 @@ def chart(outlook_rows, quotes, anch):
                         label="model, not a resale price: discounted net rent an installed GPU can still earn, 10% to 90%"))
         h.append(Line2D([], [], color=col, lw=7, alpha=0.3, marker="o", ms=8, mfc=col, mec=SURFACE, mew=2,
                         label="resale outlook, bare module: today's quote x the model's share of today's value"))
+        if any(s["scenario"] == "hardware_trend_25" for s in outlook_rows):
+            h.append(Line2D([], [], marker="D", ms=6.5, mfc=SURFACE, mec=col, mew=1.5, ls="none",
+                            label="the same middle if rent instead falls a steady 25% a year (hardware-trend comparison)"))
         ax.legend(handles=h, loc="upper left", bbox_to_anchor=(0.0, -0.12), ncol=1, fontsize=8, frameon=False, labelcolor=INK2)
     gpus = " and ".join(anch[c]["gpu"] for c in CHIPS)
     updated = ", ".join(sorted({anch[c]["published"] for c in CHIPS}))
@@ -478,29 +578,46 @@ def chart(outlook_rows, quotes, anch):
              f"(CSV updated {updated}; free to use with attribution).\n"
              "Other public figures: data/resale_quotes.csv; server prices are divided by 8. Rental and resale are different "
              "instruments and are not joined: the AWS spot rental outlook only feeds the model.\n"
-             "Tops of the ranges assume rents near the top of the rental outlook and may be out of reach. "
-             "A range that reaches \\$0 means the GPU has stopped earning in at least 10% of cases; the model gives it no scrap value.",
+             "Tops of the ranges assume rents near the top of the rental outlook (itself capped at AWS's list price) and may be out of reach.\n"
+             + ("Floor: the low, middle and high figures cannot fall below 1%, 2% and 5% of the launch price. "
+                "A GPU that has stopped earning still sells for something."
+                if use_floor else
+                "A range that reaches \\$0 means the GPU has stopped earning in at least 10% of cases; the model gives it no scrap value."),
              fontsize=7.5, color=INK2, ha="left", va="bottom", linespacing=1.4)
-    fig.subplots_adjust(left=0.06, right=0.99, top=0.9, bottom=0.335, wspace=0.17)
-    fig.savefig(os.path.join(OUT, "chart4_resale.png"), dpi=150, facecolor=SURFACE)
+    fig.subplots_adjust(left=0.06, right=0.99, top=0.9, bottom=0.36, wspace=0.17)
+    fig.savefig(os.path.join(out_dir, "chart4_resale.png"), dpi=150, facecolor=SURFACE)
     plt.close(fig)
 
 
 # -------------------------------------------------------------------- main ----
-def main():
-    os.makedirs(OUT, exist_ok=True)
-    ol = load_outlook()
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--rent-variant", default="main", choices=["main", "main_nocap"],
+                    help="rental outlook to feed the model: capped at AWS's list price (default) or as before the cap")
+    ap.add_argument("--no-floor", action="store_true", help="let a GPU that has stopped earning reach $0, as before the floor")
+    ap.add_argument("--anchor-h100", type=float, help="today's quote for a bare H100 module, USD (default: midpoint in resale_quotes.csv)")
+    ap.add_argument("--anchor-a100", type=float, help="today's quote for a bare A100 80GB module, USD")
+    ap.add_argument("--out-dir", default=OUT, help="where to write the three output files")
+    args = ap.parse_args(argv)
+    out_dir = args.out_dir
+    use_floor = not args.no_floor
+    os.makedirs(out_dir, exist_ok=True)
+    ol = load_outlook(args.rent_variant)
     quotes = load_quotes()
     alt = load_alt_benchmark(ol["H100"]["origin"])
+    launch = launch_prices()
     rng = np.random.default_rng(SEED)
     outlook_rows, assume_rows, anch = [], [], {}
+    given = {"H100": args.anchor_h100, "A100": args.anchor_a100}
     for chip in CHIPS:
         anch[chip] = anchors(quotes, chip)
-        o, s, v0, v0c = run_chip(chip, ol[chip], alt, anch[chip], rng)
+        if given[chip]:
+            anch[chip].update(module=float(given[chip]), source=f"${given[chip]:,.0f}, given on the command line (not from resale_quotes.csv)")
+        o, s, v0, v0c = run_chip(chip, ol[chip], alt, anch[chip], rng, launch[chip]["usd"], use_floor)
         outlook_rows += o
         assume_rows += s
 
-    pd.DataFrame(outlook_rows).to_csv(os.path.join(OUT, "resale_outlook.csv"), index=False)
+    pd.DataFrame(outlook_rows).to_csv(os.path.join(out_dir, "resale_outlook.csv"), index=False)
     a = pd.DataFrame(assume_rows)
     for c in ("today_low", "today_central", "today_high"):
         a[c] = a[c].round(-2)
@@ -516,17 +633,23 @@ def main():
     cols = ["chip", "kind", "name", "unit", "low", "central", "high", "value_today_usd_if_low", "value_today_usd_central",
             "value_today_usd_if_high", "swing_today_pct", "rank_by_swing_today", "share_at_2y_if_low", "share_at_2y_central",
             "share_at_2y_if_high", "swing_share2_points", "rank_by_swing_share2", "today_vs_main_pct", "basis"]
-    a[cols].to_csv(os.path.join(OUT, "resale_assumptions.csv"), index=False)
-    chart(outlook_rows, quotes, anch)
+    a[cols].to_csv(os.path.join(out_dir, "resale_assumptions.csv"), index=False)
+    chart(outlook_rows, quotes, anch, out_dir, use_floor)
 
     # ---- console summary
     pd.set_option("display.width", 250, "display.max_columns", 40, "display.max_colwidth", 70)
-    df = pd.DataFrame(outlook_rows)
+    df_all = pd.DataFrame(outlook_rows)
+    df = df_all[df_all.scenario == SCENARIO_MAIN]
+    print(f"rental outlook variant: {args.rent_variant}; floor: "
+          + (", ".join(f"{f:.0%}" for f in FLOOR_SHARE) + " of launch price (low, middle, high)" if use_floor else "none"))
     for chip in CHIPS:
         d = df[df.chip == chip]
         t = d.iloc[0]
         print(f"\n=== {chip} ===  all resale figures below are USD per bare GPU module")
         print(f"today's quote, bare module: ${anch[chip]['module']:,.0f} ({anch[chip]['source']})")
+        if use_floor:
+            print(f"floor: launch price ${launch[chip]['usd']:,.0f} ({launch[chip]['row']}, released {launch[chip]['release_date']}; pack hardware table) "
+                  f"-> ${t.floor_usd_low:,.0f} / ${t.floor_usd_central:,.0f} / ${t.floor_usd_high:,.0f}")
         print(f"model value in use today, installed GPU: ${t.model_value_in_use_usd_central:,.0f} "
               f"(${t.model_value_in_use_usd_low:,.0f} to ${t.model_value_in_use_usd_high:,.0f}); all-central "
               f"${t.model_value_all_assumptions_central_usd:,.0f}")
@@ -541,12 +664,20 @@ def main():
             print(f"  +{r.years_ahead}y share {r.share_of_today_central:.0%} ({r.share_of_today_low:.0%} to {r.share_of_today_high:.0%})"
                   f" | bare module ${r.resale_usd_bare_module_central:,.0f} (${r.resale_usd_bare_module_low:,.0f} to ${r.resale_usd_bare_module_high:,.0f})"
                   f" | model, installed GPU ${r.model_value_in_use_usd_central:,.0f} (${r.model_value_in_use_usd_low:,.0f} to ${r.model_value_in_use_usd_high:,.0f})"
-                  f" | past end of life {r.share_of_draws_past_end_of_life:.0%}")
+                  f" | past end of life {r.share_of_draws_past_end_of_life:.0%}"
+                  f" | before the floor ${r.resale_usd_bare_module_central_no_floor:,.0f} (${r.resale_usd_bare_module_low_no_floor:,.0f} to ${r.resale_usd_bare_module_high_no_floor:,.0f})")
+        for name, g in df_all[(df_all.chip == chip) & (df_all.scenario != SCENARIO_MAIN)].groupby("scenario", sort=False):
+            g = g[g.years_ahead > 0]
+            print(f"  {name}: rent " + " / ".join(f"{x:.2f}" for x in g.rent_q50) + " | share of today "
+                  + " / ".join(f"{x:.0%}" for x in g.share_of_today_central) + " | bare module middle "
+                  + " / ".join(f"${x:,.0f}" for x in g.resale_usd_bare_module_central) + " (low "
+                  + " / ".join(f"${x:,.0f}" for x in g.resale_usd_bare_module_low) + "; high "
+                  + " / ".join(f"${x:,.0f}" for x in g.resale_usd_bare_module_high) + ")")
         print(a[a.chip == chip][["kind", "name", "low", "central", "high", "value_today_usd_if_low", "value_today_usd_central",
                                  "value_today_usd_if_high", "swing_today_pct", "share_at_2y_if_low", "share_at_2y_central",
                                  "share_at_2y_if_high", "today_vs_main_pct"]].to_string(index=False))
-    print("\nwrote", os.path.join(OUT, "resale_outlook.csv"), os.path.join(OUT, "resale_assumptions.csv"),
-          os.path.join(OUT, "chart4_resale.png"))
+    print("\nwrote", os.path.join(out_dir, "resale_outlook.csv"), os.path.join(out_dir, "resale_assumptions.csv"),
+          os.path.join(out_dir, "chart4_resale.png"))
 
 
 if __name__ == "__main__":

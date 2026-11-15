@@ -1,0 +1,15 @@
+line,older_chip,older_instance,successor,successor_first_spot_price,generations_apart,n_zones,before_days,after_days,pct_per_year_before,pct_per_year_after,delta_log_per_year,fell_faster_after,list_cut_june_2025,n_other_dates,share_of_other_dates_with_a_lower_delta,other_dates_delta_q10,other_dates_delta_median,other_dates_delta_q90
+training,K80,p2.xlarge,H100,2023-07-26,3,26,365,365,0.0000,31.7274,0.2756,False,not a chip whose list price was cut,16,1.0000,-1.0323,-0.3977,-0.0562
+training,V100,p3.2xlarge,H100,2023-07-26,2,23,365,365,-3.1669,16.0374,0.1809,False,not a chip whose list price was cut,17,0.9412,-0.6404,-0.1595,0.0971
+training,A100,p4d.24xlarge,H100,2023-07-26,1,11,365,365,-40.9980,8.0683,0.6052,False,outside both windows,17,0.7059,-0.4548,0.0525,0.8267
+training,V100,p3.2xlarge,H200,2024-12-12,3,23,365,365,-12.6002,-29.9250,-0.2209,True,not a chip whose list price was cut,17,0.4118,-0.6404,-0.1595,0.0971
+training,A100,p4d.24xlarge,H200,2024-12-12,2,11,365,365,61.6347,-33.2582,-0.8845,True,in the window after the arrival,17,0.0000,-0.4548,0.0525,0.8267
+training,H100,p5.48xlarge,H200,2024-12-12,1,3,365,365,-56.5160,-60.2318,-0.0893,True,in the window after the arrival,7,0.7143,-0.5877,-0.1949,0.2700
+training,V100,p3.2xlarge,B200,2025-07-24,4,23,365,220,-17.8964,-68.8129,-0.9680,True,not a chip whose list price was cut,17,0.0588,-0.6404,-0.1595,0.0971
+training,A100,p4d.24xlarge,B200,2025-07-24,3,12,365,220,-21.3013,-13.1368,0.0987,False,in the window before the arrival,17,0.4706,-0.5407,0.1206,1.0343
+training,H100,p5.48xlarge,B200,2025-07-24,2,4,365,220,-63.4949,0.6402,1.0141,False,in the window before the arrival,2,1.0000,-0.2716,0.0212,0.3140
+training,H200,p5en.48xlarge,B200,2025-07-24,1,4,224,220,7.2874,33.2504,0.2167,False,in the window before the arrival,0,,,,
+inference,T4,g4dn.xlarge,L4,2024-04-04,2,59,365,365,17.5048,-10.6470,-0.2739,True,not a chip whose list price was cut,24,0.0417,-0.2305,0.1419,0.2603
+inference,A10G,g5.xlarge,L4,2024-04-04,1,23,365,365,60.7645,-23.7311,-0.7457,True,not a chip whose list price was cut,23,0.0435,-0.3607,0.5298,0.6328
+inference,T4,g4dn.xlarge,L40S,2024-08-15,3,59,365,365,15.6843,0.4572,-0.1411,True,not a chip whose list price was cut,24,0.1667,-0.2305,0.1419,0.2603
+inference,A10G,g5.xlarge,L40S,2024-08-15,2,37,365,365,27.6025,6.5957,-0.1799,True,not a chip whose list price was cut,11,0.0909,0.0217,0.3378,0.5591

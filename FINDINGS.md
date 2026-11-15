@@ -224,30 +224,36 @@ Sources: GPUJournal, "Lambda announces GPU price rises of about 15% — B200, H1
 
 Rolled forward a day at a time, the engine's ranges hold the truth 77% of the time at 1 day, 52% at 7 days and about 40% from two weeks to 90 days. It can be trusted for days, not months.
 
-**Rentals (AWS spot, USD per GPU-hour, median across zones).** Details in [longview/LONGVIEW.md](longview/LONGVIEW.md).
+**Rentals (AWS spot, USD per GPU-hour, median across zones).** Details in [longview/LONGVIEW.md](longview/LONGVIEW.md). Revised on 15 Nov after reading the brief's references; the long view is not scored against the 7 to 13 Nov prices, and every earlier figure can still be rebuilt (rows named `*_nocap` in `longview/out/outlook.csv`).
 
 | | Now (31 Oct 2026) | +1 year | +2 years | +3 years |
 |---|---|---|---|---|
-| H100 | 3.86 | 2.69 (1.05–8.25) | 2.56 (0.97–7.15) | 2.54 (0.94–6.89) |
-| A100 | 2.12 | 1.27 (0.78–3.18) | 1.25 (0.75–2.80) | 1.24 (0.74–2.70) |
+| H100 | 3.86 | 2.69 (1.05–7.64) | 2.56 (0.97–7.14) | 2.54 (0.94–6.89) |
+| A100 | 2.12 | 1.26 (0.78–2.84) | 1.24 (0.75–2.57) | 1.24 (0.74–2.53) |
 
-- **The central path assumes the 2026 rise fades.** H100 spot rose from $2.13 to $3.86 between July and October 2026. If it does not fade, the middle is about $3.6 for the H100 and $2.0 for the A100.
-- **Older chips did not fall faster when a successor arrived.** The A100 fell 20% a year before the H100 arrived and was flat afterwards.
-- **Tested horizon:** about six months. One year rests on 2 to 4 independent windows; three years is untested.
+- **Spot is a share of AWS's own list price, and list is a ceiling** (added 15 Nov). Since 5 Jun 2025 no zone has traded above its region's list price: 0 of 11,363 H100 zone-days and 0 of 10,739 for the A100. Every path is now stopped at today's list price ($7.64 for the H100, $3.29 for the A100). The middles hardly move. The tops come down: the H100's first-year top was $8.25, and the A100's tops were $3.18, $2.80 and $2.70.
+- **AWS cut the list price in June 2025, by 44% for the H100 and 33% for the A100, and our first write-up never mentioned it.** Spot fell with it ($3.58 in May 2025, $2.16 in July) and stayed at about 0.29 of list. The rise in 2026 is that share climbing, to 0.51 for the H100 on 31 Oct, with the list price unchanged. We do not model the list price itself: the archive holds one change of it.
+- **The central path assumes the 2026 rise fades.** H100 spot rose from $2.13 to $3.86 between July and October 2026. If it does not fade, the H100's middle is $3.73, $3.64 and $3.53 at one, two and three years. With a ceiling above it the A100's middle drifts down, from $1.95 to $1.56.
+- **"Older chips did not fall faster when a successor arrived" does not hold in general.** We wrote that from the A100 when the H100 arrived (it fell 20% a year before and was flat after). The archive supports 14 such pairs. In 8 the older chip's yearly change was lower after the newer chip arrived, and in 6 higher. The H100's own windows contain the June 2025 list cut, so they say nothing about successors. Leaving out the five pairs with the cut in a window: 6 of 9 lower. Small inference chips fell faster after a successor in 4 of 4 cases; large training chips in 4 of 10.
+- **A successor adjustment learned on one chip hurt on the next.** Taking the A100's shift when the H100 arrived and applying it to the H100 when the H200 arrived made one-year error 20% worse (17 forecasts). It is not in the outlook.
+- **If cheaper computing keeps pulling old chips' rent down, our middle is too high at three years.** The central path is flat after year one. A steady fall of 18%, 25% or 35% a year from today would put the H100 at $2.13, $1.63 or $1.06 in three years, against our $2.54, and the A100 at $1.17, $0.89 or $0.58, against $1.24. Those rates bracket the hardware trend: on the pack's copy of Epoch AI's table, computing per launch dollar gets 14% to 33% cheaper a year depending on the measure. Epoch measures the launch price of new chips, not the rent of installed ones.
+- **Tested horizon:** about six months. One year rests on 2 to 4 independent windows; three years is untested. The tests have no ceiling in them, because the pack holds no list price before 2026.
 
-**Resale.** **Resale (USD per bare GPU module; a different kind of price again).** Public evidence is thin. American Compute puts the middle of used resale prices at $10,000 to $14,000 for an H100 and $4,700 to $5,400 for an A100 80GB over the year to August 2026 (American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices). We take the midpoints, $12,000 and $5,050, as today's price. Five other dated figures are in [longview/RESALE.md](longview/RESALE.md).
+**Resale (USD per bare GPU module; a different kind of price again).** Public evidence is thin. American Compute puts the middle of used resale prices at $10,000 to $14,000 for an H100 and $4,700 to $5,400 for an A100 80GB over the year to August 2026 (American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices). We take the midpoints, $12,000 and $5,050, as today's price. Four other dated figures are in [longview/RESALE.md](longview/RESALE.md); a fifth, read only through a search index's copy of a LinkedIn post and never used by the model, was removed on 15 Nov.
 
 We value a used GPU as the rent it can still earn: rent × utilisation, less running cost, over its remaining earning life, discounted. The resale outlook is today's price times how that value changes over time. Rent and resale are never joined into one series.
 
 | Middle (10% to 90%) | +1 year | +2 years | +3 years |
 |---|---|---|---|
-| H100, share of today's value | 70% (8–253%) | 45% (4–169%) | 19% (0–94%) |
-| H100, from $12,000 | $8,400 (900–30,300) | $5,400 (500–20,200) | $2,300 (0–11,300) |
-| A100, share of today's value | 57% (17–182%) | 26% (0–96%) | 0% (0–36%) |
-| A100, from $5,050 | $2,900 (800–9,200) | $1,300 (0–4,900) | $0 (0–1,800) |
+| H100, share of today's value | 70% (8–248%) | 45% (4–168%) | 19% (0–94%) |
+| H100, from $12,000 | $8,400 (900–29,800) | $5,400 (500–20,200) | $2,300 (340–11,300) |
+| A100, share of today's value | 56% (16–164%) | 26% (0–90%) | 0% (0–35%) |
+| A100, from $5,050 | $2,800 (800–8,300) | $1,300 (150–4,500) | $300 (150–1,800) |
 
-- **The ranges are very wide, and the tops are probably out of reach.** They assume rents near the top of the rental outlook.
-- **Zero means "stopped earning".** The model gives no scrap value.
+- **The ranges are very wide, and the tops are probably out of reach.** They assume rents near the top of the rental outlook, which is now capped at AWS's list price.
+- **A floor replaces zero** (added 15 Nov). The model alone lets a GPU that has stopped earning reach $0, and old chips still sell for something. The low, middle and high figures are floored at 1%, 2% and 5% of launch price ($340, $670 and $1,680 for the H100; $150, $300 and $750 for the A100). The levels are a judgement, not a measurement; the one figure we can quote is a 2026 paper that prices nine-year-old V100 cards at $60, about 0.6% of launch price (arXiv:2608.14614). The floor binds only where the model reached zero.
+- **On a steady 25% yearly fall in rent, the H100's middle is $7,100, $3,600 and $1,300,** against $8,400, $5,400 and $2,300 on the central path. As a share of launch price that is 21%, 11% and 4%, against 25%, 16% and 7%.
+- **Today's price moves every dollar figure in step.** From the top of the published range ($14,000) the H100's middles would be $9,800, $6,300 and $2,700.
 - **What drives it:** the rent path first, the remaining earning life second.
 - **One untested step:** the share comes from what an installed GPU earns, and we assume a bare module's price moves in step.
 
