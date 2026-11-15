@@ -119,7 +119,7 @@ Main pulls prices back to their usual level ($2.53 H100, $1.28 A100). Four years
 
 - **Where the rates come from.** Epoch AI reports that the cost of a unit of computing halves every 2.1 to 2.5 years, which is 24% to 28% a year (brief references 24 and 25, as read by an agent on 15 Nov 2026; we did not reproduce that figure). Our own straight-line fits on the pack's copy of Epoch's table (`key_numbers.json`, `hardware_trend_fit_on_pack`) bracket it: 14% a year (8% to 20%) for single-precision speed per launch dollar, 54 GPUs released 2008 to 2025, and 33% a year (29% to 36%) for each chip's fastest number format, 57 GPUs. On AWS spot the cheapest work fell 35% a year to early 2026 and 19% a year to July-October 2026 (section 1).
 - **Epoch measures the launch price of new chips, not the rent of installed ones.** A new chip being cheaper per unit of work does not force an old chip's rent down at the same rate; section 1 shows how unevenly that happens.
-- **Reading.** In year one the main middle falls 30% (H100) and 41% (A100) as the 2026 rise fades, then stays flat. By year three it is above all three paths for both chips: $2.54 against $1.06 to $2.13, and $1.24 against $0.58 to $1.17. If cheaper computing keeps pulling old chips' rent down, the main middle is too high at three years.
+- **Reading.** In year one the main middle falls 30% (H100) and 40% (A100) as the 2026 rise fades, then stays flat. By year three it is above all three paths for both chips: $2.54 against $1.06 to $2.13, and $1.24 against $0.58 to $1.17. If cheaper computing keeps pulling old chips' rent down, the main middle is too high at three years.
 
 ## Assumptions and limits
 
