@@ -443,7 +443,7 @@ uv run python docs/media/make_media.py   # README visuals in docs/media/; reads 
 uv run python longview/answer.py         # the three long-view pictures in docs/media/, and the table; reads longview/out/
 ```
 
-The slide deck's source is in `docs/slides/source/` (the 10-minute version's in `docs/slides/short/source/`) (one HTML file per slide, plus `deck.json` and `deck.css`).
+The slide deck's source is in `docs/slides/source/` (one HTML file per slide, plus `deck.json` and `deck.css`); the 10-minute version's is in `docs/slides/short/source/`.
 The PDF, the two pipeline images (`docs/media/training_pipeline.png`, `inference_pipeline.png`) and the demo video
 (`docs/media/demo/`) are all made from it:
 
