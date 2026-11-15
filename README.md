@@ -52,7 +52,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 | Agents **read each other's answers** | ❌ no help |
 | **Memory** of the system's own past forecasts (three kinds) | ➖ 1.4% to 2.1% less error, not established |
 | An **AI analyst** writes its own tests on shuffled data | ➖ found real weekday patterns; a rule built on them did not help |
-| **One loop over the whole forecaster**: a vote that learns, range width, who votes (36 changes proposed) | ➖ kept nothing; none was clearly better on later days, one clearly worse |
+| **One loop over the whole forecaster**: a vote that learns, range width, who votes (36 changes proposed) | ➖ kept nothing; none was clearly better on later days, one clearly worse. The one promising edit, tested on 20 fresh days: +0.9%, not established |
 
 ## The same forecasts with other models
 
@@ -249,6 +249,7 @@ uv run python tests/longview_checks.py                              # the long v
 uv run python -m gpuval.rsi run                                     # the single loop: 12 AI calls at most; `--proposer random` is the control
 uv run python -m gpuval.rsi run --proposer replay && uv run python -m gpuval.rsi exam   # recorded edits through the gate again, then the exam; no keys needed
 uv run python tests/rsi_checks.py                                   # the loop's starting bundle is the handed-in forecast; no look-ahead in the vote
+uv run python -m gpuval.rsi fresh                                   # the follow-up on 20 fresh days, re-scored from saved answers; `fresh-ask` makes the 3,375 AI calls
 cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
 uv run python runs/other_models/run_crowd.py --env .env --dry                              # rebuilds the prompts and re-scores the recorded answers; nothing paid
@@ -275,7 +276,7 @@ and reproduces the blind-test table exactly.
 - `runs/agent_memory/`, `runs/recall/`, `runs/analyst/`: every answer from the three tests added on 15 Nov
   (the analyst's ledger holds each idea's code and its numbers on the real and shuffled data).
 - `runs/rsi/`: the single loop of 15 Nov. One folder per run (`main` is the AI proposer, `random_1` to `random_5` the control) with every
-  proposed edit and the gate's numbers (`state.json`); `exam_cells.parquet` holds the exam-day forecasts.
+  proposed edit and the gate's numbers (`state.json`); `exam_cells.parquet` holds the exam-day forecasts, and `fresh_answers.json` every answer of the follow-up on 20 fresh days.
 - `rl/runs/fc1/`, `rl/runs/fc2/`: training logs and test answers of the two RL-trained forecasters.
 - `rl/runs/modal/`: every Modal training run (log, test answers, scored cells); `findings/data/modal_rl.json` puts them next to the Tinker runs.
 - `runs/other_models/`: the five agents on five other models. Each `<model>/` folder holds every answer and the run's

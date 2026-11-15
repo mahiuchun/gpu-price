@@ -423,5 +423,10 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       price and target day). Reported beside it, outside the rule: Qwen3.5-9B as the sixth
       member, and both open models. These days are fresh for the crowd; the open models' own
       scores on them were already known. One run; the forecast file is not changed.
+    - Outcome of that one run (commit `10640dd` holds the rule; 3,375 calls, an estimated
+      $13.50): six against five +0.9% (−0.4% to +2.2%) on the 1,775 forecasts. By the rule, the
+      edit is not shown to help. Outside the rule: Qwen3.5-9B as the sixth member +0.5% (−1.3%
+      to +2.1%), both open models +0.5% (−2.1% to +2.7%). The five on their own: +14.8% against
+      drift (+10% to +21%).
     - The opening paragraph of this item was shortened after the run. The rule itself, every
       point from "What can change" to "Weaknesses known before the run", is as first committed.
