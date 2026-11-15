@@ -77,6 +77,7 @@ uv run python -m gpuval.recall_probe run                            # about 210 
 uv run python -m gpuval.agent_memory run                            # about 10,600 AI calls on the flex tier; `table` re-scores
 uv run python -m gpuval.analyst run                                 # 12 AI calls and a sealed Modal container; `table` re-prints
 uv run python -m gpuval.weekday_rule                                # the rule that follows from the analyst's finding; no keys needed
+uv run python tests/longview_checks.py                              # the long view's ceiling and successor test; no pack needed
 cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
 ```

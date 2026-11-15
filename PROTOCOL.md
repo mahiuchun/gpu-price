@@ -307,6 +307,18 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       interval that excludes zero. The 8 and the horizon do not change after the first run.
       - Outcome of the first run: no gain. It fired on 146 of 2,058 one-day forecasts; engine with
         the rule against without −0.1% (−0.5% to +0.1%); first crowd −0.2% (−0.9% to +0.2%).
+    - **Code review of this revision** (an automated review by a second AI model, 15 Nov). It found
+      three errors, all in the long view, and all three were real. Each was corrected the same
+      day, with the figures before and after kept in `longview/LONGVIEW.md` (sections 3 and 4)
+      and `longview/RESALE.md`:
+      - the successor test labelled "out of sample" used one number measured to 11 Dec 2024 for
+        forecast days before that date (one-year loss +20%; measured afresh on each forecast
+        day it is +12%, and +22% on the forecast days after the newer chip had arrived);
+      - the list-price cap did not reach the rent paths drawn for resale, so one H100 draw in ten
+        rented above list (H100 one-year top $29,800, now $28,100);
+      - a simulated day stopped by the cap was followed as if the price had risen (A100
+        no-pull-back middle $1.95, $1.73, $1.56, now $2.03, $1.88, $1.73).
+      `tests/longview_checks.py` guards all three. No forecast-side number changed.
     - **Checks with no rule to fix** (`gpuval.checks`, no AI calls). Counts and splits of results
       that were already recorded: how often ranges held when the price moved, how many prices and
       days carry the pooled figures, each agent alone, the AWS days before and after the agents'

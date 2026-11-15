@@ -83,7 +83,10 @@ Loss below 1 beats "price stays put" (pinball loss, a score for ranges). The sim
 ## 3. "New chip arrives" adjustment (`out/successor_test.csv`)
 
 - **In sample.** After the H100 arrived the A100's trend improved by 26%/yr (-6% to +31% across measures). Adding that changed one- and two-year test loss by -6% to 0%, using a number fitted on the same history: indistinguishable from no effect. The opposite sign scored 5-17% worse.
-- **Out of sample, it hurt.** We took the A100's shift as it could be measured the day before the H200 arrived (+0.42 log points a year) and applied it to the H100 from that day. One-year loss rose 20% (17 forecasts; 27% on the simulator with no pull-back). The opposite sign scored 2% to 5% better. Two-year results rest on 5 forecasts and point both ways.
+- **Out of sample, it hurt.** We measured the A100's shift afresh for each forecast day, from A100 prices up to that day, and applied it to the H100 from the H200's arrival. The number would not sit still: -0.70 log points a year measured in March 2024, +0.48 in December.
+  - **Forecast days after the H200 had arrived**, where nothing in the forecast comes from the future: loss rose at every horizon, by 1%, 17%, 37% and 22% at 30, 90, 180 and 365 days (17, 13, 10 and 6 forecasts). The opposite sign scored better at every one (1% to 27%). On the simulator with no pull-back the rises are 0%, 16%, 43% and 1%.
+  - **All forecast days**, which takes the arrival date as known beforehand, as the in-sample test does: one-year loss rose 12% (17 forecasts; 10% with no pull-back). Two-year loss fell 16% (5 forecasts).
+- **Corrected on 15 Nov after a code review.** We first used one number, the A100's shift measured to the day before the H200 arrived (+0.42), for every forecast day, and called the result out of sample. For the 11 one-year forecasts and all 5 two-year forecasts made before that day, the number came from A100 prices the forecaster could not yet have had. That version gave +20% at one year. The reading below did not change.
 - **Reading.** A number measured on one chip did not carry to the next. The H100's year after the H200 holds the list cut, which no successor rule knows about. We do not use the adjustment in the main outlook.
 
 ## 4. Outlook from 31 Oct 2026 (`out/chart3_outlook.png`, `out/outlook.csv`)
@@ -93,18 +96,19 @@ USD per GPU-hour, middle (10% to 90%). Every path is now capped at the composite
 | | Main, widened | With successor effect | Other reading: no pull-back |
 |---|---|---|---|
 | **H100**, now $3.86: +1 yr | 2.69 (1.05-7.64) | 2.76 (1.07-7.64) | 3.73 (2.36-5.87) |
-| +2 yr | 2.56 (0.97-7.14) | 2.61 (1.00-7.56) | 3.64 (1.90-6.42) |
-| +3 yr | 2.54 (0.94-6.89) | 2.58 (0.98-7.23) | 3.53 (1.61-6.53) |
-| **A100**, now $2.12: +1 yr | 1.26 (0.78-2.84) | 1.28 (0.79-3.00) | 1.95 (0.96-3.06) |
-| +2 yr | 1.24 (0.75-2.57) | 1.26 (0.76-2.73) | 1.73 (0.69-3.00) |
-| +3 yr | 1.24 (0.74-2.53) | 1.26 (0.76-2.69) | 1.56 (0.52-2.95) |
+| +2 yr | 2.56 (0.97-7.14) | 2.61 (1.00-7.56) | 3.64 (1.90-6.47) |
+| +3 yr | 2.54 (0.94-6.89) | 2.58 (0.98-7.23) | 3.54 (1.61-6.59) |
+| **A100**, now $2.12: +1 yr | 1.26 (0.78-2.95) | 1.28 (0.79-3.13) | 2.03 (0.97-3.29) |
+| +2 yr | 1.24 (0.75-2.63) | 1.26 (0.76-2.80) | 1.88 (0.70-3.29) |
+| +3 yr | 1.24 (0.74-2.57) | 1.26 (0.76-2.76) | 1.73 (0.54-3.29) |
 
 Main pulls prices back to their usual level ($2.53 H100, $1.28 A100). Four years of A100 history favour it; for the H100 the test cannot choose (its two one-year composite tests both missed high).
 
 **What the ceiling changed.**
 
-- Main: the middles barely move (A100 +1 yr $1.27 to $1.26). The tops come down: H100 +1 yr $8.25 to $7.64; A100 $3.18, $2.80, $2.70 to $2.84, $2.57, $2.53.
-- No pull-back: the A100's tops were $4.33, $5.83 and $7.38. All three are above its composite list price ($3.29), and the last two are above the dearest regional list price in the pack ($4.44). They are now $3.06, $3.00 and $2.95. Its middle no longer holds at $2.03: it falls to $1.56 by year three, because a price that can fall freely but cannot rise past list drifts down. The H100's year-three middle moves from $3.58 to $3.53.
+- Main: the middles barely move (A100 +1 yr $1.27 to $1.26). The tops come down: H100 +1 yr $8.25 to $7.64; A100 $3.18, $2.80, $2.70 to $2.95, $2.63, $2.57.
+- No pull-back: the A100's tops were $4.33, $5.83 and $7.38. All three are above its composite list price ($3.29), and the last two are above the dearest regional list price in the pack ($4.44). The top is now the ceiling itself, $3.29, at all three horizons: 13% to 15% of paths end the year pinned at list. Its middle no longer holds at $2.03: it falls to $1.73 by year three, because a price that can fall freely but cannot rise past list drifts down. The H100's year-three middle moves from $3.58 to $3.54.
+- **Corrected on 15 Nov after a code review.** Each simulated day is drawn from past days that followed the same kind of move. When the ceiling stopped a rise, the next day was still drawn as if the price had risen. It is now drawn from what the path did: rose to the ceiling, or stayed put if it was already there. Paths that reach the ceiling now tend to sit there, as zones do (section 0); before, they left it too easily. The first capped version had 2% to 3% of the A100's no-pull-back paths at the ceiling, tops of $3.06, $3.00 and $2.95 and middles of $1.95, $1.73 and $1.56. The main outlook moved by up to 12 cents at the A100's tops ($2.84, $2.57, $2.53 to $2.95, $2.63, $2.57) and not at all for the H100.
 
 **Three paths that follow the hardware trend** (comparison, not a forecast; no range). The main middle is flat after year one, which assumes cheaper computing stops pulling old chips' rent down. A steady yearly fall from today's price gives:
 

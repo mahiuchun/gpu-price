@@ -42,11 +42,13 @@ Share of today's value from the model, and USD per bare module after the floor: 
 
 | | H100 share | H100 USD | A100 share | A100 USD |
 |---|---|---|---|---|
-| +1 yr | 8% / 70% / 248% | 900 / 8,400 / 29,800 | 16% / 56% / 164% | 800 / 2,800 / 8,300 |
-| +2 yr | 4% / 45% / 168% | 500 / 5,400 / 20,200 | 0% / 26% / 90% | 150 / 1,300 / 4,500 |
-| +3 yr | 0% / 19% / 94% | 340 / 2,300 / 11,300 | 0% / 0% / 35% | 150 / 300 / 1,800 |
+| +1 yr | 8% / 70% / 235% | 900 / 8,400 / 28,100 | 16% / 56% / 164% | 800 / 2,900 / 8,300 |
+| +2 yr | 4% / 45% / 158% | 500 / 5,400 / 18,900 | 0% / 26% / 90% | 150 / 1,300 / 4,500 |
+| +3 yr | 0% / 19% / 90% | 340 / 2,300 / 10,800 | 0% / 0% / 35% | 150 / 300 / 1,800 |
 
-As first published (no cap on rent, no floor): H100 900 / 8,400 / 30,300, then 500 / 5,400 / 20,200, then 0 / 2,300 / 11,300; A100 800 / 2,900 / 9,200, then 0 / 1,300 / 4,900, then 0 / 0 / 1,800. The middles moved by at most $300. The cap took up to $900 off the tops.
+As first published (no cap on rent, no floor): H100 900 / 8,400 / 30,300, then 500 / 5,400 / 20,200, then 0 / 2,300 / 11,300; A100 800 / 2,900 / 9,200, then 0 / 1,300 / 4,900, then 0 / 0 / 1,800. The middles moved by at most $300. The cap took up to $2,200 off the H100's tops and $900 off the A100's.
+
+Corrected on 15 Nov after a code review. The cap first reached only the three numbers read from the rental outlook. Each of the 20,000 draws takes a place in that range, and a draw above the 90% point was extended past it, so one draw in ten had the H100 renting above AWS's list price (one in thirteen for the A100). Every drawn rent path is now stopped at the ceiling. That took the H100's tops from $29,800, $20,200 and $11,300 to the figures above; its lows and middles did not move. The A100's one-year middle now reads $2,900, not $2,800: the simulator correction in `LONGVIEW.md` section 4 moved its share from 56.4% to 56.5%.
 
 **If rent follows the hardware trend instead.** The main rent path is flat after year one. `LONGVIEW.md` section 4 sets three steady falls beside it. On those the model's middle, in USD per bare module after the floor, at +1 / +2 / +3 years:
 
@@ -55,7 +57,7 @@ As first published (no cap on rent, no floor): H100 900 / 8,400 / 30,300, then 5
 | 18% a year | 8,000 / 4,700 / 2,100 | 3,000 / 1,300 / 300 |
 | 25% a year | 7,100 / 3,600 / 1,300 | 2,700 / 1,000 / 300 |
 | 35% a year | 5,600 / 1,900 / 670 | 2,100 / 500 / 300 |
-| Main outlook | 8,400 / 5,400 / 2,300 | 2,800 / 1,300 / 300 |
+| Main outlook | 8,400 / 5,400 / 2,300 | 2,900 / 1,300 / 300 |
 
 Here the fall continues for the GPU's whole life and the range (in the CSV) is over the other assumptions only. A 25% yearly fall takes $1,000 off the H100's middle at three years.
 

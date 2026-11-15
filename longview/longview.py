@@ -653,8 +653,10 @@ def simulate(fit: dict, origin, n_days: int, n_paths: int, rng, keep=(), daily_q
     """Roll forward one day at a time.  Each simulated day draws its log change from the past days
     that followed the same state, then that simulated day (its move and its new price) becomes the
     state for the next draw.  `cap` (USD per GPU-hour) is a ceiling no simulated day may pass: the
-    on-demand list price, which no zone's spot price has exceeded since the June 2025 cut.  The
-    random numbers drawn are the same with and without a cap."""
+    on-demand list price, which no zone's spot price has exceeded since the June 2025 cut.  When the
+    ceiling stops a move, the state carried to the next day is the move the path actually made
+    (up to the ceiling, or none if it was already there), not the move that was drawn.  The random
+    numbers drawn are the same with and without a cap."""
     cap_log = None if cap is None else math.log(cap)
     MC, MD, L, fb = fit["MC"], fit["MD"], fit["L"], fit["feedback"]
     st = np.full(n_paths, fit["st0"], dtype=np.int64)
@@ -667,13 +669,19 @@ def simulate(fit: dict, origin, n_days: int, n_paths: int, rng, keep=(), daily_q
     out, dq = {}, (np.zeros((n_days, 3)) if daily_quantiles else None)
     for t in range(n_days):
         idx = (rng.random(n_paths) * L[st]).astype(np.int64)
-        lp = lp + MC[st, idx] + off[t]
+        new = lp + MC[st, idx] + off[t]
+        moved = MD[st, idx]                                  # direction of the move that was drawn
         if cap_log is not None:
-            lp = np.minimum(lp, cap_log)
+            hit = new > cap_log
+            if hit.any():
+                new = np.where(hit, cap_log, new)
+                real = new - lp                              # what the capped path did today
+                moved = np.where(hit, np.where(real > EPS, 2, np.where(real < -EPS, 0, 1)), moved)
+        lp = new
         if fb == "dir":
-            st = MD[st, idx]
+            st = moved
         elif fb == "dirlvl":
-            st = MD[st, idx] + 3 * (lp > fit["thr"])
+            st = moved + 3 * (lp > fit["thr"])
         if (t + 1) in keep:
             out[t + 1] = np.exp(lp)
         if daily_quantiles:
@@ -693,7 +701,9 @@ def pinball(y, q, tau):
 def backtest(name: str, x: pd.Series, variant: str, feedback: str, trend: str, succ_date=None, succ_shift: float = 0.0,
              learn=None):
     """Monthly origins; forecast made with data up to the origin only; truth read at origin + h days
-    (skipped when that day is in the archive hole or past the end of the data)."""
+    (skipped when that day is in the archive hole or past the end of the data).
+    `succ_shift` is a number, or a function of the origin day that returns the adjustment as it could
+    be measured on that day; an origin for which it returns NaN is skipped."""
     first = x.index[0] + pd.Timedelta(days=MIN_TRAIN_DAYS)
     origins = [d for d in pd.date_range(first, x.index[-1], freq="MS") if d in x.index]
     rows = []
@@ -702,11 +712,14 @@ def backtest(name: str, x: pd.Series, variant: str, feedback: str, trend: str, s
         hs = [h for h, t in targets.items() if t in x.index]
         if not hs:
             continue
-        f = fit_steps(x, o, feedback, trend, succ_date, succ_shift, learn)
+        shift = float(succ_shift(o)) if callable(succ_shift) else succ_shift
+        if not np.isfinite(shift):             # the adjustment could not yet be measured on this day
+            continue
+        f = fit_steps(x, o, feedback, trend, succ_date, shift, learn)
         if f is None:                          # not enough usable history yet
             continue
         sims = simulate(f, o, max(hs), N_PATHS_TEST, make_rng(name, o.date()), keep=hs,
-                        succ_date=succ_date, succ_shift=succ_shift)   # same random numbers for every variant
+                        succ_date=succ_date, succ_shift=shift)        # same random numbers for every variant
         p0 = float(x[o])
         for h in hs:
             q10, q50, q90 = np.quantile(sims[h], [0.1, 0.5, 0.9])
@@ -1070,16 +1083,34 @@ def main() -> int:
             for tag, shift in (("successor", delta), ("successor_flipped", -delta)):
                 cells.append(backtest(name, test_series[name], f"{base}+{tag}", spec["feedback"], spec["trend"],
                                       succ_date=avail["H100"], succ_shift=shift, learn=test_learn[name]))
-    # the same adjustment out of sample: the A100's shift as it could be measured the day before the H200
-    # arrived, applied to the H100 from the H200's arrival (a number from one chip, tested on another)
+    # the same adjustment out of sample: a number from one chip, tested on another. The A100's shift is
+    # measured afresh for every forecast day from A100 prices up to that day (and never later than the day
+    # before the H200 arrived), then applied to the H100 from the H200's arrival. A forecast day on which
+    # the A100's window since the H100 arrived is still too short to give a yearly rate is skipped.
+    # (Until 15 Nov one number, measured to 11 Dec 2024, was used for every forecast day: for the days
+    # before that date it came from A100 prices the forecaster could not have had. Found in code review.)
     one_day = pd.Timedelta(days=1)
-    delta_known = (rate(pack["A100"], avail["H100"], avail["H200"] - one_day)["endpoint"]
-                   - rate(pack["A100"], pack["A100"].index[0], avail["H100"] - one_day)["endpoint"])
+    a100_before = rate(pack["A100"], pack["A100"].index[0], avail["H100"] - one_day)["endpoint"]
+
+    def a100_shift_known_on(o) -> float:
+        end = min(pd.Timestamp(o), avail["H200"] - one_day)
+        return rate(pack["A100"], avail["H100"], end)["endpoint"] - a100_before
+
+    delta_known = a100_shift_known_on(avail["H200"])        # its last value, the day before the H200 arrived
+    shift_by_origin = {}
+
+    def rolling(sign: float):
+        def f(o):
+            s = a100_shift_known_on(o)
+            shift_by_origin[str(pd.Timestamp(o).date())] = None if not np.isfinite(s) else round(float(s), 4)
+            return sign * s
+        return f
+
     for base in ("main", "free"):
         spec = VARIANTS[base]
-        for tag, shift in (("transfer", delta_known), ("transfer_flipped", -delta_known)):
+        for tag, sign in (("transfer", 1.0), ("transfer_flipped", -1.0)):
             cells.append(backtest("H100_founding", test_series["H100_founding"], f"{base}+{tag}", spec["feedback"], spec["trend"],
-                                  succ_date=avail["H200"], succ_shift=shift, learn=None))
+                                  succ_date=avail["H200"], succ_shift=rolling(sign), learn=None))
     cells = pd.concat(cells, ignore_index=True)
     cells.to_csv(os.path.join(OUT, "backtest_cells.csv"), index=False, float_format="%.5f")
     summ = summarise(cells)
@@ -1120,23 +1151,35 @@ def main() -> int:
         f"H100 at the H200's arrival with the A100's number {delta_known:+.3f}/yr, out of sample) ==")
     rows = []
     in_sample = {"successor": (delta, "measured"), "successor_flipped": (-delta, "sign flipped")}
-    carried = {"transfer": (delta_known, "the A100's shift as known the day before; out of sample"),
-               "transfer_flipped": (-delta_known, "the same, sign flipped")}
-    tests = [("A100_pack", "H100", in_sample), ("A100_founding", "H100", in_sample), ("H100_founding", "H200", carried)]
-    for name, newer, tags in tests:
+    known = [v for v in shift_by_origin.values() if v is not None]
+    carried = {"transfer": (None, f"the A100's shift as measured up to each forecast day, {min(known):+.2f} to {max(known):+.2f}/yr; out of sample"),
+               "transfer_flipped": (None, "the same, sign flipped")}
+    every, arrived = "all forecast days", "forecast days on or after the newer chip's arrival"
+    # The last row set keeps only forecast days on which the newer chip had already arrived: there the
+    # forecaster knows the arrival date as well as the number, so nothing in the forecast is from the future.
+    tests = [("A100_pack", "H100", in_sample, None, every), ("A100_founding", "H100", in_sample, None, every),
+             ("H100_founding", "H200", carried, None, every), ("H100_founding", "H200", carried, avail["H200"], arrived)]
+    for name, newer, tags, origins_from, which in tests:
         for base in ("main", "free"):
             b = cells[(cells.series == name) & (cells.variant == base)].set_index(["origin", "horizon_days"])
             for tag, (shift, what) in tags.items():
                 e = cells[(cells.series == name) & (cells.variant == f"{base}+{tag}")].set_index(["origin", "horizon_days"])
                 for h in HORIZONS:
-                    if h not in b.index.get_level_values("horizon_days"):
+                    if h not in b.index.get_level_values("horizon_days") or h not in e.index.get_level_values("horizon_days"):
                         continue                       # this series has no test forecast that far ahead
                     bb, ee = b.xs(h, level="horizon_days"), e.xs(h, level="horizon_days")
+                    both = bb.index.intersection(ee.index)          # the same forecast days with and without
+                    if origins_from is not None:
+                        both = both[pd.to_datetime(both) >= origins_from]
+                    if len(both) == 0:
+                        continue
+                    bb, ee = bb.loc[both], ee.loc[both]
                     pb = (bb.pin10 + bb.pin50 + bb.pin90) / 3
                     pe = (ee.pin10 + ee.pin50 + ee.pin90) / 3
                     lv = (bb.lv10 + bb.lv50 + bb.lv90) / 3
                     after = pd.to_datetime(pb.index) + pd.Timedelta(days=h) >= avail[newer]
-                    rows.append(dict(series=name, simulator=base, adjustment=f"{shift:+.2f}/yr ({what})",
+                    rows.append(dict(series=name, simulator=base, adjustment=what if shift is None else f"{shift:+.2f}/yr ({what})",
+                                     forecast_days=which,
                                      newer_chip=newer, newer_chip_first_spot_price=str(avail[newer].date()),
                                      horizon_days=h, n_origins=len(pb), n_origins_reaching_past_arrival=int(after.sum()),
                                      pinball_vs_no_change_without=pb.mean() / lv.mean(), pinball_vs_no_change_with=pe.mean() / lv.mean(),
@@ -1145,11 +1188,13 @@ def main() -> int:
                                      coverage_without=float(bb.inside.mean()), coverage_with=float(ee.inside.mean())))
     succ = pd.DataFrame(rows)
     succ.to_csv(os.path.join(OUT, "successor_test.csv"), index=False, float_format="%.4f")
-    say(succ[succ.horizon_days >= 365][["series", "simulator", "adjustment", "horizon_days", "n_origins", "pinball_vs_no_change_without",
-                                        "pinball_vs_no_change_with", "change_in_loss_pct", "share_of_origins_improved",
-                                        "coverage_without", "coverage_with"]].round(3).to_string(index=False))
+    say(succ[(succ.horizon_days >= 365) | (succ.forecast_days == arrived)]
+        [["series", "simulator", "adjustment", "forecast_days", "horizon_days", "n_origins", "pinball_vs_no_change_without",
+          "pinball_vs_no_change_with", "change_in_loss_pct", "share_of_origins_improved",
+          "coverage_without", "coverage_with"]].round(3).to_string(index=False))
     key["step3"] = succ.round(4).to_dict("records")
     key["step3_shift_carried_to_h100_log_per_year"] = delta_known
+    key["step3_shift_carried_by_forecast_day"] = shift_by_origin
 
     # ------------------------------------------------------------ step 4 ----
     say("\n== step 4: outlook from the last day of data ==")

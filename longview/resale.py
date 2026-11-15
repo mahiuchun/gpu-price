@@ -150,6 +150,7 @@ def load_outlook(variant="main"):
         f = o[(o.chip == chip) & (o.variant == other)].sort_values("years_ahead")
         assert list(m.years_ahead) == [1, 2, 3] and list(f.years_ahead) == [1, 2, 3]
         p0 = float(m.price_at_origin.iloc[0])
+        cap = float(m.list_price_cap.iloc[0]) if "list_price_cap" in m.columns else float("nan")
         trend = {}
         for name, g in o[(o.chip == chip) & o.variant.str.startswith("hardware_trend_")].groupby("variant", sort=False):
             trend[name] = float(g.sort_values("years_ahead").q50.iloc[0]) / p0 - 1.0      # the steady yearly change
@@ -158,6 +159,7 @@ def load_outlook(variant="main"):
             "targets": [str(t) for t in m.target],
             "series": m.series.iloc[0],
             "p0": p0,
+            "cap": cap if np.isfinite(cap) else None,       # the capped variant's ceiling; None for "*_nocap"
             "main": (m.q10_widened.to_numpy(float), m.q50.to_numpy(float), m.q90_widened.to_numpy(float)),
             "no_pullback_q50": f.q50.to_numpy(float),
             "variant": variant, "other_variant": other, "trend": trend,
@@ -219,12 +221,17 @@ def load_alt_benchmark(origin):
 
 
 # ------------------------------------------------------------------- model ----
-def knots_from_quantiles(p0, q10, q50, q90, z):
-    """Log rent at years 0..3 for each draw. A draw sits at the same percentile of the range at every horizon."""
+def knots_from_quantiles(p0, q10, q50, q90, z, cap=None):
+    """Log rent at years 0..3 for each draw. A draw sits at the same percentile of the range at every horizon.
+    `cap` (USD per GPU-hour) is the list-price ceiling of the rental outlook: a draw beyond the 90% point is
+    extended in a straight line in logs and would otherwise pass it. Rent between the yearly points is a
+    straight line in logs, so capping the points caps the whole path."""
     z = np.atleast_1d(np.asarray(z, float))[:, None]
     up = np.log(q90 / q50)[None, :]
     dn = np.log(q50 / q10)[None, :]
     k = np.log(q50)[None, :] + np.where(z >= 0, z / Z90 * up, z / Z90 * dn)
+    if cap is not None:
+        k = np.minimum(k, np.log(cap))
     return np.concatenate([np.full((len(z), 1), np.log(p0)), k], axis=1)
 
 
@@ -276,15 +283,16 @@ def run_chip(chip, ol, alt, anchor, rng, launch_usd, use_floor=True):
     a = ASSUME[chip]
     floors = [f * launch_usd if use_floor else 0.0 for f in FLOOR_SHARE]
     q10, q50, q90 = ol["main"]
-    p0 = ol["p0"]
-    rent_c = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, [0.0]))
+    p0, cap = ol["p0"], ol.get("cap")
+    rent_c = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, [0.0], cap))
     pc = central(a)
     v0c = float(v(rent_c, pc)[0])
 
     # --- simulation: every assumption drawn from a triangle over low / central / high; rent path by percentile
     z = rng.standard_normal(N_DRAWS)
     draw = {k: rng.triangular(a[k][0], a[k][1], a[k][2], N_DRAWS) for k in ORDER}
-    rent_z = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, z))
+    rent_z = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, z, cap))   # no drawn rent path passes the ceiling
+    share_capped = float((knots_from_quantiles(p0, q10, q50, q90, z)[:, 1:].max(axis=1) > np.log(cap)).mean()) if cap else 0.0
     v0 = v(np.repeat(rent_c, N_DRAWS, axis=0), draw)             # today: central rent path, own assumptions
     rows = [{"chip": chip, "years_ahead": 0, "target_date": ol["origin"].strftime("%Y-%m-%d"),
              "scenario": SCENARIO_MAIN, "rent_input": ol["series"],
@@ -337,6 +345,7 @@ def run_chip(chip, ol, alt, anchor, rng, launch_usd, use_floor=True):
         for name, val, floor in zip(("low", "central", "high"), sh, floors):
             d[f"resale_usd_bare_module_{name}"], unfloored[name] = usd_with_floor(val, anchor["module"], floor, r["years_ahead"])
         d["share_of_draws_past_end_of_life"] = round(r["share_of_draws_past_end_of_life"], 3)
+        d["share_of_rent_draws_stopped_at_list_price"] = round(share_capped, 3) if r["scenario"] == SCENARIO_MAIN and r["years_ahead"] else 0.0
         for name, floor in zip(("low", "central", "high"), floors):
             d[f"floor_usd_{name}"] = round(floor, -1)
             d[f"resale_usd_bare_module_{name}_no_floor"] = unfloored[name]
@@ -349,8 +358,8 @@ def run_chip(chip, ol, alt, anchor, rng, launch_usd, use_floor=True):
         return float(v(rent, p, start_year=2)[0]) / v0_
 
     sens = []
-    rent_lo = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, [-Z90]))
-    rent_hi = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, [Z90]))
+    rent_lo = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, [-Z90], cap))
+    rent_hi = rent_from_knots(knots_from_quantiles(p0, q10, q50, q90, [Z90], cap))
     sens.append({"chip": chip, "kind": "assumption", "name": "Rental price path (AWS spot outlook, main, widened)",
                  "unit": "USD per GPU-hour at +1 / +2 / +3 years",
                  "low": " / ".join(f"{x:.2f}" for x in q10), "central": " / ".join(f"{x:.2f}" for x in q50),
