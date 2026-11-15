@@ -1,0 +1,247 @@
+{
+ "start": {
+  "practice": 0.15773444001122128,
+  "check": 0.12670736463290933
+ },
+ "ledger": [
+  {
+   "n": 1,
+   "change_type": "set_range_scale",
+   "role_name": "",
+   "diagnosis": "The crowd beats drift, but its ranges become too narrow as the horizon grows: coverage falls from 83% at one day to 72% at three days and 56% at seven days. The misses include both reversals and continued moves, suggesting a general lack of longer-horizon uncertainty rather than one consistently wrong direction.",
+   "instruction": "",
+   "expectation": "Preserve the strong one-day forecasts while reducing costly longer-horizon misses and bringing coverage closer to the 80% target.",
+   "uses_reference_forecasts": false,
+   "range_scale": [
+    1.0,
+    1.25,
+    1.65
+   ],
+   "practice_before": 0.15773444001122128,
+   "practice_after": 0.1699964824140633,
+   "check": "PASS",
+   "kept": true,
+   "_check_before": 0.12670736463290933,
+   "_check_after": 0.13779871024025991
+  },
+  {
+   "n": 2,
+   "change_type": "rewrite_role",
+   "role_name": "risk_spotter",
+   "diagnosis": "The crowd beats drift, but seven-day coverage remains low and upper misses outnumber lower misses. Agents often repeat the same trend argument, leaving too little allowance for reversals or shared movement across offers even when list membership is stable.",
+   "instruction": "Your job: assess the risk that the recent price pattern stops or reverses. Distinguish rarely changing lists from frequently repriced markets, and compare recent moves with earlier multi-day swings. In frequently repriced markets, weaken trend extrapolation as the horizon grows and allow for both continuation and reversal, without assuming either is certain. Stable membership and tightly clustered offers do not prevent offers from moving together. Set low and high from plausible published-price moves at each horizon, not just today's neighboring offers; keep ranges tight when the history genuinely supports little change.",
+   "expectation": "Reduce redundant trend-following and improve longer-horizon reversal coverage while preserving narrow forecasts for genuinely sticky prices.",
+   "uses_reference_forecasts": false,
+   "range_scale": null,
+   "practice_before": 0.1699964824140633,
+   "practice_after": 0.16793138047358092,
+   "check": "not run",
+   "kept": false,
+   "_check_before": 0.13779871024025991,
+   "_check_after": 0.12541232711803407
+  },
+  {
+   "n": 3,
+   "change_type": "rewrite_role",
+   "role_name": "base_rate_keeper",
+   "diagnosis": "The crowd beats drift, but seven-day coverage remains low and upper misses are twice as common as lower misses. Several agents extrapolate the same recent trend, while the base-rate keeper contributes relatively little independent protection against that shared error.",
+   "instruction": "Your job: forecast from the historical frequency and size of published-price changes. Distinguish sticky prices from prices that change almost daily, and use observed changes over comparable horizons, including unchanged periods, to guide your low, middle and high forecasts. Treat recent direction as limited evidence: damp its continuation as the horizon grows unless earlier history supports persistence. When history is short, keep the middle near today's value and allow uncertainty in both directions rather than treating an unbroken recent trend as certain.",
+   "expectation": "Give the crowd a more independent historical anchor, reducing excessive long-horizon trend extrapolation while retaining narrow forecasts for genuinely sticky prices.",
+   "uses_reference_forecasts": false,
+   "range_scale": null,
+   "practice_before": 0.1699964824140633,
+   "practice_after": 0.17496454786790017,
+   "check": "PASS",
+   "kept": true,
+   "_check_before": 0.13779871024025991,
+   "_check_after": 0.1392083012087768
+  },
+  {
+   "n": 4,
+   "change_type": "rewrite_role",
+   "role_name": "list_reader",
+   "diagnosis": "The crowd beats drift, but seven-day coverage is only 72%, with more misses above than below its ranges. Several agents repeat the same trend argument, and stable membership or tightly clustered offers can be mistaken for protection against future price movement.",
+   "instruction": "Your job: work out how the published middle is formed, including averaging two central offers, tied blocks, and the effects of offers joining or leaving. Distinguish protection against membership changes from protection against repricing: a stable list or tight cluster does not anchor the price when its offers move together. For frequently changing offers, assess shared movement and switching of the middle rather than treating today's neighboring prices as future bounds. Use historical changes over each forecast horizon to judge plausible movement, allowing both continuation and reversal without extending a short recent trend mechanically. For sticky offers, retain substantial probability of no change.",
+   "expectation": "Preserve the list reader's structural advantage while reducing false confidence from stable membership and narrow offer gaps. This should improve longer-horizon forecasts for frequently repriced lists without indiscriminately widening ranges for sticky prices.",
+   "uses_reference_forecasts": false,
+   "range_scale": null,
+   "practice_before": 0.17496454786790017,
+   "practice_after": 0.17011929864974817,
+   "check": "not run",
+   "kept": false,
+   "_check_before": 0.1392083012087768,
+   "_check_after": 0.13305379583692956
+  },
+  {
+   "n": 5,
+   "change_type": "set_range_scale",
+   "role_name": "",
+   "diagnosis": "The crowd beats drift at every horizon, but its ranges are slightly too wide at one and three days and too narrow at seven days. Coverage of 84%, 82% and 72% suggests shifting uncertainty toward the longer horizon without changing the agents' price judgments.",
+   "instruction": "",
+   "expectation": "Reduce unnecessary width at short horizons while capturing more seven-day reversals and larger moves, bringing coverage closer to 80% at each horizon.",
+   "uses_reference_forecasts": false,
+   "range_scale": [
+    0.9,
+    1.2,
+    1.95
+   ],
+   "practice_before": 0.17496454786790017,
+   "practice_after": 0.1733713638411003,
+   "check": "not run",
+   "kept": false,
+   "_check_before": 0.1392083012087768,
+   "_check_after": 0.13650860677696408
+  },
+  {
+   "n": 6,
+   "change_type": "rewrite_role",
+   "role_name": "combiner",
+   "diagnosis": "The crowd beats drift, but seven-day coverage is only 72%, and upper misses are twice as common as lower misses. Several agents repeat the same recent-trend argument, so agreement can exaggerate confidence without adding independent evidence.",
+   "instruction": "Your job: compare the reference forecasts using the price history and offer list, rather than treating agreement as independent evidence. Favor methods whose assumptions fit how this price changes: offer structure for sticky prices and historical movement for frequently repriced prices. For each horizon, check whether recent direction has persisted over comparable periods before extending it; otherwise temper projected movement toward today's price as the horizon grows. Use disagreement to identify plausible alternative outcomes, and set low and high forecasts from their historical frequency and size, including reversals and unchanged periods, rather than simply enclosing all reference forecasts.",
+   "expectation": "Reduce duplicated trend extrapolation and improve longer-horizon centers and tail balance, while preserving narrow forecasts where historical stickiness supports them.",
+   "uses_reference_forecasts": true,
+   "range_scale": null,
+   "practice_before": 0.17496454786790017,
+   "practice_after": 0.1678714364243319,
+   "check": "not run",
+   "kept": false,
+   "_check_before": 0.1392083012087768,
+   "_check_after": 0.13542758253714138
+  },
+  {
+   "n": 7,
+   "change_type": "add_role",
+   "role_name": "level_anchor",
+   "diagnosis": "The crowd beats drift, but seven-day coverage remains low and upper misses are twice as common as lower misses. Several agents repeat recent price direction, so their agreement may overstate how long a move will persist.",
+   "instruction": "Your job: provide an independent forecast anchored in price levels rather than recent direction. Keep the next-day middle close to today's published price. For frequently changing prices, gradually blend longer-horizon middles toward a robust middle of recent historical levels, unless the history clearly supports a lasting shift. For sticky prices, retain the current level unless there is evidence of another change; do not pull a newly established plateau back toward older prices automatically. Set low and high forecasts from historical moves over comparable horizons, including unchanged periods and moves against the recent direction. Nearby offers inform the present median but do not bound future repricing.",
+   "expectation": "Add a modest counterweight to shared trend extrapolation, improving longer-horizon centers and reversal coverage without widening every forecast or disturbing sticky prices.",
+   "uses_reference_forecasts": false,
+   "range_scale": null,
+   "practice_before": 0.17496454786790017,
+   "practice_after": 0.16971118121647621,
+   "check": "not run",
+   "kept": false,
+   "_check_before": 0.1392083012087768,
+   "_check_after": 0.12965403176925827
+  },
+  {
+   "n": 8,
+   "change_type": "drop_role",
+   "role_name": "risk_spotter",
+   "diagnosis": "The crowd beats drift, but seven-day coverage remains low and misses above the range are twice as common as misses below. The risk spotter often repeats the same recent-trend argument as other agents and has one of the weaker standalone scores, suggesting its extra vote may reinforce shared errors rather than diversify them.",
+   "instruction": "",
+   "expectation": "Test whether removing a redundant trend-following vote improves the average forecast while retaining list analysis, repricing analysis, historical base rates and reference comparison. Keep range scales unchanged to isolate the effect.",
+   "uses_reference_forecasts": false,
+   "range_scale": null,
+   "practice_before": 0.17496454786790017,
+   "practice_after": 0.17913086420327928,
+   "check": "FAIL",
+   "kept": false,
+   "_check_before": 0.1392083012087768,
+   "_check_after": 0.13015426093362592
+  },
+  {
+   "n": 9,
+   "change_type": "set_range_scale",
+   "role_name": "",
+   "diagnosis": "The crowd beats drift at every horizon, but seven-day coverage is only 72%, compared with 84% and 82% at shorter horizons. This suggests testing a modest seven-day widening alone, rather than changing the agents or adjusting all three horizons together.",
+   "instruction": "",
+   "expectation": "Reduce the cost of seven-day reversals and larger moves while preserving the current middle forecasts and shorter-horizon performance. The modest increase limits the extra width penalty on stable prices.",
+   "uses_reference_forecasts": false,
+   "range_scale": [
+    1.0,
+    1.25,
+    1.85
+   ],
+   "practice_before": 0.17496454786790017,
+   "practice_after": 0.17332030428010103,
+   "check": "not run",
+   "kept": false,
+   "_check_before": 0.1392083012087768,
+   "_check_after": 0.13727877931279353
+  },
+  {
+   "n": 10,
+   "change_type": "rewrite_role",
+   "role_name": "repricer_watcher",
+   "diagnosis": "The crowd beats drift, but seven-day coverage is only 72%, and upper misses are twice as frequent as lower misses. Several agents treat recent movement in the middle offers as evidence of continued movement in the published price, even though the middle-setting offers can change.",
+   "instruction": "Your job: watch offers that change price often and judge whether their movement will carry through to the published middle. Separate movement shared by nearby offers from movement in just the current middle-setting offer, and account for offers crossing each other. Use recent direction most strongly at short horizons; extend it further only when the published price history supports persistence over comparable periods. Stable list membership does not by itself support continued direction, and tightly clustered offers can move together. Give low, middle and high forecasts that allow both continuation and reversal without assuming either is certain.",
+   "expectation": "Preserve useful short-term repricing signals while reducing unsupported longer-term trend extrapolation and accounting for shared movement across offers.",
+   "uses_reference_forecasts": false,
+   "range_scale": null,
+   "practice_before": 0.17496454786790017,
+   "practice_after": 0.17308874853364153,
+   "check": "not run",
+   "kept": false,
+   "_check_before": 0.1392083012087768,
+   "_check_after": 0.1361711444426703
+  }
+ ],
+ "config": {
+  "roles": {
+   "list_reader": {
+    "instruction": "Your job: read the list. Work out which offer is in the middle, how far the middle can move given the offers next to it, and whether an offer joining or leaving would shift it.",
+    "refs": false
+   },
+   "repricer_watcher": {
+    "instruction": "Your job: watch the offers that change price often. Decide whether their recent direction is likely to continue, and whether that would move the middle of the list.",
+    "refs": false
+   },
+   "base_rate_keeper": {
+    "instruction": "Your job: forecast from the historical frequency and size of published-price changes. Distinguish sticky prices from prices that change almost daily, and use observed changes over comparable horizons, including unchanged periods, to guide your low, middle and high forecasts. Treat recent direction as limited evidence: damp its continuation as the horizon grows unless earlier history supports persistence. When history is short, keep the middle near today's value and allow uncertainty in both directions rather than treating an unbroken recent trend as certain.",
+    "refs": false
+   },
+   "combiner": {
+    "instruction": "Your job: weigh the three reference forecasts you are given (drift, the list-replay engine, and a pretrained time-series model) against the facts. Decide where they disagree and which to trust for this price.",
+    "refs": true
+   },
+   "risk_spotter": {
+    "instruction": "Your job: look for what could make this price jump or snap back: a one-day jump that may be temporary, an offer that just appeared or vanished, a price that looks out of line with the rest of the list.",
+    "refs": false
+   }
+  },
+  "range_scale": {
+   "1": 1.0,
+   "3": 1.25,
+   "7": 1.65
+  }
+ },
+ "base": {
+  "roles": {
+   "list_reader": {
+    "instruction": "Your job: read the list. Work out which offer is in the middle, how far the middle can move given the offers next to it, and whether an offer joining or leaving would shift it.",
+    "refs": false
+   },
+   "repricer_watcher": {
+    "instruction": "Your job: watch the offers that change price often. Decide whether their recent direction is likely to continue, and whether that would move the middle of the list.",
+    "refs": false
+   },
+   "base_rate_keeper": {
+    "instruction": "Your job: keep to base rates. On most days a published price does not change. Move away from today's value only with clear evidence, and size the range from how often and how far this price has moved before.",
+    "refs": false
+   },
+   "combiner": {
+    "instruction": "Your job: weigh the three reference forecasts you are given (drift, the list-replay engine, and a pretrained time-series model) against the facts. Decide where they disagree and which to trust for this price.",
+    "refs": true
+   },
+   "risk_spotter": {
+    "instruction": "Your job: look for what could make this price jump or snap back: a one-day jump that may be temporary, an offer that just appeared or vanished, a price that looks out of line with the rest of the list.",
+    "refs": false
+   }
+  },
+  "range_scale": {
+   "1": 1.0,
+   "3": 1.0,
+   "7": 1.0
+  }
+ },
+ "end": {
+  "practice": 0.17496454786790017,
+  "check": 0.1392083012087768
+ },
+ "usage": {
+  "calls": 2497,
+  "in": 2685610,
+  "out": 482573
+ }
+}

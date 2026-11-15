@@ -8,10 +8,13 @@
 # Needs: uv (https://docs.astral.sh/uv/) and the unchanged pack in ./gpu-price-pack-v0.1.1-handover
 # (or GPUVAL_PACK=/path/to/pack).
 #
-# The main forecast comes from five AI agents. Their answers were recorded when they ran
-# (runs/agents/final_answers.json), so this script rebuilds the file from those answers exactly.
+# The main forecast comes from five AI agents, after the two changes that a coach AI proposed and
+# tests kept (one agent's instructions rewritten, 3- and 7-day ranges widened). The agents' answers
+# were recorded when they ran (runs/coach/final_answers.json; the crowd before the coach's changes is
+# in runs/agents/final_answers.json), so this script rebuilds the files from those answers exactly.
 # To ask the agents again (needs OPENAI_API_KEY; wording and numbers will differ slightly):
 #   uv run python -m gpuval.agents --origins 2026-11-06 --final --name rerun
+#   uv run python -m gpuval.coach final
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 uv sync -q
@@ -19,9 +22,12 @@ uv run python tests/parity.py 2026-11-06 | tail -1
 # the engine's forecast, computed from the pack
 uv run python -m gpuval.submit --version versions/final.json --origin 2026-11-06 \
     --out submission/alt_engine_2026-11-06.csv
-# the main forecast: the five agents' recorded answers, averaged
-uv run python -m gpuval.submit --from-agents runs/agents/final_answers.json --origin 2026-11-06 \
+# the main forecast: the improved crowd's recorded answers, averaged, ranges stretched
+uv run python -m gpuval.submit --from-agents runs/coach/final_answers.json --origin 2026-11-06 \
     --out submission/forecast_2026-11-06.csv
+# the crowd before the coach's changes
+uv run python -m gpuval.submit --from-agents runs/agents/final_answers.json --origin 2026-11-06 \
+    --out submission/other/agents_original_2026-11-06.csv
 if [[ "${1:-}" == "--with-backtest" ]]; then
   uv run python -m gpuval.timemachine --name replay --replay runs/record
   uv run python -m gpuval.report --name replay | tail -40

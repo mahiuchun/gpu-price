@@ -1,0 +1,4 @@
+ours  (479 forecasts): original +0.164 [+0.067, +0.251] | improved +0.198 [+0.096, +0.285] | improved vs original +0.040 [+0.005, +0.076] | engine +0.101 [+0.012, +0.186] | improved vs engine +0.108 [+0.021, +0.182]
+aws   (135 forecasts): original +0.223 [+0.049, +0.390] | improved +0.264 [+0.087, +0.405] | improved vs original +0.052 [-0.027, +0.104] | engine -0.150 [-0.303, +0.093] | improved vs engine +0.360 [+0.140, +0.494]
+all   (614 forecasts): original +0.161 [+0.072, +0.247] | improved +0.192 [+0.104, +0.279] | improved vs original +0.037 [+0.002, +0.069] | engine +0.048 [-0.045, +0.142] | improved vs engine +0.151 [+0.050, +0.247]
+truth inside range: original 0.708 | improved 0.783 | usage {'calls': 1380, 'in': 1389890, 'out': 281202}

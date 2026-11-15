@@ -1,0 +1,13 @@
+practice 123 price-days, check 104, exam 230
+start: practice +0.158, check +0.127 | usage {'calls': 1135, 'in': 1181343, 'out': 200217}
+gen 1: set_range_scale  | practice +0.158 -> +0.170 | check PASS | KEPT | The crowd beats drift, but its ranges become too narrow as the horizon grows: coverage falls from 83% at one day to 72% at three days and 56% at seven
+gen 2: rewrite_role risk_spotter | practice +0.170 -> +0.168 | check not run | rejected | The crowd beats drift, but seven-day coverage remains low and upper misses outnumber lower misses. Agents often repeat the same trend argument, leavin
+gen 3: rewrite_role base_rate_keeper | practice +0.170 -> +0.175 | check PASS | KEPT | The crowd beats drift, but seven-day coverage remains low and upper misses are twice as common as lower misses. Several agents extrapolate the same re
+gen 4: rewrite_role list_reader | practice +0.175 -> +0.170 | check not run | rejected | The crowd beats drift, but seven-day coverage is only 72%, with more misses above than below its ranges. Several agents repeat the same trend argument
+gen 5: set_range_scale  | practice +0.175 -> +0.173 | check not run | rejected | The crowd beats drift at every horizon, but its ranges are slightly too wide at one and three days and too narrow at seven days. Coverage of 84%, 82% 
+gen 6: rewrite_role combiner | practice +0.175 -> +0.168 | check not run | rejected | The crowd beats drift, but seven-day coverage is only 72%, and upper misses are twice as common as lower misses. Several agents repeat the same recent
+gen 7: add_role level_anchor | practice +0.175 -> +0.170 | check not run | rejected | The crowd beats drift, but seven-day coverage remains low and upper misses are twice as common as lower misses. Several agents repeat recent price dir
+gen 8: drop_role risk_spotter | practice +0.175 -> +0.179 | check FAIL | rejected | The crowd beats drift, but seven-day coverage remains low and misses above the range are twice as common as misses below. The risk spotter often repea
+gen 9: set_range_scale  | practice +0.175 -> +0.173 | check not run | rejected | The crowd beats drift at every horizon, but seven-day coverage is only 72%, compared with 84% and 82% at shorter horizons. This suggests testing a mod
+gen 10: rewrite_role repricer_watcher | practice +0.175 -> +0.173 | check not run | rejected | The crowd beats drift, but seven-day coverage is only 72%, and upper misses are twice as frequent as lower misses. Several agents treat recent movemen
+end: practice +0.175, check +0.139 | kept 2 of 10 | usage {'calls': 2497, 'in': 2685610, 'out': 482573}

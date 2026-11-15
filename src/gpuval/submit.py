@@ -62,10 +62,18 @@ def from_agents(answers_path: Path, origin: str, team_id: str = "team") -> pd.Da
         for h in HORIZONS:
             q = np.exp(np.mean(np.log(np.array([a["q"][str(h)] for a in j["r1"].values()], dtype=float)), axis=0))
             mid = float(q[1])
+            lo, hi = min(float(q[0]), mid), max(float(q[2]), mid)
+            note = "average of five AI agents forecasting directly (gpt-6.1-sol; answers recorded 14 Nov 2026 from data up to the origin)"
+            if "range_scale" in j:  # a crowd rewritten by the coach (gpuval.coach): its own agents and range stretch
+                sc = float(j["range_scale"][str(h)])
+                lo, hi = mid * (lo / mid) ** sc, mid * (hi / mid) ** sc
+                rs = j["range_scale"]
+                note = (f"average of {len(j['r1'])} AI agents forecasting directly; with the changes a coach AI proposed and tests kept: "
+                        f"{len(j.get('asked_again', []))} agent rewritten; ranges stretched x{rs['1']}/x{rs['3']}/x{rs['7']} at 1/3/7 days "
+                        "(gpt-6.1-sol; answers recorded 14 Nov 2026 from data up to the origin)")
             rows.append({"series_id": j["series_id"], "origin_date": origin, "horizon_days": h,
-                         "q10": round(min(float(q[0]), mid), 6), "q50": round(mid, 6), "q90": round(max(float(q[2]), mid), 6),
-                         "target_date": iso_of(od + h), "team_id": team_id,
-                         "method_note": "average of five AI agents forecasting directly (gpt-6.1-sol; answers recorded 14 Nov 2026 from data up to the origin)"})
+                         "q10": round(lo, 6), "q50": round(mid, 6), "q90": round(hi, 6),
+                         "target_date": iso_of(od + h), "team_id": team_id, "method_note": note})
     df = pd.DataFrame(rows)
     df["q10"] = df[["q10", "q50"]].min(axis=1)
     df["q90"] = df[["q90", "q50"]].max(axis=1)
