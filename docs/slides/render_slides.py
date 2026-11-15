@@ -1,6 +1,7 @@
-"""Render the slide deck in docs/slides/source/ to PNGs and a PDF, using images from this repo.
+"""Render a slide deck to PNGs and a PDF, using images from this repo.
 
-    python3 docs/slides/render_slides.py                 # all slides -> docs/slides/png/, docs/slides/RSI4GPR-slides.pdf
+    python3 docs/slides/render_slides.py                 # full deck (docs/slides/source/) -> docs/slides/RSI4GPR-slides.pdf
+    python3 docs/slides/render_slides.py --short         # 10-minute deck (docs/slides/short/source/) -> RSI4GPR-slides-10min.pdf
     python3 docs/slides/render_slides.py crowd-flow ...  # only these slides (PNGs only)
 
 Needs Google Chrome (or set CHROME=/path/to/chrome) and Pillow (uv run --with pillow).
@@ -17,8 +18,12 @@ import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
-SRC = REPO / "docs" / "slides" / "source"
-OUT = REPO / "docs" / "slides" / "png"
+SHORT = "--short" in sys.argv
+ARGS = [a for a in sys.argv[1:] if a != "--short"]
+DECK_DIR = REPO / "docs" / "slides" / ("short" if SHORT else "")
+SRC = DECK_DIR / "source"
+OUT = DECK_DIR / "png"
+PDF = REPO / "docs" / "slides" / ("RSI4GPR-slides-10min.pdf" if SHORT else "RSI4GPR-slides.pdf")
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 # images uploaded to the deck, by asset id -> file in this repo
@@ -36,6 +41,11 @@ BLOBS = {
     "28f65509036cadcd7ab44c4b60245049": "findings/figures/fig1_blind_weeks.png",
     "0cfe67f7d4880ff1d4177a5a3b62e354": "findings/figures/fig2_real_vs_shuffled.png",
     "ad8e8e732a80baf4a8afa6e4aedc389e": "docs/media/pipeline.svg",
+    # the same images, as copied into the 10-minute deck
+    "3fa103d5d8af23da404a7ed930046355": "docs/media/hero_scoreboard.png",
+    "ae9d41361c5c3d3000465c6617e67771": "findings/figures/fig3_what_moves_the_median.png",
+    "b0ea5cfca59897ab4190617a8fbe2d88": "docs/media/engine_replay.gif",
+    "0bf467dd9f517ea4779e749da50c735b": "findings/figures/fig6_three_tests.png",
 }
 
 # Lucide-style line icons (ISC licence), for the icon names the deck uses
@@ -110,11 +120,10 @@ def render(slide_ids):
 
 if __name__ == "__main__":
     deck = json.loads((SRC / "deck.json").read_text())
-    ids = sys.argv[1:] or deck["order"]
+    ids = ARGS or deck["order"]
     render(ids)
-    if not sys.argv[1:]:
+    if not ARGS:
         from PIL import Image
         pages = [Image.open(OUT / f"{sid}.png").convert("RGB") for sid in ids]
-        pdf = REPO / "docs" / "slides" / "RSI4GPR-slides.pdf"
-        pages[0].save(pdf, save_all=True, append_images=pages[1:], resolution=144)
-        print("wrote", pdf.relative_to(REPO), f"({len(pages)} pages)")
+        pages[0].save(PDF, save_all=True, append_images=pages[1:], resolution=144)
+        print("wrote", PDF.relative_to(REPO), f"({len(pages)} pages)")

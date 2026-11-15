@@ -1,0 +1,103 @@
+<section id="crowd-flow" class="alt">
+<!-- pinned to the section (canvas px). Diagram area x 128-1792, y 234-920.
+ inputs: facts 128,254,280,230  practice 128,576,280,190
+ ghosts 468,254 / 458,244 ; panel 448,234,1000,556
+ ring: crowd 468,254,420,230  update 928,254,230,230  verify 1198,254,230,230
+       forecast 468,576,420,190  score 928,576,230,190  coach 1198,576,230,190
+ centres x 678 / 1043 / 1313 ; y 369 / 671 ; top row bottom 484, bottom row top 576
+ right: check 1508,254,284,230  exam 1508,576,284,190
+ strip y 824-920: legend 128 ; rounds 448-1468 ; final crowd 1508,824,284,96
+ centre label 708,492,575,76 -->
+<h2 class="title" style="position:absolute; left:128px; top:128px; width:1664px">Training: a self-improvement loop with verifiers</h2>
+<div class="fade" style="--i:0; position:absolute; left:468px; top:254px; width:1000px; height:556px; box-sizing:border-box; background:#D3EDE2; border:2px solid #9FDCC3; border-radius:28px"></div>
+<div class="fade" style="--i:0; position:absolute; left:458px; top:244px; width:1000px; height:556px; box-sizing:border-box; background:#DCF1E8; border:2px solid #9FDCC3; border-radius:28px"></div>
+<div class="fade" style="--i:1; position:absolute; left:448px; top:234px; width:1000px; height:556px; box-sizing:border-box; background:#E6F5EE; border:2px solid #9FDCC3; border-radius:28px"></div>
+<div class="lp-box input rise" style="--i:1; left:128px; top:254px; width:280px; height:230px">
+<x-icon name="Database" class="lp-i"></x-icon>
+<p class="lp-t">Facts per price</p>
+<p class="lp-b">Last 21 days of the median, and today’s list of offers</p>
+</div>
+<div class="lp-box input rise" style="--i:2; left:128px; top:576px; width:280px; height:190px">
+<x-icon name="Clock" class="lp-i"></x-icon>
+<p class="lp-t">Practice days</p>
+<p class="lp-b">6 days: 4 AWS, 2 of our prices</p>
+</div>
+<div class="lp-box key rise" style="--i:2; left:468px; top:254px; width:420px; height:230px; padding:12px 20px; gap:8px">
+<p class="lp-t">1 · Crowd (n): five AI agents</p>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 12px">
+<div class="lp-agent"><x-icon name="Search"></x-icon><p>List reader</p></div>
+<div class="lp-agent"><x-icon name="Activity"></x-icon><p>Repricers</p></div>
+<div class="lp-agent"><x-icon name="Chart"></x-icon><p>Base rates</p></div>
+<div class="lp-agent"><x-icon name="Link"></x-icon><p>References</p></div>
+<div class="lp-agent"><x-icon name="Lightning"></x-icon><p>Jumps</p></div>
+</div>
+<p class="lp-b">averaged · ranges stretched</p>
+</div>
+<div class="lp-box rise" style="--i:3; left:468px; top:576px; width:420px; height:190px">
+<x-icon name="Play" class="lp-i"></x-icon>
+<p class="lp-t">2 · Forecast</p>
+<p class="lp-b">Every price, every practice day: low, middle, high</p>
+</div>
+<div class="lp-box verifier rise" style="--i:4; left:928px; top:576px; width:230px; height:190px">
+<p class="lp-pill">VERIFIER</p>
+<p class="lp-t">3 · Score</p>
+<p class="lp-b">Error vs drift; worst misses</p>
+</div>
+<div class="lp-box coach rise" style="--i:5; left:1198px; top:576px; width:230px; height:190px">
+<p class="lp-pill gen">GENERATOR</p>
+<p class="lp-t">4 · Coach AI</p>
+<p class="lp-b">Proposes one change</p>
+</div>
+<div class="lp-box verifier rise" style="--i:6; left:1198px; top:254px; width:230px; height:230px">
+<p class="lp-pill">VERIFIER</p>
+<p class="lp-t">5 · Verify</p>
+<p class="lp-b">Practice better? Check days not worse?</p>
+</div>
+<div class="lp-box rise" style="--i:7; left:928px; top:254px; width:230px; height:230px">
+<x-icon name="Wrench" class="lp-i"></x-icon>
+<p class="lp-t">6 · Update</p>
+<p class="lp-b">Pass: the change makes crowd (n+1)</p>
+</div>
+<div class="fade" style="--i:8; position:absolute; left:708px; top:492px; width:575px; height:76px; display:flex; flex-direction:column; align-items:center; gap:2px">
+<p style="font-family:var(--mono); font-size:24px; font-weight:600; letter-spacing:2px; color:var(--green)">RECURSIVE SELF-IMPROVEMENT</p>
+<p style="font-family:var(--head); font-size:32px; font-weight:700; color:var(--ink)">propose → verify → keep, ×10</p>
+</div>
+<div class="lp-box input rise" style="--i:6; left:1508px; top:254px; width:284px; height:230px">
+<x-icon name="Lock" class="lp-i"></x-icon>
+<p class="lp-t">Check days</p>
+<p class="lp-b">5 hidden days: 3 AWS, 2 ours; coach sees pass or fail</p>
+</div>
+<div class="lp-box verifier rise" style="--i:9; left:1508px; top:576px; width:284px; height:190px; padding:12px 18px">
+<p class="lp-pill">FINAL VERIFIER</p>
+<p class="lp-t">Final exam</p>
+<p class="lp-b"><b style="color:#0E7C57">+4.0%</b> on 5 unseen days</p>
+</div>
+<div class="fade" style="--i:9; position:absolute; left:128px; top:824px; width:300px; height:96px; display:flex; flex-direction:column; justify-content:center; gap:10px">
+<div class="lp-legend"><div style="width:22px; height:22px; border-radius:6px; background:#14202B"></div><p>Verifier: fixed code</p></div>
+<div class="lp-legend"><div style="width:22px; height:22px; border-radius:6px; background:#EB6834"></div><p>Generator: coach AI</p></div>
+</div>
+<div class="rise" style="--i:10; position:absolute; left:448px; top:824px; width:1020px; height:96px; display:flex; align-items:stretch; gap:12px">
+<div class="lp-round kept"><p class="rt">Round 1 · kept</p><p class="rb">wider ranges</p></div>
+<div class="lp-round"><p class="rt">Round 2</p><p class="rb">dropped</p></div>
+<div class="lp-round kept"><p class="rt">Round 3 · kept</p><p class="rb">new base rates</p></div>
+<p class="lp-dots" style="align-self:center">⋯</p>
+<div class="lp-round"><p class="rt">Round 10</p><p class="rb">dropped</p></div>
+</div>
+<div class="rise" style="--i:11; position:absolute; left:1508px; top:824px; width:284px; height:96px; box-sizing:border-box; background:#0E6B4C; border-radius:14px; padding:10px 18px; display:flex; flex-direction:column; justify-content:center; gap:2px">
+<p style="font-family:var(--head); font-size:28px; font-weight:600; color:#F1F0EB">Final crowd</p>
+<p style="font-size:24px; color:#DDF2E8">→ inference pipeline</p>
+</div>
+<x-connector x1="408" y1="369" x2="468" y2="369" style="color:#1F5FAF; border-width:3px"></x-connector>
+<x-connector x1="408" y1="671" x2="468" y2="671" style="color:#1F5FAF; border-width:3px"></x-connector>
+<x-connector x1="1508" y1="369" x2="1428" y2="369" style="color:#1F5FAF; border-width:3px"></x-connector>
+<x-connector x1="678" y1="484" x2="678" y2="576" style="color:#1BAF7A; border-width:5px"></x-connector>
+<x-connector x1="888" y1="671" x2="928" y2="671" style="color:#1BAF7A; border-width:5px"></x-connector>
+<x-connector x1="1158" y1="671" x2="1198" y2="671" style="color:#1BAF7A; border-width:5px"></x-connector>
+<x-connector x1="1313" y1="576" x2="1313" y2="484" style="color:#1BAF7A; border-width:5px"></x-connector>
+<x-connector x1="1198" y1="369" x2="1158" y2="369" style="color:#1BAF7A; border-width:5px"></x-connector>
+<x-connector x1="928" y1="369" x2="888" y2="369" style="color:#1BAF7A; border-width:5px"></x-connector>
+<x-connector x1="1468" y1="872" x2="1508" y2="872" style="color:#52514E; border-width:3px"></x-connector>
+<x-connector x1="1650" y1="766" x2="1650" y2="824" style="color:#52514E; border-width:3px"></x-connector>
+<div class="footer"><p>runs/coach/state.json · src/gpuval/coach.py · src/gpuval/harness.py</p><p class="pn"></p></div>
+<aside>[4:30–6:00, the key slide: take your time] The five agents on the left are the crew: a list reader, a repricer watcher, a base-rate keeper, a reference weigher and a jump spotter, averaged. The training pipeline. What is trained is the crowd’s configuration — its agents’ instructions and its range stretch — not model weights. Each round is propose, verify, keep. The current crowd forecasts every price on six practice days. A verifier scores those forecasts against drift and lists the worst misses. The coach AI, the generator, reads that and proposes one change. A second verifier re-scores the changed crowd: it must be better on the practice days and not worse on five hidden check days, where the coach only ever learns pass or fail. Only then does the change make crowd n+1, and the next round begins. The verifiers are fixed code that the AI cannot change, which is what makes the self-improvement trustworthy. Ten rounds: round 1 kept wider ranges, round 3 kept a rewritten base-rate keeper, round 8 passed practice but failed the hidden check, and the rest did not improve practice. A final verifier, the exam on five days of our prices the loop never saw, scored the final crowd 4% better than the first. That frozen crowd goes to the inference pipeline.</aside>
+</section>
