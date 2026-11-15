@@ -35,6 +35,7 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | Modal | `src/gpuval/modal_app.py` | Every research step runs in its own container that is sent only data up to that step's date. Real and shuffled worlds run side by side. |
 | RL, proposing ideas | `rl/train_scientist.py`, `blind_test.py` | A small open model is trained with reinforcement learning on Tinker to propose better engine settings, then tested blind. |
 | RL, forecasting | `rl/forecast_env.py`, `train_forecaster.py`, `eval_forecaster.py` | Qwen3-8B and Qwen3.5-9B are trained on AWS prices to forecast directly (reward: less error than drift), then tested on our prices, which they never practised on. |
+| RL on Modal | `rl/modal_forecaster.py` | The same training with our own sampling and policy-gradient code on Modal H100s. Each run is a container, so learning rates and random seeds run side by side; the rate is chosen on a watch set, and test prompts are sent without outcomes. |
 | Five AI agents | `src/gpuval/agents.py` | Five agents with different jobs each read a price's list and forecast it directly. |
 | Coach | `src/gpuval/coach.py` | A coach AI proposes one change at a time to the agent crowd. A change is kept only if it helps on practice days and passes a hidden check; fresh exam days decide whether the result is used. The improved crowd is the forecast we hand in. |
 | ML model | `src/gpuval/ml_challenger.py` | Chronos-2, a pretrained time-series model, run as it comes on a Modal GPU for comparison. |
@@ -61,6 +62,8 @@ uv run python -m gpuval.coach confirm && uv run python -m gpuval.coach final    
 cd rl && uv run python train_scientist.py --name full --rounds 31   # TINKER_API_KEY
 cd rl && uv run python train_forecaster.py --name fc2 --rounds 60 --base-model Qwen/Qwen3.5-9B && uv run python eval_forecaster.py --name fc2
 uv run python -m gpuval.coach compare                               # every forecaster on the same fresh days
+cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
+cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
 ```
 
 A fresh run of the scientist or the agents will not repeat the recorded answers word for word (the
@@ -77,6 +80,7 @@ and reproduces the blind-test table exactly.
 - `runs/coach/`: the coach's ledger of ten proposed changes (`state.json`), every agent answer it
   caused (`answers.json`), the exam and second-check scores, and the improved crowd's 6 Nov answers.
 - `rl/runs/fc1/`, `rl/runs/fc2/`: training logs and test answers of the two RL-trained forecasters.
+- `rl/runs/modal/`: every Modal training run (log, test answers, scored cells); `findings/data/modal_rl.json` puts them next to the Tinker runs.
 - `docs/pages/`: three explainer pages (how it works, the test periods, the Exa lookups).
 
 ## Data and attribution

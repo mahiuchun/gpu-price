@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import random
 import statistics
 import sys
@@ -26,7 +27,7 @@ from pathlib import Path
 
 import modal
 
-APP = "gpuval-rl-forecaster"
+APP = os.environ.get("GPUVAL_RL_APP", "gpuval-rl-forecaster")  # a second name lets a fix be deployed while runs are in flight
 app = modal.App(APP)
 image = (modal.Image.debian_slim(python_version="3.12")
          .pip_install("torch==2.15.0", "transformers==5.23.0", "peft==0.21.3", "accelerate==1.15.0", "numpy==2.5.4")
@@ -36,9 +37,9 @@ out_vol = modal.Volume.from_name("gpuval-rl-out", create_if_missing=True)
 
 HORIZONS = (1, 3, 7)
 CLIP, UNREADABLE = 3.0, -3.0
-TOKEN_BUDGET = 170_000  # answers x tokens held on the GPU at once while sampling
 DEFAULTS = dict(base_model="Qwen/Qwen3-8B", lr=4e-5, seed=0, rounds=60, prompts=16, samples=8, lora_rank=32, lora_alpha=32,
-                micro=16, check_every=10, check_samples=4, eval_samples=8, max_new=90, gen_batch=16)
+                micro=16, check_every=10, check_samples=4, eval_samples=8, max_new=90, gen_batch=16,
+                token_budget=170_000)  # answers x tokens held on the GPU at once while sampling
 
 
 # ------------------------------------------------- scoring an answer (mirrors forecast_env) ----
@@ -177,7 +178,7 @@ class Policy:
         pos = 0
         while pos < len(order):
             longest = len(prompts[order[min(pos + self.cfg["gen_batch"], len(order)) - 1]]) + self.cfg["max_new"]
-            k = max(1, min(self.cfg["gen_batch"], TOKEN_BUDGET // (n * longest)))  # prompts are sorted, so this bounds the batch's memory
+            k = max(1, min(self.cfg["gen_batch"], self.cfg["token_budget"] // (n * longest)))  # prompts are sorted, so this bounds the batch's memory
             idx = order[pos:pos + k]
             pos += k
             o = None
@@ -241,6 +242,8 @@ class Policy:
             del h, logits, lp, loss
         gnorm = float(torch.nn.utils.clip_grad_norm_(self.params, 1e9))
         self.opt.step()
+        self.opt.zero_grad(set_to_none=True)  # free the gradients before the next round's sampling
+        torch.cuda.empty_cache()
         return {"loss": total, "grad_norm": gnorm, "sampler_learner_gap": statistics.fmean(gaps)}
 
     def adapter_norm(self) -> float:
@@ -378,6 +381,8 @@ def plans(lr: float | None = None) -> dict:
             # follow-ups at the learning rate chosen in sweep1: the newer model, and three times the practice
             "newer": [dict(name="base_qwen3_5_9b", base_model="Qwen/Qwen3.5-9B", rounds=0)]
                      + [dict(name=f"qwen3_5_9b_s{seed}", base_model="Qwen/Qwen3.5-9B", lr=lr, seed=seed) for seed in (0, 1)],
+            # second attempt: the first ran out of memory mid-training (this model's layers need more working memory)
+            "newer2": [dict(name=f"qwen3_5_9b_s{seed}", base_model="Qwen/Qwen3.5-9B", lr=lr, seed=seed, micro=8, token_budget=70_000) for seed in (0, 1)],
             "longer": [dict(name=f"rounds180_s{seed}", lr=lr, seed=seed, rounds=180, check_every=20) for seed in (0, 1)]}
 
 
@@ -484,14 +489,22 @@ def collect(plan: str) -> None:
     items = {it["id"]: it for it in coach.build_items(ev.DAYS).values()}
     parsed = {name: {iid: [({str(h): list(q[h]) for h in env.HORIZONS} if q else None) for q in (env.parse(t, items[iid]["last"]) for t in texts)]
                      for iid, texts in r["eval"].items()} for name, r in results.items() if r.get("eval")}
-    bases = {r["cfg"]["base_model"]: name for name, r in results.items() if r["cfg"]["rounds"] == 0 and name in parsed}
+    def parse_all(r: dict) -> dict:
+        return {iid: [({str(h): list(q[h]) for h in env.HORIZONS} if q else None) for q in (env.parse(t, items[iid]["last"]) for t in texts)]
+                for iid, texts in r["eval"].items()}
+
+    bases = {}  # the untrained model's answers, from whichever plan ran it
+    for path in sorted(LOCAL.glob("*/base_*.json")):
+        r = json.loads(path.read_text())
+        if r["cfg"]["rounds"] == 0 and r.get("eval") and len(r["eval"]) > 100:
+            bases[r["cfg"]["base_model"]] = parse_all(r)
     f, summary = report.fmt_ci, {}
     for name, r in results.items():
         base = bases.get(r["cfg"]["base_model"])
         if r["cfg"]["rounds"] == 0 or name not in parsed or base is None:
             continue
-        ids = [i for i in parsed[name] if i in parsed[base]]
-        df = ev.cells([items[i] for i in ids], {"base": parsed[base], "trained": parsed[name]})
+        ids = [i for i in parsed[name] if i in base]
+        df = ev.cells([items[i] for i in ids], {"base": base, "trained": parsed[name]})
         df.to_parquet(d / f"{name}_cells.parquet", index=False)
         t = ev.table(df)
         summary[name] = {"cfg": r["cfg"], "checks": r["checks"], "gpu": r["gpu"], "total_minutes": r.get("total_minutes"), "table": t}
@@ -518,7 +531,7 @@ def summarize() -> None:
         out["tinker"][tag] = {"train_usd": l["cost_estimate_usd"], "test_usd": e["cost_estimate_usd"], "train_minutes": l["minutes"],
                               "watch_first64": [c["mean_reward"] for c in l["checks"]],
                               **{w: {k: e["table"][w][k] for k in ("n", "base_vs_drift", "trained_vs_drift", "trained_vs_base", "trained_vs_engine", "engine_vs_drift", "inside")} for w in ("ours", "aws", "all")}}
-    for plan in ("sweep1", "longer", "newer"):
+    for plan in ("sweep1", "longer", "newer2"):
         d = LOCAL / plan
         if not (d / "summary.json").exists():
             continue

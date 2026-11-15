@@ -6,7 +6,7 @@
 
 - **The forecast we hand in is the average of five AI agents, after two changes that a coach AI proposed and tests kept.** Each agent reads one price's list of offers and forecasts it directly. In three separate tests the crowd as first written cut error by 15% to 19% against drift. The coach's changes cut a further 3% to 4% on days the coach never saw.
 - **A plain calculation that looks inside the price list is the steady base.** Our "engine" cut error by about 8% against drift in all three tests, including 206 weeks of AWS spot prices.
-- **Two ways of making the system improve itself held up on fresh days.** A coach AI that rewrites the agent crowd (10 changes proposed, 2 kept). And reinforcement learning that teaches a small open model to forecast: it practised on AWS prices only, and on our prices went from 3–5% to 10–11% less error than drift.
+- **Two ways of making the system improve itself held up on fresh days.** A coach AI that rewrites the agent crowd (10 changes proposed, 2 kept). And reinforcement learning that teaches a small open model to forecast: it practised on AWS prices only, and on our prices went from about 3% less error than drift to between 5% and 11% less, depending on the run (eight runs, on Tinker and on Modal GPUs).
 - **Three other ways did not.** An AI scientist tuning the engine made it slightly worse on unseen weeks. A small model trained with reinforcement learning to propose engine settings found one change that is not clearly better. Letting the agents read each other's answers did not help.
 - **Different agents with different jobs, averaged, beat the engine.** On our own prices the crowd as first written was 8% ahead on the same forecasts (likely 3% to 14%), and the improved crowd 10% ahead (5% to 14%).
 - **A ready-made ML model is unreliable on these prices.** It looked good in the three test weeks, failed in the eight weeks before, and works well on AWS prices.
@@ -23,7 +23,7 @@ Each scored price is the daily median of one site's list of offers for one GPU. 
 - **Five AI agents.** The same model, used as five forecasters with different jobs: read the list, watch the frequent repricers, keep to base rates, weigh the reference forecasts, look for jumps that may reverse. Each sees the price's last 21 days and today's list around the middle, and returns low, middle and high for 1, 3 and 7 days. The crowd forecast is the average of the five.
 - **Coach.** The same OpenAI model, used to improve the crowd. It sees the crowd's scores and worst misses on practice days and proposes one change at a time: rewrite an agent's instructions, add an agent, drop one, or stretch the ranges. A change is kept only if the crowd improves on the practice days and passes a hidden check on other days.
 - **ML model.** Chronos-2, a pretrained time-series model, used as it comes on a Modal GPU.
-- **RL, two uses.** First, a small open model (Qwen3-8B on Tinker) trained for 1,984 tries to propose engine changes. Second, Qwen3-8B and Qwen3.5-9B each trained for 7,680 tries to forecast directly: the model reads the same facts as the agents and answers with a low, middle and high percent move, and its reward is how much less error it made than drift.
+- **RL, two uses.** First, a small open model (Qwen3-8B on Tinker) trained for 1,984 tries to propose engine changes. Second, Qwen3-8B and Qwen3.5-9B each trained for 7,680 tries to forecast directly: the model reads the same facts as the agents and answers with a low, middle and high percent move, and its reward is how much less error it made than drift. The same training also runs on Modal GPUs with our own sampling and update code (`rl/modal_forecaster.py`), many runs at once.
 
 ## How it was tested
 
@@ -96,8 +96,31 @@ On the same forecasts:
 - **Training helped on prices the model never practised on.** After against before on our prices: +7.7% for Qwen3-8B (+4% to +11%) and +7.1% for Qwen3.5-9B (+3% to +10%). It practised on AWS prices only, so the skill carried over to a different kind of price.
 - **It learned how wide to make a range.** The truth landed inside 54% to 60% of the time before training and 79% after.
 - **The newer model is better.** Trained Qwen3.5-9B against trained Qwen3-8B: +1.3% on our prices (−1% to +4%) and +7.0% on AWS (+2% to +11%). It cost about $16 to train, against $5.
-- **Where it stands.** Level with the engine on our prices (+1.3%, −7% to +7%) and behind the GPT crowd: on the 14 days both answered, +12.7% against the crowd's +14.1% as first written and +17.0% after the coach.
+- **Where it stands.** In these two runs, level with the engine on our prices (+1.3%, −7% to +7%) and behind the GPT crowd: on the 14 days both answered, +12.7% against the crowd's +14.1% as first written and +17.0% after the coach. The repeat runs below put it level with the engine at best.
 - **As a sixth agent it adds nothing clear.** Added to the improved crowd on the exam days: +1.4% for Qwen3.5-9B (−1% to +4%) and +0.3% for Qwen3-8B. It is not in the forecast.
+
+**The same training on Modal, ten more runs.** One run per model is thin, so we wrote our own sampling and update code, ran it on rented H100 GPUs, and repeated the Qwen3-8B training with four learning rates and two random seeds each, all at once. The learning rate was chosen on a separate watch set of later AWS practice prices, before any test result existed.
+
+![Every RL training run](findings/figures/fig8_rl_runs.png)
+
+| Qwen3-8B run | Our 37 prices | AWS Fridays in 2026 |
+|---|---|---|
+| Untrained | +2.7% | −21.3% |
+| Tinker, one run | +10.1% (+6% to +14%) | +1.7% (−4% to +7%) |
+| Modal, same settings and practice prices as the Tinker run | +10.1% (+6% to +14%) | −0.9% (−7% to +5%) |
+| Modal, same settings, second random seed | +6.5% (+1% to +11%) | −0.7% (−7% to +6%) |
+| Modal, rate 1e-4 (chosen on the watch set), two seeds | +7.0%, +5.4% | +3.5%, +6.4% |
+| Modal, rate 1e-4, three times the practice, two seeds | +7.1%, +8.1% | +4.3%, +8.5% |
+| Modal, rate 2.5e-4, two seeds | +7.8%, +0.1% | −6.6%, −16.6% |
+| Modal, rate 6e-4, two seeds | +3.0%, +3.0% | −20.9%, −21.0% |
+
+- **The Tinker result reproduces.** Different code and hardware, same settings and practice prices: +10.1% on our prices both times. The untrained model matches too (+2.7% against +2.6%).
+- **One run had flattered it.** A second random seed at the same settings gave +6.5%. The four 60-round runs at the two workable learning rates gave +5.4% to +10.1%, on average +7.3%. Every one beats the untrained model; the gain over it is 3 to 8 points.
+- **The learning rate decides whether training works at all.** At the highest rate both runs collapsed onto one repeated answer within about 15 rounds and stopped learning. At the next one down, one run ended worse than untrained.
+- **Three times the practice helped a little.** 180 rounds gave +7.1% and +8.1%, against +7.0% and +5.4% at 60 rounds: clearly better for one seed only (+2.9%, +0.4% to +5.7%). The watch score was flat after about round 60.
+- **The watch set picked the rate that is better on AWS, not on our prices.** The watch set is AWS prices. Rate 1e-4 did better than 4e-5 on AWS (+3.5% and +6.4% against −0.9% and −0.7%) and worse on our prices.
+- **Averaging runs does not beat the best single run.** The two chosen-rate runs averaged give +6.7% on our prices; all four give +8.4%.
+- **Cost and time.** A 60-round run with its test cost $3.50 to $4.10 on a Modal H100 and took about an hour; the same on Tinker cost $6.62 with about 10 minutes of training. Eight Modal runs at once took the same hour as one.
 
 ### 4. The engine
 
@@ -121,7 +144,8 @@ In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as 
 | 7 | Five agents forecasting directly, averaged | 8% better than the engine on our prices |
 | 8 | Agents reading each other's answers | 1.3% worse than working alone |
 | 9 | Coach AI: 10 changes to the crowd proposed, 2 kept (wider ranges at 3 and 7 days, one agent rewritten) | 4.0% better than the first crowd on fresh days (+0.5% to +7.6%); 3.4% on 14 other days |
-| 10 | RL: an open model trained to forecast directly, on AWS prices only | from +3–5% to +10–11% against drift on our prices; level with the engine |
+| 10 | RL: an open model trained to forecast directly, on AWS prices only | from about +3% to between +5% and +11% against drift on our prices, depending on the run; level with the engine at best |
+| 10b | The same RL training repeated on Modal: 4 learning rates x 2 seeds, then 3x the practice | reproduces the first run exactly with the same seed; other seeds lower; too high a rate collapses |
 | 11 | The trained open model added to the crowd as a sixth agent | +1.4% (−1% to +4%): not established; left out |
 
 - **Tuning on ten weeks of data overfits.** The scientist's ideas passed a gate and a hidden check and still did not hold. With hindsight, the best four setting changes would have reached 18%, and they point the opposite way from the past: earlier misses were upward, later ones downward.
@@ -192,6 +216,7 @@ We value a used GPU as the rent it can still earn: rent × utilisation, less run
 
 - **The agents were tested on samples:** 19 days of our prices and 15 days of AWS.
 - **The agents, the ML model, the coach and the RL forecaster were added after the blind test.** Their results come from the same weeks, which had been looked at by then. The coach and the open model saw none of their test days, but we chose which days those were.
+- **RL results vary from run to run.** The same settings with a different random seed moved the result on our prices from +10.1% to +6.5%. Single-run figures for the trained models should be read with that in mind; Qwen3.5-9B on Tinker is one run.
 - **The coach ran once.** A second run would propose different changes. Its gain is mostly a correction to range width, which a simpler rule could also have found.
 - **The second check of the coach is not fully fresh:** we already knew how the first crowd had scored on those 14 days, though not how the improved crowd would.
 - **The agents' model may have met the AWS years in training,** since its knowledge runs to April 2026. Only one of the twelve AWS days is later.
