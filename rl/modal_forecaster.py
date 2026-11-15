@@ -36,6 +36,7 @@ out_vol = modal.Volume.from_name("gpuval-rl-out", create_if_missing=True)
 
 HORIZONS = (1, 3, 7)
 CLIP, UNREADABLE = 3.0, -3.0
+TOKEN_BUDGET = 170_000  # answers x tokens held on the GPU at once while sampling
 DEFAULTS = dict(base_model="Qwen/Qwen3-8B", lr=4e-5, seed=0, rounds=60, prompts=16, samples=8, lora_rank=32, lora_alpha=32,
                 micro=16, check_every=10, check_samples=4, eval_samples=8, max_new=90, gen_batch=16)
 
@@ -81,7 +82,7 @@ def reward_of(item: dict, text: str) -> tuple[float, bool]:
 class Policy:
     """The open model plus a LoRA adapter: sample answers, and take policy-gradient steps."""
 
-    def __init__(self, cfg: dict, system: str, train: bool):
+    def __init__(self, cfg: dict, system: str, train: bool, adapter: str | None = None):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -107,6 +108,11 @@ class Policy:
             core.enable_input_require_grads()
             self.params = [p for p in model.parameters() if p.requires_grad]
             self.opt = torch.optim.Adam(self.params, lr=cfg["lr"], betas=(0.9, 0.95), eps=1e-8)
+        elif adapter:  # a trained adapter saved by an earlier run, for answering only
+            from peft import PeftModel
+
+            model = PeftModel.from_pretrained(model, adapter)
+            core = model.base_model.model
         else:
             core = model
         self.model, self.head = model, core.lm_head
@@ -168,8 +174,13 @@ class Policy:
         self.model.eval()
         order = sorted(range(len(prompts)), key=lambda i: len(prompts[i]))
         out: list = [None] * len(prompts)
-        for k in range(0, len(order), self.cfg["gen_batch"]):
-            idx = order[k:k + self.cfg["gen_batch"]]
+        pos = 0
+        while pos < len(order):
+            longest = len(prompts[order[min(pos + self.cfg["gen_batch"], len(order)) - 1]]) + self.cfg["max_new"]
+            k = max(1, min(self.cfg["gen_batch"], TOKEN_BUDGET // (n * longest)))  # prompts are sorted, so this bounds the batch's memory
+            idx = order[pos:pos + k]
+            pos += k
+            o = None
             with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
                 past, logits, mask = self._prefill([prompts[i] for i in idx], n, self.share_prefix)
                 N = logits.shape[0]
@@ -187,7 +198,8 @@ class Policy:
                     o = self.decoder(input_ids=nxt[:, None], attention_mask=mask, past_key_values=past, use_cache=True)
                     past, logits = o.past_key_values, self.head(o.last_hidden_state[:, -1])
             T, P = torch.stack(toks, 1).tolist(), torch.stack(lps, 1).tolist()
-            del past, logits, mask
+            del past, logits, mask, o  # o holds the cache too; without this the next batch runs out of memory
+            torch.cuda.empty_cache()
             for b, i in enumerate(idx):
                 group = []
                 for j in range(n):
@@ -309,6 +321,10 @@ def run(cfg: dict, system: str, train_rounds: list, check_items: list, eval_item
     res["train_minutes"] = round((time.time() - t0) / 60, 1)
     if cfg["rounds"] > 0:
         pol.model.save_pretrained(str(out_dir / "adapter"))
+        save()  # the training record and the adapter are safe before the test prompts are answered
+    if pol.opt is not None:
+        pol.opt.zero_grad(set_to_none=True)
+        torch.cuda.empty_cache()
     t3 = time.time()
     groups = pol.sample([pol.render(it["prompt"]) for it in eval_items], cfg["eval_samples"]) if eval_items else []
     res["eval"] = {it["id"]: [c["text"] for c in g] for it, g in zip(eval_items, groups)}
@@ -318,19 +334,51 @@ def run(cfg: dict, system: str, train_rounds: list, check_items: list, eval_item
     return res
 
 
+@app.function(image=image, gpu=["H100", "A100-80GB"], timeout=2 * 3600, volumes={"/cache": hf_cache, "/out": out_vol}, max_containers=16)
+def evaluate(cfg: dict, system: str, eval_items: list) -> dict:
+    """Answer the test prompts with a run's saved adapter (or with the untrained model if it has none)."""
+    import importlib.metadata as md
+
+    import torch
+
+    cfg = {**DEFAULTS, **cfg}
+    t0 = time.time()
+    hf_cache.reload()
+    out_vol.reload()
+    out_dir = Path("/out") / cfg["plan"] / cfg["name"]
+    out_dir.mkdir(parents=True, exist_ok=True)
+    adapter = out_dir / "adapter"
+    assert cfg["rounds"] == 0 or adapter.exists(), f"no saved adapter for {cfg['name']}"
+    pol = Policy(cfg, system, train=False, adapter=str(adapter) if adapter.exists() else None)
+    res = json.loads((out_dir / "result.json").read_text()) if (out_dir / "result.json").exists() else {"cfg": cfg, "rounds": [], "checks": []}
+    res.update(gpu=torch.cuda.get_device_name(0), prefix_sharing=pol.share_prefix, versions={p: md.version(p) for p in ("torch", "transformers", "peft")})
+    groups = pol.sample([pol.render(it["prompt"]) for it in eval_items], cfg["eval_samples"])
+    res["eval"] = {it["id"]: [c["text"] for c in g] for it, g in zip(eval_items, groups)}
+    res["eval_minutes"] = round((time.time() - t0) / 60, 1)
+    res["eval_done_separately"] = True
+    (out_dir / "result.json").write_text(json.dumps(res))
+    out_vol.commit()
+    return res
+
+
 # ----------------------------------------------------------- everything below runs locally ----
 HERE = Path(__file__).resolve().parent
 LOCAL = HERE / "runs" / "modal"
 
 
-def plans() -> dict:
+def plans(lr: float | None = None) -> dict:
+    """lr: the learning rate chosen on the watch set in sweep1; used by the follow-up plans."""
     sweep = [dict(name="base_qwen3_8b", rounds=0)]
     sweep += [dict(name=f"lr{lr:g}_s{seed}", lr=lr, seed=seed) for lr in (4e-5, 1e-4, 2.5e-4, 6e-4) for seed in (0, 1)]
     return {"smoke": [dict(name="smoke_base", rounds=0, n_check=8, n_eval=12),
                       dict(name="smoke_train", rounds=2, prompts=4, samples=4, lr=1e-4, check_every=1, n_check=8, n_eval=12)],
             "smoke9b": [dict(name="smoke9b_base", base_model="Qwen/Qwen3.5-9B", rounds=0, n_check=8, n_eval=12),
                         dict(name="smoke9b_train", base_model="Qwen/Qwen3.5-9B", rounds=2, prompts=4, samples=4, lr=1e-4, check_every=1, n_check=8, n_eval=12)],
-            "sweep1": sweep}
+            "sweep1": sweep,
+            # follow-ups at the learning rate chosen in sweep1: the newer model, and three times the practice
+            "newer": [dict(name="base_qwen3_5_9b", base_model="Qwen/Qwen3.5-9B", rounds=0)]
+                     + [dict(name=f"qwen3_5_9b_s{seed}", base_model="Qwen/Qwen3.5-9B", lr=lr, seed=seed) for seed in (0, 1)],
+            "longer": [dict(name=f"rounds180_s{seed}", lr=lr, seed=seed, rounds=180, check_every=20) for seed in (0, 1)]}
 
 
 def _slim(it: dict) -> dict:
@@ -365,8 +413,9 @@ def test_items() -> list[dict]:
     return [{"id": it["id"], "prompt": it["facts"] + "\n\nGive your forecast as JSON.", "last": it["last"]} for it in coach.build_items(ev.DAYS).values()]
 
 
-def launch(plan: str) -> None:
-    cfgs = plans()[plan]
+def launch(plan: str, lr: float | None = None) -> None:
+    cfgs = plans(lr)[plan]
+    assert all(c.get("lr", 1) is not None for c in cfgs), "this plan needs --lr"
     system, train, check, test = payloads(cfgs)
     fn = modal.Function.from_name(APP, "run")
     pre = modal.Function.from_name(APP, "prefetch")
@@ -382,6 +431,25 @@ def launch(plan: str) -> None:
         print("started", full["name"], call.object_id, flush=True)
     (LOCAL / plan).mkdir(parents=True, exist_ok=True)
     (LOCAL / plan / "calls.json").write_text(json.dumps(calls, indent=1))
+
+
+def launch_eval(plan: str, lr: float | None = None) -> None:
+    """Re-run only the test step, from the adapters the training runs saved on the Modal volume."""
+    cfgs = plans(lr)[plan]
+    fn = modal.Function.from_name(APP, "evaluate")
+    import forecast_env as env
+
+    test = test_items()
+    d = LOCAL / plan
+    if (d / "calls.json").exists() and not (d / "calls_train.json").exists():
+        (d / "calls_train.json").write_text((d / "calls.json").read_text())
+    calls = {}
+    for c in cfgs:
+        full = {**DEFAULTS, **c, "plan": plan}
+        n_eval = full.pop("n_eval", None); full.pop("n_check", None)
+        calls[full["name"]] = fn.spawn(full, env.SYSTEM, test[:n_eval] if n_eval else test).object_id
+        print("started test step for", full["name"], calls[full["name"]], flush=True)
+    (d / "calls.json").write_text(json.dumps(calls, indent=1))
 
 
 def collect(plan: str) -> None:
@@ -439,8 +507,9 @@ if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["launch", "collect"])
+    ap.add_argument("cmd", choices=["launch", "launch-eval", "collect"])
     ap.add_argument("--plan", required=True)
+    ap.add_argument("--lr", type=float)
     a = ap.parse_args()
     sys.path.insert(0, str(HERE))
-    launch(a.plan) if a.cmd == "launch" else collect(a.plan)
+    {"launch": lambda: launch(a.plan, a.lr), "launch-eval": lambda: launch_eval(a.plan, a.lr), "collect": lambda: collect(a.plan)}[a.cmd]()

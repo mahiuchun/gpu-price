@@ -178,3 +178,10 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       20 Feb 2026): the highest average of the round-50 and round-60 watch scores over the two seeds.
     - Test-day results are reported for all eight runs, with the chosen learning rate marked. Containers
       are sent test prompts without outcomes; scoring is done locally with the same code as before.
+    - Outcome of the choice, written while the test step was still running (no Modal test-day result
+      existed yet): watch scores were +0.038 at 4e-5, +0.042 at 1e-4, -0.018 at 2.5e-4 and -0.153 at
+      6e-4 (both of its runs collapsed onto one repeated answer). Chosen: 1e-4. The first test step
+      crashed (out of memory, our bug); the trained adapters were already saved, and the test step
+      was re-run from them with no retraining.
+    - Two follow-ups were then started at 1e-4, also before any test-day result: the same recipe on
+      Qwen3.5-9B (two seeds), and three times the practice on Qwen3-8B (180 rounds, two seeds).
