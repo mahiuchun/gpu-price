@@ -1,5 +1,17 @@
 # RSI4GPR: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting
 
+> **TL;DR**
+> - **What:** forecasts 37 posted GPU rental prices 1, 3 and 7 days ahead, from 6 November 2026.
+> - **How:** five AI agents, each with one job, forecast every price and their answers are averaged. A coach AI
+>   improves the crowd in a recursive loop: it proposes one change per round, and fixed verifiers keep the change
+>   only if practice days get better and hidden check days get no worse.
+> - **Result:** 20% less error than drift on days no model had seen (likely 10% to 28%). The coach's changes add 4%.
+>   A plain engine with no AI is a steady 8% ahead of drift in all three tests.
+> - **Honest caveats:** only 2 of 7 ways of making the system improve itself held up. Ranges hold 80% of the time
+>   overall, but 66% when the price actually moves.
+> - **Try it:** `bash reproduce.sh` rebuilds the forecast in about 15 seconds, with no AI calls. Or watch the
+>   [3-minute demo](docs/media/demo/gpu-price-demo.mp4).
+
 Entry for "Recursive Self-Improvement by Pacific: An AI Scientist for GPU Value" (Direction A).
 It forecasts 37 posted GPU rental prices 1, 3 and 7 days ahead, and tests which kinds of AI help
 make those forecasts better on data the system has not seen.
