@@ -44,7 +44,11 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | What moves a median | `src/gpuval/insight.py` | Splits each day's change in a median into list changes, frequent repricers and rare repricers; rolls the engine forward to see how far its ranges hold. |
 | Range memory | `src/gpuval/range_memory.py` | A forecaster sets its own range width, day by day, from its earlier forecasts whose outcomes are known. No AI calls. Also the control for the RL result: untrained model plus memory against trained model. |
 | Checks on our own claims | `src/gpuval/checks.py` | How often ranges hold when the price moved; how few prices and days carry the pooled figures; each agent alone; the AWS test before and after the model's knowledge ends; the price that follows the euro; the engine on every other price in the pack. No AI calls. |
-| Long view | `longview/` | AWS spot rent for H100 and A100 one to three years out, and a resale view. |
+| Agent memory | `src/gpuval/agent_memory.py` | The five agents lived through 19 days in order, in three arms: no memory, each agent's own scored record for the price, and the record plus a lesson it writes for itself. |
+| Recall probe | `src/gpuval/recall_probe.py` | Asks the agents' model, with no data shown, what the AWS prices were on its test days. Days after its knowledge ends are the control. |
+| Analyst | `src/gpuval/analyst.py` | An AI writes one analysis function per idea. It runs in a Modal container with no keys and no network, against 39 shuffled copies of the data, and a passed idea must pass again on newer data the analyst never sees. |
+| AI calls with a meter | `src/gpuval/llm.py` | One helper for the three modules above: cheaper flex tier first, token and cost totals, a budget that stops the run. |
+| Long view | `longview/` | AWS spot rent for H100 and A100 one to three years out (capped at AWS's list price, with hardware-trend paths beside it), and a resale view with a floor. |
 
 ## Re-run the research (needs keys in `.env`)
 
@@ -67,6 +71,10 @@ uv run python -m gpuval.coach compare                               # every fore
 uv run python -m gpuval.checks && uv run python -m gpuval.checks wide   # checks on the write-up's claims; no keys needed
 uv run python -m gpuval.range_memory                                # range memory and the RL control; no keys needed
 uv run python -m gpuval.ml_challenger final                         # the ML model's numbers for 6 Nov (Modal token)
+uv run python -m gpuval.ml_challenger crossrun                      # the ML model with cross-learning and list covariates (Modal token)
+uv run python -m gpuval.recall_probe run                            # about 210 AI calls; `table` re-scores saved answers
+uv run python -m gpuval.agent_memory run                            # about 10,600 AI calls on the flex tier; `table` re-scores
+uv run python -m gpuval.analyst run                                 # 12 AI calls and a sealed Modal container; `table` re-prints
 cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
 ```
@@ -84,6 +92,8 @@ and reproduces the blind-test table exactly.
 - `runs/agents/`: every answer the five agents gave, in the tests and for the 6 Nov forecast.
 - `runs/coach/`: the coach's ledger of ten proposed changes (`state.json`), every agent answer it
   caused (`answers.json`), the exam and second-check scores, and the improved crowd's 6 Nov answers.
+- `runs/agent_memory/`, `runs/recall/`, `runs/analyst/`: every answer from the three tests added on 15 Nov
+  (the analyst's ledger holds each idea's code and its numbers on the real and shuffled data).
 - `rl/runs/fc1/`, `rl/runs/fc2/`: training logs and test answers of the two RL-trained forecasters.
 - `rl/runs/modal/`: every Modal training run (log, test answers, scored cells); `findings/data/modal_rl.json` puts them next to the Tinker runs.
 - `docs/pages/`: three explainer pages (how it works, the test periods, the Exa lookups).

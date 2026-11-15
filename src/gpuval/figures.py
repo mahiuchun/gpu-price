@@ -442,6 +442,46 @@ def fig_coverage() -> None:
     _save(fig, "fig11_coverage_when_moved.png")
 
 
+def fig_agent_memory() -> None:
+    """The five agents with and without a memory of their own forecasts: error against drift, and each arm against no memory."""
+    p = data.REPO / "findings" / "data" / "agent_memory.json"
+    if not p.exists():
+        return
+    b = json.loads(p.read_text())["blocks"]["all days"]
+    fig, (a, c) = plt.subplots(1, 2, figsize=(12, 3.9), gridspec_kw={"width_ratios": [1.25, 1], "wspace": 0.3})
+    arms = [("recorded", "No memory\n(answers of 14 Nov)", NEUTRAL), ("none", "No memory\n(asked again)", NEUTRAL),
+            ("record", "Own scored\nrecord", BLUE), ("lesson", "Record plus\na written lesson", ORANGE)]
+    for i, (k, name, col) in enumerate(arms):
+        q = b["vs_drift"][k]
+        v, lo, hi = 100 * q["skill"], 100 * q["lo90"], 100 * q["hi90"]
+        a.bar(i, v, 0.6, color=col, edgecolor=SURFACE, linewidth=2, alpha=0.55 if k == "recorded" else 1.0)
+        a.errorbar([i], [v], yerr=[[v - lo], [hi - v]], fmt="none", ecolor=INK, elinewidth=1.2, capsize=3)
+        a.text(i, hi + 0.8, f"{v:+.1f}%", ha="center", va="bottom", fontsize=9, color=INK)
+        if k in b["inside"]:
+            a.text(i, 1.0, f"inside\n{100 * b['inside'][k]:.0f}%", ha="center", va="bottom", fontsize=8.5, color="white", fontweight="bold")
+    a.set_xticks(range(len(arms)), [n for _, n, _ in arms], fontsize=8.5)
+    a.axhline(0, color=INK2, linewidth=1)
+    a.set_ylabel("Less error than drift\n(bar = estimate, line = 90% interval)")
+    a.set_title(f"Each arm against drift ({b['n']:,} forecasts, {b['n_days']} days)", fontsize=10)
+    a.grid(axis="x", visible=False)
+    rows = [("none_vs_recorded", "Asked again, against the\nanswers of 14 Nov (no change made)", NEUTRAL),
+            ("record_vs_none", "Own scored record,\nagainst no memory", BLUE), ("lesson_vs_none", "Record plus lesson,\nagainst no memory", ORANGE),
+            ("lesson_vs_record", "Lesson, against\nrecord alone", ORANGE)]
+    for i, (k, name, col) in enumerate(rows[::-1]):
+        q = b[k]
+        c.plot([100 * q["lo90"], 100 * q["hi90"]], [i, i], color=col, linewidth=2, solid_capstyle="round")
+        c.plot(100 * q["skill"], i, "o", color=col, markersize=8, markeredgecolor=SURFACE, markeredgewidth=2)
+        c.text(100 * q["hi90"] + 0.3, i, f"{100 * q['skill']:+.1f}%", va="center", fontsize=9, color=INK)
+    c.axvline(0, color=INK2, linewidth=1)
+    c.set_yticks(range(len(rows)), [n for _, n, _ in rows[::-1]], fontsize=8.5)
+    c.set_xlabel("Change in error on the same forecasts (right of zero = better)")
+    c.set_title("One arm against another", fontsize=10)
+    c.grid(axis="y", visible=False)
+    c.margins(x=0.18)
+    fig.suptitle("Do the agents forecast better when they can see their own past forecasts?", x=0.07, ha="left", fontsize=11.5, fontweight="bold", y=1.03)
+    _save(fig, "fig12_agent_memory.png")
+
+
 def main() -> int:
     rep = json.loads((data.REPO / "runs" / "record" / "report.json").read_text())
     fig_blind_weeks(rep)
@@ -455,6 +495,7 @@ def main() -> int:
     fig_range_memory()
     fig_euro()
     fig_coverage()
+    fig_agent_memory()
     return 0
 
 
