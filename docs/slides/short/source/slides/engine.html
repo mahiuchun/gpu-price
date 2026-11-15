@@ -12,5 +12,5 @@
 </div>
 </div>
 <div class="footer"><p>Illustrative numbers · src/gpuval/engine.py</p><p class="pn"></p></div>
-<aside>[3:30–4:30] Drift, the reference forecast, replays how the median itself moved. The engine looks underneath: for a horizon of h days it takes every past pair of days, applies to today’s list what each individual offer did between them — repriced, stayed, dropped off, rejoined — and recomputes the median. It is classic historical simulation; nothing is trained. The animation uses illustrative numbers.</aside>
+<aside>[3:56–4:48] That insight gives us the engine, which uses no AI at all. It starts from today’s list, so it knows which offer sits in the middle and how far its neighbours let the middle move. Then, for each past pair of days, it replays what every individual offer did, who repriced, who left, who came back, and takes the median again. Do that across many past days and you get a whole spread of possible medians. The tenth, fiftieth and ninetieth percentiles of that spread are the forecast. It’s classic historical simulation, and nothing is trained.</aside>
 </section>
