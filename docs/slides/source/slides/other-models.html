@@ -1,0 +1,22 @@
+<section id="other-models" class="light">
+<div class="head">
+<p class="eyebrow">RESULTS · OTHER MODELS</p>
+<h2 class="title">The result does not hang on one model</h2>
+</div>
+<table class="rise" style="--i:1; font-size:28px; color:var(--ink); width:1664px">
+<tr><th style="width:34%; text-align:left">Model answering</th><th style="width:18%; text-align:right">As first written</th><th style="width:20%; text-align:right">With coach’s changes</th><th style="width:16%; text-align:right">Ranges held</th><th style="width:12%; text-align:right">Run cost</th></tr>
+<tr><td>Qwen3.5-9B, untrained (open)</td><td style="text-align:right">+6.4%</td><td style="text-align:right">+11.6%</td><td style="text-align:right">61% → 70%</td><td style="text-align:right">$0.65</td></tr>
+<tr><td>gpt-6-luna</td><td style="text-align:right">+15.3%</td><td style="text-align:right">+19.2%</td><td style="text-align:right">75% → 80%</td><td style="text-align:right">$0.17</td></tr>
+<tr><td>gpt-6.1-sol (the crew’s own)</td><td style="text-align:right">+16.4%</td><td style="text-align:right">+19.8%</td><td style="text-align:right">74% → 80%</td><td style="text-align:right">recorded</td></tr>
+<tr><td>gpt-6-astra</td><td style="text-align:right">+16.6%</td><td style="text-align:right">+20.7%</td><td style="text-align:right">74% → 80%</td><td style="text-align:right">$12.01</td></tr>
+<tr><td>Claude Sonnet 5.5</td><td style="text-align:right">+19.3%</td><td style="text-align:right">+18.9%</td><td style="text-align:right">82% → 87%</td><td style="text-align:right">$5.77</td></tr>
+<tr><td>Claude Opus 5.5</td><td style="text-align:right">+22.0%</td><td style="text-align:right">+22.7%</td><td style="text-align:right">80% → 86%</td><td style="text-align:right">$11.45</td></tr>
+</table>
+<div class="rise" style="--i:2; display:grid; grid-template-columns:repeat(3, 1fr); gap:40px">
+<div class="rule"><p class="h3" style="font-size:32px">15% to 22% for every API model</p><p class="small">including one whose whole run cost 17 cents</p></div>
+<div class="rule blue-rule"><p class="h3" style="font-size:32px">The coach’s changes carry over</p><p class="small">to the GPT models and the open model; Claude’s ranges were already near 80%</p></div>
+<div class="rule grey-rule"><p class="h3" style="font-size:32px">Each model run once</p><p class="small">same 479 fresh forecasts, same facts, same five jobs; no rule written before</p></div>
+</div>
+<div class="footer"><p>Percent less error than drift · FINDINGS.md §11</p><p class="pn"></p></div>
+<aside>The same five-agent crew, answered by other models, on the same 479 fresh forecasts. Every API model cut error by 15% to 22% against drift, including one whose whole run cost 17 cents, and none is clearly better or worse than the crew’s own model. Only the untrained open model fell clearly behind. The coach’s two changes were chosen while working with gpt-6.1-sol; they carry over to the other GPT models and to the open model, but not to Claude, whose ranges already held about 80% of the time. No rule was written before this ran, and each model was run once.</aside>
+</section>

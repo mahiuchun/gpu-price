@@ -34,7 +34,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
   after two changes that a coach AI proposed and tests kept.
   The engine alone is [submission/alt_engine_2026-11-06.csv](submission/alt_engine_2026-11-06.csv).
 - **Test protocol, fixed before the test:** [PROTOCOL.md](PROTOCOL.md)
-- **Slides (21 pages):** [docs/slides/RSI4GPR-slides.pdf](docs/slides/RSI4GPR-slides.pdf)
+- **Slides (24 pages):** [docs/slides/RSI4GPR-slides.pdf](docs/slides/RSI4GPR-slides.pdf)
 - **Explainer pages:** [how it works](docs/pages/build-walkthrough.html) · [the test periods](docs/pages/test-periods.html) · [the Exa lookups](docs/pages/exa-status.html)
 
 ## Overview
