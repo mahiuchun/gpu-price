@@ -199,6 +199,48 @@ def run() -> None:
     table()
 
 
+def drop_provider(world: dict, provider: str) -> dict:
+    """The same world without one provider's offers; the published value is the median of what is left."""
+    out = {"wall": world["wall"], "name": world["name"], "series": {}}
+    for sid, s in world["series"].items():
+        keep = np.array([not name.lower().startswith(provider.lower() + "|") for name in s["slots"]], dtype=bool)
+        P = s["P"][:, keep]
+        with np.errstate(all="ignore"):
+            val = np.round(np.nanmedian(P, axis=1), 4) if P.shape[1] else np.full(len(P), np.nan)
+        ok = np.isfinite(val)
+        if ok.sum() < 10:
+            continue
+        out["series"][sid] = {"days": s["days"][ok].copy(), "value": val[ok], "P": P[ok].copy(),
+                              "slots": [x for x, k in zip(s["slots"], keep) if k], "meta": dict(s["meta"])}
+    return out
+
+
+def without(provider: str) -> None:
+    """A reading made after the result was in, not part of the test: re-run each confirmed idea's code,
+    in the same sealed container, on the data with one provider's offers taken out.
+
+        uv run python -m gpuval.analyst without scaleway
+    """
+    saved = json.loads((OUT / "ledger.json").read_text())
+    full = data.build_world(data.DATA_END)
+    worlds = {"discovery": (drop_provider(data.cut_world(full, SPLIT), provider), list(range(1, N_SHUFFLES + 1))),
+              "confirmation": (drop_provider(tail_world(full, SPLIT), provider), list(range(101, 101 + N_SHUFFLES)))}
+    blobs = {k: (pickle.dumps(w, protocol=4), seeds) for k, (w, seeds) in worlds.items()}
+    with modal.enable_output(), app.run():
+        for e in saved["ledger"]:
+            if not e.get("confirmation", {}).get("confirmed"):
+                continue
+            e.setdefault("without", {})[provider] = {}
+            for part, (blob, seeds) in blobs.items():
+                res = run_idea.remote(e["code"], blob, seeds)
+                if res["ok"]:
+                    res["verdict"] = verdict(res["real"], res["shuffled"])
+                e["without"][provider][part] = res
+                print(f"idea {e['n']} without {provider}, {part}: " + (f"real {res['real']:.4g} vs {min(res['shuffled']):.4g}..{max(res['shuffled']):.4g} -> {res['verdict']}" if res["ok"] else "did not run"), flush=True)
+    (OUT / "ledger.json").write_text(json.dumps(saved, indent=1))
+    table()
+
+
 def table() -> dict:
     saved = json.loads((OUT / "ledger.json").read_text())
     led = saved["ledger"]
@@ -213,6 +255,9 @@ def table() -> dict:
         if c:
             row["confirmation"] = ({"real": c["real"], "shuffled_min": min(c["shuffled"]), "shuffled_max": max(c["shuffled"]), "verdict": c["verdict"],
                                     "confirmed": c["confirmed"]} if c["ok"] else {"error": c["error"][-300:]})
+        for prov, parts in e.get("without", {}).items():
+            row.setdefault("without", {})[prov] = {part: ({"real": r["real"], "shuffled_min": min(r["shuffled"]), "shuffled_max": max(r["shuffled"]), "verdict": r["verdict"]}
+                                                          if r["ok"] else {"error": r["error"][-300:]}) for part, r in parts.items()}
         out["rows"].append(row)
         tail = ""
         if c:
@@ -225,4 +270,4 @@ def table() -> dict:
 
 
 if __name__ == "__main__":
-    {"run": run, "table": table}[sys.argv[1]]()
+    without(sys.argv[2]) if sys.argv[1] == "without" else {"run": run, "table": table}[sys.argv[1]]()

@@ -254,6 +254,33 @@ def euro(full: dict, cells: pd.DataFrame, movers: pd.DataFrame) -> dict:
     return out
 
 
+def weekday_by_provider(full: dict, top: int = 8) -> dict:
+    """How often each provider's offers change price, by the weekday of the reading. Added after the
+    analyst (gpuval.analyst) found a weekday pattern that survives taking the euro-priced provider out."""
+    rows = []
+    for s in full["series"].values():
+        P, days = s["P"], s["days"]
+        ok = (np.diff(days) == 1)[:, None] & ~np.isnan(P[1:]) & ~np.isnan(P[:-1])
+        chg = ok & (np.abs(P[1:] - P[:-1]) > 1e-9)
+        wd = (days[1:] + 6) % 7
+        prov = np.array([x.split("|")[0].lower() for x in s["slots"]])
+        for p in np.unique(prov):
+            m = prov == p
+            for d in range(7):
+                rows.append((p, d, int(ok[wd == d][:, m].sum()), int(chg[wd == d][:, m].sum())))
+    df = pd.DataFrame(rows, columns=["provider", "wd", "n", "changed"]).groupby(["provider", "wd"]).sum().reset_index()
+    tot = df.groupby("provider").changed.sum().sort_values(ascending=False)
+    out = {}
+    for p in list(tot.head(top).index) + ["everyone else"]:
+        g = df[df.provider == p] if p != "everyone else" else df[~df.provider.isin(tot.head(top).index)]
+        g = g.groupby("wd")[["n", "changed"]].sum()
+        week, end = g.loc[[0, 1, 2, 3, 4]].sum(), g.loc[[5, 6]].sum()
+        out[p] = {"changes": int(g.changed.sum()), "offer_days": int(g.n.sum()),
+                  "by_weekday": {WEEKDAYS[d]: (float(g.changed[d] / g.n[d]) if g.n[d] else None) for d in range(7)},
+                  "mon_to_fri": float(week.changed / week.n) if week.n else None, "sat_sun": float(end.changed / end.n) if end.n else None}
+    return out
+
+
 def aws_flat_zones() -> dict:
     """The AWS archive holds price changes, not readings, so a zone that stops changing is carried
     forward for ever. We cannot tell a flat price from a zone that has gone."""
@@ -344,7 +371,8 @@ def main() -> int:
     _, movers = insight.decompose(full)
     out = {"coverage": coverage(exam, cells, rec), "weight": weight(rec), "single_agents": single_agents(test, periods),
            "ml_per_price": ml_per_price(periods), "aws_knowledge": aws_knowledge(exam_all.assign(origin=exam_all.id.str.split("|").str[2].map(day_of))),
-           "coach_gain": coach_gain(exam), "exits": exits(full), "euro": euro(full, cells, movers), "aws_flat_zones": aws_flat_zones()}
+           "coach_gain": coach_gain(exam), "exits": exits(full), "euro": euro(full, cells, movers),
+           "weekday_by_provider": weekday_by_provider(full), "aws_flat_zones": aws_flat_zones()}
     (OUT / "checks.json").write_text(json.dumps(out, indent=1, default=str))
 
     c = out["coverage"]["exam_days"]
@@ -384,6 +412,11 @@ def main() -> int:
               f"published price moved Tue-Sat {v['published_price_moved']['tue_to_sat']}, Sun-Mon {v['published_price_moved']['sun_mon']}")
     for name, v in e["one_day_forecasts_where_scaleway_is_the_middle"].items():
         print(f"  1-day forecasts, Scaleway in the middle, {name}: n={v['n']}, price moved {v['price_moved']}, mean error {v['mean_error_usd']}")
+    print("\nREPRICING BY WEEKDAY of the reading (share of an offer's listed days on which its price changed):")
+    for p, v in out["weekday_by_provider"].items():
+        r3 = lambda x: "-" if x is None else f"{x:.3f}"
+        print(f"  {p:16s} {v['changes']:7d} changes | Mon-Fri {r3(v['mon_to_fri'])} | Sat-Sun {r3(v['sat_sun'])} | "
+              + " ".join(f"{d} {x:.2f}" if x is not None else f"{d} -" for d, x in v["by_weekday"].items()))
     print("\nAWS FLAT ZONES:", out["aws_flat_zones"])
     print("\nwrote", (OUT / "checks.json").relative_to(data.REPO))
     return 0

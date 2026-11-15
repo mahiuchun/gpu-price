@@ -314,6 +314,7 @@ Each rule was written into PROTOCOL.md and committed before the test first ran (
 - **Check which site, and when.** The same announced price change reached one site ten days early and the others not at all.
 - **Check the currency of the offer in the middle.** One scored median is a euro price converted each morning. It moves with the exchange rate from Tuesday to Saturday and stands still on Sunday and Monday, whatever the GPU market does.
 - **Ask how often a range held when the price moved.** A range can hold 80% of the time overall and 66% of the time when the price actually changes. The second number is the one a lender needs.
+- **Read an AWS spot price as a share of AWS's list price.** Spot has not traded above list since the June 2025 list cut, and the whole 2026 rise is that share climbing from about 0.3 to 0.5 with list unchanged. A further list cut would pull spot down within days, as it did in June 2025; nothing in the spot history warns of one.
 - **Do not extrapolate a short-run forecaster.** Ranges that are right for a week are too narrow by a month.
 - **Be wary of tuned models on short histories.** Careful tuning, a hidden check and a strong model still produced changes that did not survive.
 

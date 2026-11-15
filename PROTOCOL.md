@@ -287,6 +287,20 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       - By luck an idea passes discovery 1 time in 20 and both steps about 1 time in 800. We
         report every idea, passed or not. A confirmed idea is a pattern in timing, not yet a
         better forecast.
+      - Outcome of the first run: 12 ideas, all ran, 5 passed discovery, 3 confirmed (repricing
+        by weekday; an offer repricing again two to four days later; one provider's changes
+        arriving together across its GPUs). Two passed discovery and failed confirmation.
+        Afterwards, as a reading and not part of the test, the three confirmed functions were
+        re-run in the same container with one provider's offers removed
+        (`gpuval.analyst without scaleway`); all three still passed in both periods.
+    - **Weekday rule** (`gpuval.weekday_rule`, no AI calls; written after the analyst's result and
+      a count of price moves by weekday, and before this rule's first run). For 1-day forecasts
+      only: if, in this price's own history up to the forecast day, the published price has never
+      moved into the weekday being forecast, in at least 8 past cases, the forecast becomes "no
+      change" with no range; otherwise it is left alone. Applied to the engine and to drift on
+      every forecast day from 21 Aug to 5 Nov, and to the first crowd's recorded answers on its 19
+      days. We will say the rule helps a forecaster only if its 1-day error falls with a 90%
+      interval that excludes zero. The 8 and the horizon do not change after the first run.
     - **Checks with no rule to fix** (`gpuval.checks`, no AI calls). Counts and splits of results
       that were already recorded: how often ranges held when the price moved, how many prices and
       days carry the pooled figures, each agent alone, the AWS days before and after the agents'
