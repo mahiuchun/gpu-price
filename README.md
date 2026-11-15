@@ -1,4 +1,4 @@
-# An AI scientist for GPU rental prices
+# RSI4GPR: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting
 
 Entry for "Recursive Self-Improvement by Pacific: An AI Scientist for GPU Value" (Direction A).
 It forecasts 37 posted GPU rental prices 1, 3 and 7 days ahead, and tests which kinds of AI help
@@ -13,7 +13,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 (likely range 10% to 28%).
 
 <p align="center">
-  <a href="docs/media/demo/gpu-price-demo.mp4"><img src="docs/media/demo/poster.jpg" alt="Demo video, 3 minutes: the question, the engine, the five AI agents, the training loop with verifiers, the inference pipeline and the results. Click to play." width="640"></a>
+  <a href="docs/media/demo/gpu-price-demo.mp4"><img src="docs/media/demo/poster.jpg" alt="RSI4GPR demo video, 3 minutes: the question, the engine, the five AI agents, the training loop with verifiers, the inference pipeline and the results. Click to play." width="640"></a>
   <br><sub><b>▶ 3-minute demo</b> (narrated, captions embedded): <a href="docs/media/demo/gpu-price-demo.mp4">gpu-price-demo.mp4</a> · <a href="docs/media/demo/script.json">narration script</a> · <a href="docs/media/demo/demo.srt">captions</a></sub>
 </p>
 
