@@ -19,7 +19,7 @@ V = tempfile.mkdtemp()
 LEAD, TAIL, X = 0.3, 0.45, 0.6  # silence before/after each line; crossfade length
 # Voice: any `say -v '?'` name. A Premium or Enhanced voice (System Settings > Accessibility >
 # Spoken Content > Manage Voices) sounds far more natural, e.g. VOICE="Zoe (Premium)".
-VOICE = os.environ.get("VOICE", "Samantha")
+VOICE = os.environ.get("VOICE", "Daniel")
 RATE = os.environ.get("RATE", "192")  # words per minute
 TITLE = "RSI4GPR: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting"
 

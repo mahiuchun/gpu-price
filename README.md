@@ -396,7 +396,7 @@ uv run --no-project --with pillow python docs/slides/render_slides.py   # docs/s
 python3 docs/media/demo/build_demo.py                                   # the demo video, captions and poster (needs macOS and ffmpeg)
 ```
 
-The video's narration is `docs/media/demo/script.json`, read by the macOS `say` voice Samantha.
+The video's narration is `docs/media/demo/script.json`, read by the macOS `say` voice Daniel (British English).
 
 ## Data and attribution
 
