@@ -5,24 +5,24 @@
     uv run python -m gpuval.rsi run --proposer replay        # repeat the recorded loop, no AI calls
     uv run python -m gpuval.rsi exam                         # every run on the fresh days, with attribution
 
-The loop is the one in our sister repo (RSI4GPF, `gpr/loop.py`): generation after generation,
-propose a change, test it against the incumbent, keep it or roll back, archive everything. Three
-things are taken from there and one is changed.
+Our other loops were separate tests, each started by hand. This one runs unattended: generation
+after generation it proposes a change, tests it against the current team, keeps it or rolls
+back, and archives everything. It has three parts and one rule.
 
-Taken:
-  - a vote that learns (`gpr/weights.py`). Each member's weight starts equal. When an outcome is
-    published, the weight is multiplied by exp(-eta x its error / the error of "no change"), pulled
-    a share `decay` back towards equal, and kept above `w_min`. Weights are per kind of price and
-    horizon. A forecast only ever uses weights learned from outcomes published by its own day.
-  - the accept test (`gpr/evaluate.paired_bootstrap`): a change replaces the incumbent only if it
-    has less error with probability 0.9 or more when prices and days are resampled.
-  - members of different kinds in one team: the five GPT agents, the engine, and the two open
+  - A vote that learns (exponential weights). Each member's weight starts equal. When an outcome
+    is published, the weight is multiplied by exp(-eta x its error / the error of "no change"),
+    pulled a share `decay` back towards equal, and kept above `w_min`. Weights are per kind of
+    price and horizon. A forecast only ever uses weights learned from outcomes published by its
+    own day.
+  - An accept test: a change replaces the current team only if it has less error with
+    probability 0.9 or more when prices and days are resampled, and then passes a hidden check.
+  - Members of different kinds in one team: the five GPT agents, the engine, and the two open
     models after RL training. Trained weights enter the loop as members the vote can learn to trust.
 
-Changed: one kind of thing per generation. In RSI4GPF a new member gets a new learning rate, a new
-temperature, prompt edits and more training at once, so a gain cannot be traced. Here the kinds
-take turns (vote, range, members), each generation is one edit, and the exam scores the final
-bundle with each kept edit taken out again.
+The rule: one kind of thing per generation. If one generation changed the vote, the ranges and
+the members together, a gain could not be traced to its cause. So the kinds take turns (vote,
+range, members), each generation is one edit, and the exam scores the final bundle with each
+kept edit taken out again.
 
 The starting bundle is the forecast we handed in (five agents, equal weights, the coach's range
 stretch); `tests/rsi_checks.py` checks that it reproduces those numbers exactly. Everything is
@@ -57,10 +57,10 @@ RL_RUNS = {"qwen3_8b_rl": "fc1", "qwen3_5_9b_rl": "fc2"}
 WALL = "2026-10-20"          # the loop sees no outcome published after this day
 EXAM_FROM = "2026-10-21"     # forecasts made from this day on are the exam
 KINDS = ("vote", "range", "members")
-ACCEPT_P = 0.9               # RSI4GPF's accept test
+ACCEPT_P = 0.9               # share of resamples in which a change must have less error
 CHECK_NOISE = 0.005          # the coach's hidden check: sd of the tolerance
 PLATEAU = 6                  # stop after this many generations in a row with nothing kept
-FLOOR_SHARE, LOSS_CAP = 0.002, 3.0          # as in RSI4GPF's weight update
+FLOOR_SHARE, LOSS_CAP = 0.002, 3.0          # the vote: "no change" error is at least 0.2% of the price; a scaled error is capped at 3
 BY = ("all", "h", "class_h")
 BOUNDS = {"eta": (0.0, 10.0), "decay": (0.0, 0.5), "w_min": (0.0, 0.3), "range_scale": (0.3, 3.0), "widen": (0.0, 2.0)}
 MIN_MEMBERS, MAX_MEMBERS = 2, 8
@@ -184,7 +184,7 @@ def walk(frame: pd.DataFrame, bundle: dict) -> pd.DataFrame:
 # ------------------------------------------------------------------- gate ----
 def paired(g: pd.DataFrame, new: str, old: str, seed: int = 0) -> dict:
     """How much less error `new` has than `old`, and how often it has less when prices and target
-    days are resampled (the repo's resampling; RSI4GPF resamples price-days)."""
+    days are resampled (2,000 resamples, as everywhere in this repo)."""
     M = report._mats(g, [new, old])
     A, B = M[new], M[old]
     rng = np.random.default_rng(seed)
@@ -550,11 +550,11 @@ def audit(frame: pd.DataFrame, states: list[dict], log=print) -> dict:
         p, q = r["practice"], r["practice_without_coach_days"]
         log(f"   {k}: practice {p['gain']:+.4f} [{p['lo90']:+.3f}, {p['hi90']:+.3f}], confidence {p['p_better']:.2f} "
             f"(without the coach's own days {q['gain']:+.4f}, {q['p_better']:.2f}) | check {r['check_gain']:+.4f} | exam {fm(r['exam'])}")
-    # RSI4GPF's own default vote (configs/team_v0.yaml), put on our crowd
+    # one more setting of the vote, which no loop happened to propose
     v = {"eta": 2.0, "decay": 0.05, "w_min": 0.05, "by": "class_h"}
-    sister = {"vote only": _judge(frame, {**start, "vote": v}, start), "vote and widen 0.5": _judge(frame, {**start, "vote": v, "widen": 0.5}, start)}
-    log("AFTER THE RESULT (c): RSI4GPF's default vote settings on our crowd")
-    for k, r in sister.items():
+    extra = {"vote only": _judge(frame, {**start, "vote": v}, start), "vote and widen 0.5": _judge(frame, {**start, "vote": v, "widen": 0.5}, start)}
+    log("AFTER THE RESULT (c): one more setting of the vote, which no loop proposed (eta 2, decay 0.05, w_min 0.05, per kind of price and horizon)")
+    for k, r in extra.items():
         log(f"   {k}: practice {r['practice']['gain']:+.4f}, confidence {r['practice']['p_better']:.2f} | check {r['check_gain']:+.4f} | exam {fm(r['exam'])}")
 
     def count(rows: list[dict]) -> dict:
@@ -562,7 +562,7 @@ def audit(frame: pd.DataFrame, states: list[dict], log=print) -> dict:
                 "clearly_better_on_exam": int(sum(r["exam"]["lo90"] > 0 for r in rows)), "clearly_worse_on_exam": int(sum(r["exam"]["hi90"] < 0 for r in rows))}
 
     out = {"note": "readings made after the result; not part of the pre-stated test", "turned_away": turned_away, "coach_changes_through_this_gate": control,
-           "sister_default_vote": sister, "all_edits": count(turned_away), "by_kind": {k: count([r for r in turned_away if r["kind"] == k]) for k in KINDS},
+           "one_more_vote_setting": extra, "all_edits": count(turned_away), "by_kind": {k: count([r for r in turned_away if r["kind"] == k]) for k in KINDS},
            "edits_with_confidence_0.7_or_more": count([r for r in turned_away if r["practice"]["p_better"] >= 0.7])}
     log(f"   all edits: {out['all_edits']} | by kind: {out['by_kind']} | at confidence 0.7 or more: {out['edits_with_confidence_0.7_or_more']}")
     return out

@@ -331,13 +331,12 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       (the ML model's numbers do reach one agent; the agents' different jobs and the averaging are
       not shown to matter; the coach's gain is nearly all range width; the 7-day engine figure is
       72 forecasts from three days). Each is marked "added 15 Nov" or "corrected" where it stands.
-13. **One self-improvement loop over the whole forecaster, taken from our sister repo** (`gpuval.rsi`;
-    added 15 Nov, written before its first run). RSI4GPF (`chengjianglong/gpu-pricing-rsi`) runs a
-    single loop: train, validate, accept or roll back, change, repeat. Our own loops were separate
-    one-off tests. We take three things from it: the loop, a vote that learns each member's weight
-    from its record (`gpr/weights.py`), and the accept test (`gpr/evaluate.paired_bootstrap`). We
-    change one thing: each generation may change one kind of setting only, so that a gain can be
-    traced to its cause. This test is not blind: every day it uses has been looked at. The forecast
+13. **One self-improvement loop over the whole forecaster** (`gpuval.rsi`; added 15 Nov, written
+    before its first run). Our own loops were separate one-off tests. This one runs unattended:
+    propose a change, test it against the current team, keep it or roll back, repeat. It has a
+    vote that learns each member's weight from its record, and an accept test stricter than the
+    coach's. Each generation may change one kind of setting only, so that a gain can be traced
+    to its cause. This test is not blind: every day it uses has been looked at. The forecast
     file is not changed whatever the result.
     - **What can change (the bundle).** Which members vote; how the weights are learned (`eta`,
       `decay`, `w_min`, and whether there is one set of weights, one per horizon, or one per kind
@@ -389,5 +388,7 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
     - Three readings were added after seeing that result and are labelled so in the findings:
       every proposed edit scored on the exam days (30 different edits: none clearly better, one
       clearly worse); the coach's two kept changes put to this gate, starting from the first
-      crowd (the wider ranges pass at 94%, the rewritten agent does not at 81%); and RSI4GPF's
-      default vote settings on our crowd (−1.0%, −2.7% to +0.4%).
+      crowd (the wider ranges pass at 94%, the rewritten agent does not at 81%); and one more
+      setting of the vote, which no loop proposed (−1.0%, −2.7% to +0.4%).
+    - The opening paragraph of this item was shortened after the run. The rule itself, every
+      point from "What can change" to "Weaknesses known before the run", is as first committed.

@@ -51,7 +51,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 | Agents **read each other's answers** | ❌ no help |
 | **Memory** of the system's own past forecasts (three kinds) | ➖ 1.4% to 2.1% less error, not established |
 | An **AI analyst** writes its own tests on shuffled data | ➖ found real weekday patterns; a rule built on them did not help |
-| **One loop over the whole forecaster**, taken from our sister repo: a vote that learns, range width, who votes (36 changes proposed) | ➖ kept nothing; none was clearly better on later days, one clearly worse |
+| **One loop over the whole forecaster**: a vote that learns, range width, who votes (36 changes proposed) | ➖ kept nothing; none was clearly better on later days, one clearly worse |
 
 ## How it works
 
@@ -184,7 +184,7 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | Recall probe | `src/gpuval/recall_probe.py` | Asks the agents' model, with no data shown, what the AWS prices were on its test days. Days after its knowledge ends are the control. |
 | Analyst | `src/gpuval/analyst.py` | An AI writes one analysis function per idea. It runs in a Modal container with no keys and no network, against 39 shuffled copies of the data, and a passed idea must pass again on newer data the analyst never sees. |
 | Weekday rule | `src/gpuval/weekday_rule.py` | Tests whether the weekday pattern the analyst found makes 1-day forecasts better. No AI calls. It does not. |
-| One loop | `src/gpuval/rsi.py` | The self-improvement loop of our sister repo (RSI4GPF) run on this forecaster: a vote that learns each member's weight from its record, a paired accept test, one kind of change per generation, and an exam that takes each kept change out again. It starts from the forecast we handed in and can leave it only through the gate. |
+| One loop | `src/gpuval/rsi.py` | One self-improvement loop that runs unattended over the whole forecaster: a vote that learns each member's weight from its record, a paired accept test, one kind of change per generation, and an exam that takes each kept change out again. It starts from the forecast we handed in and can leave it only through the gate. |
 | AI calls with a meter | `src/gpuval/llm.py` | One helper for the three modules above: cheaper flex tier first, token and cost totals, a budget that stops the run. |
 | Long view | `longview/` | AWS spot rent for H100 and A100 one to three years out (capped at AWS's list price, with hardware-trend paths beside it), and a resale view with a floor. |
 

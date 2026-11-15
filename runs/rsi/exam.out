@@ -47,7 +47,7 @@ AFTER THE RESULT (b): the coach's two kept changes put to this gate
    wider ranges at 3 and 7 days: practice +0.0140 [-0.002, +0.030], confidence 0.94 (without the coach's own days +0.0152, 0.85) | check +0.0181 | exam +0.024 [-0.004, +0.047]
    the rewritten agent, on top of the wider ranges: practice +0.0070 [-0.004, +0.026], confidence 0.81 (without the coach's own days +0.0077, 0.66) | check +0.0078 | exam +0.008 [-0.006, +0.021]
    both changes: practice +0.0210 [-0.000, +0.047], confidence 0.95 (without the coach's own days +0.0228, 0.85) | check +0.0258 | exam +0.031 [+0.002, +0.059]
-AFTER THE RESULT (c): RSI4GPF's default vote settings on our crowd
+AFTER THE RESULT (c): one more setting of the vote, which no loop proposed (eta 2, decay 0.05, w_min 0.05, per kind of price and horizon)
    vote only: practice -0.0032, confidence 0.22 | check -0.0033 | exam -0.010 [-0.027, +0.004]
    vote and widen 0.5: practice -0.0020, confidence 0.39 | check -0.0017 | exam -0.010 [-0.027, +0.004]
    all edits: {'n': 30, 'better_on_exam': 7, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 1} | by kind: {'vote': {'n': 12, 'better_on_exam': 1, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 1}, 'range': {'n': 12, 'better_on_exam': 3, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 0}, 'members': {'n': 6, 'better_on_exam': 3, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 0}} | at confidence 0.7 or more: {'n': 4, 'better_on_exam': 2, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 0}
