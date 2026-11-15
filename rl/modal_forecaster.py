@@ -10,6 +10,8 @@ container, so many runs go at once: several learning rates, several random seeds
     uv run modal deploy modal_forecaster.py                    # once, and after any change to the container code
     uv run python modal_forecaster.py launch --plan smoke      # start the runs; returns at once
     uv run python modal_forecaster.py collect --plan smoke     # fetch what has finished, score it, print the tables
+    uv run python modal_forecaster.py rsi-launch --name rsi_m1 # the self-improvement loop of rsi_forecaster.py, in one container
+    uv run python modal_forecaster.py rsi-collect              # its generations so far, or the finished log
 
 What a container is sent: prompts, and for practice prices only, the outcomes needed to score an
 answer. For the test days it is sent prompts only; the outcomes stay on this machine.
@@ -364,6 +366,124 @@ def evaluate(cfg: dict, system: str, eval_items: list) -> dict:
     return res
 
 
+# ------------------------------------- the self-improvement loop (mirrors rsi_forecaster.py) ----
+RSI_ACCEPT_P = 0.9
+RSI_LR_BOUNDS = (1e-5, 1.6e-4)
+
+
+def p_better(new: list, old: list, n: int = 2000, seed: int = 0) -> float:
+    """Share of resamples of the watch price-days in which the new weights score higher."""
+    import numpy as np
+
+    d = np.array(new) - np.array(old)
+    idx = np.random.default_rng(seed).integers(0, len(d), size=(n, len(d)))
+    return float((d[idx].mean(axis=1) > 0).mean())
+
+
+@app.function(image=image, gpu=["H100", "A100-80GB"], timeout=4 * 3600, volumes={"/cache": hf_cache, "/out": out_vol}, max_containers=16)
+def rsi(cfg: dict, system: str, train_rounds: list, watch_items: list) -> dict:
+    """The loop of rsi_forecaster.py in one container: train, validate on the watch set, keep the new weights or roll back.
+
+    The adapter stays on the GPU the whole time; a copy of the kept weights is held in memory to restore on a
+    rollback. The log and the kept adapter are written to the volume as the loop goes."""
+    import torch
+
+    cfg = {**DEFAULTS, **cfg}
+    t0 = time.time()
+    hf_cache.reload()
+    pol = Policy(cfg, system, train=True)
+    gpu = torch.cuda.get_device_name(0)
+    print(f"{cfg['name']}: loaded {cfg['base_model']} on {gpu} in {time.time() - t0:.0f}s", flush=True)
+    out_dir = Path("/out") / cfg["plan"] / cfg["name"]
+    out_dir.mkdir(parents=True, exist_ok=True)
+    watch_ids = [pol.render(it["prompt"]) for it in watch_items]
+    rng_lr = random.Random(f"lr|{cfg['seed']}")
+
+    def watch() -> tuple[list, float]:
+        """Mean reward per watch price-day, and the share of readable answers."""
+        groups = pol.sample(watch_ids, cfg["watch_answers"])
+        sc = [[reward_of(it, c["text"]) for c in g] for it, g in zip(watch_items, groups)]
+        flat = [x for g in sc for x in g]
+        return [statistics.fmean(x[0] for x in g) for g in sc], sum(x[1] for x in flat) / len(flat)
+
+    def weights() -> dict:
+        return {n: p.detach().cpu().clone() for n, p in pol.model.named_parameters() if p.requires_grad}
+
+    def practise(items: list) -> float:
+        """One training round, as in run(): sample, score, one policy-gradient step. Returns the mean reward."""
+        pids = [pol.render(it["prompt"]) for it in items]
+        groups = pol.sample(pids, cfg["samples"])
+        rows, rs, spread = [], [], []
+        for it, p, g in zip(items, pids, groups):
+            sc = [reward_of(it, c["text"])[0] for c in g]
+            base = statistics.fmean(sc)
+            rs += sc
+            if max(sc) - min(sc) < 1e-12:
+                continue  # every answer scored the same: nothing to learn from this price
+            spread += [x - base for x in sc]
+            rows += [(p, c, x - base) for c, x in zip(g, sc)]
+        if rows:
+            sd = statistics.pstdev(spread) or 1.0
+            pol.update([(p, c, a / sd) for p, c, a in rows])
+        return round(statistics.fmean(rs), 4)
+
+    def mean(xs: list) -> float:
+        return float(statistics.fmean(xs))
+
+    scores, readable = watch()
+    kept = {"generation": 0, "watch": mean(scores), "scores": scores, "weights": weights()}
+    log = {"args": cfg, "base_model": cfg["base_model"], "gpu": gpu, "watch": cfg.get("watch"), "accept_p": RSI_ACCEPT_P,
+           "start": {"watch": kept["watch"], "readable": readable}, "generations": [], "stop": "generations"}
+
+    def archive() -> None:
+        minutes = (time.time() - t0) / 60
+        log.update(checkpoint=f"{cfg['plan']}/{cfg['name']}/adapter", kept_generation=kept["generation"], kept_watch=kept["watch"],
+                   cost_estimate_usd=round(minutes * usd_per_hour(gpu) / 60, 2), minutes=round(minutes, 1))
+        (out_dir / "log.json").write_text(json.dumps(log, indent=1))
+        out_vol.commit()
+
+    archive()
+    print(f"untrained: watch {kept['watch']:+.4f} (readable {readable:.2f}) on {len(watch_items)} price-days x {cfg['watch_answers']} answers", flush=True)
+    lr, quiet = cfg["lr"], 0
+    for g in range(1, cfg["generations"] + 1):
+        if cfg.get("minutes") and time.time() - t0 >= cfg["minutes"] * 60:
+            log["stop"] = "time"
+            break
+        tg = time.time()
+        for grp in pol.opt.param_groups:
+            grp["lr"] = lr
+        rounds = [practise(train_rounds[(g - 1) * cfg["rounds"] + k]) for k in range(cfg["rounds"])]   # 1. TRAIN
+        scores, readable = watch()                                                                    # 2. VALIDATE
+        gain, p = mean(scores) - kept["watch"], p_better(scores, kept["scores"])
+        accepted = gain > 0 and p >= RSI_ACCEPT_P                                                     # 3. ACCEPT
+        row = {"generation": g, "from_generation": kept["generation"], "learning_rate": lr, "rounds": rounds, "train_reward": round(statistics.fmean(rounds), 4),
+               "watch": mean(scores), "watch_kept_before": kept["watch"], "gain": gain, "p_better": p, "readable": readable, "accepted": accepted}
+        if accepted:
+            kept = {"generation": g, "watch": mean(scores), "scores": scores, "weights": weights()}
+            pol.model.save_pretrained(str(out_dir / "adapter"))
+            quiet = 0
+        else:                                                               # 4. CHANGE: back to the kept weights, another learning rate
+            quiet += 1
+            lr = float(min(RSI_LR_BOUNDS[1], max(RSI_LR_BOUNDS[0], lr * rng_lr.choice((0.5, 2.0)))))
+            with torch.no_grad():
+                for n, prm in pol.model.named_parameters():
+                    if n in kept["weights"]:
+                        prm.copy_(kept["weights"][n].to(prm.device))
+            pol.opt = torch.optim.Adam(pol.params, lr=lr, betas=(0.9, 0.95), eps=1e-8)  # a fresh optimizer, as after a restart from the kept weights
+        row.update(kept_generation=kept["generation"], next_learning_rate=lr, seconds=round(time.time() - tg))
+        log["generations"].append(row)                                      # 5. ARCHIVE
+        archive()
+        print(f"gen {g}: lr {row['learning_rate']:.1e} | train reward {row['train_reward']:+.3f} | watch {row['watch']:+.4f} against kept {row['watch_kept_before']:+.4f} "
+              f"(gain {gain:+.4f}, {p:.2f} of resamples) | {'ACCEPTED' if accepted else 'rolled back'} | {row['seconds']} s | about ${log['cost_estimate_usd']:.2f} so far", flush=True)
+        if quiet >= cfg["plateau"]:
+            log["stop"] = "plateau"
+            break
+    pol.model.save_pretrained(str(out_dir / "adapter"))  # the kept weights: a rollback has already restored them
+    log["finished"] = True
+    archive()
+    return log
+
+
 # ----------------------------------------------------------- everything below runs locally ----
 HERE = Path(__file__).resolve().parent
 LOCAL = HERE / "runs" / "modal"
@@ -568,13 +688,81 @@ def summarize() -> None:
     print("Modal total: $", out["total_usd"])
 
 
+def launch_rsi(a) -> None:
+    """Start the self-improvement loop in one container; returns at once. Practice prices are the draw rsi_forecaster.py makes for the same seed."""
+    import forecast_env as env
+
+    cfg = dict(plan="rsi", name=a.name, base_model=a.base_model, lr=a.lr or 4e-5, seed=a.seed, generations=a.generations, rounds=a.rounds, prompts=a.prompts,
+               samples=a.samples, plateau=a.plateau, minutes=a.minutes, watch_answers=a.watch_answers, micro=8, token_budget=70_000,
+               watch={"n": a.watch_n, "answers": a.watch_answers, "from": env.CHECK_FROM, "to": env.CHECK_TO})
+    world = env.aws_world()
+    rng = random.Random(a.seed)
+    train = [[_slim(it) for it in env.sample_items(world, a.prompts, "2022-08-05", env.TRAIN_END, rng)] for _ in range(a.generations * a.rounds)]
+    watch = [_slim(it) for it in env.sample_items(world, a.watch_n, env.CHECK_FROM, env.CHECK_TO, random.Random(123))]
+    print("model files ready:", a.base_model, modal.Function.from_name(APP, "prefetch").remote(a.base_model), flush=True)
+    call = modal.Function.from_name(APP, "rsi").spawn(cfg, env.SYSTEM, train, watch)
+    d = LOCAL / "rsi"
+    d.mkdir(parents=True, exist_ok=True)
+    calls = json.loads((d / "calls.json").read_text()) if (d / "calls.json").exists() else {}
+    calls[a.name] = call.object_id
+    (d / "calls.json").write_text(json.dumps(calls, indent=1))
+    print("started", a.name, call.object_id, "on app", APP, flush=True)
+
+
+def collect_rsi(name: str | None) -> None:
+    """Fetch the log of each finished loop into runs/modal/rsi/<name>.json; for one still running, show the generations so far."""
+    d = LOCAL / "rsi"
+    for nm, cid in json.loads((d / "calls.json").read_text()).items():
+        if name and nm != name:
+            continue
+        path = d / f"{nm}.json"
+        if path.exists():
+            log = json.loads(path.read_text())
+        else:
+            try:
+                log = modal.FunctionCall.from_id(cid).get(timeout=0)
+                path.write_text(json.dumps(log, indent=1))
+            except TimeoutError:
+                try:  # the container writes its log to the volume after every generation
+                    log = json.loads(b"".join(out_vol.read_file(f"rsi/{nm}/log.json")))
+                except Exception:
+                    print(f"{nm}: still running, nothing written yet")
+                    continue
+            except Exception as e:
+                print(f"{nm}: FAILED {type(e).__name__}: {str(e)[:300]}")
+                continue
+        w = log["watch"]
+        print(f"\n== {nm} ({log['base_model']} on {log['gpu']}){'' if log.get('finished') else ' -- STILL RUNNING'}")
+        print(f"untrained: watch {log['start']['watch']:+.4f} (readable {log['start']['readable']:.2f}) on {w['n']} price-days x {w['answers']} answers")
+        for r in log["generations"]:
+            print(f"gen {r['generation']}: lr {r['learning_rate']:.1e} | train reward {r['train_reward']:+.3f} | watch {r['watch']:+.4f} against kept {r['watch_kept_before']:+.4f} "
+                  f"(gain {r['gain']:+.4f}, {r['p_better']:.2f} of resamples) | {'ACCEPTED' if r['accepted'] else 'rolled back'} | {r['seconds']} s")
+        if log.get("finished"):
+            print(f"stopped ({log['stop']}): {sum(r['accepted'] for r in log['generations'])} of {len(log['generations'])} generations accepted; kept generation "
+                  f"{log['kept_generation']}, watch {log['start']['watch']:+.4f} -> {log['kept_watch']:+.4f}; adapter on the volume at {log['checkpoint']}; "
+                  f"about ${log['cost_estimate_usd']:.2f} of GPU time, {log['minutes']} min")
+
+
 if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["launch", "launch-eval", "collect", "summarize"])
+    ap.add_argument("cmd", choices=["launch", "launch-eval", "collect", "summarize", "rsi-launch", "rsi-collect"])
     ap.add_argument("--plan")
     ap.add_argument("--lr", type=float)
+    # the rest are for rsi-launch / rsi-collect only
+    ap.add_argument("--name")
+    ap.add_argument("--base-model", default="Qwen/Qwen3.5-9B")
+    ap.add_argument("--generations", type=int, default=5)
+    ap.add_argument("--rounds", type=int, default=8, help="training rounds in one generation")
+    ap.add_argument("--prompts", type=int, default=16)
+    ap.add_argument("--samples", type=int, default=8)
+    ap.add_argument("--plateau", type=int, default=4)
+    ap.add_argument("--minutes", type=float, default=100, help="no generation starts after this many minutes in the container")
+    ap.add_argument("--watch-n", type=int, default=128)
+    ap.add_argument("--watch-answers", type=int, default=4)
+    ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
     sys.path.insert(0, str(HERE))
-    {"launch": lambda: launch(a.plan, a.lr), "launch-eval": lambda: launch_eval(a.plan, a.lr), "collect": lambda: collect(a.plan), "summarize": summarize}[a.cmd]()
+    {"launch": lambda: launch(a.plan, a.lr), "launch-eval": lambda: launch_eval(a.plan, a.lr), "collect": lambda: collect(a.plan), "summarize": summarize,
+     "rsi-launch": lambda: launch_rsi(a), "rsi-collect": lambda: collect_rsi(a.name)}[a.cmd]()
