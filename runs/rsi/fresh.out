@@ -1,0 +1,9 @@
+FRESH DAYS: 1775 forecasts, 37 prices, 20 days the crowd had never answered
+   five                 against drift +0.148 [+0.101, +0.206]
+   plus_qwen3_8b_rl     against drift +0.157 [+0.113, +0.209] | against the five +0.009 [-0.004, +0.022] | inside 0.781
+   plus_qwen3_5_9b_rl   against drift +0.153 [+0.107, +0.206] | against the five +0.005 [-0.013, +0.021] | inside 0.774
+   plus_both            against drift +0.152 [+0.109, +0.202] | against the five +0.005 [-0.021, +0.027] | inside 0.800
+   qwen3_8b_rl          against drift +0.085 [+0.034, +0.127]
+   qwen3_5_9b_rl        against drift +0.079 [+0.025, +0.128]
+   engine               against drift +0.110 [+0.065, +0.170]
+   by horizon, six against five: 1d -0.013 [-0.038, +0.000]; 3d +0.008 [-0.013, +0.021]; 7d +0.017 [-0.005, +0.034] | helps by the rule: False | usage {'calls': 3375, 'in': 3198323, 'out': 709979, 'flex_calls': 0, 'standard_calls': 3375, 'usd': 13.5}

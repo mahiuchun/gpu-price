@@ -649,10 +649,11 @@ def fresh_table(log=print) -> dict:
     for k in arms:
         g[f"loss_{k}"] = w[k].loss.to_numpy()
     for m in RL_RUNS:
-        g[f"loss_{m}"] = cell_loss(f.y, f[f"{m}_lo"], f[f"{m}_mid"], f[f"{m}_hi"]).to_numpy()
+        g[f"loss_{m}"] = np.asarray(cell_loss(f.y, f[f"{m}_lo"], f[f"{m}_mid"], f[f"{m}_hi"]))
     out = {"rule": {"edit": edit_text(FRESH_EDIT), "days": fresh_days()}, "n": int(len(g)), "n_days": int(g.origin.nunique()), "n_prices": int(g.series_id.nunique()),
            "vs_drift": {k: ci(g, f"loss_{k}", "loss_drift") for k in [*arms, *RL_RUNS, "engine"]},
            "vs_five": {k: ci(g, f"loss_{k}", "loss_five") for k in arms if k != "five"},
+           "five_vs_engine": ci(g, "loss_five", "loss_engine"),
            "by_h": {int(h): ci(gh, "loss_plus_qwen3_8b_rl", "loss_five") for h, gh in g.groupby("h")},
            "inside": {k: float(w[k].inside.mean()) for k in arms}, "inside_when_moved": {k: float(w[k][w[k].moved].inside.mean()) for k in arms},
            "usage": json.loads((OUT / "fresh_answers.json").read_text())["usage"]}
