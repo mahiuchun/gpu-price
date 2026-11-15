@@ -198,3 +198,25 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       than +3% to +6%, so we read the gap as mostly the learning rate. Modal ran both on A100 80GB
       cards, not H100s. `rl/runs/modal/newer3/rate_and_model_comparison.json` holds the comparisons
       of the two rates and the two models on the same forecasts (each rate's two seeds averaged).
+12. **Added on 15 Nov, after the forecast was handed in and after reading the brief's reference
+    list: corrections to the write-up and further tests on past data.** The forecast file is not
+    changed: its target days (7 to 13 Nov) had passed, so a change could not be blind. None of the
+    tests below is blind either: every day they use had been looked at. What can still be fixed in
+    advance is the rule of each test, so each rule is written here and committed before that test
+    is first run.
+    - **Range memory** (`gpuval.range_memory`, no AI calls). A forecaster's ranges are stretched by
+      one number per horizon, set from its own earlier forecasts. On each forecast day, for each
+      horizon, the memory holds every earlier forecast by the same forecaster whose outcome was
+      published on or before that day. The stretch is the value in 0.50, 0.55, ..., 3.00 with the
+      lowest total pinball loss in dollars on the memory (ties: the value nearest 1). With fewer
+      than 50 forecasts in the memory it is 1. A stretch s turns low into mid × (low ÷ mid)^s and
+      high likewise, as the coach's stretch does. One stretch per horizon is shared by all prices.
+      - Scored on the 19 days of our prices that the first crowd answered outside the coach's
+        practice and check days, counting every forecast whose outcome is known by 6 Nov.
+      - Compared on the first crowd's recorded answers: no stretch, the coach's fixed
+        1.0 / 1.25 / 1.65, and the memory. The crowd's memory also holds its answers on the
+        coach's four practice and check days of our prices; those days are never scored here.
+      - The same rule is run on the engine (memory: its own forecasts from 21 Aug) and on the open
+        models before and after RL training (memory: their own forecasts from 24 Sep). "Untrained
+        plus memory against trained" asks whether RL taught more than range width.
+      - The grid, the minimum memory and the scoring days do not change after the first run.
