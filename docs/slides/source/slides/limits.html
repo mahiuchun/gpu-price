@@ -1,0 +1,16 @@
+<section id="limits" class="alt">
+<div class="head">
+<p class="eyebrow">LIMITS</p>
+<h2 class="title">What these results do not show</h2>
+</div>
+<div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:36px 64px">
+<div class="rule orange-rule rise" style="--i:0"><p class="h3" style="font-size:34px">Later forecasters were not blind</p><p class="small">The agents, coach, ML model and RL forecaster were added after the blind weeks had been looked at.</p></div>
+<div class="rule orange-rule rise" style="--i:1"><p class="h3" style="font-size:34px">Samples, not every day</p><p class="small">The agents were scored on 19 days of our prices and 15 days of AWS.</p></div>
+<div class="rule orange-rule rise" style="--i:2"><p class="h3" style="font-size:34px">One coach run, noisy RL</p><p class="small">The coach ran once. One RL seed change moved a result from +10.1% to +6.5%.</p></div>
+<div class="rule orange-rule rise" style="--i:3"><p class="h3" style="font-size:34px">The model may know AWS history</p><p class="small">Its knowledge runs to April 2026; only four AWS test days are later. It recalled none of them.</p></div>
+<div class="rule orange-rule rise" style="--i:4"><p class="h3" style="font-size:34px">The 37 were picked with hindsight</p><p class="small">On the pack’s 476 other prices the engine’s edge is about half: +4.6%.</p></div>
+<div class="rule orange-rule rise" style="--i:5"><p class="h3" style="font-size:34px">Posted, not transacted</p><p class="small">These are list prices, not what anyone actually paid.</p></div>
+</div>
+<div class="footer"><p>FINDINGS.md · Limits · PROTOCOL.md · Deviations</p><p class="pn"></p></div>
+<aside>We want the limits to be as visible as the results. The blind test covered the engine and the AI scientist; everything after was tested on weeks we had already looked at, though on days the models had not seen. Agent tests use samples. RL is noisy across seeds. The model’s training may include older AWS history. The 37 prices were chosen by the starter kit with hindsight, and on other prices the engine’s edge is about half. And all of this is posted prices.</aside>
+</section>

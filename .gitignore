@@ -21,3 +21,6 @@ rl/__pycache__/
 runs/replay/
 runs/replay.log
 runs/record.log
+
+# rendered slide PNGs (rebuild with docs/slides/render_slides.py)
+docs/slides/png/
