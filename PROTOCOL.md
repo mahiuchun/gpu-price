@@ -226,6 +226,35 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
         (−3.2% to +0.2%). Nothing was changed and re-run. Two readings in the findings were made
         after seeing these numbers and are labelled so: the split of days at 12 Oct, and the share
         of misses that are zero-width ranges.
+    - **Recall probe** (`gpuval.recall_probe`, about 280 AI calls; written before its first run).
+      The agents' model is asked, with no data shown, for the AWS spot price of each machine type
+      on each of the agents' AWS days (median across zones, USD per GPU-hour), and whether it was
+      higher, lower or the same (within 1%) a week later. "I don't know" is allowed; a best guess
+      is still asked for. The 11 days before April 2026 are the test and the 4 days after it,
+      which the model cannot have seen, are the control. Same model and effort as the agents.
+      - We will say the model shows recall if, on the days before April 2026, either (a) its
+        prices are closer to the truth of their own date than to the truth of other dates for the
+        same machine type (dates shuffled within machine type, 5,000 shuffles, p below 0.05), or
+        (b) where it names a direction and the price moved, it is right clearly more than half
+        the time (90% interval above 0.5). Otherwise we say no recall was found, and report how
+        close its guesses were, before and after April 2026, side by side.
+    - **Agent memory** (`gpuval.agent_memory`, about 10,600 AI calls on the cheaper flex tier,
+      stopped by code at an estimated $45; written before its first run). The five agents as first
+      written, lived through the 19 scoring days in date order, in three arms that differ only in
+      what is added to the facts: nothing; the agent's own earlier forecasts for that price whose
+      outcomes are known, each marked inside, below or above its range (the last 12, with a
+      count of all); or that record plus a lesson of at most three sentences that the agent
+      writes for itself before each day from its whole scored record (once it has 30 outcomes).
+      Each arm's memory holds that arm's own answers. No range stretch is applied in any arm.
+      - The "nothing" arm is asked again now, so that the three arms are the same age. Its gap to
+        the answers recorded on 14 Nov shows how far the score moves when nothing changes.
+      - We will say a memory helps only if its arm has less error than the "nothing" arm on the
+        same forecasts with a 90% interval that excludes zero (all 19 days, dollars, resampled by
+        price and target day). We also report the later half of the days, each horizon, each
+        agent, and the lessons as written.
+      - Expectation, from the reading: the record helps a little or not at all, and the written
+        lesson does no better than the record. One run; prompts are not changed after seeing a
+        result. A crash is resumed from the last finished day and reported.
     - **Checks with no rule to fix** (`gpuval.checks`, no AI calls). Counts and splits of results
       that were already recorded: how often ranges held when the price moved, how many prices and
       days carry the pooled figures, each agent alone, the AWS days before and after the agents'
