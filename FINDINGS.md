@@ -4,13 +4,19 @@
 
 ## Summary
 
-- **The forecast we hand in is the average of five AI agents, after two changes that a coach AI proposed and tests kept.** Each agent reads one price's list of offers and forecasts it directly. In three separate tests the crowd as first written cut error by 15% to 19% against drift. The coach's changes cut a further 3% to 4% on days the coach never saw.
+- **The forecast we hand in is the average of five AI agents, after two changes that a coach AI proposed and tests kept.** Each agent reads one price's list of offers and forecasts it directly. In three separate tests the crowd as first written cut error by 15% to 19% against drift. The third test, on AWS prices, mostly uses days the model may have read about; on the four AWS days after its knowledge ends the cut was 18% (likely 3% to 35%), and asked directly it could recall none of those prices. The coach's changes cut a further 3% to 4% on days the coach never saw.
 - **A plain calculation that looks inside the price list is the steady base.** Our "engine" cut error by about 8% against drift in all three tests, including 206 weeks of AWS spot prices.
-- **Two ways of making the system improve itself held up on fresh days.** A coach AI that rewrites the agent crowd (10 changes proposed, 2 kept). And reinforcement learning that teaches a small open model to forecast: it practised on AWS prices only, and on our prices Qwen3-8B went from about 3% less error than drift to between 5% and 10% less, depending on the run (seven runs, on Tinker and on Modal GPUs). The newer Qwen3.5-9B went from 5% to between 9% and 11% in three runs at the lower learning rate, and showed no gain in two runs at a higher one. The two models end level.
+- **Two ways of making the system improve itself held up on fresh days.** A coach AI that proposes changes to the agent crowd (10 proposed, 2 kept; nearly all of the gain comes from one of them, wider ranges). And reinforcement learning that teaches a small open model to forecast: it practised on AWS prices only, and on our prices Qwen3-8B went from about 3% less error than drift to between 5% and 10% less, depending on the run (seven runs, on Tinker and on Modal GPUs). The newer Qwen3.5-9B went from 5% to between 9% and 11% in three runs at the lower learning rate, and showed no gain in two runs at a higher one. The two models end level.
 - **Three other ways did not.** An AI scientist tuning the engine made it slightly worse on unseen weeks. A small model trained with reinforcement learning to propose engine settings found one change that is not clearly better. Letting the agents read each other's answers did not help.
-- **Different agents with different jobs, averaged, beat the engine.** On our own prices the crowd as first written was 8% ahead on the same forecasts (likely 3% to 14%), and the improved crowd 10% ahead (5% to 14%).
-- **A ready-made ML model is unreliable on these prices.** It looked good in the three test weeks, failed in the eight weeks before, and works well on AWS prices.
+- **Learning from its own past forecasts: three ways, one modest result.** We gave the crowd a memory with no AI in it (range width set from its own resolved forecasts), showed each agent its own scored record, and let each agent write itself a lesson from that record. All three found the fault the coach found, ranges too narrow at 3 and 7 days. They cut error by 1.4% to 2.1%, and in each case the likely range includes zero, so none is established. The no-AI memory also recovers 6 of the 8 points that RL training gave Qwen3-8B.
+- **An AI analyst that writes its own tests found three timing patterns that held on data it never saw.** One is a weekday pattern wider than anything we had found by hand: three scored cloud spot prices move almost only on Mondays and Tuesdays. A simple rule built on it did not make the forecasts better.
+- **Five AI agents that read the price list beat the engine.** On our own prices the crowd as first written was 8% ahead on the same forecasts (likely 3% to 14%), and the improved crowd 10% ahead (5% to 14%). We did not show that their different jobs, or the averaging, are the reason: the best single agent scored above the average of the five, and the five middles agree within 0.1% on three forecasts in four.
+- **A ready-made ML model, run in its plainest mode, is unreliable on these prices.** It looked good in the three test weeks, failed in the eight weeks before, and works well on AWS prices. We first ran it one price at a time with default settings; letting the prices read each other and adding facts about the list did not repair it (section 10).
 - **Most movement in a published median is not providers changing prices.** For provider list prices, 66% comes from offers joining or leaving the list, 25% from one or two offers that reprice almost daily, and 9% from everyone else.
+- **Some of that "repricing" is the euro.** One provider prices in euros and its tracking site converts to dollars each morning. Its dollar price changed on 55 of 59 days from Tuesday to Saturday and on 1 of 22 Sundays and Mondays. On 6 Nov it was the middle offer of two scored prices, so those published medians were its price.
+- **Ranges hold far less often when the price moves.** The improved crowd's ranges held the truth 80% of the time on its exam days: 99% when the price did not change and 66% when it did. For the engine the second figure is 49%.
+
+The points above on learning from past forecasts, the analyst, the euro and the ranges, sections 9 and 10, and every note marked "added 15 Nov" were written after the forecast was handed in and after reading the brief's reference list. The forecast file itself is unchanged. The tests in sections 9 and 10 had their rules committed before they first ran; the days they use had all been looked at.
 
 ## The question
 
@@ -49,6 +55,12 @@ Percent less error than drift, with the likely range:
 
 The engine is scored on every forecast day (2,573, 1,196 and 35,952 forecasts). The ML model on AWS is scored on Fridays (8,221). The agents are scored on samples: 7 days in each block of our prices (481 and 429 forecasts) and 12 days of AWS (501).
 
+Three notes added on 15 Nov (`uv run python -m gpuval.checks`):
+
+- **The AWS result is uneven across years.** Engine against drift by year: +1.4% in 2022, +32.7% in 2023, +8.0% in 2024, +7.1% in 2025 and +2.7% in 2026. It was ahead in 154 of 206 weeks. AWS sets spot prices by its own rule, so the pooled +7.9% leans on one year.
+- **Most of the agents' AWS days fall inside their model's knowledge,** which ends in April 2026. On the 11 sampled days before that the crowd cut error by 22.7% (+10% to +34%). On the four AWS days after it (4 Sep, and the coach's three exam days) it cut 18.5% (+3% to +35%, 180 forecasts). The edge is still there after the cutoff; four days is thin.
+- **A few prices and days carry these figures.** In the three test weeks drift's error sits on the equivalent of 14 of the 37 prices and 10 of the 21 days, and the top 5% of 1-day forecasts hold 75% of it. Price by price, the engine was ahead of drift on 31 prices and behind on 6 (the middle price: +13%).
+
 ### 2. The agents against the engine
 
 On the same forecasts:
@@ -61,7 +73,9 @@ On the same forecasts:
 | AWS, 12 days | −4.4% (−31% to +17%) |
 
 - **On our prices the agents were ahead in all 7 weeks where they ran.** On AWS they beat drift on all 12 days and were ahead of the engine on 8.
-- **Every one of the five agents beat the engine** on the test days. The best was the one looking for jumps that may reverse (+18.8% against drift), then the list reader (+15.6%).
+- **Every one of the five agents scored above the engine** on the test days; for two of them the likely range excludes zero. The best was the one looking for jumps that may reverse (+18.8% against drift), then the list reader (+15.6%).
+- **Neither the different jobs nor the averaging is shown to matter** (added 15 Nov). Those two agents each scored above the average of the five (+14.9%). Over all 14 days the best agent is at +18.4% and the average at +15.2%; the gap is +3.8% (−3% to +10%), so we cannot tell them apart. The five middles agree within 0.1% on 76% of forecasts, which leaves averaging little to do. What the test supports is "an AI agent that reads the list beats the engine", five times over.
+- **The agent shown the reference forecasts was the weakest.** It is the only one given the numbers from drift, the engine and the ML model. Over the 14 days it was 5.4% behind the average of the five (−10% to −1%).
 - **Seeing each other's answers did not help.** A second round, where each agent read the other four and could revise, scored 1.3% worse (−5% to +3%).
 - **Their ranges are a little narrow.** The truth landed inside 69% of the time; the target is 80%. The coach's first kept change addresses this (section 3).
 
@@ -79,9 +93,14 @@ On the same forecasts:
 | AWS, 12 other days (501) | +19.2% (+8% to +31%) | +20.6% (+10% to +31%) | +1.8% (−4% to +6%) |
 
 - **Ten changes proposed, two kept.** Kept: stretch the crowd's ranges by 1.25 at 3 days and 1.65 at 7 days; and rewrite the "base-rate keeper" so that it measures how often and how far this price has moved before and trusts a recent trend less at longer horizons. Seven changes did not improve the practice days. One, dropping an agent, improved the practice days (+17.5% to +17.9%) and failed the hidden check.
-- **Most of the gain is the wider ranges.** On the 14 days they account for +2.4% (+0.7% to +4.2%) and the rewritten agent for +1.0% (+0.1% to +2.1%). On the exam days the rewritten agent adds +0.4% (−2% to +3%).
+- **Most of the gain is the wider ranges.** On the 14 days they account for +2.4% (+0.7% to +4.2%) and the rewritten agent for +1.0% (+0.1% to +2.1%). On the exam days the wider ranges alone give +3.7% (+0.4% to +6.6%) and the rewritten agent adds +0.4% (−2% to +3%). So "the coach rewrites the crowd" is, in effect, "the coach found that the ranges were too narrow".
+- **Three prices supply 73% of the exam-day gain** (added 15 Nov): the B300 and B200 provider lists and A100 80GB spot. The improved crowd had less error on 19 prices and more on 17.
 - **The gain is at 7 days.** On the 14 days: +5.1% at 7 days (+2.5% to +7.9%), +1.9% at 3 days, +0.3% at 1 day.
 - **The ranges are closer to target.** On the exam days the truth landed inside 78% of the time, up from 71%; at 7 days, 76%, up from 61%. The target is 80%.
+- **That figure is two very different figures** (added 15 Nov). On our prices on the exam days (479 forecasts), the improved crowd's ranges held the truth 80% of the time: 99% of the 196 times the price did not change, and 66% of the 283 times it did (first crowd: 56%; engine: 49%; drift: 47%). Someone lending against these prices cares about the second number. Report both.
+
+![Coverage when the price moved](findings/figures/fig11_coverage_when_moved.png)
+
 - **Against the engine, same forecasts:** +10.8% on the exam days (+2% to +18%) and +9.9% on the 14 days (+5% to +14%).
 - **How these are counted.** This table counts every forecast whose outcome is known by 6 Nov. Sections 1 and 2 count only forecasts that land inside the same test week (910 of the 1,415), which leaves out most 7-day forecasts. On those 910 the improvement is +2.6% (+0.3% to +4.8%).
 
@@ -95,6 +114,7 @@ On the same forecasts:
 
 - **Training helped on prices the model never practised on.** After against before on our prices: +7.7% for Qwen3-8B (+4% to +11%) and +7.1% for Qwen3.5-9B (+3% to +10%). It practised on AWS prices only, so the skill carried over to a different kind of price.
 - **It learned how wide to make a range.** The truth landed inside 54% to 60% of the time before training and 79% after.
+- **For Qwen3-8B that is most of what it learned** (added 15 Nov, section 9). Give the untrained model one stretch number per horizon, set from its own earlier misses, and it reaches +8.8% against drift. The trained model's +10.1% is then +1.5% ahead (−1% to +4%): not a clear difference. For Qwen3.5-9B the trained model stays ahead of that control (+3.0%, +0.1% to +6.0%).
 - **The newer model looked better in these two runs.** Trained Qwen3.5-9B against trained Qwen3-8B: +1.3% on our prices (−1% to +4%) and +7.0% on AWS (+2% to +11%). It cost about $16 to train, against $5. The repeat runs below put the two models level.
 - **Where it stands.** In these two runs, level with the engine on our prices (+1.3%, −7% to +7%) and behind the GPT crowd: on the 14 days both answered, +12.7% against the crowd's +14.1% as first written and +17.0% after the coach. The repeat runs below put it level with the engine at best.
 - **As a sixth agent it adds nothing clear.** Added to the improved crowd on the exam days: +1.4% for Qwen3.5-9B (−1% to +4%) and +0.3% for Qwen3-8B. It is not in the forecast.
@@ -136,11 +156,13 @@ On the same forecasts:
 
 ### 4. The engine
 
-On the three blind weeks (1,196 forecasts) the engine cut error by 7.7% against drift. The gain is at longer horizons: +2.4% at 1 day (−4% to +9%), +7.6% at 3 days (+1% to +16%), +20.7% at 7 days (+11% to +43%, 72 forecasts).
+On the three blind weeks (1,196 forecasts) the engine cut error by 7.7% against drift. The gain is at longer horizons: +2.4% at 1 day (−4% to +9%), +7.6% at 3 days (+1% to +16%), +20.7% at 7 days (+11% to +43%). The 7-day figure is 72 forecasts made on three days (16, 23 and 30 Oct) for 24 of the 37 prices, so treat it as a pointer; the 1-day and 3-day figures come from 21 and 15 forecast days.
 
 ![Real against shuffled worlds](findings/figures/fig2_real_vs_shuffled.png)
 
 In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as in the real world. Its edge comes from knowing the list, not from any pattern in timing. One weak spot: on the few of our prices that go back to January, mostly four large cloud spot lists, it is no better than drift (−1.8%, −6% to +3%).
+
+**Outside the 37 scored prices the edge is about half as large** (added 15 Nov, `uv run python -m gpuval.checks wide`). The starter kit picked the 37 for having history, at least three providers and prices that move. On the pack's other daily-median rental prices over the same eleven weeks (476 prices, 52,940 forecasts) the engine cut error by 4.6% against drift (+1% to +8%): ahead on 160 prices, behind on 87 and level on 229 (175 of those never moved). On the 37 over those weeks, counting every forecast, it is +9.8% (+6% to +14%). The engine was designed while looking at the 37, so the smaller figure is the fairer guide to a price picked at random.
 
 ### 5. What the system learned across iterations
 
@@ -159,6 +181,13 @@ In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as 
 | 10 | RL: an open model trained to forecast directly, on AWS prices only | from about +3% to between +5% and +11% against drift on our prices, depending on the run; level with the engine at best |
 | 10b | The same RL training repeated on Modal: 4 learning rates x 2 seeds, then 3x the practice, then Qwen3.5-9B | reproduces the first Qwen3-8B run exactly with the same seed; other seeds lower; too high a rate collapses; Qwen3.5-9B gains only at the lower learning rate; the two models end level |
 | 11 | The trained open model added to the crowd as a sixth agent | +1.4% (−1% to +4%): not established; left out |
+| 12 | Range memory, no AI: the crowd's range width set day by day from its own resolved forecasts (added 15 Nov, as are the rows below) | ranges closest to the 80% target; +1.4% in error (−1.5% to +4.1%): not established |
+| 13 | The same memory given to the untrained open model | recovers 6.3 of the 7.7 points that RL training gave Qwen3-8B |
+| 14 | Each agent shown its own scored record for the price | +1.9% (−0.2% to +4.2%): not established; ranges widen |
+| 15 | The record plus a lesson the agent writes for itself | +2.1% (−0.2% to +4.5%); no better than the record alone |
+| 16 | ML model with prices reading each other and facts about the list | does not beat drift in both periods |
+| 17 | AI analyst writing its own tests in a sealed container | 12 ideas, 5 passed once, 3 passed again on data it never saw |
+| 18 | A weekday rule built on the analyst's confirmed pattern | −0.1% (−0.5% to +0.1%): no gain |
 
 - **Tuning on ten weeks of data overfits.** The scientist's ideas passed a gate and a hidden check and still did not hold. With hindsight, the best four setting changes would have reached 18%, and they point the opposite way from the past: earlier misses were upward, later ones downward.
 - **The ideas the gate rejected were also informative.** Following other sites' prices for the same GPU cut skill from +0.235 to +0.190. Replacing the engine's middle with the last value cut it from +0.212 to +0.194.
@@ -168,7 +197,14 @@ In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as 
 
 ### 6. The ML model
 
-Week by week on our prices it swings from −21% to +19% against drift and is above zero in 5 of 11 weeks; two of its three best weeks are test weeks. On AWS prices, with years of history per series, it beats the engine by 10.9% (+1% to +19%). We do not use it in the forecast.
+Week by week on our prices it swings from −21% to +19% against drift and is above zero in 5 of 11 weeks; two of its three best weeks are test weeks. On AWS prices, with years of history per series, it beats the engine by 10.9% (+1% to +19%).
+
+Corrected and extended on 15 Nov:
+
+- **It is not one of the forecasters we hand in, but one agent sees its numbers.** An earlier version of this section said "We do not use it in the forecast". The agent that weighs reference forecasts is shown the ML model's low, middle and high beside drift's and the engine's, in every test and for 6 Nov (`src/gpuval/agents.py`). That agent was the weakest of the five (section 2), so there is no sign the numbers helped. No committed script wrote the 6 Nov numbers (`versions/chronos2_quantiles_2026-11-06.csv`); `uv run python -m gpuval.ml_challenger final` now does, and a rerun on 15 Nov matched the committed file on all 111 rows.
+- **We ran it in its plainest mode:** one price at a time, default settings, the published price only. The model can also read related series in one batch and take known facts as extra inputs; its paper presents both, and we used neither. So section 1 is a result about the model as it comes. Section 10 runs it both ways: neither repairs it.
+- **Price by price it is behind drift in both periods.** The pooled figures (−7.1% and +8.6%) are pulled about by a few prices. The typical price (geometric mean of the error ratio) is 6.3% behind drift in the eight earlier weeks and 5.7% behind in the test weeks. It beat drift on 15 of 36 prices, then on 21 of 37.
+- **Much of its deficit is a middle that wanders when nothing happens.** A what-if on the same weeks: hold its middle at the last value wherever the price's own history says the typical change is zero, and keep its range. It then scores −0.7% (−9% to +6%) and +12.1% (−2% to +21%) against drift and is ahead of drift in 7 of 11 weeks, up from 5. Over the eleven weeks it is still 4.4% behind the engine (−16% to +4%). These weeks had been looked at, so this is a pointer, not a test.
 
 ### 7. What moves a published median
 
@@ -176,9 +212,20 @@ Week by week on our prices it swings from −21% to +19% against drift and is ab
 
 - **A typical provider list** has 12 offers from 10 providers, of which one reprices often. The typical offer never changed price in the sample, yet the median moved on about a third of days.
 - **A median can jump on an announcement, before the price takes effect.** On 6 Nov one tracking site began recording Lambda's announced prices (B200 $6.69 to $7.69, H100 $3.99 to $4.59), which a news report dates to 16 Nov. Its B200 median rose from $6.89 to $7.89 that day. The other two sites still showed the old prices, and their medians did not move, because Lambda sits above the middle of their lists.
+- **The three sites read Lambda by different routes** (added 15 Nov). The site that moved (gpurentalprices) fetches each provider's own pricing page or API once a day, at about 08:47 UTC in the pack. GPU Price Tracker reads providers through the open-source gpuhunt library, and FastGPU says it reads each provider's own API, feed or rate card. So one provider can show different prices on different sites on the same day, as Lambda did here. Which route a site uses is part of what its median means.
 - **The same thing reversed once before.** Crusoe's page lists new prices "starting Dec 1, 2026". The tracking sites recorded those higher prices from 16 to 21 Oct, then went back.
+- **One provider's "repricing" is the euro exchange rate** (added 15 Nov). Scaleway prices in euros. The gpurentalprices method page says its rows are converted at the European Central Bank's daily reference rate, and that "small day-to-day moves on Scaleway rows can therefore reflect the exchange rate, not a repricing". The pack shows exactly that: Scaleway's dollar price for the H100 changed on 55 of 59 mornings from Tuesday to Saturday and on 1 of 22 Sundays and Mondays. The bank sets a rate on working days only, which fits a morning reading that uses the rate set the working day before.
 
-Sources: GPUJournal, "Lambda announces GPU price rises of about 15% — B200, H100 and A100 80GB, from Nov 16", 6 Nov 2026, https://gpujournal.ai/story/lambda-announced-rises-nov-16. Crusoe, "Crusoe Cloud pricing", https://www.crusoe.ai/cloud/pricing, as stored on or before 6 Nov 2026 (read through Exa Snapshot). Tracking-site readings are from the data pack.
+![A scored price that follows the euro](findings/figures/fig10_euro_weekday.png)
+
+- **It decides scored prices.** Scaleway is the middle offer of that site's L4 list on all 86 days (three offers on 6 Nov), so the published L4 median is a euro price in dollars: it moved on 56 of 61 days from Tuesday to Saturday and on 1 of 22 Sundays and Mondays. On 6 Nov it was also the middle of the nine-offer H100 SXM list ($3.5539). Scaleway accounts for 10 of the 42 frequent repricers outside AWS.
+- **The weekday matters beyond the euro** (added 15 Nov, found by the analyst of section 10). Three more scored prices, cloud spot lists full of Google offers, moved on 54 of 189 Monday and Tuesday readings and on 7 of 495 others.
+- **Neither the engine nor the agents know the weekday or the currency.** Where Scaleway is the middle offer, the price moved in 0 of 29 one-day forecasts that land on a Sunday or Monday, and in 69 of 74 that land from Tuesday to Saturday. A flat forecast has zero error on the first group; drift and the engine both pay for a range there, though a small one: a simple weekday rule won nothing overall (section 10). A check for anyone holding the 7 to 13 Nov prices: that site's L4 price on Monday 9 Nov should equal Saturday 7 Nov's.
+- **A quarter of the offers that leave a list come straight back** (added 15 Nov). The 66% share for list changes counts every exit and entry as real. Of the 74 exits from provider lists, 19 were back within three readings, 15 of them at the same price, which reads like a missed reading and not a withdrawn offer. 50 never came back (6 of those left within the last three readings, too late to tell). gpurentalprices says it carries a provider's rows forward when a fetch fails; 1.2% of its rows in the pack carry a fetch time from an earlier day.
+
+Sources: GPUJournal, "Lambda announces GPU price rises of about 15% — B200, H100 and A100 80GB, from Nov 16", 6 Nov 2026, https://gpujournal.ai/story/lambda-announced-rises-nov-16. Crusoe, "Crusoe Cloud pricing", https://www.crusoe.ai/cloud/pricing, as stored on or before 6 Nov 2026 (read through Exa Snapshot). gpurentalprices, "Methodology", https://gpurentalprices.com/methodology, read 15 Nov 2026. GPU Price Tracker's method note and FastGPU's dataset card are in the pack (`licences/`). Tracking-site readings are from the data pack.
+
+**None of these lookups reached a forecast.** The Lambda article is dated on the forecast day itself and the Crusoe page was read through a paid snapshot service, so neither meets the brief's rule for outside data (public, free to every team, dated before the forecast day). They explain two moves in the data after the fact. No agent was shown news or provider pages in any test or for 6 Nov: the recorded prompts in `runs/agents/` and `runs/coach/` hold the pack's facts only.
 
 ### 8. Rolling forward, and the 2 to 3 year view
 
@@ -186,37 +233,138 @@ Sources: GPUJournal, "Lambda announces GPU price rises of about 15% — B200, H1
 
 Rolled forward a day at a time, the engine's ranges hold the truth 77% of the time at 1 day, 52% at 7 days and about 40% from two weeks to 90 days. It can be trusted for days, not months.
 
-**Rentals (AWS spot, USD per GPU-hour, median across zones).** Details in [longview/LONGVIEW.md](longview/LONGVIEW.md).
+**Rentals (AWS spot, USD per GPU-hour, median across zones).** Details in [longview/LONGVIEW.md](longview/LONGVIEW.md). Revised on 15 Nov after reading the brief's references; the long view is not scored against the 7 to 13 Nov prices, and every earlier figure can still be rebuilt (rows named `*_nocap` in `longview/out/outlook.csv`).
 
 | | Now (31 Oct 2026) | +1 year | +2 years | +3 years |
 |---|---|---|---|---|
-| H100 | 3.86 | 2.69 (1.05–8.25) | 2.56 (0.97–7.15) | 2.54 (0.94–6.89) |
-| A100 | 2.12 | 1.27 (0.78–3.18) | 1.25 (0.75–2.80) | 1.24 (0.74–2.70) |
+| H100 | 3.86 | 2.69 (1.05–7.64) | 2.56 (0.97–7.14) | 2.54 (0.94–6.89) |
+| A100 | 2.12 | 1.26 (0.78–2.95) | 1.24 (0.75–2.63) | 1.24 (0.74–2.57) |
 
-- **The central path assumes the 2026 rise fades.** H100 spot rose from $2.13 to $3.86 between July and October 2026. If it does not fade, the middle is about $3.6 for the H100 and $2.0 for the A100.
-- **Older chips did not fall faster when a successor arrived.** The A100 fell 20% a year before the H100 arrived and was flat afterwards.
-- **Tested horizon:** about six months. One year rests on 2 to 4 independent windows; three years is untested.
+- **Spot is a share of AWS's own list price, and list is a ceiling** (added 15 Nov). Since 5 Jun 2025 no zone has traded above its region's list price: 0 of 11,363 H100 zone-days and 0 of 10,739 for the A100. Every path is now stopped at today's list price ($7.64 for the H100, $3.29 for the A100). The middles hardly move. The tops come down: the H100's first-year top was $8.25, and the A100's tops were $3.18, $2.80 and $2.70.
+- **AWS cut the list price in June 2025, by 44% for the H100 and 33% for the A100, and our first write-up never mentioned it.** Spot fell with it ($3.58 in May 2025, $2.16 in July) and stayed at about 0.29 of list. The rise in 2026 is that share climbing, to 0.51 for the H100 on 31 Oct, with the list price unchanged. We do not model the list price itself: the archive holds one change of it.
+- **The central path assumes the 2026 rise fades.** H100 spot rose from $2.13 to $3.86 between July and October 2026. If it does not fade, the H100's middle is $3.73, $3.64 and $3.54 at one, two and three years. With a ceiling above it the A100's middle drifts down, from $2.03 to $1.73, and 13% to 15% of its paths end the year pinned at the list price.
+- **"Older chips did not fall faster when a successor arrived" does not hold in general.** We wrote that from the A100 when the H100 arrived (it fell 20% a year before and was flat after). The archive supports 14 such pairs. In 8 the older chip's yearly change was lower after the newer chip arrived, and in 6 higher. The H100's own windows contain the June 2025 list cut, so they say nothing about successors. Leaving out the five pairs with the cut in a window: 6 of 9 lower. Small inference chips fell faster after a successor in 4 of 4 cases; large training chips in 4 of 10.
+- **A successor adjustment learned on one chip hurt on the next.** We took the A100's shift after the H100 arrived, measured afresh on each forecast day, and applied it to the H100 when the H200 arrived. On forecast days after that arrival, where nothing comes from the future, error rose at every horizon: by 1%, 17%, 37% and 22% at 30, 90, 180 and 365 days (17, 13, 10 and 6 forecasts), and the opposite sign did better each time. It is not in the outlook.
+- **If cheaper computing keeps pulling old chips' rent down, our middle is too high at three years.** The central path is flat after year one. A steady fall of 18%, 25% or 35% a year from today would put the H100 at $2.13, $1.63 or $1.06 in three years, against our $2.54, and the A100 at $1.17, $0.89 or $0.58, against $1.24. Those rates bracket the hardware trend: on the pack's copy of Epoch AI's table, computing per launch dollar gets 14% to 33% cheaper a year depending on the measure. Epoch measures the launch price of new chips, not the rent of installed ones.
+- **Tested horizon:** about six months. One year rests on 2 to 4 independent windows; three years is untested. The tests have no ceiling in them, because the pack holds no list price before 2026.
 
-**Resale.** **Resale (USD per bare GPU module; a different kind of price again).** Public evidence is thin. American Compute puts the middle of used resale prices at $10,000 to $14,000 for an H100 and $4,700 to $5,400 for an A100 80GB over the year to August 2026 (American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices). We take the midpoints, $12,000 and $5,050, as today's price. Five other dated figures are in [longview/RESALE.md](longview/RESALE.md).
+**Resale (USD per bare GPU module; a different kind of price again).** Public evidence is thin. American Compute puts the middle of used resale prices at $10,000 to $14,000 for an H100 and $4,700 to $5,400 for an A100 80GB over the year to August 2026 (American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices). We take the midpoints, $12,000 and $5,050, as today's price. Four other dated figures are in [longview/RESALE.md](longview/RESALE.md); a fifth, read only through a search index's copy of a LinkedIn post and never used by the model, was removed on 15 Nov.
 
 We value a used GPU as the rent it can still earn: rent × utilisation, less running cost, over its remaining earning life, discounted. The resale outlook is today's price times how that value changes over time. Rent and resale are never joined into one series.
 
 | Middle (10% to 90%) | +1 year | +2 years | +3 years |
 |---|---|---|---|
-| H100, share of today's value | 70% (8–253%) | 45% (4–169%) | 19% (0–94%) |
-| H100, from $12,000 | $8,400 (900–30,300) | $5,400 (500–20,200) | $2,300 (0–11,300) |
-| A100, share of today's value | 57% (17–182%) | 26% (0–96%) | 0% (0–36%) |
-| A100, from $5,050 | $2,900 (800–9,200) | $1,300 (0–4,900) | $0 (0–1,800) |
+| H100, share of today's value | 70% (8–235%) | 45% (4–158%) | 19% (0–90%) |
+| H100, from $12,000 | $8,400 (900–28,100) | $5,400 (500–18,900) | $2,300 (340–10,800) |
+| A100, share of today's value | 56% (16–164%) | 26% (0–90%) | 0% (0–35%) |
+| A100, from $5,050 | $2,900 (800–8,300) | $1,300 (150–4,500) | $300 (150–1,800) |
 
-- **The ranges are very wide, and the tops are probably out of reach.** They assume rents near the top of the rental outlook.
-- **Zero means "stopped earning".** The model gives no scrap value.
+- **The ranges are very wide, and the tops are probably out of reach.** They assume rents near the top of the rental outlook, which is now capped at AWS's list price.
+- **Three errors in this revision were found by a code review and corrected the same day** (15 Nov; details in `longview/LONGVIEW.md` sections 3 and 4 and `longview/RESALE.md`). The successor test called "out of sample" used a number measured after 11 of its 17 one-year forecast days; it then read +20% and now reads as above. The cap did not reach the rent paths drawn for resale, so one H100 draw in ten rented above list; the H100's tops were $29,800, $20,200 and $11,300. And when the ceiling stopped a simulated rise, the next day was drawn as if the price had risen; fixing that moved the A100's tops by up to 12 cents and its no-pull-back middle from $1.95, $1.73, $1.56 to $2.03, $1.88, $1.73.
+- **A floor replaces zero** (added 15 Nov). The model alone lets a GPU that has stopped earning reach $0, and old chips still sell for something. The low, middle and high figures are floored at 1%, 2% and 5% of launch price ($340, $670 and $1,680 for the H100; $150, $300 and $750 for the A100). The levels are a judgement, not a measurement; the one figure we can quote is a 2026 paper that prices nine-year-old V100 cards at $60, about 0.6% of launch price (arXiv:2608.14614). The floor binds only where the model reached zero.
+- **On a steady 25% yearly fall in rent, the H100's middle is $7,100, $3,600 and $1,300,** against $8,400, $5,400 and $2,300 on the central path. As a share of launch price that is 21%, 11% and 4%, against 25%, 16% and 7%.
+- **Today's price moves every dollar figure in step.** From the top of the published range ($14,000) the H100's middles would be $9,800, $6,300 and $2,700.
 - **What drives it:** the rent path first, the remaining earning life second.
 - **One untested step:** the share comes from what an installed GPU earns, and we assume a bare module's price moves in step.
+
+### 9. A memory of its own misses (added 15 Nov)
+
+![Range memory](findings/figures/fig9_range_memory.png)
+
+The brief asks for a system that learns from its previous predictions. The plainest version needs no AI. On each forecast day, look at your own earlier forecasts whose outcomes are now known, find the range stretch that would have cost least on them (one number per horizon, shared by all prices), and apply it today. Every forecast is scored with a stretch fixed before its outcome existed. The rule was written into PROTOCOL.md and committed before its first run (deviation 12); the numbers below are that first run (`uv run python -m gpuval.range_memory`).
+
+| First crowd's recorded answers, 19 days, 1,894 forecasts | Less error than drift | Truth inside the range | Inside when the price moved |
+|---|---|---|---|
+| As the agents gave it | +14.7% (+11% to +19%) | 70% | 51% |
+| With the coach's fixed stretch (1.0 / 1.25 / 1.65) | +17.0% (+13% to +22%) | 75% | 59% |
+| With the range memory | +15.9% (+12% to +21%) | 79% | 65% |
+
+- **The memory found the fault the coach found, without a coach.** From mid-October it sat near 1.1 to 1.5 at one day, 1.4 to 1.7 at three and 1.9 to 2.3 at seven: wider than the agents' own ranges, and wider than the coach chose.
+- **Its ranges came closest to the 80% target, but its gain in error is not established.** Memory against no stretch: +1.4% (−1.5% to +4.1%). Memory against the coach's stretch: −1.4% (−3.2% to +0.2%). Being nearer 80% did not mean less error.
+- **It was unstable while its memory was thin.** In its first days with anything to learn from (3 to 12 Oct) it jumped to 3.0, the widest it was allowed. Splitting the days after the fact: up to 12 Oct it was 1.1% worse than no stretch, and after that 3.2% better and level with the coach (+0.0%). A rule that moves more slowly at the start would probably do better; we did not go back and tune one.
+- **The engine gains nothing from it:** +0.1% (−0.4% to +0.8%) on the same forecasts, with the truth inside 69% of the time, up from 66%. A stretch cannot widen a range that has no width, and a third of the engine's misses when the price moved (34%) are ranges of zero width. For the crowd that share is 12%.
+
+**The same memory as a control for the RL result.** Section 3 says RL training carried a skill from AWS prices to ours. How much of that skill is range width alone? Give the untrained model the range memory and compare it with the trained one, on the same 4,074 forecasts over 43 days:
+
+| Less error than drift | Untrained | Untrained plus memory | Trained (Tinker run) | Trained against untrained plus memory |
+|---|---|---|---|---|
+| Qwen3-8B | +2.6% | +8.8% (+4% to +12%) | +10.1% | +1.5% (−1% to +4%) |
+| Qwen3.5-9B | +4.6% | +8.6% (+4% to +12%) | +11.3% | +3.0% (+0.1% to +6.0%) |
+
+- **For Qwen3-8B, range width is most of it.** One number per horizon recovers 6.3 of the 7.7 points that training gave (memory alone: +6.3%, +3.7% to +8.8%), and what training adds beyond that is not established. The seven Qwen3-8B training runs at workable learning rates gave +5.4% to +10.1%; the untrained model with a memory sits inside that spread.
+- **For Qwen3.5-9B, training added something more:** the trained model stays ahead of the control.
+- **The control is conservative.** The untrained Qwen3-8B's stretch sat at 3.0, the top of the allowed range, at three and seven days from 4 Oct on, so a width fix alone may be worth more than this shows.
+- **What this does not show.** The memory learns on our prices as it goes; RL learned on AWS prices only and never saw ours. So the comparison is about what was learned, not about which method had less to work with. Adding the memory on top of a trained model made it worse (Qwen3-8B −2.0%, −4.4% to +0.2%; Qwen3.5-9B −3.1%, −5.1% to −1.2%): ranges that are already about right get over-stretched in the unstable first days.
+
+### 10. Five further tests (added 15 Nov)
+
+Each rule was written into PROTOCOL.md and committed before the test first ran (deviation 12). All five use days that had already been looked at, and each was run once.
+
+**Do the agents forecast better when they can see their own past forecasts?** (`gpuval.agent_memory`, 10,635 AI calls, about $24 on the cheaper tier.) The five agents as first written lived through the 19 days in date order, three times over. In one arm nothing was added. In the second, each agent was shown its own earlier forecasts for that price whose outcomes were known, each marked inside, below or above its range. In the third it was shown that record and a lesson of at most three sentences that it had written for itself from its whole record. A memory only ever held what was known on the day.
+
+![Agent memory](findings/figures/fig12_agent_memory.png)
+
+| 19 days, 1,894 forecasts, no range stretch | Less error than drift | Truth inside the range | Inside when the price moved |
+|---|---|---|---|
+| No memory, asked again | +14.2% (+10% to +19%) | 70% | 51% |
+| Own scored record | +15.8% (+12% to +21%) | 73% | 56% |
+| Record plus a written lesson | +16.0% (+12% to +21%) | 74% | 57% |
+
+- **Both memories point the right way, and neither is established.** Record against no memory: +1.9% (−0.2% to +4.2%). Record plus lesson against no memory: +2.1% (−0.2% to +4.5%). Our rule needed the range to exclude zero, and it does not, by a hair. The sign is the same at every horizon and for all five agents, and at 7 days the range only just clears zero (+2.7%, +0.0% to +5.9%).
+- **The written lesson added nothing to the record:** +0.2% (−1.0% to +1.3%). That is what we wrote down beforehand, from recent work on agent memory which reports that raw records of what happened tend to beat lessons distilled from them (arXiv:2610.27406 and arXiv:2510.19897, both read in summary only).
+- **What the memory changed was the width.** Middles moved no more often than before (40% of forecasts in every arm). Typical range width went from 1.2% of the price to 1.5%. The agents read their records and widened their own ranges.
+- **Every agent reached the coach's diagnosis by itself.** The lessons, as written: "widen three- and especially seven-day ranges", "more upside allowance", "tighten one-day ranges". All 90 are in `findings/data/agent_memory.json`.
+- **Asking the same agents again moves the score by about half a point.** The no-memory arm against the answers recorded on 14 Nov: −0.6% (−2.1% to +0.8%). A difference between two runs of agents smaller than about 2 points should not be read as a result.
+- **Three ways of learning from past misses, one size of gain.** The coach's fixed stretch gave +2.7% on these forecasts, an agent's own record +1.9%, the range memory with no AI +1.4% (section 9). All three work by widening ranges at 3 and 7 days. None taught the agents to place the middle better.
+
+**Does the agents' model already remember the AWS prices?** (`gpuval.recall_probe`, 212 questions.) We asked it, with no data shown, for the spot price of each machine type on each of the agents' AWS days, and whether the price was higher or lower a week later. "I don't know" was allowed and a best guess was still asked for. Days after April 2026, which it cannot have seen, were asked in the same way as a control.
+
+- **No recall was found.** It said it remembered none of the 212 prices, and answered "don't know" to every week-later question. Its guesses for the 11 earlier days were no closer to the truth of their own date than to the truth of other dates for the same machine (p = 0.12; the rule needed below 0.05).
+- **It does know roughly where these prices used to sit.** Its guesses were a median 16% off before April 2026 and 34% off after. The agents are shown the last three weeks of each price, so knowing the level gives them nothing.
+- **What this does not rule out.** A model can use what it will not recite. Together with the four later AWS days in section 1, this lowers the worry about the AWS test; it does not remove it.
+
+**The ML model, run the way its paper also describes** (`gpuval.ml_challenger crossrun`). Same model, nothing tuned, same 3,769 forecasts. Percent less error than drift:
+
+| | 8 earlier weeks | 3 test weeks |
+|---|---|---|
+| One price at a time (section 1) | −7.1% (−18% to +1%) | +8.6% (−9% to +19%) |
+| Prices on the same day read each other | −2.4% (−11% to +4%) | +8.4% (−5% to +17%) |
+| One at a time, plus four facts about its list | −5.5% (−16% to +2%) | +10.4% (−5% to +20%) |
+| Both | −2.1% (−10% to +4%) | +8.8% (−5% to +18%) |
+
+- **Neither change repairs it.** No version beats drift in both periods. Letting prices read each other is better than the plain run in the earlier weeks (+4.4%, +0.9% to +7.7%) and no different in the test weeks. It is then ahead of drift in 7 of 11 weeks, up from 5.
+- **It stays behind the engine where it was behind:** by 11.5% in the earlier weeks (−23% to −4%) with both changes. "Unreliable on these prices" stands for this model in these modes. Histories of a few dozen days, most of them flat, give it little to work with.
+
+**An analyst that writes its own test** (`gpuval.analyst`, 12 AI calls, about 11 cents). The AI scientist of section 5 could only turn the engine's 15 dials. Here the same model writes code: for each idea, one function that measures a pattern in when prices change. It was given a plain description of the data and no hint from our own findings.
+
+- **How an idea is judged.** Its function is run on the real data and on 39 shuffled copies, in which each offer keeps its price changes but their order in time is scrambled. An idea passes if the real number lies outside all 39. That happens by luck one time in twenty, so a passed idea is confirmed only if it passes again on newer data (8 Oct to 6 Nov) that the analyst never saw and that was not touched until it had finished.
+- **Where it runs.** The AI is called from our machine. Its code runs in a container that is given the data and nothing else: no keys, no network. The shuffles, the pass rule and the newer data stay outside its reach.
+
+| | Ideas |
+|---|---|
+| Proposed, and ran without error | 12 |
+| Passed on the data to 7 Oct | 5 |
+| Passed again on the newer data | 3 |
+
+- **Three patterns held twice.** Offers are repriced more on weekdays than at weekends. An offer that changes price is unusually likely to change again two to four days later. One provider's price changes arrive together across its different GPUs.
+- **Two passed once and then failed:** "price cuts arrive in market-wide waves" and "a price change tends to reverse the next day". The second look is what caught them. In the first AI scientist's test nothing that was kept held up on later weeks (section 5); here the gate threw out two of five before anything was claimed.
+- **It found the weekday pattern without being told, and the pattern is wider than the one we found by hand.** We expected all three to be the euro effect of section 7 seen from three sides. They are not only that: with that provider's offers taken out, all three still pass in both periods (a reading made after the result). Counting by provider shows why. Google Cloud's spot offers changed price on 42% of Monday readings and 17% of Tuesday readings, and almost never from Friday to Sunday (42,726 changes). AWS spot offers change a little less at weekends (67% of offers a day, against 72%).
+- **Three scored prices move almost only on Mondays and Tuesdays.** On one site's cloud spot lists for the A100 40GB, A100 80GB and V100, half or more of the offers are Google's. Their published price moved on 54 of 189 Monday and Tuesday readings, and on 7 of 495 readings on other days. We cannot tell from the pack whether Google reprices early in the week or the collector's catalogue is refreshed then.
+
+**Does that pattern make a better forecast? Not with a simple rule** (`gpuval.weekday_rule`, no AI calls). The rule, written down before it was run: for a 1-day forecast, if this price has never moved into the weekday being forecast, in at least 8 past cases, say "no change" with no range.
+
+- **No gain.** It fired on 146 of 2,058 one-day forecasts. The engine with the rule against the engine without: −0.1% (−0.5% to +0.1%). For the first crowd: −0.2% (−0.9% to +0.2%).
+- **Where it was right there was nothing left to win.** On the three cloud spot lists it fired 94 times and the price moved once. But the engine's error there was already close to zero: its ranges are tight when a history is flat.
+- **Where it was wrong it cost.** On three provider lists with short histories it fired 31 times and the price moved in 16: "never moved on that weekday" was eight quiet days, not a schedule.
+- **Reading.** A pattern can be real in timing and still be worth nothing to a forecaster that already keeps its range tight on quiet days. That is the gap between the analyst's kind of test and a forecasting test, and the reason a confirmed idea was not claimed as an improvement.
 
 ## What someone pricing a lease or a loan could use
 
 - **Read a published median with its list.** A move is far more likely to be an offer entering or leaving the sample, or one dynamic pricer, than a change in what providers charge.
 - **Check which site, and when.** The same announced price change reached one site ten days early and the others not at all.
+- **Check the currency of the offer in the middle.** One scored median is a euro price converted each morning. It moves with the exchange rate from Tuesday to Saturday and stands still on Sunday and Monday, whatever the GPU market does.
+- **Ask how often a range held when the price moved.** A range can hold 80% of the time overall and 66% of the time when the price actually changes. The second number is the one a lender needs.
+- **Read an AWS spot price as a share of AWS's list price.** Spot has not traded above list since the June 2025 list cut, and the whole 2026 rise is that share climbing from about 0.3 to 0.5 with list unchanged. A further list cut would pull spot down within days, as it did in June 2025; nothing in the spot history warns of one.
 - **Do not extrapolate a short-run forecaster.** Ranges that are right for a week are too narrow by a month.
 - **Be wary of tuned models on short histories.** Careful tuning, a hidden check and a strong model still produced changes that did not survive.
 
@@ -229,18 +377,21 @@ We value a used GPU as the rent it can still earn: rent × utilisation, less run
 - **The agents were tested on samples:** 19 days of our prices and 15 days of AWS.
 - **The agents, the ML model, the coach and the RL forecaster were added after the blind test.** Their results come from the same weeks, which had been looked at by then. The coach and the open model saw none of their test days, but we chose which days those were.
 - **RL results vary from run to run.** The same settings with a different random seed moved the result on our prices from +10.1% to +6.5%. Single-run figures for the trained models should be read with that in mind. Qwen3.5-9B's +11.3% on Tinker is one run; two Modal runs at the same learning rate gave +9.3% and +9.7%, and that pair was chosen after seeing test results.
-- **The coach ran once.** A second run would propose different changes. Its gain is mostly a correction to range width, which a simpler rule could also have found.
+- **The coach ran once.** A second run would propose different changes. Its gain is mostly a correction to range width. A simpler rule, with no AI, finds the same fault (section 9), though in our one run of it the coach's fixed numbers scored a little better.
 - **The second check of the coach is not fully fresh:** we already knew how the first crowd had scored on those 14 days, though not how the improved crowd would.
-- **The agents' model may have met the AWS years in training,** since its knowledge runs to April 2026. Only one of the twelve AWS days is later.
-- **AWS prices are a different kind of price.** AWS sets them itself and they move in small steps.
-- **The 37 prices were chosen with hindsight to 6 Nov** by the starter kit's rule, and 33 of them have under 90 days of history.
-- **Agent answers are not deterministic.** A second run gives slightly different numbers.
+- **The agents' model may have met the AWS years in training,** since its knowledge runs to April 2026. Only one of the twelve sampled AWS days is later; with the coach's three exam days that makes four (section 1).
+- **AWS prices are a different kind of price.** AWS sets them itself and they move in small steps. The archive records price changes, not daily readings, so a zone whose price stops changing is carried forward for ever: 13% of zone-days in our AWS test have had the same price for 60 days or more (32% for the oldest machine type). We cannot tell a flat price from a zone that has gone.
+- **The 37 prices were chosen with hindsight to 6 Nov** by the starter kit's rule, and 33 of them have under 90 days of history. On the pack's other rental prices the engine's edge is about half as large (section 4).
+- **Everything dated 15 Nov was added after the forecast was handed in** and uses days that had already been looked at. The rule of each new test was committed before its first run; the choice of which tests to add was not blind.
+- **Agent answers are not deterministic.** Asking the first crowd again on its 19 days moved its score against drift from +14.7% to +14.2% (−0.6% on the same forecasts, −2.1% to +0.8%; section 10).
 - **Posted prices, not transacted prices.**
 
 ## Deviations from the protocol
 
-Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent crowd, which was not in the protocol; the ML model, the agents and the extra test periods were added after the blind test; the RL trial was lengthened; the coach and the RL forecaster were added last, and the submission changed from the first crowd to the improved one.
+Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent crowd, which was not in the protocol; the ML model, the agents and the extra test periods were added after the blind test; the RL trial was lengthened; the coach and the RL forecaster were added last, and the submission changed from the first crowd to the improved one. On 15 Nov, after the forecast was handed in, we corrected wording in this file and added checks and tests on past data (deviation 12); the forecast file was not touched.
 
 ## Reproduce
 
 `bash reproduce.sh` rebuilds the forecast files in about 15 seconds with no AI calls. The main file is rebuilt from the agents' recorded answers (`runs/coach/final_answers.json`; the first crowd's are in `runs/agents/final_answers.json`). The coach's ledger of all ten changes is `runs/coach/state.json`. `bash reproduce.sh --with-backtest` replays the AI scientist's blind test and reproduces its results table exactly.
+
+The notes added on 15 Nov rebuild from recorded files with no AI calls: `uv run python -m gpuval.checks` (about a minute), `uv run python -m gpuval.checks wide` (a few minutes), `uv run python -m gpuval.range_memory` and `uv run python -m gpuval.weekday_rule`. The three tests that called an AI saved every answer, and their tables rebuild from those: `uv run python -m gpuval.agent_memory table`, `uv run python -m gpuval.recall_probe table` and `uv run python -m gpuval.analyst table`. The long view rebuilds with `uv run python longview/longview.py && uv run python longview/resale.py`.

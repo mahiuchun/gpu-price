@@ -1,0 +1,356 @@
+{
+ "model": "amazon/chronos-2",
+ "arms": [
+  "cross",
+  "cov",
+  "cross_cov"
+ ],
+ "covariates": [
+  "cov_cheapest",
+  "cov_lower_quartile",
+  "cov_upper_quartile",
+  "cov_offers"
+ ],
+ "blocks": {
+  "8 earlier weeks": {
+   "n": 2573,
+   "plain_vs_drift": {
+    "n_cells": 2573,
+    "n_series": 37,
+    "n_days": 56,
+    "skill": -0.0707788823787816,
+    "lo90": -0.1778406569056924,
+    "hi90": 0.007909487865810121,
+    "excludes_zero": false
+   },
+   "engine_vs_drift": {
+    "n_cells": 2573,
+    "n_series": 37,
+    "n_days": 56,
+    "skill": 0.0838353562136207,
+    "lo90": 0.03775201536363004,
+    "hi90": 0.14359919848292194,
+    "excludes_zero": true
+   },
+   "cross": {
+    "vs_drift": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": -0.024095761089037104,
+     "lo90": -0.10782182049680952,
+     "hi90": 0.03643013011657659,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": 0.043597349609693414,
+     "lo90": 0.009064597968338157,
+     "hi90": 0.07655962857462623,
+     "excludes_zero": true
+    },
+    "vs_engine": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": -0.11780755569937051,
+     "lo90": -0.22975837026884086,
+     "hi90": -0.04068007126215415,
+     "excludes_zero": true
+    },
+    "inside": 0.6027982899339293
+   },
+   "cov": {
+    "vs_drift": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": -0.05485308408574574,
+     "lo90": -0.16219705138444834,
+     "hi90": 0.022761710493820978,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": 0.01487309710260254,
+     "lo90": -0.01278987262760296,
+     "hi90": 0.03986904058823445,
+     "excludes_zero": false
+    },
+    "vs_engine": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": -0.15137938496096814,
+     "lo90": -0.28839045745055253,
+     "hi90": -0.057266029080966,
+     "excludes_zero": true
+    },
+    "inside": 0.5993004275165177
+   },
+   "cross_cov": {
+    "vs_drift": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": -0.02131061237434806,
+     "lo90": -0.10543965715698503,
+     "hi90": 0.040945242752334916,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": 0.04619839895846445,
+     "lo90": 0.010030924662601776,
+     "hi90": 0.08060351908562899,
+     "excludes_zero": true
+    },
+    "vs_engine": {
+     "n_cells": 2573,
+     "n_series": 37,
+     "n_days": 56,
+     "skill": -0.11476754675165735,
+     "lo90": -0.22525116381572094,
+     "hi90": -0.03978213776121029,
+     "excludes_zero": true
+    },
+    "inside": 0.6047415468324913
+   }
+  },
+  "3 test weeks": {
+   "n": 1196,
+   "plain_vs_drift": {
+    "n_cells": 1196,
+    "n_series": 37,
+    "n_days": 21,
+    "skill": 0.0856519928044358,
+    "lo90": -0.08598736560802565,
+    "hi90": 0.1931079196649227,
+    "excludes_zero": false
+   },
+   "engine_vs_drift": {
+    "n_cells": 1196,
+    "n_series": 37,
+    "n_days": 21,
+    "skill": 0.07691767825750961,
+    "lo90": 0.02176158906545337,
+    "hi90": 0.1426671932852296,
+    "excludes_zero": true
+   },
+   "cross": {
+    "vs_drift": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": 0.08383788851923346,
+     "lo90": -0.05442561846575623,
+     "hi90": 0.17170348165772334,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": -0.001984041383506163,
+     "lo90": -0.05725269546627898,
+     "hi90": 0.054741863896675236,
+     "excludes_zero": false
+    },
+    "vs_engine": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": 0.0074968506044625904,
+     "lo90": -0.19203574218432615,
+     "hi90": 0.11809971581194117,
+     "excludes_zero": false
+    },
+    "inside": 0.8060200668896321
+   },
+   "cov": {
+    "vs_drift": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": 0.10397158587663669,
+     "lo90": -0.048626724669331496,
+     "hi90": 0.20316961967825223,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": 0.020035689833665882,
+     "lo90": -0.02400893339721879,
+     "hi90": 0.07173885102890235,
+     "excludes_zero": false
+    },
+    "vs_engine": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": 0.029308228509953294,
+     "lo90": -0.1901733985779092,
+     "hi90": 0.14930174969959223,
+     "excludes_zero": false
+    },
+    "inside": 0.8010033444816054
+   },
+   "cross_cov": {
+    "vs_drift": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": 0.08843786423183286,
+     "lo90": -0.052349529260468985,
+     "hi90": 0.17954354527032815,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": 0.003046839283810221,
+     "lo90": -0.05148495015169047,
+     "hi90": 0.05860937096984429,
+     "excludes_zero": false
+    },
+    "vs_engine": {
+     "n_cells": 1196,
+     "n_series": 37,
+     "n_days": 21,
+     "skill": 0.012480128481473618,
+     "lo90": -0.19576107929452763,
+     "hi90": 0.12255871209500194,
+     "excludes_zero": false
+    },
+    "inside": 0.8035117056856187
+   }
+  },
+  "all 11 weeks": {
+   "n": 3769,
+   "plain_vs_drift": {
+    "n_cells": 3769,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": -0.012053144145522277,
+    "lo90": -0.11529161229365224,
+    "hi90": 0.06876767629107407,
+    "excludes_zero": false
+   },
+   "engine_vs_drift": {
+    "n_cells": 3769,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": 0.08123838969817576,
+    "lo90": 0.0446827716291415,
+    "hi90": 0.12689198338395405,
+    "excludes_zero": true
+   },
+   "cross": {
+    "vs_drift": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": 0.01642362644255968,
+     "lo90": -0.06072024429407794,
+     "hi90": 0.07674101729760033,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": 0.028137623753073604,
+     "lo90": -0.003264525008386332,
+     "hi90": 0.062202696512944355,
+     "excludes_zero": false
+    },
+    "vs_engine": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": -0.07054578960294577,
+     "lo90": -0.1727911739015512,
+     "hi90": 0.0059971001521581125,
+     "excludes_zero": false
+    },
+    "inside": 0.6672857521889095
+   },
+   "cov": {
+    "vs_drift": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": 0.004771309003345325,
+     "lo90": -0.09766778539738538,
+     "hi90": 0.08136284159360226,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": 0.01662408070780952,
+     "lo90": -0.008303942270972553,
+     "hi90": 0.042863450866495345,
+     "excludes_zero": false
+    },
+    "vs_engine": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": -0.08322842382335716,
+     "lo90": -0.21347300805822295,
+     "hi90": 0.011656262929398645,
+     "excludes_zero": false
+    },
+    "inside": 0.6633059166887768
+   },
+   "cross_cov": {
+    "vs_drift": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": 0.019890079631784907,
+     "lo90": -0.05918341216261454,
+     "hi90": 0.0825182530605433,
+     "excludes_zero": false
+    },
+    "vs_plain": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": 0.03156279288502861,
+     "lo90": -0.0004653104842768591,
+     "hi90": 0.06624014745953705,
+     "excludes_zero": false
+    },
+    "vs_engine": {
+     "n_cells": 3769,
+     "n_series": 37,
+     "n_days": 77,
+     "skill": -0.06677282700812581,
+     "lo90": -0.1689132899141982,
+     "hi90": 0.010922068900112963,
+     "excludes_zero": false
+    },
+    "inside": 0.6678163969222606
+   }
+  }
+ },
+ "weeks_ahead_of_drift": {
+  "plain": 5,
+  "cross": 7,
+  "cov": 6,
+  "cross_cov": 7,
+  "weeks": 11
+ }
+}

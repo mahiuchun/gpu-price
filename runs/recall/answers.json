@@ -1,0 +1,3194 @@
+{
+ "model": "gpt-6.1-sol",
+ "effort": "low",
+ "usage": {
+  "calls": 212,
+  "in": 60573,
+  "out": 21002,
+  "flex_calls": 212,
+  "standard_calls": 0,
+  "usd": 0.17
+ },
+ "rows": [
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.35205,
+   "price_week_later": 0.3597125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.3,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical spot discounts for this four-GPU instance, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.1869,
+   "price_week_later": 0.1855,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.1578,
+    "week_later": "dont_know",
+    "basis": "A guess based on typical g4dn.xlarge spot pricing, not a recalled observation for this date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.5044,
+   "price_week_later": 0.474875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.55,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical spot discounts, not a recalled price for this instance and date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.6782,
+   "price_week_later": 0.6782,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.72,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on general g5 spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.3351,
+   "price_week_later": 0.3351,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.35,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region was not specified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.43155,
+   "price_week_later": 0.45465,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical p2.xlarge spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.1469,
+   "price_week_later": 1.1469,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical V100 spot discounts, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.1793,
+   "price_week_later": 1.1548,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.918,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical p3.2xlarge spot pricing, not a recalled median for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.0767,
+   "price_week_later": 1.0465,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.9,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from typical V100 spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.6043625,
+   "price_week_later": 1.6043625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for this instance type and date."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2022-11-04",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2022-11-04",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.684575,
+   "price_week_later": 1.684575,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.25,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.3844,
+   "price_week_later": 0.37665,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.3,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from typical g4dn.12xlarge spot discounts divided by four GPUs, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.1893,
+   "price_week_later": 0.1935,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.1578,
+    "week_later": "dont_know",
+    "basis": "This is a guess based on typical g4dn.xlarge spot pricing, not recall of the date-specific median."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.508225,
+   "price_week_later": 0.510825,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.57,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.7278625,
+   "price_week_later": 0.737475,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.72,
+    "week_later": "dont_know",
+    "basis": "A rough guess from general G5 spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.3351,
+   "price_week_later": 0.3351,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.35,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on general g5.xlarge spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.4395,
+   "price_week_later": 0.4395,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on general p2.xlarge spot pricing, not a recollection of this date or its zone median."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.2358625,
+   "price_week_later": 1.1972625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.95,
+    "week_later": "dont_know",
+    "basis": "A rough estimate based on typical p3 spot discounts, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.1469,
+   "price_week_later": 1.1839,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.918,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled date-specific median; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.0767,
+   "price_week_later": 1.097175,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.918,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical p3 spot discounts, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.17045,
+   "price_week_later": 1.1926125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.2,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2023-03-03",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2023-03-03",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.535425,
+   "price_week_later": 1.7020625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.45,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.41075,
+   "price_week_later": 0.407075,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.35,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical g4dn.12xlarge spot pricing divided by its four GPUs, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.1941,
+   "price_week_later": 0.1941,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.158,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical g4dn.xlarge spot pricing, not a recalled observation for this date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.5531,
+   "price_week_later": 0.5531,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.55,
+    "week_later": "dont_know",
+    "basis": "A rough guess from typical g5.12xlarge spot discounts, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 1.0194625,
+   "price_week_later": 0.989875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.7,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from general g5 spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.3624,
+   "price_week_later": 0.3711,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.35,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical g5.xlarge spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.2916,
+   "price_week_later": 0.2916,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.0098,
+   "price_week_later": 1.0098,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical V100 spot pricing, not a remembered price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.0098,
+   "price_week_later": 1.0098,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.918,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical p3.2xlarge spot pricing, not a recalled price for this date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.0098,
+   "price_week_later": 1.0098,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical p3 spot pricing, not a remembered price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.17045,
+   "price_week_later": 1.17045,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.3,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for this instance and date."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2023-07-07",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2023-07-07",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.228975,
+   "price_week_later": 1.228975,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough estimate from general p4d spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.38445,
+   "price_week_later": 0.410725,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.3,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from typical g4dn.12xlarge spot pricing divided by its four GPUs, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.2071,
+   "price_week_later": 0.2107,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.1578,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical g4dn.xlarge spot pricing, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.5219,
+   "price_week_later": 0.512275,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.6,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.7749875,
+   "price_week_later": 0.68565,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.72,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on general g5 spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.4319,
+   "price_week_later": 0.4473,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.35,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.40395000000000003,
+   "price_week_later": 0.37534999999999996,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical p2.xlarge spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.9282,
+   "price_week_later": 0.880925,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.15,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on general p3 spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.1912,
+   "price_week_later": 1.104,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.918,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical p3.2xlarge spot pricing, not recalled data for this date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.0011,
+   "price_week_later": 0.94345,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.2352625,
+   "price_week_later": 1.1752875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.25,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2023-11-03",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2023-11-03",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.119975,
+   "price_week_later": 1.1625375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.45,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.403975,
+   "price_week_later": 0.396,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.32,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.2241,
+   "price_week_later": 0.2252,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.19,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical g4dn.xlarge spot pricing, not recall of this date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.484425,
+   "price_week_later": 0.504725,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.6,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.4149875,
+   "price_week_later": 0.4261125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.7,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.5172,
+   "price_week_later": 0.5247,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.39575,
+   "price_week_later": 0.3917,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on general p2.xlarge spot pricing, not a recalled observation for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.7618875,
+   "price_week_later": 0.7912125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.1,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.1932,
+   "price_week_later": 1.1504,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.918,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled median spot price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.00295,
+   "price_week_later": 1.018475,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for March 1, 2024."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.313925,
+   "price_week_later": 1.33395,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.25,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2024-03-01",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2024-03-01",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 0.7416437499999999,
+   "price_week_later": 0.78383125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.435575,
+   "price_week_later": 0.428,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.32,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.2222,
+   "price_week_later": 0.2267,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.16,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical g4dn.xlarge spot pricing, not a remembered price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.625375,
+   "price_week_later": 0.63465,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.56,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.701,
+   "price_week_later": 0.7161125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.7,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from general g5 spot pricing, not a recalled price for this date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.4942,
+   "price_week_later": 0.4913,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.38149999999999995,
+   "price_week_later": 0.36970000000000003,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.9851375,
+   "price_week_later": 1.038075,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.95,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical V100 spot pricing, not recalled data for this date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.1717,
+   "price_week_later": 1.12,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.00465,
+   "price_week_later": 1.0873,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.95,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.5034625,
+   "price_week_later": 1.512025,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2024-07-05",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2024-07-05",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.2753187499999998,
+   "price_week_later": 1.2877687500000001,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical p4d spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.42795,
+   "price_week_later": 0.43385,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.32,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.2051,
+   "price_week_later": 0.207,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.19,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.5737,
+   "price_week_later": 0.55935,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.55,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered historical price; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.744975,
+   "price_week_later": 0.685075,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.8,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.4345,
+   "price_week_later": 0.4418,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical g5.xlarge spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.3937125,
+   "price_week_later": 0.4138125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.38,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.2863,
+   "price_week_later": 0.30600000000000005,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.27505,
+   "price_week_later": 0.2772,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on historical p2.xlarge spot pricing, not a recalled median for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.257875,
+   "price_week_later": 1.23035,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.1,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.8912,
+   "price_week_later": 1.0357,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on general p3.2xlarge spot pricing, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.299275,
+   "price_week_later": 1.286675,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled date-specific price; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.1021125,
+   "price_week_later": 1.1007625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.25,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled date-specific price; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2024-11-01",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2024-11-01",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 2.00479375,
+   "price_week_later": 2.2207375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.41455,
+   "price_week_later": 0.39685,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.34,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical T4 spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.2076,
+   "price_week_later": 0.2035,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.18,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical g4dn.xlarge spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.567725,
+   "price_week_later": 0.5643,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.58,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.6694125,
+   "price_week_later": 0.6466125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.75,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from typical spot discounts, not a recalled price for this date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.4408,
+   "price_week_later": 0.4176,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.5009,
+   "price_week_later": 0.483525,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.43,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.386,
+   "price_week_later": 0.3668,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.12xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g6e.12xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g6e.12xlarge (NVIDIA L40S)",
+   "after_knowledge": false,
+   "price": 1.154375,
+   "price_week_later": 1.07585,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.72,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.g6e.xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "g6e.xlarge (NVIDIA L40S)",
+   "after_knowledge": false,
+   "price": 0.7158,
+   "price_week_later": 0.7484,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.75,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.2783,
+   "price_week_later": 0.2725,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.0218125,
+   "price_week_later": 0.9627125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.1,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical V100 spot pricing, not a recalled observation for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.936,
+   "price_week_later": 0.9232,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.918,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess from general p3.2xlarge spot pricing, not a recalled median for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.276175,
+   "price_week_later": 1.206075,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "A rough estimate based on typical V100 spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.242425,
+   "price_week_later": 1.2614375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.35,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.18505,
+   "price_week_later": 1.25794375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p5.48xlarge.az_median|2025-03-07",
+   "series_id": "aws_spot.p5.48xlarge.az_median",
+   "day": "2025-03-07",
+   "machine": "p5.48xlarge (NVIDIA H100)",
+   "after_knowledge": false,
+   "price": 4.2649437500000005,
+   "price_week_later": 4.0747625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.1,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date or a verified median across availability zones."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.422225,
+   "price_week_later": 0.412475,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.35,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical spot discounts, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.2174,
+   "price_week_later": 0.2029,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.17,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.5455,
+   "price_week_later": 0.551575,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.55,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from general g5.12xlarge spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.8197375,
+   "price_week_later": 0.851025,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.72,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from general g5 spot pricing, not a recalled price for this date or a specified AWS region."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.4594,
+   "price_week_later": 0.4442,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.43,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled historical price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.507,
+   "price_week_later": 0.5078875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.43,
+    "week_later": "dont_know",
+    "basis": "A rough guess, not a recalled historical price; no region or spot-price data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.38585,
+   "price_week_later": 0.38634999999999997,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical L4 spot pricing, not a recalled observation for this date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.12xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g6e.12xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g6e.12xlarge (NVIDIA L40S)",
+   "after_knowledge": false,
+   "price": 0.998275,
+   "price_week_later": 1.08935,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.79,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no historical spot data or AWS region was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.g6e.xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "g6e.xlarge (NVIDIA L40S)",
+   "after_knowledge": false,
+   "price": 0.8074,
+   "price_week_later": 0.8981,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.72,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled historical price; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.32415000000000005,
+   "price_week_later": 0.32415000000000005,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region was not specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.1627125,
+   "price_week_later": 1.2234625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.15,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.8277,
+   "price_week_later": 1.0973,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on general p3.2xlarge spot pricing, not recalled data for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.956475,
+   "price_week_later": 1.003425,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.02,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 0.911975,
+   "price_week_later": 1.0290375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.1536,
+   "price_week_later": 1.1653375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.65,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4de.24xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p4de.24xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p4de.24xlarge (NVIDIA A100 80GB)",
+   "after_knowledge": false,
+   "price": 1.03861875,
+   "price_week_later": 1.1720187499999999,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 2.05,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p5.48xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p5.48xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p5.48xlarge (NVIDIA H100)",
+   "after_knowledge": false,
+   "price": 2.01078125,
+   "price_week_later": 2.08830625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.1,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5e.48xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p5e.48xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p5e.48xlarge (NVIDIA H200)",
+   "after_knowledge": false,
+   "price": 1.7203062500000001,
+   "price_week_later": 1.7633,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.1,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for this instance and date."
+   }
+  },
+  {
+   "id": "aws_spot.p5en.48xlarge.az_median|2025-07-04",
+   "series_id": "aws_spot.p5en.48xlarge.az_median",
+   "day": "2025-07-04",
+   "machine": "p5en.48xlarge (NVIDIA H200)",
+   "after_knowledge": false,
+   "price": 1.9115375,
+   "price_week_later": 2.06485,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical pricing data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.412825,
+   "price_week_later": 0.399225,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.34,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from typical g4dn.12xlarge spot pricing divided by four GPUs, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.2164,
+   "price_week_later": 0.2062,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.158,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on general g4dn.xlarge spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.56655,
+   "price_week_later": 0.565275,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.55,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical spot data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.984775,
+   "price_week_later": 0.911525,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.75,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.4312,
+   "price_week_later": 0.4303,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.461175,
+   "price_week_later": 0.4567,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.46,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical spot discounts, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.3729,
+   "price_week_later": 0.3815,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.32,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.12xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g6e.12xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g6e.12xlarge (NVIDIA L40S)",
+   "after_knowledge": false,
+   "price": 0.8947,
+   "price_week_later": 0.861625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.65,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.g6e.xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "g6e.xlarge (NVIDIA L40S)",
+   "after_knowledge": false,
+   "price": 0.7456,
+   "price_week_later": 0.7502,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.78,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.32415000000000005,
+   "price_week_later": 0.32415000000000005,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 1.3956,
+   "price_week_later": 1.2593125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.15,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical V100 spot pricing, not a recalled price for this date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.943,
+   "price_week_later": 0.7751,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.95,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on general p3.2xlarge spot pricing, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.986325,
+   "price_week_later": 0.973275,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.3905,
+   "price_week_later": 1.1962625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.56,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date or a verified median across zones."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.2896875,
+   "price_week_later": 1.1652,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.65,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4de.24xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p4de.24xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p4de.24xlarge (NVIDIA A100 80GB)",
+   "after_knowledge": false,
+   "price": 1.9674375,
+   "price_week_later": 1.9956437500000002,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 2.05,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical spot data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.p5.48xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p5.48xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p5.48xlarge (NVIDIA H100)",
+   "after_knowledge": false,
+   "price": 2.41469375,
+   "price_week_later": 2.3351437500000003,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical spot data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.p5e.48xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p5e.48xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p5e.48xlarge (NVIDIA H200)",
+   "after_knowledge": false,
+   "price": 2.29885625,
+   "price_week_later": 2.34913125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.1,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for this instance type and date."
+   }
+  },
+  {
+   "id": "aws_spot.p5en.48xlarge.az_median|2025-11-07",
+   "series_id": "aws_spot.p5en.48xlarge.az_median",
+   "day": "2025-11-07",
+   "machine": "p5en.48xlarge (NVIDIA H200)",
+   "after_knowledge": false,
+   "price": 2.7540375,
+   "price_week_later": 2.6304875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled or verified price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.417975,
+   "price_week_later": 0.42775,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.34,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": false,
+   "price": 0.2029,
+   "price_week_later": 0.2186,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.16,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical g4dn.xlarge spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.6339,
+   "price_week_later": 0.697675,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.62,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.970775,
+   "price_week_later": 1.0587875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.72,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": false,
+   "price": 0.4624,
+   "price_week_later": 0.4842,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.44232499999999997,
+   "price_week_later": 0.4779,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical L4 spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": false,
+   "price": 0.35105,
+   "price_week_later": 0.36675,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.25,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is also unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.12xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g6e.12xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g6e.12xlarge (NVIDIA L40S)",
+   "after_knowledge": false,
+   "price": 0.978675,
+   "price_week_later": 1.008875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.74,
+    "week_later": "dont_know",
+    "basis": "A rough guess, not a recalled price for this date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.g6e.xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "g6e.xlarge (NVIDIA L40S)",
+   "after_knowledge": false,
+   "price": 0.847,
+   "price_week_later": 0.8568,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.72,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p2.xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p2.xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p2.xlarge (NVIDIA K80)",
+   "after_knowledge": false,
+   "price": 0.32415000000000005,
+   "price_week_later": 0.32415000000000005,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.28,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on historical p2.xlarge spot pricing, not recalled data for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.16xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p3.16xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p3.16xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.7846,
+   "price_week_later": 0.912825,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.1,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3.2xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p3.2xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p3.2xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.6855,
+   "price_week_later": 0.6197,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical p3.2xlarge spot pricing, not recalled data for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p3.8xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p3.8xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p3.8xlarge (NVIDIA V100)",
+   "after_knowledge": false,
+   "price": 0.792025,
+   "price_week_later": 0.8974,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.92,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": false,
+   "price": 1.0650375,
+   "price_week_later": 1.22395,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.35,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical V100 spot pricing, not a recalled observation for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": false,
+   "price": 1.1789875,
+   "price_week_later": 1.2502125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.65,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4de.24xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p4de.24xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p4de.24xlarge (NVIDIA A100 80GB)",
+   "after_knowledge": false,
+   "price": 1.4306875,
+   "price_week_later": 1.3413625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 2.05,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or a value verified against historical spot data."
+   }
+  },
+  {
+   "id": "aws_spot.p5.48xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p5.48xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p5.48xlarge (NVIDIA H100)",
+   "after_knowledge": false,
+   "price": 2.43181875,
+   "price_week_later": 2.382875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.1,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled or verified price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5e.48xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p5e.48xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p5e.48xlarge (NVIDIA H200)",
+   "after_knowledge": false,
+   "price": 2.1923250000000003,
+   "price_week_later": 2.2257749999999996,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.2,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date or a value based on historical spot data."
+   }
+  },
+  {
+   "id": "aws_spot.p5en.48xlarge.az_median|2026-02-06",
+   "series_id": "aws_spot.p5en.48xlarge.az_median",
+   "day": "2026-02-06",
+   "machine": "p5en.48xlarge (NVIDIA H200)",
+   "after_knowledge": false,
+   "price": 2.254975,
+   "price_week_later": 2.25295,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.8,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered price for that instance and date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": true,
+   "price": 0.44275,
+   "price_week_later": 0.459075,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.32,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": true,
+   "price": 0.2406,
+   "price_week_later": 0.2425,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.16,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 0.9176875,
+   "price_week_later": 0.857325,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.48,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 1.2361125,
+   "price_week_later": 1.3056,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.85,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 0.51025,
+   "price_week_later": 0.5859,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; the AWS region is unspecified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": true,
+   "price": 0.4418875,
+   "price_week_later": 0.4870375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": true,
+   "price": 0.41964999999999997,
+   "price_week_later": 0.44355,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.26,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.12xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g6e.12xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g6e.12xlarge (NVIDIA L40S)",
+   "after_knowledge": true,
+   "price": 1.0237,
+   "price_week_later": 1.207925,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.65,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for this date; no region or historical data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.g6e.xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "g6e.xlarge (NVIDIA L40S)",
+   "after_knowledge": true,
+   "price": 1.1661,
+   "price_week_later": 1.1109,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.67,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": true,
+   "price": 1.0513375,
+   "price_week_later": 0.9197,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.3,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or an observed median for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": true,
+   "price": 2.20315,
+   "price_week_later": 2.3515,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date or an observation from pricing data."
+   }
+  },
+  {
+   "id": "aws_spot.p4de.24xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.p4de.24xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "p4de.24xlarge (NVIDIA A100 80GB)",
+   "after_knowledge": true,
+   "price": 2.68246875,
+   "price_week_later": 2.88895,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 2.56,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled spot price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5.48xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.p5.48xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "p5.48xlarge (NVIDIA H100)",
+   "after_knowledge": true,
+   "price": 2.6272625,
+   "price_week_later": 2.6295375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.8,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or an observed median for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5e.48xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.p5e.48xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "p5e.48xlarge (NVIDIA H200)",
+   "after_knowledge": true,
+   "price": 3.1400437500000002,
+   "price_week_later": 3.14030625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled spot price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5en.48xlarge.az_median|2026-07-24",
+   "series_id": "aws_spot.p5en.48xlarge.az_median",
+   "day": "2026-07-24",
+   "machine": "p5en.48xlarge (NVIDIA H200)",
+   "after_knowledge": true,
+   "price": 3.38225,
+   "price_week_later": 3.39855,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": true,
+   "price": 0.448325,
+   "price_week_later": 0.460275,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.36,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical g4dn.12xlarge spot discounts and four GPUs per instance, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": true,
+   "price": 0.2409,
+   "price_week_later": 0.2493,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.16,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on typical g4dn.xlarge spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 0.75175,
+   "price_week_later": 0.7958624999999999,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.6,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 1.60028125,
+   "price_week_later": 1.9621875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.76,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical pricing data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 0.5246,
+   "price_week_later": 0.5204500000000001,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.35,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": true,
+   "price": 0.44461249999999997,
+   "price_week_later": 0.4641,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled date-specific price; no region or pricing data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": true,
+   "price": 0.42674999999999996,
+   "price_week_later": 0.398,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.12xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g6e.12xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g6e.12xlarge (NVIDIA L40S)",
+   "after_knowledge": true,
+   "price": 1.234975,
+   "price_week_later": 1.2396,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.85,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or an observation for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.g6e.xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "g6e.xlarge (NVIDIA L40S)",
+   "after_knowledge": true,
+   "price": 1.3258,
+   "price_week_later": 1.216,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.75,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": true,
+   "price": 0.58285,
+   "price_week_later": 0.636775,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": true,
+   "price": 2.2793125,
+   "price_week_later": 2.1283875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4de.24xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.p4de.24xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "p4de.24xlarge (NVIDIA A100 80GB)",
+   "after_knowledge": true,
+   "price": 2.84940625,
+   "price_week_later": 2.68331875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 2.05,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p5.48xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.p5.48xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "p5.48xlarge (NVIDIA H100)",
+   "after_knowledge": true,
+   "price": 2.5940374999999998,
+   "price_week_later": 2.5844875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.2,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for this instance type and date."
+   }
+  },
+  {
+   "id": "aws_spot.p5e.48xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.p5e.48xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "p5e.48xlarge (NVIDIA H200)",
+   "after_knowledge": true,
+   "price": 3.0352187500000003,
+   "price_week_later": 3.05453125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5en.48xlarge.az_median|2026-08-21",
+   "series_id": "aws_spot.p5en.48xlarge.az_median",
+   "day": "2026-08-21",
+   "machine": "p5en.48xlarge (NVIDIA H200)",
+   "after_knowledge": true,
+   "price": 3.348225,
+   "price_week_later": 3.356625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or an observation for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": true,
+   "price": 0.46455,
+   "price_week_later": 0.46205,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.35,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": true,
+   "price": 0.255,
+   "price_week_later": 0.2743,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.16,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 0.8368875,
+   "price_week_later": 0.8761,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.48,
+    "week_later": "dont_know",
+    "basis": "A rough guess based on general g5 spot pricing, not a recalled price for this date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 1.9207625,
+   "price_week_later": 2.11003125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.74,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on typical A10G spot pricing, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 0.5567,
+   "price_week_later": 0.5874999999999999,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or pricing data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": true,
+   "price": 0.529875,
+   "price_week_later": 0.582275,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.46,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": true,
+   "price": 0.45165,
+   "price_week_later": 0.4562,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.27,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for this date; no region or historical data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.12xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g6e.12xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g6e.12xlarge (NVIDIA L40S)",
+   "after_knowledge": true,
+   "price": 1.582225,
+   "price_week_later": 1.8162,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.85,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical pricing data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.g6e.xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "g6e.xlarge (NVIDIA L40S)",
+   "after_knowledge": true,
+   "price": 1.2645,
+   "price_week_later": 1.3511,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.74,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": true,
+   "price": 0.583675,
+   "price_week_later": 0.5628375,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.56,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": true,
+   "price": 2.1771125,
+   "price_week_later": 2.283725,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or pricing data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.p4de.24xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.p4de.24xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "p4de.24xlarge (NVIDIA A100 80GB)",
+   "after_knowledge": true,
+   "price": 2.86783125,
+   "price_week_later": 4.05265,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 2.05,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or an observation for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5.48xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.p5.48xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "p5.48xlarge (NVIDIA H100)",
+   "after_knowledge": true,
+   "price": 2.59278125,
+   "price_week_later": 2.58918125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date or an observed median across availability zones."
+   }
+  },
+  {
+   "id": "aws_spot.p5e.48xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.p5e.48xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "p5e.48xlarge (NVIDIA H200)",
+   "after_knowledge": true,
+   "price": 3.0362,
+   "price_week_later": 3.10506875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.2,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled or observed price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5en.48xlarge.az_median|2026-09-04",
+   "series_id": "aws_spot.p5en.48xlarge.az_median",
+   "day": "2026-09-04",
+   "machine": "p5en.48xlarge (NVIDIA H200)",
+   "after_knowledge": true,
+   "price": 3.38195,
+   "price_week_later": 3.387025,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 4.2,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.12xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g4dn.12xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g4dn.12xlarge (NVIDIA T4)",
+   "after_knowledge": true,
+   "price": 0.476725,
+   "price_week_later": 0.46095,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.32,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or pricing data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g4dn.xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g4dn.xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g4dn.xlarge (NVIDIA T4)",
+   "after_knowledge": true,
+   "price": 0.2719,
+   "price_week_later": 0.2751,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.16,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess based on general g4dn.xlarge spot pricing, not a recalled price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.12xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g5.12xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g5.12xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 0.8983625,
+   "price_week_later": 0.8876625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.55,
+    "week_later": "dont_know",
+    "basis": "A rough estimate from typical g5 spot pricing, not a remembered price for this date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.48xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g5.48xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g5.48xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 1.82495,
+   "price_week_later": 1.918825,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.78,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g5.xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g5.xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g5.xlarge (NVIDIA A10G)",
+   "after_knowledge": true,
+   "price": 0.55845,
+   "price_week_later": 0.565,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no AWS region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.g6.12xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g6.12xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g6.12xlarge (NVIDIA L4)",
+   "after_knowledge": true,
+   "price": 0.6432625,
+   "price_week_later": 0.6376999999999999,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.4,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled or verified price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.g6.xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g6.xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g6.xlarge (NVIDIA L4)",
+   "after_knowledge": true,
+   "price": 0.432,
+   "price_week_later": 0.42575,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.3,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region or historical data was provided."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.12xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g6e.12xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g6e.12xlarge (NVIDIA L40S)",
+   "after_knowledge": true,
+   "price": 1.79245,
+   "price_week_later": 2.111625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.82,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or an observation from historical spot data."
+   }
+  },
+  {
+   "id": "aws_spot.g6e.xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.g6e.xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "g6e.xlarge (NVIDIA L40S)",
+   "after_knowledge": true,
+   "price": 1.706,
+   "price_week_later": 1.7438,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 0.75,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p3dn.24xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.p3dn.24xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "p3dn.24xlarge (NVIDIA V100 32GB)",
+   "after_knowledge": true,
+   "price": 0.81045,
+   "price_week_later": 0.716175,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.2,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or a value based on data for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4d.24xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.p4d.24xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "p4d.24xlarge (NVIDIA A100 40GB)",
+   "after_knowledge": true,
+   "price": 2.1074375,
+   "price_week_later": 2.1412125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 1.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a remembered price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p4de.24xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.p4de.24xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "p4de.24xlarge (NVIDIA A100 80GB)",
+   "after_knowledge": true,
+   "price": 2.98464375,
+   "price_week_later": 2.58763125,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 2.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price for that date; no region was specified."
+   }
+  },
+  {
+   "id": "aws_spot.p5.48xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.p5.48xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "p5.48xlarge (NVIDIA H100)",
+   "after_knowledge": true,
+   "price": 2.82863125,
+   "price_week_later": 3.29175625,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 3.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or an observation for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5e.48xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.p5e.48xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "p5e.48xlarge (NVIDIA H200)",
+   "after_knowledge": true,
+   "price": 3.370375,
+   "price_week_later": 4.2222875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 5.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled or verified spot price for that date."
+   }
+  },
+  {
+   "id": "aws_spot.p5en.48xlarge.az_median|2026-10-02",
+   "series_id": "aws_spot.p5en.48xlarge.az_median",
+   "day": "2026-10-02",
+   "machine": "p5en.48xlarge (NVIDIA H200)",
+   "after_knowledge": true,
+   "price": 3.69165,
+   "price_week_later": 5.1221875,
+   "answer": {
+    "remembers": false,
+    "price_usd_per_gpu_hour": 5.5,
+    "week_later": "dont_know",
+    "basis": "This is a rough guess, not a recalled price or a value based on data for that date."
+   }
+  }
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "model": "gpt-6.1-sol",
+ "usage": {
+  "calls": 212,
+  "in": 60573,
+  "out": 21002,
+  "flex_calls": 212,
+  "standard_calls": 0,
+  "usd": 0.17
+ },
+ "blocks": {
+  "before April 2026 (11 days)": {
+   "questions": 152,
+   "says_it_remembers": 0.0,
+   "price_within_10pct": 0.34210526315789475,
+   "price_within_25pct": 0.7236842105263158,
+   "median_abs_error_pct": 16.284603088557592,
+   "median_abs_log_error": 0.16715680734806923,
+   "same_after_shuffling_dates": 0.1788867887765138,
+   "p_closer_to_own_date": 0.1241751649670066,
+   "direction_dont_know": 1.0,
+   "direction_answered_where_price_moved": 0,
+   "direction_right": 0,
+   "direction_right_share": null,
+   "direction_right_90pct": [
+    NaN,
+    NaN
+   ],
+   "share_of_weeks_that_moved": 0.756578947368421
+  },
+  "after April 2026 (4 days)": {
+   "questions": 60,
+   "says_it_remembers": 0.0,
+   "price_within_10pct": 0.03333333333333333,
+   "price_within_25pct": 0.21666666666666667,
+   "median_abs_error_pct": 34.29512620941993,
+   "median_abs_log_error": 0.38845511659079357,
+   "same_after_shuffling_dates": 0.38910847272164484,
+   "p_closer_to_own_date": 0.37252549490101977,
+   "direction_dont_know": 1.0,
+   "direction_answered_where_price_moved": 0,
+   "direction_right": 0,
+   "direction_right_share": null,
+   "direction_right_90pct": [
+    NaN,
+    NaN
+   ],
+   "share_of_weeks_that_moved": 0.7833333333333333
+  }
+ }
+}

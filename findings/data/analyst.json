@@ -1,0 +1,220 @@
+{
+ "split": "2026-10-07",
+ "ideas": 12,
+ "ran": 12,
+ "passed_discovery": 5,
+ "confirmed": 3,
+ "usage": {
+  "calls": 12,
+  "in": 12528,
+  "out": 18541,
+  "flex_calls": 12,
+  "standard_calls": 0,
+  "usd": 0.11
+ },
+ "rows": [
+  {
+   "n": 1,
+   "idea": "Price cuts arrive in market-wide waves: incumbent offers across different GPU price series are more likely to get cheaper on the same calendar days than independent timing would predict.",
+   "why_it_matters": "A broad wave of cuts in other GPU series would raise the forecast probability of a near-term cut in a series that has not yet moved.",
+   "ran": true,
+   "real": 0.10294513743416718,
+   "shuffled_min": -0.0149392209454123,
+   "shuffled_max": 0.0428135963124871,
+   "discovery": "above all",
+   "confirmation": {
+    "real": 0.009099052228091174,
+    "shuffled_min": -0.024656049207263577,
+    "shuffled_max": 0.1016150144120801,
+    "verdict": "inside",
+    "confirmed": false
+   }
+  },
+  {
+   "n": 2,
+   "idea": "Price changes in actively repriced offers tend to reverse on the following day rather than continue in the same direction. This would indicate temporary price excursions rather than persistent repricing trends.",
+   "why_it_matters": "A forecaster should partially fade a fresh offer-level price jump or cut when predicting the next few days.",
+   "ran": true,
+   "real": 0.14537073228175112,
+   "shuffled_min": -0.08268442674518761,
+   "shuffled_max": 0.020190366981797974,
+   "discovery": "above all",
+   "confirmation": {
+    "real": -0.08859248172633404,
+    "shuffled_min": -0.13632534068730878,
+    "shuffled_max": 0.024292109330296185,
+    "verdict": "inside",
+    "confirmed": false
+   }
+  },
+  {
+   "n": 3,
+   "idea": "Incumbent offers are more likely to be repriced on weekdays than on weekends, after accounting for each offer's weekday and weekend listing exposure.",
+   "why_it_matters": "A forecaster should assign a higher probability of a price update to upcoming weekdays than to weekend days.",
+   "ran": true,
+   "real": 0.07850982732330263,
+   "shuffled_min": -0.03380484955872299,
+   "shuffled_max": 0.01931092801872159,
+   "discovery": "above all",
+   "confirmation": {
+    "real": 0.04416557787139067,
+    "shuffled_min": -0.030701607819510618,
+    "shuffled_max": 0.031974722229343715,
+    "verdict": "above all",
+    "confirmed": true
+   },
+   "without": {
+    "scaleway": {
+     "discovery": {
+      "real": 0.0748891303434608,
+      "shuffled_min": -0.042858199700758416,
+      "shuffled_max": 0.027476823290598813,
+      "verdict": "above all"
+     },
+     "confirmation": {
+      "real": 0.042585975702078664,
+      "shuffled_min": -0.02862963680395985,
+      "shuffled_max": 0.032709345941607126,
+      "verdict": "above all"
+     }
+    }
+   }
+  },
+  {
+   "n": 4,
+   "idea": "Incumbent offers are more likely to be repriced on days when the same price list has unusually high offer entry or exit, even compared with other occurrences of the same weekday. Listing refreshes and price refreshes therefore appear to share an update cycle.",
+   "why_it_matters": "A forecaster should treat heavy list turnover as a signal of elevated incumbent repricing risk, rather than interpreting it solely as a change in the mix of offers.",
+   "ran": true,
+   "real": -0.002882600359327426,
+   "shuffled_min": -0.030028907012619885,
+   "shuffled_max": 0.08087949019856604,
+   "discovery": "inside"
+  },
+  {
+   "n": 5,
+   "idea": "Repricing occurs in multi-day bouts: an offer that changes price is unusually likely to change again two to four days later, even after accounting for its usual weekday schedule. This persistence extends beyond immediate next-day price reversals.",
+   "why_it_matters": "After an offer reprices, a forecaster should temporarily increase the probability of further updates over the following several days.",
+   "ran": true,
+   "real": 0.17183680168891075,
+   "shuffled_min": -0.04034832958200784,
+   "shuffled_max": 0.02976627309182693,
+   "discovery": "above all",
+   "confirmation": {
+    "real": 0.23728278275411777,
+    "shuffled_min": -0.037937629480281586,
+    "shuffled_max": 0.0378740270719349,
+    "verdict": "above all",
+    "confirmed": true
+   },
+   "without": {
+    "scaleway": {
+     "discovery": {
+      "real": 0.18837086211890264,
+      "shuffled_min": -0.035165231476281665,
+      "shuffled_max": 0.021609179395615154,
+      "verdict": "above all"
+     },
+     "confirmation": {
+      "real": 0.23728278275411777,
+      "shuffled_min": -0.03066947267732894,
+      "shuffled_max": 0.03332354945980982,
+      "verdict": "above all"
+     }
+    }
+   }
+  },
+  {
+   "n": 6,
+   "idea": "For the same GPU and pricing tier, one tracking site systematically leads another site's repricing by one day. This lead\u2013lag relationship should remain after removing weekday patterns and each site's own next-day price dynamics.",
+   "why_it_matters": "A forecaster could use changes on the leading site as an early signal for tomorrow's prices on the slower site.",
+   "ran": true,
+   "real": 0.20682703058662072,
+   "shuffled_min": 0.006868743548198381,
+   "shuffled_max": 0.44731782135928033,
+   "discovery": "inside"
+  },
+  {
+   "n": 7,
+   "idea": "Upward repricings are more temporary than downward repricings: after three days, a larger fraction of a price increase has typically been undone than of a price cut.",
+   "why_it_matters": "A forecaster should discount recent price increases more heavily than recent cuts when predicting prices several days ahead.",
+   "ran": true,
+   "real": -0.3881507368199852,
+   "shuffled_min": -0.4030920963789142,
+   "shuffled_max": -0.088358440023059,
+   "discovery": "inside"
+  },
+  {
+   "n": 8,
+   "idea": "Unusually cheap new listings trigger delayed competitive responses: incumbent offers are more likely to cut prices during the next three days than during the preceding three days. This response should be stronger following cheap entries than on otherwise comparable weekdays without them.",
+   "why_it_matters": "A forecaster should treat an influx of below-market offers as an early warning of incumbent price cuts over the next few days.",
+   "ran": true,
+   "real": -0.017252729951771028,
+   "shuffled_min": -0.05575396354230344,
+   "shuffled_max": 0.06675250323333673,
+   "discovery": "inside"
+  },
+  {
+   "n": 9,
+   "idea": "A provider's repricing bursts synchronize across different GPU models, beyond the market-wide update wave and weekday schedule. This would indicate provider-specific refresh cycles rather than only general market timing.",
+   "why_it_matters": "A price update for one GPU would raise the near-term probability of updates to other GPUs offered by the same provider.",
+   "ran": true,
+   "real": 0.053803127956837005,
+   "shuffled_min": -0.03435858643434352,
+   "shuffled_max": -0.016253532599763327,
+   "discovery": "above all",
+   "confirmation": {
+    "real": 0.1338994535992467,
+    "shuffled_min": -0.03729006062250058,
+    "shuffled_max": -0.004322301241055154,
+    "verdict": "above all",
+    "confirmed": true
+   },
+   "without": {
+    "scaleway": {
+     "discovery": {
+      "real": 0.0020606779905587473,
+      "shuffled_min": -0.03771055833178164,
+      "shuffled_max": -0.02634870024686417,
+      "verdict": "above all"
+     },
+     "confirmation": {
+      "real": 0.14968176999869734,
+      "shuffled_min": -0.041033611372760306,
+      "shuffled_max": -0.0048829239483020705,
+      "verdict": "above all"
+     }
+    }
+   }
+  },
+  {
+   "n": 10,
+   "idea": "When an offer reverses a price change, it disproportionately restores the exact previous quote, rather than merely moving in the opposite direction. This suggests temporary departures from stable reference prices.",
+   "why_it_matters": "After a price excursion, a forecaster should put extra probability on a return to the specific preceding quote, not just on a directional reversal.",
+   "ran": true,
+   "real": 0.01612955242202816,
+   "shuffled_min": -0.00631999775492033,
+   "shuffled_max": 0.06403388600033445,
+   "discovery": "inside"
+  },
+  {
+   "n": 11,
+   "idea": "When an incumbent quote finally changes after a long uninterrupted spell of stability, its price adjustment tends to be larger than changes made during rapid repricing bouts. Test whether the size of a nonzero adjustment increases with the time since that offer's previous adjustment.",
+   "why_it_matters": "A forecaster should distinguish frequent small quote updates from stale offers that may require larger adjustments when they next reprice.",
+   "ran": true,
+   "real": 0.06279012255544804,
+   "shuffled_min": -0.09455308974512608,
+   "shuffled_max": 0.11816619112511145,
+   "discovery": "inside"
+  },
+  {
+   "n": 12,
+   "idea": "Newly listed offers have a short settling-in period: their quotes are more likely to be revised during the first three days after entry than later in the same uninterrupted listing spell, even after accounting for weekday patterns and each offer's usual repricing rate.",
+   "why_it_matters": "A forecaster should assign greater near-term quote uncertainty to newly added offers than to otherwise comparable established listings.",
+   "ran": true,
+   "real": 0.003663038922769793,
+   "shuffled_min": -0.08570277258903738,
+   "shuffled_max": 0.05688051768221075,
+   "discovery": "inside"
+  }
+ ]
+}

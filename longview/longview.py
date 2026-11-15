@@ -9,6 +9,16 @@ Regenerates everything under longview/out/ deterministically (fixed seed):
   3. a "new chip arrives" adjustment and whether it helps (step 3),
   4. the outlook from 31 Oct 2026 at +1, +2, +3 years (step 4).
 
+Revised 15 Nov 2026, after reading the brief's references (the long view is not scored against the
+7-13 Nov truth):
+  * the spot price is set against AWS's on-demand list price (step 0): the list price per region is
+    read from the pack, the share of list that spot trades at is reported through time, and every
+    outlook path is capped at today's list price (the uncapped paths are kept as "*_nocap");
+  * the before/after-arrival comparison is run on every older-chip and successor pair the archive
+    supports, beside the same comparison at dates when nothing arrived (step 1b);
+  * the successor adjustment is also tested out of sample, carried from the A100 to the H100 (step 3);
+  * three paths that fall at a steady hardware-trend rate are written beside the outlook (step 4).
+
 Instrument throughout: AWS EC2 Linux/UNIX SPOT price, USD per GPU-hour (instance
 price / 8 GPUs), end-of-day value, median across availability zones.  It is an
 administered price that moves in steps; it is not an on-demand list price and
@@ -26,13 +36,16 @@ Choices that matter (all stated in LONGVIEW.md):
     is in-sample when tested on the A100.
 
 Reads only: aws_spot_ticks/, capability/, hardware_fundamentals/ (via the pack's
-starter/build_series.py for the daily series).  No network.
+starter/build_series.py for the daily series) and, for list prices, the AWS on-demand rows of
+rental_observations/.  No network.  The pack is found at ./gpu-price-pack-v0.1.1-handover or at
+GPUVAL_PACK.
 """
 from __future__ import annotations
 
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 import time
@@ -50,7 +63,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 # ----------------------------------------------------------------- config ----
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-PACK = os.path.join(ROOT, "gpu-price-pack-v0.1.1-handover")
+PACK = os.environ.get("GPUVAL_PACK", os.path.join(ROOT, "gpu-price-pack-v0.1.1-handover"))
 OUT = os.path.join(HERE, "out")
 
 SEED = 20261114
@@ -69,6 +82,19 @@ EPS = 1e-12
 INST = {"A100": "p4d.24xlarge", "A100_80GB": "p4de.24xlarge", "H100": "p5.48xlarge",
         "H200": "p5en.48xlarge", "H200_p5e": "p5e.48xlarge",
         "B200": "p6-b200.48xlarge", "B300": "p6-b300.48xlarge"}
+
+# Chips used only in the all-pairs comparison of step 1b: one standard machine size per chip.
+PAIR_INST = {"K80": "p2.xlarge", "V100": "p3.2xlarge", "T4": "g4dn.xlarge", "A10G": "g5.xlarge",
+             "L4": "g6.xlarge", "L40S": "g6e.xlarge"}
+LINES = {"training": ["K80", "V100", "A100", "H100", "H200", "B200"], "inference": ["T4", "A10G", "L4", "L40S"]}
+PAIR_WINDOW, PAIR_MIN_DAYS = 365, 180        # days compared each side of an arrival; fewer than 180 is not annualised
+PAIR_ZONE_SHARE = 0.80                       # a day counts when this share of the fixed zone set has a price
+PLACEBO_GAP = 90                             # comparison dates this close to any real arrival in the line are left out
+# Chips whose on-demand list price AWS cut in June 2025. The sizes for P5, P4d and P4de are checked
+# against the pack in list_cut_check(); P5en is as announced only (the pack cannot show it).
+LIST_CUT_CHIPS = ("A100", "A100_80GB", "H100", "H200")
+AT_CEILING = 0.995                           # a zone at or above this share of its list price is "at the ceiling"
+HARDWARE_TRENDS = (-0.18, -0.25, -0.35)      # steady yearly change in rent; see LONGVIEW.md section 4
 
 # chart tokens (validated categorical order: blue, orange, aqua, yellow)
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e6e5e1"
@@ -90,7 +116,8 @@ def build_pack_series() -> None:
     os.makedirs(OUT, exist_ok=True)
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")   # never write __pycache__ into the pack
     cmd = [sys.executable, "-B", os.path.join(PACK, "starter", "build_series.py"), "--pack", PACK,
-           "--no-daily-statistics", "--out", os.path.join(OUT, "aws_series.csv"),
+           "--no-daily-statistics", "--aws-instances", ",".join(list(INST.values()) + list(PAIR_INST.values())),
+           "--out", os.path.join(OUT, "aws_series.csv"),
            "--catalog", os.path.join(OUT, "aws_catalog.csv")]
     res = subprocess.run(cmd, env=env, capture_output=True, text=True)
     if res.returncode != 0:
@@ -102,7 +129,7 @@ def load_series():
     s = pd.read_csv(os.path.join(OUT, "aws_series.csv"), usecols=["series_id", "date", "value"], parse_dates=["date"])
     cat = pd.read_csv(os.path.join(OUT, "aws_catalog.csv"), dtype=str, keep_default_na=False)
     zones, pack = {}, {}
-    for chip, inst in INST.items():
+    for chip, inst in {**INST, **PAIR_INST}.items():
         pre = f"aws_spot.{inst}."
         g = s[s.series_id.str.startswith(pre)]
         comp = g[g.series_id == pre + "az_median"].set_index("date")["value"].sort_index()
@@ -111,8 +138,9 @@ def load_series():
         z = g[g.series_id != pre + "az_median"].copy()
         z["az"] = z.series_id.str[len(pre):]
         zones[chip] = z.pivot(index="date", columns="az", values="value").sort_index()
+    every = {**INST, **PAIR_INST}
     members = {chip: [m.split(".")[-1] for m in
-                      cat.loc[cat.series_id == f"aws_spot.{INST[chip]}.az_median", "members"].iloc[0].split(";")]
+                      cat.loc[cat.series_id == f"aws_spot.{every[chip]}.az_median", "members"].iloc[0].split(";")]
                for chip in pack}
     return zones, pack, members
 
@@ -121,8 +149,9 @@ def first_ticks() -> pd.DataFrame:
     """First Linux/UNIX spot tick per instance type, straight from the raw change events."""
     import duckdb
     files = os.path.join(PACK, "aws_spot_ticks", "*.parquet")
-    inst = ", ".join(f"'{v}'" for v in INST.values())
-    q = f"""SELECT instance_type, min(ts_utc) AS first_tick_utc,
+    every = {**INST, **PAIR_INST}
+    inst = ", ".join(f"'{v}'" for v in every.values())
+    q = f"""SELECT instance_type, min(ts_utc) AS first_tick_utc, max(ts_utc) AS last_tick_utc,
                    arg_min(usd_per_gpu_hour, ts_utc) AS first_usd_per_gpu_hour,
                    arg_min(az_global_id, ts_utc) AS first_zone, count(*) AS n_ticks,
                    count(DISTINCT az_global_id) AS n_zones_ever
@@ -132,9 +161,165 @@ def first_ticks() -> pd.DataFrame:
     con = duckdb.connect()
     df = con.execute(q).df()
     con.close()
+    back = {v: k for k, v in every.items()}
+    df.insert(0, "chip", df.instance_type.map(back))
+    return df
+
+
+# --------------------------------------------------------- hardware trend ----
+def hardware_trend_fit() -> dict:
+    """How fast a launch dollar buys more computing, on the pack's copy of Epoch AI's hardware table:
+    a straight line through log(speed per launch dollar) against release date, GPUs with a launch price.
+    Two speed measures: single-precision (FP32) and each chip's fastest number format ("Max performance").
+    The range is the 5% to 95% points of 4,000 resamples of the chips."""
+    m = pd.read_csv(os.path.join(PACK, "hardware_fundamentals", "ml_hardware.csv"))
+    m = m[m["Type"] == "GPU"]
+    t = (pd.to_datetime(m["Release date"], errors="coerce") - pd.Timestamp("2000-01-01")).dt.days / 365.25
+    price = pd.to_numeric(m["Release price (USD)"], errors="coerce")
+    out = {}
+    for name, col in (("fp32_per_launch_dollar", "FP32 (single precision) performance (FLOP/s)"),
+                      ("fastest_format_per_launch_dollar", "Max performance")):
+        y = np.log(pd.to_numeric(m[col], errors="coerce") / price)
+        ok = (np.isfinite(y) & t.notna()).to_numpy()
+        x, yy = t.to_numpy()[ok], y.to_numpy()[ok]
+        slope = float(np.polyfit(x, yy, 1)[0])
+        rng = make_rng("hardware_trend", name)
+        bs = np.array([np.polyfit(x[i], yy[i], 1)[0] for i in (rng.integers(0, len(x), len(x)) for _ in range(4000))])
+        lo, hi = np.quantile(bs, [0.05, 0.95])
+        out[name] = dict(n_gpus=int(len(x)), first_release_year=float(2000 + x.min()), last_release_year=float(2000 + x.max()),
+                         cost_pct_per_year=pct(-slope), cost_pct_per_year_slow=pct(-lo), cost_pct_per_year_fast=pct(-hi),
+                         halving_years=math.log(2) / slope)
+    return out
+
+
+# ------------------------------------------------------------ list prices ----
+_AZ = re.compile(r"^([a-z]{2})(ne|se|nw|sw|n|s|e|w|c)(\d)-az\d+$")
+_DIR = {"n": "north", "s": "south", "e": "east", "w": "west", "c": "central", "ne": "northeast",
+        "se": "southeast", "nw": "northwest", "sw": "southwest"}
+
+
+def zone_region(az: str) -> str:
+    """'use1-az5' -> 'us-east-1' (the region whose list price applies to a zone)."""
+    m = _AZ.match(az)
+    return f"{m.group(1)}-{_DIR[m.group(2)]}-{m.group(3)}" if m else ""
+
+
+def _pack_rows(source: str, select: str, where: str, tail: str) -> pd.DataFrame:
+    import duckdb
+    files = os.path.join(PACK, "rental_observations", f"source_id={source}", "*", "*.parquet")
+    q = f"""SELECT {select} FROM read_parquet('{files}', hive_partitioning=true, union_by_name=true)
+            WHERE provider = 'aws' AND instrument_class = 'hyperscaler_list' AND pricing_tier = 'on_demand' AND {where} {tail}"""
+    con = duckdb.connect()
+    df = con.execute(q).df()
+    con.close()
+    return df
+
+
+def list_prices(origin) -> pd.DataFrame:
+    """AWS on-demand list price per machine type and region, USD per GPU-hour, from the pack's own
+    offer rows (collector afhubbard, instrument hyperscaler_list). One row per (instance, region):
+    the last price on or before `origin` and how many different prices that region showed."""
+    inst = ", ".join(f"'{v}'" for v in INST.values())
+    df = _pack_rows("afhubbard",
+                    "sku_raw AS instance_type, region_raw AS region, min(dt) AS first_seen, max(dt) AS last_seen, "
+                    "arg_max(usd_per_gpu_hour, snapshot_ts_utc) AS list_usd_per_gpu_hour, "
+                    "count(DISTINCT round(usd_per_gpu_hour, 4)) AS n_distinct_prices, count(DISTINCT dt) AS n_days",
+                    f"sku_raw IN ({inst}) AND dt <= DATE '{pd.Timestamp(origin).date()}'", "GROUP BY 1, 2 ORDER BY 1, 5, 2")
     back = {v: k for k, v in INST.items()}
     df.insert(0, "chip", df.instance_type.map(back))
     return df
+
+
+def list_cut_check(origin) -> pd.DataFrame:
+    """The June 2025 list cut, as far as the pack can show it. One tracking site (gpurentalprices)
+    still carried AWS's earlier on-demand prices on its first days in the pack and then switched to
+    the current ones; the two levels give the size of the cut. One row per GPU that shows both."""
+    df = _pack_rows("gpurentalprices",
+                    "gpu_model, round(usd_per_gpu_hour, 4) AS usd, min(dt) AS first_seen, max(dt) AS last_seen, count(*) AS n_rows",
+                    f"gpu_model IN ('H100 SXM 80GB', 'A100 40GB', 'A100 SXM 80GB') AND dt <= DATE '{pd.Timestamp(origin).date()}'",
+                    "GROUP BY 1, 2 ORDER BY 1, 3")
+    chip_of = {"H100 SXM 80GB": "H100", "A100 40GB": "A100", "A100 SXM 80GB": "A100_80GB"}
+    rows = []
+    for gpu, g in df.groupby("gpu_model"):
+        if len(g) != 2:
+            continue                                   # no earlier reading for this GPU: nothing to compare
+        old, new = g.iloc[0], g.iloc[1]
+        rows.append(dict(chip=chip_of[gpu], gpu_model=gpu, earlier_usd=float(old.usd), earlier_first_seen=str(old.first_seen)[:10],
+                         earlier_last_seen=str(old.last_seen)[:10], current_usd=float(new.usd),
+                         current_first_seen=str(new.first_seen)[:10], cut_pct=(float(new.usd) / float(old.usd) - 1) * 100,
+                         factor=float(new.usd) / float(old.usd)))
+    return pd.DataFrame(rows)
+
+
+def spot_vs_list(zones, pack, members, lp, cut) -> tuple[pd.DataFrame, dict]:
+    """Spot as a share of the on-demand list price, zone by zone and month by month.
+
+    Every zone is compared with its own region's list price. The pack's list rows start on
+    12 Jan 2026 and show one price per region throughout, so that price is used from the day the
+    cut reached the spot ceilings. Before that day the list in force is the current one divided by
+    the cut factor (checked: before the cut, zones sat exactly at that higher ceiling). For a chip
+    with no cut factor in the pack the months before the cut are left blank."""
+    factor = dict(zip(cut.chip, cut.factor))
+
+    def zone_list(chip):
+        r = lp[lp.chip == chip].set_index("region").list_usd_per_gpu_hour
+        return r, pd.Series({a: r.get(zone_region(a), np.nan) for a in zones[chip].columns}, dtype=float)
+
+    # the day the cut reached spot: the day after the last day any H100 zone traded above today's list price
+    above = (zones["H100"] / zone_list("H100")[1] > 1.005).any(axis=1)
+    cut_seen = above[above].index.max() + pd.Timedelta(days=1)
+    rows, info = [], {"cut_reached_spot_ceilings_on": str(cut_seen.date())}
+    for chip in ("H100", "A100", "A100_80GB", "H200"):
+        z = zones[chip]
+        r, zl = zone_list(chip)
+        new = z / zl                                              # share of today's list price
+        after = pd.Series(z.index >= cut_seen, index=z.index)
+        inforce = new.where(after, new * factor[chip], axis=0) if chip in factor else new.where(after, axis=0)
+        mem = [m for m in members[chip] if np.isfinite(zl.get(m, np.nan))]
+        comp_list = float(zl[mem].median())
+        comp = pack[chip]
+        lpc = lp[lp.chip == chip]
+        info[chip] = dict(
+            regions_with_a_list_price=int(len(r)), list_low=float(r.min()), list_median_of_regions=float(r.median()),
+            list_high=float(r.max()), regions_whose_price_changed_in_the_pack=int((lpc.n_distinct_prices > 1).sum()),
+            list_first_seen=str(lpc.first_seen.min())[:10], list_last_seen=str(lpc.last_seen.max())[:10],
+            composite_zones=len(members[chip]), composite_zones_with_a_list_price=len(mem), composite_list_price=comp_list,
+            spot_composite_last_day=float(comp.iloc[-1]), last_day=str(comp.index[-1].date()),
+            spot_share_of_list_last_day=float(comp.iloc[-1] / comp_list),
+            max_zone_share_of_list_since_cut=float(np.nanmax(new[after.to_numpy()].to_numpy())),
+            zone_days_since_cut=int(new[after.to_numpy()].notna().sum().sum()),
+            zone_days_above_list_since_cut=int((new[after.to_numpy()] > 1.005).sum().sum()),
+            max_zone_share_of_todays_list_before_cut=float(np.nanmax(new[~after.to_numpy()].to_numpy())) if (~after).any() else float("nan"),
+            cut_factor_from_earlier_reading=factor.get(chip, float("nan")))
+        long = pd.DataFrame({"share": inforce.stack(), "spot": z.stack()}).dropna(subset=["spot"]).reset_index()
+        long.columns = ["date", "az", "share", "spot"]
+        long["month"] = long.date.dt.strftime("%Y-%m")
+        for month, g in long.groupby("month"):
+            if month >= "2026-01":
+                basis = "list price seen in the pack"
+            elif g.date.min() >= cut_seen:
+                basis = "same list price, assumed in force since the cut"
+            elif g.date.max() < cut_seen:
+                basis = "list price before the cut (current price / cut factor)" if chip in factor else "not known"
+            else:
+                basis = "cut month: both list prices" if chip in factor else "cut month: after the cut only"
+            ok = g.share.notna()
+            rows.append(dict(chip=chip, instance_type=INST[chip], month=month, n_zones=int(g.az.nunique()), zone_days=len(g),
+                             spot_usd_median=float(g.spot.median()), list_basis=basis,
+                             spot_share_of_list_median=float(g.share[ok].median()) if ok.any() else np.nan,
+                             spot_share_of_list_max=float(g.share[ok].max()) if ok.any() else np.nan,
+                             share_of_zone_days_at_ceiling=float((g.share[ok] >= AT_CEILING).mean()) if ok.any() else np.nan))
+
+        def med(a, b):
+            m = long[(long.date >= pd.Timestamp(a)) & (long.date <= pd.Timestamp(b))].share.dropna()
+            return float(m.median()) if len(m) else float("nan")
+
+        info[chip]["share_of_list_by_period"] = {
+            "90 days before the cut": med(cut_seen - pd.Timedelta(days=90), cut_seen - pd.Timedelta(days=1)),
+            "Jul 2025 to Feb 2026": med("2025-07-01", "2026-02-28"),
+            "Jul to Sep 2026": med("2026-07-01", "2026-09-30"),
+            "Oct 2026": med("2026-10-01", "2026-10-31")}
+    return pd.DataFrame(rows), info
 
 
 def founding_composite(z: pd.DataFrame, live_by: str) -> tuple[pd.Series, list[str]]:
@@ -302,6 +487,99 @@ def step1(zones, pack, comps, avail, units):
     return rates, effect, per_work, pw
 
 
+# ---------------------------------------------------------------- step 1b ----
+def pair_composite(z: pd.DataFrame, arrival) -> tuple[pd.Series, int]:
+    """The older chip's price around one arrival: the median over a fixed set of zones, namely those
+    that already had a price PAIR_WINDOW days before the arrival (for a chip younger than that, in
+    its own first 30 days), on days when at least PAIR_ZONE_SHARE of them have a value."""
+    first = z.apply(lambda c: c.first_valid_index())
+    live_by = max(pd.Timestamp(arrival) - pd.Timedelta(days=PAIR_WINDOW), first.min() + pd.Timedelta(days=30))
+    mem = sorted(first[first <= live_by].index)
+    zz = z[mem]
+    ok = zz.notna().sum(axis=1) >= math.ceil(PAIR_ZONE_SHARE * len(mem))
+    return zz[ok].median(axis=1), len(mem)
+
+
+def before_after(x: pd.Series, t) -> dict | None:
+    """Yearly rate of change in the PAIR_WINDOW days before date t and in the PAIR_WINDOW days from t,
+    and the difference. Windows never reach across the archive hole; None if either side is too short."""
+    t = pd.Timestamp(t)
+    day = pd.Timedelta(days=1)
+    a0, b1 = t - pd.Timedelta(days=PAIR_WINDOW), t + pd.Timedelta(days=PAIR_WINDOW - 1)
+    if t <= HOLE_END:                                   # the arrival is before the hole: stop at it
+        b1 = min(b1, HOLE_START - day)
+    else:                                               # after the hole: do not look back across it
+        a0 = max(a0, HOLE_END + day)
+    rb, ra = rate(x, a0, t - day), rate(x, t, b1)
+    if min(rb["n_days"], ra["n_days"]) < PAIR_MIN_DAYS or not (np.isfinite(rb["endpoint"]) and np.isfinite(ra["endpoint"])):
+        return None
+    seg_b = x[(x.index >= a0) & (x.index < t)]
+    seg_a = x[(x.index >= t) & (x.index <= b1)]
+    return dict(before_start=seg_b.index[0], before_days=rb["n_days"], after_end=seg_a.index[-1], after_days=ra["n_days"],
+                before=rb["endpoint"], after=ra["endpoint"], delta=ra["endpoint"] - rb["endpoint"])
+
+
+def step1b(zones, avail, cut_seen) -> tuple[pd.DataFrame, dict]:
+    """Every older-chip and successor pair the archive supports. A pair is an older chip and a later
+    chip of the same line whose first spot price falls inside the archive, with at least
+    PAIR_MIN_DAYS of the older chip's price on each side. The same before/after difference is then
+    taken at every month-start that is not near an arrival, to show what a difference looks like
+    when nothing arrived."""
+    rows = []
+    for line, chips in LINES.items():
+        arrivals = {c: avail[c] for c in chips if c in avail}
+        archive_start = min(z.index[0] for z in zones.values() if len(z))
+        real = [t for c, t in arrivals.items() if t > archive_start + pd.Timedelta(days=30)]
+        for j, new in enumerate(chips):
+            t = arrivals.get(new)
+            if t is None or t not in real:
+                continue                                # the newer chip was already on spot when the archive starts
+            for i, old in enumerate(chips[:j]):
+                z = zones.get(old)
+                if z is None or not len(z):
+                    continue
+                x, n_zones = pair_composite(z, t)
+                r = before_after(x, t)
+                if r is None:
+                    continue
+                pl = []
+                for d in pd.date_range(x.index[0], x.index[-1], freq="MS"):
+                    if min(abs((d - a).days) for a in real) < PLACEBO_GAP:
+                        continue
+                    q = before_after(x, d)
+                    if q is not None:
+                        pl.append(q["delta"])
+                pl = np.array(pl)
+                cut_in = "not a chip whose list price was cut"
+                if old in LIST_CUT_CHIPS:
+                    cut_in = ("in the window before the arrival" if r["before_start"] <= cut_seen < t else
+                              "in the window after the arrival" if t <= cut_seen <= r["after_end"] else "outside both windows")
+                rows.append(dict(line=line, older_chip=old, older_instance={**INST, **PAIR_INST}[old], successor=new,
+                                 successor_first_spot_price=str(t.date()), generations_apart=j - i, n_zones=n_zones,
+                                 before_days=r["before_days"], after_days=r["after_days"],
+                                 pct_per_year_before=pct(r["before"]), pct_per_year_after=pct(r["after"]),
+                                 delta_log_per_year=r["delta"], fell_faster_after=bool(r["delta"] < 0),
+                                 list_cut_june_2025=cut_in, n_other_dates=len(pl),
+                                 share_of_other_dates_with_a_lower_delta=float((pl < r["delta"]).mean()) if len(pl) else np.nan,
+                                 other_dates_delta_q10=float(np.quantile(pl, 0.1)) if len(pl) else np.nan,
+                                 other_dates_delta_median=float(np.median(pl)) if len(pl) else np.nan,
+                                 other_dates_delta_q90=float(np.quantile(pl, 0.9)) if len(pl) else np.nan))
+    pairs = pd.DataFrame(rows)
+    clean = pairs[~pairs.list_cut_june_2025.str.startswith("in the window")]
+    direct = pairs[pairs.generations_apart == 1]
+
+    def block(d):
+        if not len(d):
+            return dict(n=0)
+        return dict(n=int(len(d)), fell_faster_after=int(d.fell_faster_after.sum()),
+                    median_delta_log_per_year=float(d.delta_log_per_year.median()),
+                    delta_min=float(d.delta_log_per_year.min()), delta_max=float(d.delta_log_per_year.max()))
+
+    summary = dict(all_pairs=block(pairs), pairs_with_no_list_cut_in_a_window=block(clean), next_generation_pairs=block(direct))
+    summary.update({f"{line}_line": block(pairs[pairs.line == line]) for line in LINES})
+    return pairs, summary
+
+
 # -------------------------------------------------------------- simulator ----
 # feedback: "iid"    = how often it steps + how big, each day independent of the last
 #           "dir"    = the previous day's move (down / unchanged / up) picks which past days we draw from
@@ -371,10 +649,15 @@ def fit_steps(x: pd.Series, origin, feedback: str, trend: str, succ_date=None, s
 
 
 def simulate(fit: dict, origin, n_days: int, n_paths: int, rng, keep=(), daily_quantiles: bool = False,
-             succ_date=None, succ_shift: float = 0.0):
+             succ_date=None, succ_shift: float = 0.0, cap: float | None = None):
     """Roll forward one day at a time.  Each simulated day draws its log change from the past days
     that followed the same state, then that simulated day (its move and its new price) becomes the
-    state for the next draw."""
+    state for the next draw.  `cap` (USD per GPU-hour) is a ceiling no simulated day may pass: the
+    on-demand list price, which no zone's spot price has exceeded since the June 2025 cut.  When the
+    ceiling stops a move, the state carried to the next day is the move the path actually made
+    (up to the ceiling, or none if it was already there), not the move that was drawn.  The random
+    numbers drawn are the same with and without a cap."""
+    cap_log = None if cap is None else math.log(cap)
     MC, MD, L, fb = fit["MC"], fit["MD"], fit["L"], fit["feedback"]
     st = np.full(n_paths, fit["st0"], dtype=np.int64)
     lp = np.full(n_paths, fit["lp0"])
@@ -386,11 +669,19 @@ def simulate(fit: dict, origin, n_days: int, n_paths: int, rng, keep=(), daily_q
     out, dq = {}, (np.zeros((n_days, 3)) if daily_quantiles else None)
     for t in range(n_days):
         idx = (rng.random(n_paths) * L[st]).astype(np.int64)
-        lp = lp + MC[st, idx] + off[t]
+        new = lp + MC[st, idx] + off[t]
+        moved = MD[st, idx]                                  # direction of the move that was drawn
+        if cap_log is not None:
+            hit = new > cap_log
+            if hit.any():
+                new = np.where(hit, cap_log, new)
+                real = new - lp                              # what the capped path did today
+                moved = np.where(hit, np.where(real > EPS, 2, np.where(real < -EPS, 0, 1)), moved)
+        lp = new
         if fb == "dir":
-            st = MD[st, idx]
+            st = moved
         elif fb == "dirlvl":
-            st = MD[st, idx] + 3 * (lp > fit["thr"])
+            st = moved + 3 * (lp > fit["thr"])
         if (t + 1) in keep:
             out[t + 1] = np.exp(lp)
         if daily_quantiles:
@@ -410,7 +701,9 @@ def pinball(y, q, tau):
 def backtest(name: str, x: pd.Series, variant: str, feedback: str, trend: str, succ_date=None, succ_shift: float = 0.0,
              learn=None):
     """Monthly origins; forecast made with data up to the origin only; truth read at origin + h days
-    (skipped when that day is in the archive hole or past the end of the data)."""
+    (skipped when that day is in the archive hole or past the end of the data).
+    `succ_shift` is a number, or a function of the origin day that returns the adjustment as it could
+    be measured on that day; an origin for which it returns NaN is skipped."""
     first = x.index[0] + pd.Timedelta(days=MIN_TRAIN_DAYS)
     origins = [d for d in pd.date_range(first, x.index[-1], freq="MS") if d in x.index]
     rows = []
@@ -419,11 +712,14 @@ def backtest(name: str, x: pd.Series, variant: str, feedback: str, trend: str, s
         hs = [h for h, t in targets.items() if t in x.index]
         if not hs:
             continue
-        f = fit_steps(x, o, feedback, trend, succ_date, succ_shift, learn)
+        shift = float(succ_shift(o)) if callable(succ_shift) else succ_shift
+        if not np.isfinite(shift):             # the adjustment could not yet be measured on this day
+            continue
+        f = fit_steps(x, o, feedback, trend, succ_date, shift, learn)
         if f is None:                          # not enough usable history yet
             continue
         sims = simulate(f, o, max(hs), N_PATHS_TEST, make_rng(name, o.date()), keep=hs,
-                        succ_date=succ_date, succ_shift=succ_shift)   # same random numbers for every variant
+                        succ_date=succ_date, succ_shift=shift)        # same random numbers for every variant
         p0 = float(x[o])
         for h in hs:
             q10, q50, q90 = np.quantile(sims[h], [0.1, 0.5, 0.9])
@@ -547,7 +843,9 @@ def chart_paths(pack, comps, avail, units):
             ax.legend(loc="upper left", fontsize=8, frameon=False, labelcolor=INK2, ncol=1, borderaxespad=0.2)
     axes[1].xaxis.set_major_locator(mdates.YearLocator())
     axes[1].xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0.025, 1, 1))
+    fig.text(0.012, 0.008, "Speed ratios are the pack's capability units, a composite derived from published MLPerf Inference results. "
+                           "Result not verified by MLCommons Association.", fontsize=7.5, color=INK2, ha="left", va="bottom")
     fig.savefig(os.path.join(OUT, "chart1_price_paths.png"), dpi=150, facecolor=SURFACE)
     plt.close(fig)
 
@@ -599,8 +897,8 @@ def chart_trust(summ):
     plt.close(fig)
 
 
-def chart_outlook(pack, paths, origin):
-    fig, axes = plt.subplots(1, 2, figsize=(13.5, 6.9), facecolor=SURFACE)
+def chart_outlook(pack, paths, origin, caps):
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 7.3), facecolor=SURFACE)
     for ax, chip in zip(axes, ("H100", "A100")):
         col = COL[chip]
         hist = gapped(pack[chip].loc["2024-07-01":])
@@ -616,6 +914,14 @@ def chart_outlook(pack, paths, origin):
         fd = pd.to_datetime(f.date)
         ax.plot(fd, f.q10, color="#8a8984", lw=1.0, label="other reading (no pull back to the usual level): its 10% and 90%")
         ax.plot(fd, f.q90, color="#8a8984", lw=1.0)
+        # the ceiling: AWS's on-demand list price today (median over the composite's zones)
+        ax.plot([hist.index[0], d.iloc[-1]], [caps[chip]] * 2, color=INK, lw=0.9, ls=(0, (1, 2)),
+                label=f"AWS on-demand list price today, \\${caps[chip]:.2f}: no path may pass it")
+        # comparison only: a steady fall at a hardware-trend rate from the last price
+        p0 = float(pack[chip].iloc[-1])
+        yrs = np.arange(1, len(d) + 1) / 365.0
+        ax.plot(d, p0 * 0.75 ** yrs, color=INK2, lw=1.1, ls=(0, (6, 2, 1, 2)),
+                label="for comparison: a steady fall of 25% a year (hardware trend)")
         for i, h in enumerate(OUTLOOK_HORIZONS):
             r = p.iloc[h - 1]
             ax.plot([pd.Timestamp(r.date)], [r.q50], marker="o", ms=7, mfc=col, mec=SURFACE, mew=1.5, zorder=5)
@@ -630,7 +936,7 @@ def chart_outlook(pack, paths, origin):
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
         ax.set_xlim(None, origin + pd.Timedelta(days=max(OUTLOOK_HORIZONS) + 170))
         ax.legend(loc="upper left", bbox_to_anchor=(0.0, -0.07), ncol=1, fontsize=8, frameon=False, labelcolor=INK2)
-    fig.subplots_adjust(left=0.06, right=0.99, top=0.94, bottom=0.25, wspace=0.14)
+    fig.subplots_adjust(left=0.06, right=0.99, top=0.945, bottom=0.29, wspace=0.14)
     fig.savefig(os.path.join(OUT, "chart3_outlook.png"), dpi=150, facecolor=SURFACE)
     plt.close(fig)
 
@@ -658,6 +964,11 @@ def main() -> int:
     say(f"  next generation in the hardware file: VR200 (Vera Rubin) released {rel['VR200']}; no spot ticks in the pack yet")
     avail = {r.chip: pd.Timestamp(r.first_tick_utc).normalize() for r in ticks.itertuples()}
     key["first_spot_tick"] = {k: str(v.date()) for k, v in avail.items()}
+    # The pack's daily series carry a zone's last price forward to the end of the archive segment. A machine
+    # type whose ticks stop earlier (the K80's stop on 1 Jun 2025) has no real price after that day: cut it there.
+    for r in ticks.itertuples():
+        zones[r.chip] = zones[r.chip].loc[:pd.Timestamp(r.last_tick_utc).normalize()]
+    key["last_spot_tick"] = {r.chip: str(pd.Timestamp(r.last_tick_utc).date()) for r in ticks.itertuples()}
 
     units = capability_units()
     comps = {}
@@ -704,6 +1015,30 @@ def main() -> int:
     say("  levels (USD per GPU-hour) either side of the hole and at the end:")
     say(pd.DataFrame(key["levels"]).T.to_string())
 
+    # ------------------------------------------------------------ step 0 ----
+    say("\n== step 0: spot against the on-demand list price ==")
+    last_day = pack["H100"].index[-1]
+    lp = list_prices(last_day)
+    cut = list_cut_check(last_day)
+    lp.to_csv(os.path.join(OUT, "aws_list_prices.csv"), index=False, float_format="%.6f")
+    s2l, list_info = spot_vs_list(zones, pack, members, lp, cut)
+    s2l.to_csv(os.path.join(OUT, "spot_to_list.csv"), index=False, float_format="%.4f")
+    cut_seen = pd.Timestamp(list_info["cut_reached_spot_ceilings_on"])
+    list_info["cut_sizes_from_the_pack"] = cut.round(4).to_dict("records")
+    key["list_price"] = list_info
+    say("  size of the June 2025 list cut, from one site's earlier and current readings of AWS's on-demand price:")
+    say(cut.round(4).to_string(index=False))
+    say(f"  the cut reached the spot ceilings on {cut_seen.date()} (the day after the last day any H100 zone was above today's list price)")
+    for chip in ("H100", "A100", "A100_80GB", "H200"):
+        i = list_info[chip]
+        say(f"  {chip}: list ${i['list_low']:.2f} to ${i['list_high']:.2f} across {i['regions_with_a_list_price']} regions "
+            f"({i['regions_whose_price_changed_in_the_pack']} changed between {i['list_first_seen']} and {i['list_last_seen']}); "
+            f"composite list ${i['composite_list_price']:.3f} ({i['composite_zones_with_a_list_price']} of {i['composite_zones']} zones); "
+            f"spot ${i['spot_composite_last_day']:.3f} = {i['spot_share_of_list_last_day']:.2f} of list on {i['last_day']}; "
+            f"highest zone since the cut {i['max_zone_share_of_list_since_cut']:.3f} of list "
+            f"({i['zone_days_above_list_since_cut']} of {i['zone_days_since_cut']} zone-days above); "
+            "median share of list: " + ", ".join(f"{k} {v:.2f}" for k, v in i["share_of_list_by_period"].items()))
+
     # ------------------------------------------------------------ step 1 ----
     say("\n== step 1: the older chip when the newer one arrived ==")
     rates, effect, per_work, pw = step1(zones, pack, comps, avail, units)
@@ -722,6 +1057,16 @@ def main() -> int:
                                      "pct_per_year_trend", "zone_pct_q25", "zone_pct_q75"]].round(3).to_dict("records"))
     chart_paths(pack, comps, avail, units)
 
+    # ----------------------------------------------------------- step 1b ----
+    say("\n== step 1b: every older-chip and successor pair the archive supports ==")
+    pairs, pair_summary = step1b(zones, avail, cut_seen)
+    pairs.to_csv(os.path.join(OUT, "successor_pairs.csv"), index=False, float_format="%.4f")
+    say(pairs[["line", "older_chip", "successor", "successor_first_spot_price", "generations_apart", "n_zones", "before_days", "after_days",
+               "pct_per_year_before", "pct_per_year_after", "delta_log_per_year", "list_cut_june_2025", "n_other_dates",
+               "share_of_other_dates_with_a_lower_delta", "other_dates_delta_q10", "other_dates_delta_q90"]].round(2).to_string(index=False))
+    say("  " + json.dumps({k: {a: (round(b, 3) if isinstance(b, float) else b) for a, b in v.items()} for k, v in pair_summary.items()}))
+    key["step1b"] = dict(summary=pair_summary, pairs=pairs.round(4).to_dict("records"))
+
     # ------------------------------------------------------------ step 2 ----
     say("\n== step 2: roll-forward test ==")
     test_series = {"A100_pack": pack["A100"], "A100_founding": comps["A100_founding"],
@@ -738,6 +1083,34 @@ def main() -> int:
             for tag, shift in (("successor", delta), ("successor_flipped", -delta)):
                 cells.append(backtest(name, test_series[name], f"{base}+{tag}", spec["feedback"], spec["trend"],
                                       succ_date=avail["H100"], succ_shift=shift, learn=test_learn[name]))
+    # the same adjustment out of sample: a number from one chip, tested on another. The A100's shift is
+    # measured afresh for every forecast day from A100 prices up to that day (and never later than the day
+    # before the H200 arrived), then applied to the H100 from the H200's arrival. A forecast day on which
+    # the A100's window since the H100 arrived is still too short to give a yearly rate is skipped.
+    # (Until 15 Nov one number, measured to 11 Dec 2024, was used for every forecast day: for the days
+    # before that date it came from A100 prices the forecaster could not have had. Found in code review.)
+    one_day = pd.Timedelta(days=1)
+    a100_before = rate(pack["A100"], pack["A100"].index[0], avail["H100"] - one_day)["endpoint"]
+
+    def a100_shift_known_on(o) -> float:
+        end = min(pd.Timestamp(o), avail["H200"] - one_day)
+        return rate(pack["A100"], avail["H100"], end)["endpoint"] - a100_before
+
+    delta_known = a100_shift_known_on(avail["H200"])        # its last value, the day before the H200 arrived
+    shift_by_origin = {}
+
+    def rolling(sign: float):
+        def f(o):
+            s = a100_shift_known_on(o)
+            shift_by_origin[str(pd.Timestamp(o).date())] = None if not np.isfinite(s) else round(float(s), 4)
+            return sign * s
+        return f
+
+    for base in ("main", "free"):
+        spec = VARIANTS[base]
+        for tag, sign in (("transfer", 1.0), ("transfer_flipped", -1.0)):
+            cells.append(backtest("H100_founding", test_series["H100_founding"], f"{base}+{tag}", spec["feedback"], spec["trend"],
+                                  succ_date=avail["H200"], succ_shift=rolling(sign), learn=None))
     cells = pd.concat(cells, ignore_index=True)
     cells.to_csv(os.path.join(OUT, "backtest_cells.csv"), index=False, float_format="%.5f")
     summ = summarise(cells)
@@ -774,21 +1147,40 @@ def main() -> int:
     chart_trust(summ)
 
     # ------------------------------------------------------------ step 3 ----
-    say("\n== step 3: does a 'new chip arrived' adjustment help? (A100, H100 arrival, in-sample) ==")
+    say("\n== step 3: does a 'new chip arrived' adjustment help? (A100 at the H100's arrival, in sample; "
+        f"H100 at the H200's arrival with the A100's number {delta_known:+.3f}/yr, out of sample) ==")
     rows = []
-    for name in ("A100_pack", "A100_founding"):
+    in_sample = {"successor": (delta, "measured"), "successor_flipped": (-delta, "sign flipped")}
+    known = [v for v in shift_by_origin.values() if v is not None]
+    carried = {"transfer": (None, f"the A100's shift as measured up to each forecast day, {min(known):+.2f} to {max(known):+.2f}/yr; out of sample"),
+               "transfer_flipped": (None, "the same, sign flipped")}
+    every, arrived = "all forecast days", "forecast days on or after the newer chip's arrival"
+    # The last row set keeps only forecast days on which the newer chip had already arrived: there the
+    # forecaster knows the arrival date as well as the number, so nothing in the forecast is from the future.
+    tests = [("A100_pack", "H100", in_sample, None, every), ("A100_founding", "H100", in_sample, None, every),
+             ("H100_founding", "H200", carried, None, every), ("H100_founding", "H200", carried, avail["H200"], arrived)]
+    for name, newer, tags, origins_from, which in tests:
         for base in ("main", "free"):
             b = cells[(cells.series == name) & (cells.variant == base)].set_index(["origin", "horizon_days"])
-            for tag in ("successor", "successor_flipped"):
+            for tag, (shift, what) in tags.items():
                 e = cells[(cells.series == name) & (cells.variant == f"{base}+{tag}")].set_index(["origin", "horizon_days"])
                 for h in HORIZONS:
+                    if h not in b.index.get_level_values("horizon_days") or h not in e.index.get_level_values("horizon_days"):
+                        continue                       # this series has no test forecast that far ahead
                     bb, ee = b.xs(h, level="horizon_days"), e.xs(h, level="horizon_days")
+                    both = bb.index.intersection(ee.index)          # the same forecast days with and without
+                    if origins_from is not None:
+                        both = both[pd.to_datetime(both) >= origins_from]
+                    if len(both) == 0:
+                        continue
+                    bb, ee = bb.loc[both], ee.loc[both]
                     pb = (bb.pin10 + bb.pin50 + bb.pin90) / 3
                     pe = (ee.pin10 + ee.pin50 + ee.pin90) / 3
                     lv = (bb.lv10 + bb.lv50 + bb.lv90) / 3
-                    after = pd.to_datetime(pb.index) + pd.Timedelta(days=h) >= avail["H100"]
-                    rows.append(dict(series=name, simulator=base, adjustment=f"{'+' if tag == 'successor' else '-'}{abs(delta):.2f}/yr"
-                                     + (" (measured)" if tag == "successor" else " (sign flipped)"),
+                    after = pd.to_datetime(pb.index) + pd.Timedelta(days=h) >= avail[newer]
+                    rows.append(dict(series=name, simulator=base, adjustment=what if shift is None else f"{shift:+.2f}/yr ({what})",
+                                     forecast_days=which,
+                                     newer_chip=newer, newer_chip_first_spot_price=str(avail[newer].date()),
                                      horizon_days=h, n_origins=len(pb), n_origins_reaching_past_arrival=int(after.sum()),
                                      pinball_vs_no_change_without=pb.mean() / lv.mean(), pinball_vs_no_change_with=pe.mean() / lv.mean(),
                                      change_in_loss_pct=(pe.mean() / pb.mean() - 1) * 100,
@@ -796,17 +1188,24 @@ def main() -> int:
                                      coverage_without=float(bb.inside.mean()), coverage_with=float(ee.inside.mean())))
     succ = pd.DataFrame(rows)
     succ.to_csv(os.path.join(OUT, "successor_test.csv"), index=False, float_format="%.4f")
-    say(succ[succ.horizon_days >= 365][["series", "simulator", "adjustment", "horizon_days", "n_origins", "pinball_vs_no_change_without",
-                                        "pinball_vs_no_change_with", "change_in_loss_pct", "share_of_origins_improved",
-                                        "coverage_without", "coverage_with"]].round(3).to_string(index=False))
+    say(succ[(succ.horizon_days >= 365) | (succ.forecast_days == arrived)]
+        [["series", "simulator", "adjustment", "forecast_days", "horizon_days", "n_origins", "pinball_vs_no_change_without",
+          "pinball_vs_no_change_with", "change_in_loss_pct", "share_of_origins_improved",
+          "coverage_without", "coverage_with"]].round(3).to_string(index=False))
     key["step3"] = succ.round(4).to_dict("records")
+    key["step3_shift_carried_to_h100_log_per_year"] = delta_known
+    key["step3_shift_carried_by_forecast_day"] = shift_by_origin
 
     # ------------------------------------------------------------ step 4 ----
     say("\n== step 4: outlook from the last day of data ==")
     origin = pack["H100"].index[-1]
     succ_dates = {"A100": avail["H100"], "H100": avail["B200"]}     # the next GENERATION to reach AWS spot
-    out_variants = [("main", "main", 0.0), ("main+successor", "main", delta), ("free_notrend", "free_notrend", 0.0),
-                    ("free", "free", 0.0)]
+    # Each composite is a median over zones and each zone has stayed at or below its region's list price,
+    # so the composite cannot pass the median of its zones' list prices. "*_nocap" rows are the paths as
+    # they were before this ceiling was added (same random numbers).
+    caps = {chip: list_info[chip]["composite_list_price"] for chip in ("H100", "A100")}
+    out_variants = [("main", "main", 0.0, True), ("main+successor", "main", delta, True), ("free_notrend", "free_notrend", 0.0, True),
+                    ("free", "free", 0.0, True), ("main_nocap", "main", 0.0, False), ("free_notrend_nocap", "free_notrend", 0.0, False)]
     H = max(OUTLOOK_HORIZONS)
     eday_chip = {}
     for chip in widen:                                              # flat beyond the longest tested horizon
@@ -816,17 +1215,18 @@ def main() -> int:
     for chip in ("H100", "A100"):
         x = pack[chip]
         eday = eday_chip[chip]
-        for vname, base, shift in out_variants:
+        for vname, base, shift, capped in out_variants:
             spec = VARIANTS[base]
             sd = succ_dates[chip] if shift != 0.0 else None
+            top = caps[chip] if capped else float("inf")
             f = fit_steps(x, origin, spec["feedback"], spec["trend"], sd, shift, learn[chip])
             sims, dq = simulate(f, origin, H, N_PATHS_OUTLOOK, make_rng("outlook", chip), keep=OUTLOOK_HORIZONS,
-                                daily_quantiles=True, succ_date=sd, succ_shift=shift)
+                                daily_quantiles=True, succ_date=sd, succ_shift=shift, cap=caps[chip] if capped else None)
             fits[(chip, vname)] = f
             dates = origin + pd.to_timedelta(np.arange(1, H + 1), unit="D")
             is_main = base == "main"                              # the widening was measured on the main simulator only
             w10 = dq[:, 0] * np.exp(-eday) if is_main else np.full(H, np.nan)
-            w90 = dq[:, 2] * np.exp(eday) if is_main else np.full(H, np.nan)
+            w90 = np.minimum(dq[:, 2] * np.exp(eday), top) if is_main else np.full(H, np.nan)   # widening stops at the ceiling too
             prow.append(pd.DataFrame({"chip": chip, "variant": vname, "date": dates.date, "q10": dq[:, 0], "q50": dq[:, 1],
                                       "q90": dq[:, 2], "q10_widened": w10, "q90_widened": w90}))
             for h in OUTLOOK_HORIZONS:
@@ -835,8 +1235,20 @@ def main() -> int:
                 orow.append(dict(chip=chip, instance_type=INST[chip], series=f"aws_spot.{INST[chip]}.az_median", variant=vname,
                                  origin=origin.date(), price_at_origin=float(x.iloc[-1]), years_ahead=h // 365,
                                  target=(origin + pd.Timedelta(days=h)).date(), q10=q10, q50=q50, q90=q90,
-                                 widen_each_end_pct=(math.exp(e) - 1) * 100, q10_widened=q10 * math.exp(-e), q90_widened=q90 * math.exp(e),
-                                 share_of_paths_above_origin_price=float((sims[h] > x.iloc[-1]).mean())))
+                                 widen_each_end_pct=(math.exp(e) - 1) * 100, q10_widened=q10 * math.exp(-e),
+                                 q90_widened=min(q90 * math.exp(e), top),
+                                 share_of_paths_above_origin_price=float((sims[h] > x.iloc[-1]).mean()),
+                                 list_price_cap=caps[chip] if capped else float("nan"),
+                                 share_of_paths_at_cap=float((sims[h] >= caps[chip] * (1 - 1e-9)).mean()) if capped else float("nan")))
+        # for comparison only: a steady yearly fall at a hardware-trend rate, from the last price (no range)
+        for r in HARDWARE_TRENDS:
+            for h in OUTLOOK_HORIZONS:
+                v = float(x.iloc[-1]) * (1.0 + r) ** (h // 365)
+                orow.append(dict(chip=chip, instance_type=INST[chip], series=f"aws_spot.{INST[chip]}.az_median",
+                                 variant=f"hardware_trend_{int(round(-r * 100))}", origin=origin.date(), price_at_origin=float(x.iloc[-1]),
+                                 years_ahead=h // 365, target=(origin + pd.Timedelta(days=h)).date(), q10=v, q50=v, q90=v,
+                                 widen_each_end_pct=float("nan"), q10_widened=float("nan"), q90_widened=float("nan"),
+                                 share_of_paths_above_origin_price=0.0, list_price_cap=float("nan"), share_of_paths_at_cap=float("nan")))
     outlook = pd.DataFrame(orow)
     outlook.to_csv(os.path.join(OUT, "outlook.csv"), index=False, float_format="%.4f")
     paths = pd.concat(prow, ignore_index=True)
@@ -848,13 +1260,19 @@ def main() -> int:
         say(f"  {chip}: last price {math.exp(f['lp0']):.3f}; usual level (median of history) {math.exp(f['thr']):.3f}; "
             f"share of days with a step {f['p_step']:.2f}; median step {f['median_abs_step'] * 100:.2f}%; "
             f"history's average change {pct(f['mean_log_per_year']):+.0f}%/yr over the {f['n_pairs']} day pairs learned from")
+    hw_fit = hardware_trend_fit()
+    for name, v in hw_fit.items():
+        say(f"  hardware trend, {name}: {v['n_gpus']} GPUs, {int(v['first_release_year'])} to {int(v['last_release_year'])}: cost of a unit "
+            f"{v['cost_pct_per_year']:+.1f}%/yr ({v['cost_pct_per_year_slow']:+.1f} to {v['cost_pct_per_year_fast']:+.1f}), "
+            f"halves every {v['halving_years']:.1f} years")
     key["step4"] = dict(origin=str(origin.date()), successor_dates={k: str(v.date()) for k, v in succ_dates.items()},
+                        list_price_cap=caps, hardware_trend_rates=list(HARDWARE_TRENDS), hardware_trend_fit_on_pack=hw_fit,
                         successor_shift_log_per_year=delta, outlook=outlook.round(3).astype({"origin": str, "target": str}).to_dict("records"),
                         fit={chip: dict(last_price=math.exp(fits[(chip, 'main')]["lp0"]), usual_level=math.exp(fits[(chip, 'main')]["thr"]),
                                         p_step=fits[(chip, 'main')]["p_step"], median_abs_step=fits[(chip, 'main')]["median_abs_step"],
                                         history_trend_pct_per_year=pct(fits[(chip, 'main')]["mean_log_per_year"]))
                              for chip in ("H100", "A100")})
-    chart_outlook(pack, paths, origin)
+    chart_outlook(pack, paths, origin, caps)
 
     key["runtime_seconds"] = round(time.time() - t0, 1)
     with open(os.path.join(OUT, "key_numbers.json"), "w") as fh:

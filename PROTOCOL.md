@@ -198,3 +198,136 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       than +3% to +6%, so we read the gap as mostly the learning rate. Modal ran both on A100 80GB
       cards, not H100s. `rl/runs/modal/newer3/rate_and_model_comparison.json` holds the comparisons
       of the two rates and the two models on the same forecasts (each rate's two seeds averaged).
+12. **Added on 15 Nov, after the forecast was handed in and after reading the brief's reference
+    list: corrections to the write-up and further tests on past data.** The forecast file is not
+    changed: its target days (7 to 13 Nov) had passed, so a change could not be blind. None of the
+    tests below is blind either: every day they use had been looked at. What can still be fixed in
+    advance is the rule of each test, so each rule is written here and committed before that test
+    is first run.
+    - **Range memory** (`gpuval.range_memory`, no AI calls). A forecaster's ranges are stretched by
+      one number per horizon, set from its own earlier forecasts. On each forecast day, for each
+      horizon, the memory holds every earlier forecast by the same forecaster whose outcome was
+      published on or before that day. The stretch is the value in 0.50, 0.55, ..., 3.00 with the
+      lowest total pinball loss in dollars on the memory (ties: the value nearest 1). With fewer
+      than 50 forecasts in the memory it is 1. A stretch s turns low into mid × (low ÷ mid)^s and
+      high likewise, as the coach's stretch does. One stretch per horizon is shared by all prices.
+      - Scored on the 19 days of our prices that the first crowd answered outside the coach's
+        practice and check days, counting every forecast whose outcome is known by 6 Nov.
+      - Compared on the first crowd's recorded answers: no stretch, the coach's fixed
+        1.0 / 1.25 / 1.65, and the memory. The crowd's memory also holds its answers on the
+        coach's four practice and check days of our prices; those days are never scored here.
+      - The same rule is run on the engine (memory: its own forecasts from 21 Aug) and on the open
+        models before and after RL training (memory: their own forecasts from 24 Sep). "Untrained
+        plus memory against trained" asks whether RL taught more than range width.
+      - The grid, the minimum memory and the scoring days do not change after the first run.
+      - Outcome of the first run (commit `9563862` holds the rule, `d7ca03a` the numbers):
+        first crowd +14.7% against drift with no stretch, +17.0% with the coach's stretch, +15.9%
+        with the memory; memory against none +1.4% (−1.5% to +4.1%), against the coach −1.4%
+        (−3.2% to +0.2%). Nothing was changed and re-run. Two readings in the findings were made
+        after seeing these numbers and are labelled so: the split of days at 12 Oct, and the share
+        of misses that are zero-width ranges.
+    - **Recall probe** (`gpuval.recall_probe`, about 280 AI calls; written before its first run).
+      The agents' model is asked, with no data shown, for the AWS spot price of each machine type
+      on each of the agents' AWS days (median across zones, USD per GPU-hour), and whether it was
+      higher, lower or the same (within 1%) a week later. "I don't know" is allowed; a best guess
+      is still asked for. The 11 days before April 2026 are the test and the 4 days after it,
+      which the model cannot have seen, are the control. Same model and effort as the agents.
+      - We will say the model shows recall if, on the days before April 2026, either (a) its
+        prices are closer to the truth of their own date than to the truth of other dates for the
+        same machine type (dates shuffled within machine type, 5,000 shuffles, p below 0.05), or
+        (b) where it names a direction and the price moved, it is right clearly more than half
+        the time (90% interval above 0.5). Otherwise we say no recall was found, and report how
+        close its guesses were, before and after April 2026, side by side.
+    - **Agent memory** (`gpuval.agent_memory`, about 10,600 AI calls on the cheaper flex tier,
+      stopped by code at an estimated $45; written before its first run). The five agents as first
+      written, lived through the 19 scoring days in date order, in three arms that differ only in
+      what is added to the facts: nothing; the agent's own earlier forecasts for that price whose
+      outcomes are known, each marked inside, below or above its range (the last 12, with a
+      count of all); or that record plus a lesson of at most three sentences that the agent
+      writes for itself before each day from its whole scored record (once it has 30 outcomes).
+      Each arm's memory holds that arm's own answers. No range stretch is applied in any arm.
+      - The "nothing" arm is asked again now, so that the three arms are the same age. Its gap to
+        the answers recorded on 14 Nov shows how far the score moves when nothing changes.
+      - We will say a memory helps only if its arm has less error than the "nothing" arm on the
+        same forecasts with a 90% interval that excludes zero (all 19 days, dollars, resampled by
+        price and target day). We also report the later half of the days, each horizon, each
+        agent, and the lessons as written.
+      - Expectation, from the reading: the record helps a little or not at all, and the written
+        lesson does no better than the record. One run; prompts are not changed after seeing a
+        result. A crash is resumed from the last finished day and reported.
+      - Outcome of the one run (10,635 calls, all on the flex tier, an estimated $24; no crash):
+        record against nothing +1.9% (−0.2% to +4.2%), lesson against nothing +2.1% (−0.2% to
+        +4.5%), lesson against record +0.2% (−1.0% to +1.3%). By the rule, neither memory is
+        shown to help. The "nothing" arm against the answers of 14 Nov: −0.6% (−2.1% to +0.8%).
+    - **The ML model, a second look** (`gpuval.ml_challenger crossrun`, a Modal T4; written before
+      its first run). Same model and version, nothing tuned. Three new arms on the same 3,769
+      forecasts as the plain run: `cross` (every scored price observed on the forecast day goes in
+      one batch with cross-learning on; one batch per forecast day, so no later reading of any
+      price is in it), `cov` (one price at a time, plus four past-only facts about its list: the
+      cheapest offer, the lower and upper quartile, the number of offers), and `cross_cov` (both).
+      - We will say an arm repairs the model only if it beats drift in both blocks (the eight
+        earlier weeks and the three test weeks) with 90% intervals that exclude zero. We also
+        report each arm against the plain run and against the engine on the same forecasts.
+      - Outcome of the first run: no arm repairs the model. In the eight earlier weeks `cross`
+        scored −2.4% against drift (−11% to +4%) and `cross_cov` −2.1%; in the test weeks +8.4%
+        and +8.8%, with intervals that include zero. Cross-learning was better than the plain run
+        in the earlier weeks (+4.4%, +0.9% to +7.7%) and no different in the test weeks.
+    - **Recall probe, outcome of the first run:** 212 questions. The model said it remembered
+      none of them and answered "don't know" to every week-later question. Its price guesses were
+      no closer to their own date than to other dates (p = 0.12 before April 2026, 0.37 after).
+      By the rule above, no recall was found.
+    - **An analyst that writes its own test** (`gpuval.analyst`, 12 AI calls and a Modal CPU
+      container; written before its first run). The agents' model, at medium effort, proposes 12
+      ideas one at a time about when or in what order prices and lists change, each as a Python
+      function that returns one number. It is given a neutral description of the data and no
+      hint from our own findings.
+      - Its code runs in a container with no keys and no network, on the real data and on 39
+        shuffled copies (`data.make_placebo`, seeds 1 to 39). Discovery uses data up to 7 Oct:
+        an idea passes if the real number is outside all 39 shuffled ones. The analyst is told
+        each result.
+      - Confirmation uses 8 Oct to 6 Nov, is never shown to the analyst, and is run once after
+        its last idea, only for ideas that passed: confirmed if the real number is again outside
+        all 39 shuffled ones (seeds 101 to 139) on the same side.
+      - By luck an idea passes discovery 1 time in 20 and both steps about 1 time in 800. We
+        report every idea, passed or not. A confirmed idea is a pattern in timing, not yet a
+        better forecast.
+      - Outcome of the first run: 12 ideas, all ran, 5 passed discovery, 3 confirmed (repricing
+        by weekday; an offer repricing again two to four days later; one provider's changes
+        arriving together across its GPUs). Two passed discovery and failed confirmation.
+        Afterwards, as a reading and not part of the test, the three confirmed functions were
+        re-run in the same container with one provider's offers removed
+        (`gpuval.analyst without scaleway`); all three still passed in both periods.
+    - **Weekday rule** (`gpuval.weekday_rule`, no AI calls; written after the analyst's result and
+      a count of price moves by weekday, and before this rule's first run). For 1-day forecasts
+      only: if, in this price's own history up to the forecast day, the published price has never
+      moved into the weekday being forecast, in at least 8 past cases, the forecast becomes "no
+      change" with no range; otherwise it is left alone. Applied to the engine and to drift on
+      every forecast day from 21 Aug to 5 Nov, and to the first crowd's recorded answers on its 19
+      days. We will say the rule helps a forecaster only if its 1-day error falls with a 90%
+      interval that excludes zero. The 8 and the horizon do not change after the first run.
+      - Outcome of the first run: no gain. It fired on 146 of 2,058 one-day forecasts; engine with
+        the rule against without −0.1% (−0.5% to +0.1%); first crowd −0.2% (−0.9% to +0.2%).
+    - **Code review of this revision** (an automated review by a second AI model, 15 Nov). It found
+      three errors, all in the long view, and all three were real. Each was corrected the same
+      day, with the figures before and after kept in `longview/LONGVIEW.md` (sections 3 and 4)
+      and `longview/RESALE.md`:
+      - the successor test labelled "out of sample" used one number measured to 11 Dec 2024 for
+        forecast days before that date (one-year loss +20%; measured afresh on each forecast
+        day it is +12%, and +22% on the forecast days after the newer chip had arrived);
+      - the list-price cap did not reach the rent paths drawn for resale, so one H100 draw in ten
+        rented above list (H100 one-year top $29,800, now $28,100);
+      - a simulated day stopped by the cap was followed as if the price had risen (A100
+        no-pull-back middle $1.95, $1.73, $1.56, now $2.03, $1.88, $1.73).
+      `tests/longview_checks.py` guards all three. No forecast-side number changed.
+    - **Checks with no rule to fix** (`gpuval.checks`, no AI calls). Counts and splits of results
+      that were already recorded: how often ranges held when the price moved, how many prices and
+      days carry the pooled figures, each agent alone, the AWS days before and after the agents'
+      model's knowledge ends, the prices that supply the coach's gain, offers that leave a list
+      and return, one provider's price by weekday, and the engine on every other daily-median
+      price in the pack. These describe; they were chosen after reading the references and after
+      looking at the data. One of them is a what-if and is labelled so: the ML model with its
+      middle held at the last value.
+    - **Corrections to FINDINGS.md.** Sentences that claimed more than the tests show were reworded
+      (the ML model's numbers do reach one agent; the agents' different jobs and the averaging are
+      not shown to matter; the coach's gain is nearly all range width; the 7-day engine figure is
+      72 forecasts from three days). Each is marked "added 15 Nov" or "corrected" where it stands.
