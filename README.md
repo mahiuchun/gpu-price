@@ -47,6 +47,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 |---|---|
 | A **coach AI** rewrites the agent crowd (10 changes proposed, 2 kept) | ✅ a further 3% to 4% less error |
 | **RL** teaches a small open model to forecast (practised on AWS only) | ✅ Qwen3-8B: 3% → 5–10%; Qwen3.5-9B: 5% → 9–11% |
+| **RL inside a keep-or-roll-back loop** (Qwen3.5-9B: train 8 rounds, judge on a watch set, keep or roll back; 5 generations) | ✅ 1 kept, 4 rolled back; kept weights 5% → 8% on our prices (+4.0%, +0.1% to +6.8%) |
 | An **AI scientist** tunes the engine's settings | ❌ slightly worse on unseen weeks |
 | **RL** teaches a small model to propose engine settings | ❌ its one change is not clearly better |
 | Agents **read each other's answers** | ❌ no help |
@@ -211,6 +212,7 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | Recall probe | `src/gpuval/recall_probe.py` | Asks the agents' model, with no data shown, what the AWS prices were on its test days. Days after its knowledge ends are the control. |
 | Analyst | `src/gpuval/analyst.py` | An AI writes one analysis function per idea. It runs in a Modal container with no keys and no network, against 39 shuffled copies of the data, and a passed idea must pass again on newer data the analyst never sees. |
 | Weekday rule | `src/gpuval/weekday_rule.py` | Tests whether the weekday pattern the analyst found makes 1-day forecasts better. No AI calls. It does not. |
+| RL inside a loop | `rl/rsi_forecaster.py` | Generation after generation: train Qwen3.5-9B for 8 rounds from the kept weights, score the new weights on a watch set of later AWS dates, keep them only if they are better in 90% of resamples, otherwise roll back and change the learning rate. The kept weights are then tested once on our prices. |
 | One loop | `src/gpuval/rsi.py` | One self-improvement loop that runs unattended over the whole forecaster: a vote that learns each member's weight from its record, a paired accept test, one kind of change per generation, and an exam that takes each kept change out again. It starts from the forecast we handed in and can leave it only through the gate. |
 | AI calls with a meter | `src/gpuval/llm.py` | One helper for the three modules above: cheaper flex tier first, token and cost totals, a budget that stops the run. |
 | Other models | `runs/other_models/run_crowd.py`, `table.py` | `run_crowd.py` asks the five agents' questions of another model (OpenAI, Anthropic, or an open model on Tinker), with a spending limit. `table.py` scores every model on the same 479 forecasts. |
@@ -249,6 +251,7 @@ uv run python tests/longview_checks.py                              # the long v
 uv run python -m gpuval.rsi run                                     # the single loop: 12 AI calls at most; `--proposer random` is the control
 uv run python -m gpuval.rsi run --proposer replay && uv run python -m gpuval.rsi exam   # recorded edits through the gate again, then the exam; no keys needed
 uv run python tests/rsi_checks.py                                   # the loop's starting bundle is the handed-in forecast; no look-ahead in the vote
+cd rl && uv run python rsi_forecaster.py --name rsi1 --base-model Qwen/Qwen3.5-9B && uv run python eval_forecaster.py --name rsi1 --base-from fc2   # RL inside the loop, then its test (TINKER_API_KEY)
 uv run python -m gpuval.rsi fresh                                   # the follow-up on 20 fresh days, re-scored from saved answers; `fresh-ask` makes the 3,375 AI calls
 cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
@@ -277,6 +280,7 @@ and reproduces the blind-test table exactly.
   (the analyst's ledger holds each idea's code and its numbers on the real and shuffled data).
 - `runs/rsi/`: the single loop of 15 Nov. One folder per run (`main` is the AI proposer, `random_1` to `random_5` the control) with every
   proposed edit and the gate's numbers (`state.json`); `exam_cells.parquet` holds the exam-day forecasts, and `fresh_answers.json` every answer of the follow-up on 20 fresh days.
+- `rl/runs/rsi1/`: the RL loop of 15 Nov. Every generation with its watch score and whether it was kept (`log.json`), and the kept weights' test answers.
 - `rl/runs/fc1/`, `rl/runs/fc2/`: training logs and test answers of the two RL-trained forecasters.
 - `rl/runs/modal/`: every Modal training run (log, test answers, scored cells); `findings/data/modal_rl.json` puts them next to the Tinker runs.
 - `runs/other_models/`: the five agents on five other models. Each `<model>/` folder holds every answer and the run's

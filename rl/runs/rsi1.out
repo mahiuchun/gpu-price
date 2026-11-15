@@ -1,0 +1,8 @@
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+untrained: watch -0.0937 (readable 1.00) on 128 price-days x 4 answers
+gen 1: lr 4.0e-05 | train reward -0.015 | watch -0.0118 against kept -0.0937 (gain +0.0819, 1.00 of resamples) | ACCEPTED | 94 s | about $2.28 so far
+gen 2: lr 4.0e-05 | train reward +0.048 | watch -0.0337 against kept -0.0118 (gain -0.0218, 0.12 of resamples) | rolled back | 101 s | about $4.46 so far
+gen 3: lr 2.0e-05 | train reward -0.031 | watch -0.0218 against kept -0.0118 (gain -0.0100, 0.28 of resamples) | rolled back | 108 s | about $6.60 so far
+gen 4: lr 4.0e-05 | train reward -0.012 | watch -0.0267 against kept -0.0118 (gain -0.0149, 0.22 of resamples) | rolled back | 105 s | about $8.84 so far
+gen 5: lr 8.0e-05 | train reward -0.076 | watch +0.0191 against kept -0.0118 (gain +0.0309, 0.86 of resamples) | rolled back | 108 s | about $11.05 so far
+stopped (plateau): 1 of 5 generations accepted; kept generation 1, watch -0.0937 -> -0.0118; checkpoint tinker://ab2b13ad-0d62-5172-9ac2-0a4e422b00fa:train:0/sampler_weights/rsi1-g1; about $11.05, 8.9 min

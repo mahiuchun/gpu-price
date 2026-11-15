@@ -11,6 +11,7 @@
 - **Learning from its own past forecasts: three ways, one modest result.** We gave the crowd a memory with no AI in it (range width set from its own resolved forecasts), showed each agent its own scored record, and let each agent write itself a lesson from that record. All three found the fault the coach found, ranges too narrow at 3 and 7 days. They cut error by 1.4% to 2.1%, and in each case the likely range includes zero, so none is established. The no-AI memory also recovers 6 of the 8 points that RL training gave Qwen3-8B.
 - **An AI analyst that writes its own tests found three timing patterns that held on data it never saw.** One is a weekday pattern wider than anything we had found by hand: three scored cloud spot prices move almost only on Mondays and Tuesdays. A simple rule built on it did not make the forecasts better.
 - **One loop over the whole forecaster kept nothing, and it was right to.** Every test above was started by hand, so we added one loop that runs unattended: generation after generation, an AI proposes one change to how the team is put together (a vote that learns each member's weight, the range width, who votes), and the change is kept only if it has less error in 90% of resamples. It kept none of the AI's 6 proposals and none of 30 random ones. On nine later days none of those edits was clearly better and one was clearly worse. Put to the same gate, the coach's wider ranges would have been kept. The one edit that looked promising, a vote for an RL-trained open model, was then tested once on 20 days the crowd had never answered: +0.9% (−0.4% to +2.2%), not established. On those 20 days the team we handed in cut error by 14.8% against drift (+10% to +21%) (section 12).
+- **With RL training inside the loop, one generation was accepted and it held up.** The same keep-or-roll-back loop, this time training Qwen3.5-9B: 8 rounds of RL practice, then a watch set decides whether the new weights are kept. Of five generations one was accepted and four were rolled back. The kept weights, tested once on our 37 prices, cut error by 4.0% against the untrained model (+0.1% to +6.8%) and their ranges held the truth 80% of the time, up from 60% (section 12).
 - **Five AI agents that read the price list beat the engine.** On our own prices the crowd as first written was 8% ahead on the same forecasts (likely 3% to 14%), and the improved crowd 10% ahead (5% to 14%). We did not show that their different jobs, or the averaging, are the reason: the best single agent scored above the average of the five, and the five middles agree within 0.1% on three forecasts in four.
 - **A ready-made ML model, run in its plainest mode, is unreliable on these prices.** It looked good in the three test weeks, failed in the eight weeks before, and works well on AWS prices. We first ran it one price at a time with default settings; letting the prices read each other and adding facts about the list did not repair it (section 10).
 - **Most movement in a published median is not providers changing prices.** For provider list prices, 66% comes from offers joining or leaving the list, 25% from one or two offers that reprice almost daily, and 9% from everyone else.
@@ -191,6 +192,7 @@ In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as 
 | 17 | AI analyst writing its own tests in a sealed container | 12 ideas, 5 passed once, 3 passed again on data it never saw |
 | 18 | A weekday rule built on the analyst's confirmed pattern | −0.1% (−0.5% to +0.1%): no gain |
 | 19 | One loop over the whole forecaster: a vote that learns, range width, who votes; 6 edits proposed by an AI and 30 at random | none kept; on 9 later days none was clearly better and one was clearly worse. The one promising edit, tested once on 20 fresh days: +0.9% (−0.4% to +2.2%), not established |
+| 20 | RL training inside a keep-or-roll-back loop, Qwen3.5-9B: five generations of 8 rounds, each judged on a watch set | 1 accepted, 4 rolled back; the kept weights cut error by 4.0% against the untrained model on our prices (+0.1% to +6.8%) |
 
 - **Tuning on ten weeks of data overfits.** The scientist's ideas passed a gate and a hidden check and still did not hold. With hindsight, the best four setting changes would have reached 18%, and they point the opposite way from the past: earlier misses were upward, later ones downward.
 - **The ideas the gate rejected were also informative.** Following other sites' prices for the same GPU cut skill from +0.235 to +0.190. Replacing the engine's middle with the last value cut it from +0.212 to +0.194.
@@ -440,11 +442,36 @@ Everything above was a separate test, started by hand. This is one loop that run
 - **The team we handed in held up on days nobody had asked it about.** +14.8% against drift on 1,775 new forecasts, in line with +14% to +20% on its earlier days. On the same forecasts the engine cut 11.0% (+7% to +17%) and the two trained open models 8.5% and 7.9%.
 - **Its lead over the engine was smaller here:** +4.3% (−0.7% to +9.3%), against +8% to +11% on the earlier days. And its ranges were narrower than the target: the truth landed inside 74% of the time, and 57% of the time when the price moved.
 
+**RL training inside the loop.** The loop above only changes how recorded answers are put together. This one trains (`rl/rsi_forecaster.py`, Qwen3.5-9B on Tinker; rule committed before its first run, PROTOCOL.md deviation 14). A generation is 8 rounds of RL practice on AWS prices, starting from the kept weights. The new weights then answer a watch set of 128 later AWS price-days. They are kept only if they score higher there in at least 90% of resamples. Otherwise they are thrown away and the next generation restarts from the kept weights with the learning rate halved or doubled.
+
+| Generation | Starts from | Learning rate | Watch score: kept, then new | Resamples in which new is better | Decision |
+|---|---|---|---|---|---|
+| 1 | untrained | 4e-5 | −0.094, −0.012 | 100% | accepted |
+| 2 | generation 1 | 4e-5 | −0.012, −0.034 | 12% | rolled back |
+| 3 | generation 1 | 2e-5 | −0.012, −0.022 | 28% | rolled back |
+| 4 | generation 1 | 4e-5 | −0.012, −0.027 | 22% | rolled back |
+| 5 | generation 1 | 8e-5 | −0.012, +0.019 | 86% | rolled back |
+
+The loop stopped itself after four rollbacks in a row: 9 minutes, about $11, plus about $1 for the test. The kept weights were then tested once, on prices the loop never used:
+
+| Less error than drift | Our 37 prices (4,074 forecasts, 43 days) | AWS Fridays in 2026 (784 forecasts) |
+|---|---|---|
+| Qwen3.5-9B untrained | +4.6% | −11.8% |
+| Kept weights from the loop (8 rounds of training) | +8.4% (+4% to +12%) | +0.9% (−4% to +6%) |
+| Kept against untrained | **+4.0% (+0.1% to +6.8%)** | +11.3% (+8% to +15%) |
+| Earlier one-shot run of the same model, 60 rounds, no gate | +11.3% (+7% to +15%) | +8.6% (+3% to +14%) |
+
+- **By the rule, the loop trained a better forecaster.** The kept weights have less error than the untrained model on our prices, and the likely range excludes zero, though only just. The truth landed inside their ranges 80% of the time, up from 60%.
+- **The one step the gate accepted held up on the test.** We do not know what the four rolled-back sets of weights would have scored there; they were not tested.
+- **The gate stopped it early.** After 8 rounds the loop kept +8.4%; the earlier run, left to train for 60 rounds, reached +11.3%. Generation 5 scored highest of all on the watch set and was better than the kept weights in 86% of resamples, short of the 90% it needed. After the first big step, what 8 more rounds add is smaller than the noise in 128 watch price-days. It is the same lesson as with the vote: this gate is safe, and it needs more to judge on (a larger watch set, or longer generations) before it will let a slow gain through.
+- **Where the kept weights stand.** Level with the engine on our prices (−2.0%, −11% to +4%) and behind the GPT crowd on the 14 days both answered (−5.5%, −16% to +1%).
+- **Not yet joined up.** The kept weights are not yet a voting member of the team in the loop above; that is one more edit of the "who votes" kind.
+
 **What this says about the loop.**
 
 - **The gate is the part worth having.** It let through none of 36 proposals, of which one would have cost 6%, and it would have kept the one earlier change that carried a real gain. The AI scientist's gate (section 5) kept 7 ideas that then did not hold.
 - **It needs more to practise on than five weeks of prices.** The one change that passes was worth 1.4% of the error on the 640 practice forecasts. The largest gain among the 30 edits was 0.9%, and it reached 72%. A loop with this gate is safe on short data, and short data is also why it accepts nothing.
-- **What the loop does not do yet.** RL training inside the loop (an hour or more per training run on a rented GPU), prompt rewrites inside the loop (the coach's lever; each needs about 840 agent calls on these days), and several teams side by side. The loop takes any forecaster with recorded answers as a member, so a newly trained model can be given a vote without changing the code.
+- **What the loops do not do yet.** Prompt rewrites inside the loop (the coach's lever; each needs about 840 agent calls on these days), several teams side by side, and one loop that both trains and votes. The loop takes any forecaster with recorded answers as a member, so a newly trained model can be given a vote without changing the code.
 
 ## What someone pricing a lease or a loan could use
 

@@ -442,5 +442,12 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       only if the kept weights have less error than the untrained model on our prices with a 90%
       interval that excludes zero. The earlier one-shot run of the same model (60 rounds, no
       gate) is reported beside it.
+    - Outcome of that one run (commit `6da8d27` holds the rule; 8.9 minutes, an estimated $11.05,
+      and $1.18 for the test): generation 1 was accepted (watch score −0.094 to −0.012, higher in
+      100% of resamples); generations 2 to 5 were rolled back (12%, 28%, 22% and 86%), and the
+      loop stopped at four in a row. Kept weights against the untrained model on our prices:
+      +4.0% (+0.1% to +6.8%) on 4,074 forecasts. By the rule, the loop trained a better
+      forecaster. On AWS Fridays: +11.3% (+8% to +15%). The untrained model's answers were the
+      ones saved by the earlier run of the same model.
     - The opening paragraph of this item was shortened after the run. The rule itself, every
       point from "What can change" to "Weaknesses known before the run", is as first committed.
