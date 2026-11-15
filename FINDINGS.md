@@ -4,18 +4,19 @@
 
 ## Summary
 
-- **The forecast we hand in is the average of five AI agents, after two changes that a coach AI proposed and tests kept.** Each agent reads one price's list of offers and forecasts it directly. In three separate tests the crowd as first written cut error by 15% to 19% against drift. The third test, on AWS prices, mostly uses days the model may have read about; on the four AWS days after its knowledge ends the cut was 18% (likely 3% to 35%). The coach's changes cut a further 3% to 4% on days the coach never saw.
+- **The forecast we hand in is the average of five AI agents, after two changes that a coach AI proposed and tests kept.** Each agent reads one price's list of offers and forecasts it directly. In three separate tests the crowd as first written cut error by 15% to 19% against drift. The third test, on AWS prices, mostly uses days the model may have read about; on the four AWS days after its knowledge ends the cut was 18% (likely 3% to 35%), and asked directly it could recall none of those prices. The coach's changes cut a further 3% to 4% on days the coach never saw.
 - **A plain calculation that looks inside the price list is the steady base.** Our "engine" cut error by about 8% against drift in all three tests, including 206 weeks of AWS spot prices.
 - **Two ways of making the system improve itself held up on fresh days.** A coach AI that proposes changes to the agent crowd (10 proposed, 2 kept; nearly all of the gain comes from one of them, wider ranges). And reinforcement learning that teaches a small open model to forecast: it practised on AWS prices only, and on our prices Qwen3-8B went from about 3% less error than drift to between 5% and 10% less, depending on the run (seven runs, on Tinker and on Modal GPUs). The newer Qwen3.5-9B went from 5% to between 9% and 11% in three runs at the lower learning rate, and showed no gain in two runs at a higher one. The two models end level.
 - **Three other ways did not.** An AI scientist tuning the engine made it slightly worse on unseen weeks. A small model trained with reinforcement learning to propose engine settings found one change that is not clearly better. Letting the agents read each other's answers did not help.
-- **A memory of its own misses, with no AI in it, does part of both loops' work.** A forecaster that sets its range width from its own resolved forecasts found the fault the coach found, and recovers 6 of the 8 points that RL training gave Qwen3-8B. Its own gain on the crowd is not established (+1.4%, −1.5% to +4.1%), and the coach's fixed numbers scored a little better.
+- **Learning from its own past forecasts: three ways, one modest result.** We gave the crowd a memory with no AI in it (range width set from its own resolved forecasts), showed each agent its own scored record, and let each agent write itself a lesson from that record. All three found the fault the coach found, ranges too narrow at 3 and 7 days. They cut error by 1.4% to 2.1%, and in each case the likely range includes zero, so none is established. The no-AI memory also recovers 6 of the 8 points that RL training gave Qwen3-8B.
+- **An AI analyst that writes its own tests found three timing patterns that held on data it never saw.** One is a weekday pattern wider than anything we had found by hand: three scored cloud spot prices move almost only on Mondays and Tuesdays. A simple rule built on it did not make the forecasts better.
 - **Five AI agents that read the price list beat the engine.** On our own prices the crowd as first written was 8% ahead on the same forecasts (likely 3% to 14%), and the improved crowd 10% ahead (5% to 14%). We did not show that their different jobs, or the averaging, are the reason: the best single agent scored above the average of the five, and the five middles agree within 0.1% on three forecasts in four.
 - **A ready-made ML model, run in its plainest mode, is unreliable on these prices.** It looked good in the three test weeks, failed in the eight weeks before, and works well on AWS prices. We first ran it one price at a time with default settings; letting the prices read each other and adding facts about the list did not repair it (section 10).
 - **Most movement in a published median is not providers changing prices.** For provider list prices, 66% comes from offers joining or leaving the list, 25% from one or two offers that reprice almost daily, and 9% from everyone else.
 - **Some of that "repricing" is the euro.** One provider prices in euros and its tracking site converts to dollars each morning. Its dollar price changed on 55 of 59 days from Tuesday to Saturday and on 1 of 22 Sundays and Mondays. On 6 Nov it was the middle offer of two scored prices, so those published medians were its price.
 - **Ranges hold far less often when the price moves.** The improved crowd's ranges held the truth 80% of the time on its exam days: 99% when the price did not change and 66% when it did. For the engine the second figure is 49%.
 
-The points above on the memory, the euro and the ranges, section 9, and every note marked "added 15 Nov" were written after the forecast was handed in and after reading the brief's reference list. The forecast file itself is unchanged.
+The points above on learning from past forecasts, the analyst, the euro and the ranges, sections 9 and 10, and every note marked "added 15 Nov" were written after the forecast was handed in and after reading the brief's reference list. The forecast file itself is unchanged. The tests in sections 9 and 10 had their rules committed before they first ran; the days they use had all been looked at.
 
 ## The question
 
@@ -180,6 +181,13 @@ In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as 
 | 10 | RL: an open model trained to forecast directly, on AWS prices only | from about +3% to between +5% and +11% against drift on our prices, depending on the run; level with the engine at best |
 | 10b | The same RL training repeated on Modal: 4 learning rates x 2 seeds, then 3x the practice, then Qwen3.5-9B | reproduces the first Qwen3-8B run exactly with the same seed; other seeds lower; too high a rate collapses; Qwen3.5-9B gains only at the lower learning rate; the two models end level |
 | 11 | The trained open model added to the crowd as a sixth agent | +1.4% (−1% to +4%): not established; left out |
+| 12 | Range memory, no AI: the crowd's range width set day by day from its own resolved forecasts (added 15 Nov, as are the rows below) | ranges closest to the 80% target; +1.4% in error (−1.5% to +4.1%): not established |
+| 13 | The same memory given to the untrained open model | recovers 6.3 of the 7.7 points that RL training gave Qwen3-8B |
+| 14 | Each agent shown its own scored record for the price | +1.9% (−0.2% to +4.2%): not established; ranges widen |
+| 15 | The record plus a lesson the agent writes for itself | +2.1% (−0.2% to +4.5%); no better than the record alone |
+| 16 | ML model with prices reading each other and facts about the list | does not beat drift in both periods |
+| 17 | AI analyst writing its own tests in a sealed container | 12 ideas, 5 passed once, 3 passed again on data it never saw |
+| 18 | A weekday rule built on the analyst's confirmed pattern | −0.1% (−0.5% to +0.1%): no gain |
 
 - **Tuning on ten weeks of data overfits.** The scientist's ideas passed a gate and a hidden check and still did not hold. With hindsight, the best four setting changes would have reached 18%, and they point the opposite way from the past: earlier misses were upward, later ones downward.
 - **The ideas the gate rejected were also informative.** Following other sites' prices for the same GPU cut skill from +0.235 to +0.190. Replacing the engine's middle with the last value cut it from +0.212 to +0.194.
@@ -287,9 +295,26 @@ The brief asks for a system that learns from its previous predictions. The plain
 - **The control is conservative.** The untrained Qwen3-8B's stretch sat at 3.0, the top of the allowed range, at three and seven days from 4 Oct on, so a width fix alone may be worth more than this shows.
 - **What this does not show.** The memory learns on our prices as it goes; RL learned on AWS prices only and never saw ours. So the comparison is about what was learned, not about which method had less to work with. Adding the memory on top of a trained model made it worse (Qwen3-8B −2.0%, −4.4% to +0.2%; Qwen3.5-9B −3.1%, −5.1% to −1.2%): ranges that are already about right get over-stretched in the unstable first days.
 
-### 10. Four further tests (added 15 Nov)
+### 10. Five further tests (added 15 Nov)
 
-Each rule was written into PROTOCOL.md and committed before the test first ran (deviation 12). All four use days that had already been looked at, and each was run once.
+Each rule was written into PROTOCOL.md and committed before the test first ran (deviation 12). All five use days that had already been looked at, and each was run once.
+
+**Do the agents forecast better when they can see their own past forecasts?** (`gpuval.agent_memory`, 10,635 AI calls, about $24 on the cheaper tier.) The five agents as first written lived through the 19 days in date order, three times over. In one arm nothing was added. In the second, each agent was shown its own earlier forecasts for that price whose outcomes were known, each marked inside, below or above its range. In the third it was shown that record and a lesson of at most three sentences that it had written for itself from its whole record. A memory only ever held what was known on the day.
+
+![Agent memory](findings/figures/fig12_agent_memory.png)
+
+| 19 days, 1,894 forecasts, no range stretch | Less error than drift | Truth inside the range | Inside when the price moved |
+|---|---|---|---|
+| No memory, asked again | +14.2% (+10% to +19%) | 70% | 51% |
+| Own scored record | +15.8% (+12% to +21%) | 73% | 56% |
+| Record plus a written lesson | +16.0% (+12% to +21%) | 74% | 57% |
+
+- **Both memories point the right way, and neither is established.** Record against no memory: +1.9% (−0.2% to +4.2%). Record plus lesson against no memory: +2.1% (−0.2% to +4.5%). Our rule needed the range to exclude zero, and it does not, by a hair. The sign is the same at every horizon and for all five agents, and at 7 days the range only just clears zero (+2.7%, +0.0% to +5.9%).
+- **The written lesson added nothing to the record:** +0.2% (−1.0% to +1.3%). That is what we wrote down beforehand, from recent work on agent memory which reports that raw records of what happened tend to beat lessons distilled from them (arXiv:2610.27406 and arXiv:2510.19897, both read in summary only).
+- **What the memory changed was the width.** Middles moved no more often than before (40% of forecasts in every arm). Typical range width went from 1.2% of the price to 1.5%. The agents read their records and widened their own ranges.
+- **Every agent reached the coach's diagnosis by itself.** The lessons, as written: "widen three- and especially seven-day ranges", "more upside allowance", "tighten one-day ranges". All 90 are in `findings/data/agent_memory.json`.
+- **Asking the same agents again moves the score by about half a point.** The no-memory arm against the answers recorded on 14 Nov: −0.6% (−2.1% to +0.8%). A difference between two runs of agents smaller than about 2 points should not be read as a result.
+- **Three ways of learning from past misses, one size of gain.** The coach's fixed stretch gave +2.7% on these forecasts, an agent's own record +1.9%, the range memory with no AI +1.4% (section 9). All three work by widening ranges at 3 and 7 days. None taught the agents to place the middle better.
 
 **Does the agents' model already remember the AWS prices?** (`gpuval.recall_probe`, 212 questions.) We asked it, with no data shown, for the spot price of each machine type on each of the agents' AWS days, and whether the price was higher or lower a week later. "I don't know" was allowed and a best guess was still asked for. Days after April 2026, which it cannot have seen, were asked in the same way as a control.
 
@@ -304,7 +329,7 @@ Each rule was written into PROTOCOL.md and committed before the test first ran (
 | One price at a time (section 1) | −7.1% (−18% to +1%) | +8.6% (−9% to +19%) |
 | Prices on the same day read each other | −2.4% (−11% to +4%) | +8.4% (−5% to +17%) |
 | One at a time, plus four facts about its list | −5.5% (−16% to +2%) | +10.4% (−5% to +20%) |
-| Both | −2.1% (−11% to +4%) | +8.8% (−5% to +18%) |
+| Both | −2.1% (−10% to +4%) | +8.8% (−5% to +18%) |
 
 - **Neither change repairs it.** No version beats drift in both periods. Letting prices read each other is better than the plain run in the earlier weeks (+4.4%, +0.9% to +7.7%) and no different in the test weeks. It is then ahead of drift in 7 of 11 weeks, up from 5.
 - **It stays behind the engine where it was behind:** by 11.5% in the earlier weeks (−23% to −4%) with both changes. "Unreliable on these prices" stands for this model in these modes. Histories of a few dozen days, most of them flat, give it little to work with.
@@ -329,7 +354,7 @@ Each rule was written into PROTOCOL.md and committed before the test first ran (
 
 - **No gain.** It fired on 146 of 2,058 one-day forecasts. The engine with the rule against the engine without: −0.1% (−0.5% to +0.1%). For the first crowd: −0.2% (−0.9% to +0.2%).
 - **Where it was right there was nothing left to win.** On the three cloud spot lists it fired 94 times and the price moved once. But the engine's error there was already close to zero: its ranges are tight when a history is flat.
-- **Where it was wrong it cost.** On three provider lists with short histories it fired 31 times and the price moved in 16: "never moved on a Thursday" was eight quiet Thursdays, not a schedule.
+- **Where it was wrong it cost.** On three provider lists with short histories it fired 31 times and the price moved in 16: "never moved on that weekday" was eight quiet days, not a schedule.
 - **Reading.** A pattern can be real in timing and still be worth nothing to a forecaster that already keeps its range tight on quiet days. That is the gap between the analyst's kind of test and a forecasting test, and the reason a confirmed idea was not claimed as an improvement.
 
 ## What someone pricing a lease or a loan could use
@@ -357,7 +382,7 @@ Each rule was written into PROTOCOL.md and committed before the test first ran (
 - **AWS prices are a different kind of price.** AWS sets them itself and they move in small steps. The archive records price changes, not daily readings, so a zone whose price stops changing is carried forward for ever: 13% of zone-days in our AWS test have had the same price for 60 days or more (32% for the oldest machine type). We cannot tell a flat price from a zone that has gone.
 - **The 37 prices were chosen with hindsight to 6 Nov** by the starter kit's rule, and 33 of them have under 90 days of history. On the pack's other rental prices the engine's edge is about half as large (section 4).
 - **Everything dated 15 Nov was added after the forecast was handed in** and uses days that had already been looked at. The rule of each new test was committed before its first run; the choice of which tests to add was not blind.
-- **Agent answers are not deterministic.** A second run gives slightly different numbers.
+- **Agent answers are not deterministic.** Asking the first crowd again on its 19 days moved its score against drift from +14.7% to +14.2% (−0.6% on the same forecasts, −2.1% to +0.8%; section 10).
 - **Posted prices, not transacted prices.**
 
 ## Deviations from the protocol
@@ -368,4 +393,4 @@ Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent
 
 `bash reproduce.sh` rebuilds the forecast files in about 15 seconds with no AI calls. The main file is rebuilt from the agents' recorded answers (`runs/coach/final_answers.json`; the first crowd's are in `runs/agents/final_answers.json`). The coach's ledger of all ten changes is `runs/coach/state.json`. `bash reproduce.sh --with-backtest` replays the AI scientist's blind test and reproduces its results table exactly.
 
-The notes added on 15 Nov rebuild from recorded files with no AI calls: `uv run python -m gpuval.checks` (about a minute), `uv run python -m gpuval.checks wide` (a few minutes) and `uv run python -m gpuval.range_memory`.
+The notes added on 15 Nov rebuild from recorded files with no AI calls: `uv run python -m gpuval.checks` (about a minute), `uv run python -m gpuval.checks wide` (a few minutes), `uv run python -m gpuval.range_memory` and `uv run python -m gpuval.weekday_rule`. The three tests that called an AI saved every answer, and their tables rebuild from those: `uv run python -m gpuval.agent_memory table`, `uv run python -m gpuval.recall_probe table` and `uv run python -m gpuval.analyst table`. The long view rebuilds with `uv run python longview/longview.py && uv run python longview/resale.py`.

@@ -1,0 +1,1057 @@
+{
+ "days_done": [
+  "2026-09-24",
+  "2026-09-27",
+  "2026-09-30",
+  "2026-10-03",
+  "2026-10-06",
+  "2026-10-09",
+  "2026-10-12",
+  "2026-10-16",
+  "2026-10-18",
+  "2026-10-19",
+  "2026-10-21",
+  "2026-10-22",
+  "2026-10-25",
+  "2026-10-26",
+  "2026-10-28",
+  "2026-10-29",
+  "2026-10-31",
+  "2026-11-02",
+  "2026-11-03"
+ ],
+ "usage": {
+  "calls": 10635,
+  "in": 14265906,
+  "out": 2025584,
+  "flex_calls": 10635,
+  "standard_calls": 0,
+  "usd": 24.39
+ },
+ "n": 1894,
+ "n_days": 19,
+ "blocks": {
+  "all days": {
+   "n": 1894,
+   "n_days": 19,
+   "vs_drift": {
+    "none": {
+     "n_cells": 1894,
+     "n_series": 37,
+     "n_days": 35,
+     "skill": 0.14193896802577377,
+     "lo90": 0.09945037252163716,
+     "hi90": 0.1900327083315777,
+     "excludes_zero": true
+    },
+    "record": {
+     "n_cells": 1894,
+     "n_series": 37,
+     "n_days": 35,
+     "skill": 0.15849725565167294,
+     "lo90": 0.11920457420889644,
+     "hi90": 0.2049204758839411,
+     "excludes_zero": true
+    },
+    "lesson": {
+     "n_cells": 1894,
+     "n_series": 37,
+     "n_days": 35,
+     "skill": 0.159980965116839,
+     "lo90": 0.12198091975845674,
+     "hi90": 0.20836588795611333,
+     "excludes_zero": true
+    },
+    "recorded": {
+     "n_cells": 1894,
+     "n_series": 37,
+     "n_days": 35,
+     "skill": 0.1467409862358161,
+     "lo90": 0.10791764093650984,
+     "hi90": 0.19278991356290698,
+     "excludes_zero": true
+    }
+   },
+   "none_vs_recorded": {
+    "n_cells": 1894,
+    "n_series": 37,
+    "n_days": 35,
+    "skill": -0.005627855238069079,
+    "lo90": -0.020591872293184287,
+    "hi90": 0.007951066798558653,
+    "excludes_zero": false
+   },
+   "record_vs_none": {
+    "n_cells": 1894,
+    "n_series": 37,
+    "n_days": 35,
+    "skill": 0.019297330852797057,
+    "lo90": -0.0024279731191086617,
+    "hi90": 0.04165840358773461,
+    "excludes_zero": false
+   },
+   "lesson_vs_none": {
+    "n_cells": 1894,
+    "n_series": 37,
+    "n_days": 35,
+    "skill": 0.0210264729649291,
+    "lo90": -0.0019229368730264704,
+    "hi90": 0.04526627063905036,
+    "excludes_zero": false
+   },
+   "lesson_vs_record": {
+    "n_cells": 1894,
+    "n_series": 37,
+    "n_days": 35,
+    "skill": 0.0017631665198133417,
+    "lo90": -0.009849728885632935,
+    "hi90": 0.01317568433707087,
+    "excludes_zero": false
+   },
+   "inside": {
+    "none": 0.7022175290390708,
+    "record": 0.7291446673706441,
+    "lesson": 0.7397043294614573
+   },
+   "inside_when_moved": {
+    "none": 0.514410480349345,
+    "record": 0.5554585152838428,
+    "lesson": 0.5746724890829694
+   },
+   "typical_width_pct": {
+    "none": 1.1770990805135149,
+    "record": 1.4512620605061415,
+    "lesson": 1.5342331513118597
+   },
+   "middle_moved_share": {
+    "none": 0.4044350580781415,
+    "record": 0.3996832101372756,
+    "lesson": 0.40549102428722283
+   },
+   "by_h": {
+    "1": {
+     "n": 651,
+     "record_vs_none": {
+      "n_cells": 651,
+      "n_series": 37,
+      "n_days": 19,
+      "skill": 0.016062903090344305,
+      "lo90": -0.007273378942563857,
+      "hi90": 0.03565969703231346,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 651,
+      "n_series": 37,
+      "n_days": 19,
+      "skill": 0.010951055656398312,
+      "lo90": -0.009898732378916952,
+      "hi90": 0.031408847273052265,
+      "excludes_zero": false
+     },
+     "inside": {
+      "none": 0.8356374807987711,
+      "record": 0.8540706605222734,
+      "lesson": 0.8509984639016898
+     }
+    },
+    "3": {
+     "n": 677,
+     "record_vs_none": {
+      "n_cells": 677,
+      "n_series": 37,
+      "n_days": 19,
+      "skill": 0.008791256990471119,
+      "lo90": -0.031327243232332616,
+      "hi90": 0.044966236432082654,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 677,
+      "n_series": 37,
+      "n_days": 19,
+      "skill": 0.014127084871683682,
+      "lo90": -0.023857347450688283,
+      "hi90": 0.04921974177718776,
+      "excludes_zero": false
+     },
+     "inside": {
+      "none": 0.6942392909896603,
+      "record": 0.7223042836041359,
+      "lesson": 0.7370753323485968
+     }
+    },
+    "7": {
+     "n": 566,
+     "record_vs_none": {
+      "n_cells": 566,
+      "n_series": 37,
+      "n_days": 16,
+      "skill": 0.02692420989357258,
+      "lo90": 0.00023564819452298624,
+      "hi90": 0.05943417501776476,
+      "excludes_zero": true
+     },
+     "lesson_vs_none": {
+      "n_cells": 566,
+      "n_series": 37,
+      "n_days": 16,
+      "skill": 0.028107786065256435,
+      "lo90": 0.0005900704619099973,
+      "hi90": 0.061323878092537455,
+      "excludes_zero": true
+     },
+     "inside": {
+      "none": 0.558303886925795,
+      "record": 0.5936395759717314,
+      "lesson": 0.6148409893992933
+     }
+    }
+   },
+   "by_agent": {
+    "list_reader": {
+     "record_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.023062243259424187,
+      "lo90": -0.03095583734948677,
+      "hi90": 0.07472908952227629,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.010937600855733254,
+      "lo90": -0.05557563579894814,
+      "hi90": 0.06586041501617639,
+      "excludes_zero": false
+     }
+    },
+    "repricer_watcher": {
+     "record_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.028627673238058482,
+      "lo90": 0.00546488366709384,
+      "hi90": 0.05546030803319274,
+      "excludes_zero": true
+     },
+     "lesson_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.02551894150985723,
+      "lo90": -0.00033200104636527117,
+      "hi90": 0.05406846640797779,
+      "excludes_zero": false
+     }
+    },
+    "base_rate_keeper": {
+     "record_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.016179163387678552,
+      "lo90": -0.019159975148521257,
+      "hi90": 0.05195184551749139,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.018598731458041473,
+      "lo90": -0.0028688025424289496,
+      "hi90": 0.040288470004202666,
+      "excludes_zero": false
+     }
+    },
+    "combiner": {
+     "record_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.018220371159502258,
+      "lo90": -0.0014713917697327659,
+      "hi90": 0.04360456548454206,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.03604546843510692,
+      "lo90": 0.010792486743401325,
+      "hi90": 0.06639977696991974,
+      "excludes_zero": true
+     }
+    },
+    "risk_spotter": {
+     "record_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.016170780360308168,
+      "lo90": -0.00981066472020058,
+      "hi90": 0.039898643787788964,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 1894,
+      "n_series": 37,
+      "n_days": 35,
+      "skill": 0.019911224638325398,
+      "lo90": -0.0053781295722118315,
+      "hi90": 0.04421271964117839,
+      "excludes_zero": false
+     }
+    }
+   }
+  },
+  "later half of the days": {
+   "n": 921,
+   "n_days": 10,
+   "vs_drift": {
+    "none": {
+     "n_cells": 921,
+     "n_series": 37,
+     "n_days": 17,
+     "skill": 0.14333051062334046,
+     "lo90": 0.07898746645169533,
+     "hi90": 0.20928530517672406,
+     "excludes_zero": true
+    },
+    "record": {
+     "n_cells": 921,
+     "n_series": 37,
+     "n_days": 17,
+     "skill": 0.15955599105136675,
+     "lo90": 0.09860213114819684,
+     "hi90": 0.22190070398902642,
+     "excludes_zero": true
+    },
+    "lesson": {
+     "n_cells": 921,
+     "n_series": 37,
+     "n_days": 17,
+     "skill": 0.15774701599843166,
+     "lo90": 0.09637920185536458,
+     "hi90": 0.21929879214909515,
+     "excludes_zero": true
+    },
+    "recorded": {
+     "n_cells": 921,
+     "n_series": 37,
+     "n_days": 17,
+     "skill": 0.14719264388070963,
+     "lo90": 0.08297104450112472,
+     "hi90": 0.20981898745918698,
+     "excludes_zero": true
+    }
+   },
+   "none_vs_recorded": {
+    "n_cells": 921,
+    "n_series": 37,
+    "n_days": 17,
+    "skill": -0.004528728826805439,
+    "lo90": -0.02761565356877106,
+    "hi90": 0.01837327094458012,
+    "excludes_zero": false
+   },
+   "record_vs_none": {
+    "n_cells": 921,
+    "n_series": 37,
+    "n_days": 17,
+    "skill": 0.01894018711910994,
+    "lo90": -0.01553541393247918,
+    "hi90": 0.051884232946701345,
+    "excludes_zero": false
+   },
+   "lesson_vs_none": {
+    "n_cells": 921,
+    "n_series": 37,
+    "n_days": 17,
+    "skill": 0.016828550046274038,
+    "lo90": -0.021715622395138922,
+    "hi90": 0.055708238065437836,
+    "excludes_zero": false
+   },
+   "lesson_vs_record": {
+    "n_cells": 921,
+    "n_series": 37,
+    "n_days": 17,
+    "skill": -0.0021524040074938355,
+    "lo90": -0.024234554349944516,
+    "hi90": 0.01866409081692267,
+    "excludes_zero": false
+   },
+   "inside": {
+    "none": 0.7079261672095548,
+    "record": 0.756786102062975,
+    "lesson": 0.7654723127035831
+   },
+   "inside_when_moved": {
+    "none": 0.5157699443413729,
+    "record": 0.5918367346938775,
+    "lesson": 0.6103896103896104
+   },
+   "typical_width_pct": {
+    "none": 1.062675758295258,
+    "record": 1.4172050701853802,
+    "lesson": 1.4409221902017366
+   },
+   "middle_moved_share": {
+    "none": 0.38219326818675353,
+    "record": 0.3789359391965255,
+    "lesson": 0.38653637350705755
+   },
+   "by_h": {
+    "1": {
+     "n": 331,
+     "record_vs_none": {
+      "n_cells": 331,
+      "n_series": 37,
+      "n_days": 10,
+      "skill": 0.014025796379985689,
+      "lo90": -0.011488932241702254,
+      "hi90": 0.03924826056128843,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 331,
+      "n_series": 37,
+      "n_days": 10,
+      "skill": 0.017225848422966816,
+      "lo90": -0.007466659040412415,
+      "hi90": 0.042380964572038764,
+      "excludes_zero": false
+     },
+     "inside": {
+      "none": 0.8006042296072508,
+      "record": 0.8338368580060423,
+      "lesson": 0.8308157099697885
+     }
+    },
+    "3": {
+     "n": 344,
+     "record_vs_none": {
+      "n_cells": 344,
+      "n_series": 37,
+      "n_days": 10,
+      "skill": 0.01551365982158004,
+      "lo90": -0.05603740194174501,
+      "hi90": 0.07421630835749168,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 344,
+      "n_series": 37,
+      "n_days": 10,
+      "skill": 0.015387118768436792,
+      "lo90": -0.055749835252037305,
+      "hi90": 0.07512845791059775,
+      "excludes_zero": false
+     },
+     "inside": {
+      "none": 0.7063953488372093,
+      "record": 0.7587209302325582,
+      "lesson": 0.7674418604651163
+     }
+    },
+    "7": {
+     "n": 246,
+     "record_vs_none": {
+      "n_cells": 246,
+      "n_series": 37,
+      "n_days": 7,
+      "skill": 0.02402529597133407,
+      "lo90": -0.018551512951863545,
+      "hi90": 0.0750035886392726,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 246,
+      "n_series": 37,
+      "n_days": 7,
+      "skill": 0.01786693136542916,
+      "lo90": -0.027278957869370322,
+      "hi90": 0.07645446224868443,
+      "excludes_zero": false
+     },
+     "inside": {
+      "none": 0.5853658536585366,
+      "record": 0.6504065040650406,
+      "lesson": 0.6747967479674797
+     }
+    }
+   },
+   "by_agent": {
+    "list_reader": {
+     "record_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.025935426641172654,
+      "lo90": -0.07777579098989419,
+      "hi90": 0.10956896928215701,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": -0.00576358877224914,
+      "lo90": -0.1332564189197898,
+      "hi90": 0.09715866809397204,
+      "excludes_zero": false
+     }
+    },
+    "repricer_watcher": {
+     "record_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.040730789883660745,
+      "lo90": 0.004772824445119045,
+      "hi90": 0.08607144811313346,
+      "excludes_zero": true
+     },
+     "lesson_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.029720379934291996,
+      "lo90": -0.006708737176508271,
+      "hi90": 0.07580681623257318,
+      "excludes_zero": false
+     }
+    },
+    "base_rate_keeper": {
+     "record_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.007195124413737708,
+      "lo90": -0.05707762070480381,
+      "hi90": 0.06228635275612026,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.016831995167415736,
+      "lo90": -0.02892106348128485,
+      "hi90": 0.05805836075688401,
+      "excludes_zero": false
+     }
+    },
+    "combiner": {
+     "record_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.022227682392628623,
+      "lo90": -0.00813803761178622,
+      "hi90": 0.0653144525907276,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.0422814561200342,
+      "lo90": -0.003571764158838775,
+      "hi90": 0.09148097195748947,
+      "excludes_zero": false
+     }
+    },
+    "risk_spotter": {
+     "record_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.010610499012463026,
+      "lo90": -0.03346602275118119,
+      "hi90": 0.05035458979495867,
+      "excludes_zero": false
+     },
+     "lesson_vs_none": {
+      "n_cells": 921,
+      "n_series": 37,
+      "n_days": 17,
+      "skill": 0.014717471023570572,
+      "lo90": -0.03365591739295343,
+      "hi90": 0.05496207735477167,
+      "excludes_zero": false
+     }
+    }
+   }
+  }
+ },
+ "lessons": {
+  "list_reader": [
+   {
+    "day": "2026-09-27",
+    "n_resolved": 74,
+    "lesson": "Keep the midpoint near the current median when the offer list is stable, but assess how neighboring gaps and offer arrivals or departures could shift it. Coverage is close to target overall, yet misses are consistently above the range, so shift more of the uncertainty allowance upward rather than widening both sides indiscriminately. Avoid zero-width ranges unless the median is robust to plausible offer changes, and allow greater movement over longer horizons."
+   },
+   {
+    "day": "2026-09-30",
+    "n_resolved": 148,
+    "lesson": "Calibrate each horizon separately: modestly tighten short-horizon ranges where the offer structure supports stability, but expand longer-horizon uncertainty, especially upward, without ignoring occasional sharp declines. Anchor the midpoint to the current median unless there is evidence of change, and use neighboring offer gaps plus plausible arrivals or departures to estimate discrete median shifts rather than relying on recent stability. Reserve wider or asymmetric ranges for fragile offer lists and increase uncertainty with horizon instead of widening every forecast uniformly."
+   },
+   {
+    "day": "2026-10-03",
+    "n_resolved": 259,
+    "lesson": "Calibrate by horizon: short-horizon ranges have overcovered, while longer-horizon ranges need more upside room; retain downside protection rather than widening both tails uniformly. Locate the current median and model how neighboring offer gaps and plausible arrivals or departures could shift it, especially when a thin or fragile list permits discrete jumps. Keep the midpoint anchored unless those scenarios support a directional shift, and size uncertainty from offer-list fragility and horizon rather than recent price stability alone."
+   },
+   {
+    "day": "2026-10-06",
+    "n_resolved": 370,
+    "lesson": "Keep one-day ranges tight while correcting their excess downside coverage; at longer horizons, raise upper bounds substantially more than lower bounds, since misses increasingly cluster above the range. Identify the median-setting offers and quantify how neighboring gaps and plausible entries or exits could shift the median, including discrete jumps in fragile lists. Move forecast midpoints when these scenarios imply a directional shift, and scale uncertainty with horizon and list fragility rather than widening every forecast to cover rare extremes."
+   },
+   {
+    "day": "2026-10-09",
+    "n_resolved": 481,
+    "lesson": "Keep one-day ranges tight and trim excess downside coverage, but raise longer-horizon upper bounds more than lower bounds to address increasingly frequent upward misses. Locate the median-setting offers and calculate how neighboring gaps and plausible entries or exits could move the median, shifting forecast midpoints when those scenarios support a directional change. Scale uncertainty with horizon and offer-list fragility, allowing for discrete jumps without widening every range to cover rare extremes."
+   },
+   {
+    "day": "2026-10-12",
+    "n_resolved": 592,
+    "lesson": "Keep one-day ranges tight and trim excess downside coverage, while widening longer-horizon ranges mainly upward to correct persistent upper-tail misses without unnecessarily extending already calibrated lower bounds. Identify the median-setting offers and use neighboring gaps plus plausible entries and exits to estimate discrete shifts, moving forecast midpoints when those scenarios support a directional change rather than defaulting to the current price. Scale uncertainty with horizon and offer-list fragility, allowing substantial jumps where structurally plausible without widening every range to cover rare extremes."
+   },
+   {
+    "day": "2026-10-16",
+    "n_resolved": 740,
+    "lesson": "Tighten one-day ranges selectively to reduce excess coverage, but widen longer-horizon ranges mainly upward, since upper-tail misses grow with horizon while lower bounds are roughly calibrated. Locate the median-setting offers and assess neighboring gaps and plausible entries or exits to estimate discrete shifts, adjusting midpoints when the scenario balance supports movement rather than anchoring automatically to the current price. Scale uncertainty with horizon and offer-list fragility, reserving large jump allowances for structurally plausible changes rather than widening every range to cover rare extremes."
+   },
+   {
+    "day": "2026-10-18",
+    "n_resolved": 764,
+    "lesson": "Tighten one-day ranges selectively, but expand longer-horizon ranges mainly upward, where misses grow sharply while lower-tail coverage remains near target. Identify the median-setting offers, neighboring gaps, and how plausible entries or exits change the middle; use that scenario balance to move forecast midpoints rather than routinely anchoring to the current price. Scale uncertainty with horizon and offer-list fragility, allowing for discrete jumps when structurally plausible without widening every forecast to cover rare extremes."
+   },
+   {
+    "day": "2026-10-19",
+    "n_resolved": 875,
+    "lesson": "Tighten one-day ranges selectively, while expanding longer-horizon ranges mainly upward to correct increasingly frequent upper misses without unnecessarily widening the lower tail. Set midpoints from the median-setting offers, neighboring gaps, and plausible entries or exits rather than defaulting to the current price, especially over longer horizons. Allow for discrete jumps when offer-list fragility supports them, but do not let a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-21",
+    "n_resolved": 949,
+    "lesson": "Tighten one-day ranges selectively, but widen longer-horizon ranges primarily upward to address worsening coverage and increasingly frequent upper misses. Set forecast middles and bounds from the median-setting offers, neighboring gaps, and plausible entries or exits rather than anchoring mechanically to the current price. Account for discrete jumps when the offer list is fragile, while avoiding blanket widening driven by a few extreme outcomes."
+   },
+   {
+    "day": "2026-10-22",
+    "n_resolved": 1023,
+    "lesson": "Keep one-day ranges tight when the middle is stable, but widen three- and seven-day ranges selectively, especially upward, as coverage deteriorates and upper misses become more frequent. Set middles and bounds from the median-setting offers, neighboring gaps, and how plausible entries or exits change the middle, rather than anchoring to the current price. Allow discrete jumps when the offer list is fragile, without letting a few extreme misses drive blanket widening."
+   },
+   {
+    "day": "2026-10-25",
+    "n_resolved": 1169,
+    "lesson": "Slightly tighten one-day ranges when the middle is robust, but widen three- and especially seven-day ranges selectively, with more room above than below to correct persistent upper misses. Derive the middle and bounds from the median-setting offers, neighboring gaps, and plausible entries or exits, allowing discrete shifts rather than merely scaling small daily moves. Move the forecast middle when those scenarios justify it, while reserving large jump allowances for fragile offer lists instead of widening every forecast."
+   },
+   {
+    "day": "2026-10-26",
+    "n_resolved": 1243,
+    "lesson": "Slightly tighten one-day ranges when the middle is stable, but widen three- and especially seven-day ranges selectively, adding more upside room to address persistent upper misses. Locate the median-setting offers and use neighboring gaps plus plausible entries or exits to estimate discrete shifts, rather than simply scaling recent small moves. Adjust the forecast middle when these scenarios support it, reserving large jump allowances for fragile offer lists rather than broadening every range."
+   },
+   {
+    "day": "2026-10-28",
+    "n_resolved": 1354,
+    "lesson": "Slightly tighten one-day ranges when the middle is well supported, but widen three- and especially seven-day ranges selectively, with more added room above than below. Identify the median-setting offers, neighboring gaps, and plausible entries or exits to estimate discrete shifts rather than extrapolating small recent moves. Move the forecast middle when these scenarios justify it, and reserve large jump allowances for fragile offer lists instead of widening every range."
+   },
+   {
+    "day": "2026-10-29",
+    "n_resolved": 1465,
+    "lesson": "Slightly tighten one-day ranges where the median is stable, but widen three- and especially seven-day ranges selectively, adding more upside room to correct persistent upper-tail misses. Locate the median-setting offers and neighboring gaps, and test how plausible entries, exits, or repricing would change the median rather than extrapolating small recent moves. Shift the forecast middle when those scenarios support it, reserving large jump allowances for fragile offer lists rather than padding every range."
+   },
+   {
+    "day": "2026-10-31",
+    "n_resolved": 1526,
+    "lesson": "Slightly tighten one-day ranges when the middle is well supported, but widen three- and especially seven-day ranges selectively, with more upside room to address persistent upper-tail misses. Identify the middle-setting offers and neighboring gaps, then test how plausible entries, exits, or repricing could shift the middle, including discrete jumps in thin or fragile lists. Move the forecast middle when these scenarios justify it rather than anchoring to the current price, and reserve large jump allowances for structurally exposed offers instead of padding every range."
+   },
+   {
+    "day": "2026-11-02",
+    "n_resolved": 1635,
+    "lesson": "Slightly tighten one-day ranges where the middle is stable, but widen three- and especially seven-day ranges selectively, giving more room to the upside without ignoring downside risk. Locate the middle-setting offers and neighboring gaps, then test how plausible entries, exits, or repricing would shift the middle, including discrete jumps in thin lists. Adjust the forecast middle when those scenarios warrant it rather than anchoring to today's price, and reserve large jump allowances for structurally fragile lists instead of widening every range."
+   },
+   {
+    "day": "2026-11-03",
+    "n_resolved": 1709,
+    "lesson": "Slightly tighten one-day ranges when the middle is well supported, but widen three- and especially seven-day ranges selectively, with more added room above than below. Identify the middle-setting offers and neighboring gaps, then test whether plausible entries, exits, or repricing would shift the middle gradually or cause a discrete jump. Move the forecast middle when those scenarios justify it rather than anchoring to today's price, and reserve large jump allowances for fragile offer lists instead of widening every range."
+   }
+  ],
+  "repricer_watcher": [
+   {
+    "day": "2026-09-27",
+    "n_resolved": 74,
+    "lesson": "Keep ranges tight for stable offers, but give frequently changing offers more upside room: misses have consistently been above the range, especially at longer horizons. Raise the midpoint when recent increases persist and affect offers near the middle of the list, rather than assuming either no change or automatic reversal. Scale uncertainty with horizon and observed movement, avoiding blanket widening across unchanged prices."
+   },
+   {
+    "day": "2026-09-30",
+    "n_resolved": 148,
+    "lesson": "Tighten short-horizon ranges selectively for stable offers, but widen longer-horizon ranges for frequently changing offers, with more upside room while retaining protection against sharp declines. Move the midpoint when repeated changes show persistent direction and affect offers near the middle of the list, rather than mechanically extending a trend or assuming reversal. Scale uncertainty by offer behavior and horizon rather than widening all ranges, and treat longer-horizon extrapolation cautiously where outcomes are not yet available."
+   },
+   {
+    "day": "2026-10-03",
+    "n_resolved": 259,
+    "lesson": "Tighten one-day ranges selectively for stable offers, but widen three- and seven-day ranges for frequently changing offers, allowing more upside room without neglecting sharp declines. Shift midpoints when repeated directional changes are likely to persist and reach offers near the middle of the list, rather than leaving them anchored or extrapolating every recent move. Calibrate each horizon and offer type separately toward balanced tail misses, using observed jump frequency and size rather than letting a few extreme misses widen every range."
+   },
+   {
+    "day": "2026-10-06",
+    "n_resolved": 370,
+    "lesson": "Keep one-day ranges tight for stable offers, but widen three- and seven-day ranges selectively for frequently repriced offers, with more upside room while retaining protection against sharp declines. Move midpoints away from the current price when repeated directional repricing is likely to persist and affect offers near the middle of the list, rather than extrapolating isolated changes. Calibrate each horizon and offer type toward balanced tail misses using movement frequency, persistence and jump size, without letting rare extremes inflate every range."
+   },
+   {
+    "day": "2026-10-09",
+    "n_resolved": 481,
+    "lesson": "Keep one-day ranges tight for stable offers rather than widening them indiscriminately, but expand three- and especially seven-day ranges selectively as repricing risk accumulates, with greater upside allowance while preserving downside protection. Shift midpoints when repeated directional changes among frequently repriced offers are likely to persist and move the middle of the list, rather than remaining anchored to the current price or extrapolating isolated jumps. Calibrate each horizon using movement frequency, persistence and jump size toward balanced tail misses, without letting rare extremes inflate every range."
+   },
+   {
+    "day": "2026-10-12",
+    "n_resolved": 592,
+    "lesson": "Keep one-day ranges tight for stable offers, but widen three- and especially seven-day ranges selectively as repricing risk accumulates, allowing more upside without neglecting downside. Move longer-horizon midpoints away from the current price when persistent changes among frequently repriced offers are likely to shift the middle of the list, rather than extrapolating isolated jumps. Calibrate each horizon separately using movement frequency, directional persistence and jump risk, aiming for balanced tail misses without letting rare extremes inflate every range."
+   },
+   {
+    "day": "2026-10-16",
+    "n_resolved": 740,
+    "lesson": "Keep one-day ranges tight and trim excess coverage on stable offers, but widen three- and especially seven-day ranges selectively, with more room above than below to correct persistent upside misses. Move longer-horizon midpoints upward when sustained increases among frequently repriced offers are likely to shift the middle of the list, rather than defaulting to unchanged prices or extrapolating isolated jumps. Calibrate each horizon separately toward balanced tail misses, accounting for accumulated repricing risk without letting rare extremes inflate every range."
+   },
+   {
+    "day": "2026-10-18",
+    "n_resolved": 764,
+    "lesson": "Slightly tighten one-day ranges on stable offers, but widen three- and especially seven-day ranges selectively, adding more upside room to correct persistent undercoverage and upward bias in misses. Shift longer-horizon midpoints when sustained repricing among frequently changing offers is likely to move the middle of the list, rather than anchoring to unchanged prices or extrapolating isolated jumps. Calibrate each horizon and offer type toward balanced tail misses, allowing for discrete resets without letting rare extremes inflate every range."
+   },
+   {
+    "day": "2026-10-19",
+    "n_resolved": 875,
+    "lesson": "Slightly tighten one-day ranges for stable offers, but widen three- and especially seven-day ranges selectively, with more upside room to address increasingly frequent upper-tail misses. Move longer-horizon midpoints when sustained repricing among frequently changing offers is likely to shift the middle of the list, rather than defaulting to unchanged prices or extrapolating isolated jumps. Calibrate coverage and both tails separately by horizon and offer behavior, allowing for discrete resets without letting rare extremes inflate every range."
+   },
+   {
+    "day": "2026-10-21",
+    "n_resolved": 949,
+    "lesson": "Keep one-day ranges tight for stable offers, but widen three- and especially seven-day ranges selectively, adding more upside room while retaining protection against declines. Move longer-horizon midpoints when persistent repricing among frequently changing offers is likely to shift the middle of the list, rather than anchoring to unchanged prices or extrapolating isolated jumps. Calibrate coverage and each tail by horizon and offer behavior, allowing for discrete resets without letting rare extremes inflate every range."
+   },
+   {
+    "day": "2026-10-22",
+    "n_resolved": 1023,
+    "lesson": "Slightly tighten one-day ranges for stable offers, but widen three- and especially seven-day ranges selectively, with substantially more upside room at longer horizons while preserving downside protection. Shift midpoints when repeated repricing among frequently changing offers is likely to move the middle of the list, rather than anchoring to unchanged prices or extrapolating isolated jumps. Calibrate coverage and both tails separately by horizon and offer behavior, accounting for discrete resets without letting rare extremes inflate every range."
+   },
+   {
+    "day": "2026-10-25",
+    "n_resolved": 1169,
+    "lesson": "Slightly tighten one-day ranges for stable offers, but widen three-day ranges on both sides and seven-day ranges especially upward, targeting balanced tail misses rather than coverage alone. Move longer-horizon midpoints more readily when persistent repricing among frequently changing offers is likely to shift the middle of the list, without treating isolated jumps as a trend. Calibrate by horizon and repricing behavior, allowing for discrete resets selectively rather than widening every forecast to cover rare extremes."
+   },
+   {
+    "day": "2026-10-26",
+    "n_resolved": 1243,
+    "lesson": "Keep one-day ranges tight for stable offers, but widen three-day ranges on both sides and seven-day ranges especially upward to correct worsening coverage and excess upside misses. Move longer-horizon midpoints more readily when sustained repricing among frequently changing offers is likely to shift the middle of the list, rather than anchoring on the current price or extrapolating isolated jumps. Calibrate by horizon and repricing behavior, allowing selectively for discrete resets without inflating every range to cover rare extremes."
+   },
+   {
+    "day": "2026-10-28",
+    "n_resolved": 1354,
+    "lesson": "Slightly tighten one-day ranges for stable offers, but widen three-day ranges on both sides and seven-day ranges more substantially, especially upward, to correct worsening coverage and excess upside misses. Move longer-horizon midpoints more readily when persistent repricing across frequently changing offers is likely to shift the middle of the list, rather than anchoring on unchanged prices or extrapolating isolated jumps. Calibrate jump risk selectively by repricing behavior instead of widening every forecast to cover rare extremes."
+   },
+   {
+    "day": "2026-10-29",
+    "n_resolved": 1465,
+    "lesson": "Slightly tighten one-day ranges for stable offers, but widen longer-horizon ranges on both sides, especially the upper side at a week, where coverage deteriorates and upside misses dominate. Shift longer-horizon midpoints more readily when sustained repricing among frequently changing offers is likely to move the middle of the list, rather than treating every recent move as either noise or a continuing trend. Allocate jump risk selectively using repricing frequency and persistence instead of widening all ranges to cover isolated extremes."
+   },
+   {
+    "day": "2026-10-31",
+    "n_resolved": 1526,
+    "lesson": "Slightly tighten one-day ranges for stable offers, but widen three- and seven-day ranges selectively, with more upside room at the longest horizon where undercoverage is greatest. Move longer-horizon midpoints more readily when persistent repricing among frequently changing offers is likely to shift the middle of the list, rather than anchoring on the current price or extrapolating isolated moves. Calibrate jump allowances to offer-specific repricing behavior instead of letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-11-02",
+    "n_resolved": 1635,
+    "lesson": "Keep one-day ranges tight for stable offers, but widen three- and especially seven-day ranges selectively to address worsening undercoverage, allowing more upside than downside where supported. Move longer-horizon midpoints away from the current price when persistent repricing among frequently changing offers is likely to shift the middle of the list, rather than extrapolating isolated changes. Calibrate jump risk to each offer\u2019s behavior and horizon instead of letting rare extreme misses inflate all ranges."
+   },
+   {
+    "day": "2026-11-03",
+    "n_resolved": 1709,
+    "lesson": "Slightly tighten one-day ranges for stable offers, but widen three- and especially seven-day ranges selectively, with more upside allowance where longer-horizon misses remain skewed upward. Shift midpoints when persistent repricing among frequently changing offers is likely to move the middle of the list, rather than defaulting to no change or extrapolating isolated moves. Calibrate widths and jump risk by offer behavior and horizon, using overall coverage and tail balance rather than letting a few extreme misses dictate every range."
+   }
+  ],
+  "base_rate_keeper": [
+   {
+    "day": "2026-09-27",
+    "n_resolved": 74,
+    "lesson": "Keep the midpoint at the current price unless clear evidence supports a change, since unchanged prices remain the most common outcome. Overall coverage is near target, but misses are consistently above the range, so rebalance uncertainty toward the upper tail rather than widening both sides indiscriminately. Calibrate bounds to each price\u2019s historical move frequency and size at each horizon, allowing more upside room over longer horizons and avoiding zero-width ranges for prices that do move."
+   },
+   {
+    "day": "2026-09-30",
+    "n_resolved": 148,
+    "lesson": "Keep the midpoint at the current price unless clear evidence supports a shift, and calibrate each horizon separately rather than relying on pooled coverage. Short-horizon ranges have been too conservative overall, while longer-horizon ranges need more upper-tail room; adjust bounds using each price\u2019s historical move frequency and size rather than widening everything. Preserve meaningful downside protection for prices with jump risk, and scale longer-horizon uncertainty from evidence rather than extrapolating a directional trend."
+   },
+   {
+    "day": "2026-10-03",
+    "n_resolved": 259,
+    "lesson": "Keep midpoints at the current price unless clear evidence supports a shift, and calibrate bounds separately by horizon using each price\u2019s historical move frequency and size. One-day coverage is above target, so tighten selectively where feasible; three- and seven-day coverage is too low, chiefly from upward misses, so add more upper-tail room while retaining evidence-based downside protection. Account for recurring jump risk without letting a few extreme misses dictate uniformly wide ranges."
+   },
+   {
+    "day": "2026-10-06",
+    "n_resolved": 370,
+    "lesson": "Keep midpoints at the current price unless clear evidence supports a shift, and calibrate ranges by each price\u2019s historical move frequency, size and forecast horizon. Tighten one-day lower bounds selectively where feasible, but widen three- and especially seven-day upper bounds, since longer-horizon misses are disproportionately upward while downside coverage is near target. Allow for demonstrated jump risk without letting a few extreme moves drive uniformly wide ranges."
+   },
+   {
+    "day": "2026-10-09",
+    "n_resolved": 481,
+    "lesson": "Anchor midpoints to the current price unless price-specific evidence supports a shift, and calibrate each horizon\u2019s bounds to historical move frequencies, sizes and direction. One-day coverage is somewhat generous on the downside, while three- and especially seven-day ranges need substantially more upside allowance without broadly widening lower bounds that are already near target. Account for recurring jump risk where demonstrated, but do not let a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-12",
+    "n_resolved": 592,
+    "lesson": "Keep midpoints anchored to the current price unless price-specific history supports a directional shift, and calibrate bounds separately by horizon using both unchanged prices and observed moves. Trim excess short-horizon downside allowance, but give longer horizons substantially more upside room while leaving already well-calibrated lower tails largely unchanged. Incorporate demonstrated jump risk for the relevant price histories without letting a few extreme misses widen every forecast."
+   },
+   {
+    "day": "2026-10-16",
+    "n_resolved": 740,
+    "lesson": "Keep midpoints anchored to the current price unless price-specific history clearly supports a shift, and calibrate each horizon from its observed frequency and size of moves, including unchanged outcomes. Modestly tighten one-day ranges, but expand longer-horizon upper bounds substantially while leaving their already well-calibrated lower tails largely unchanged. Account for recurring jump risk where the relevant history supports it, without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-18",
+    "n_resolved": 764,
+    "lesson": "Keep midpoints at the current price unless price-specific evidence supports a shift, but account for the increasing frequency and size of moves over longer horizons. Modestly tighten one-day ranges and substantially widen longer-horizon upper bounds, while preserving the roughly calibrated longer-horizon lower bounds. Calibrate jump risk from each price\u2019s history rather than letting a few extreme misses widen every forecast."
+   },
+   {
+    "day": "2026-10-19",
+    "n_resolved": 875,
+    "lesson": "Keep midpoints anchored to the current price unless price-specific evidence supports a shift, while accounting for the greater frequency and size of moves over longer horizons. Modestly tighten one-day ranges, but widen longer-horizon ranges mainly on the upside, increasingly with horizon, since lower-tail coverage is already near target. Calibrate bounds to each price\u2019s historical move frequency, direction and size rather than letting a few extreme jumps inflate every range."
+   },
+   {
+    "day": "2026-10-21",
+    "n_resolved": 949,
+    "lesson": "Keep midpoints anchored to the current price unless price-specific evidence supports a shift, while accounting for moves becoming more frequent over longer horizons. Modestly tighten one-day ranges, but widen three- and especially seven-day ranges mainly on the upside, since downside misses are already near target. Calibrate each horizon\u2019s bounds to the price\u2019s historical move frequency, direction and magnitude, allowing for recurring jumps without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-22",
+    "n_resolved": 1023,
+    "lesson": "Keep midpoints at the current price unless price-specific evidence supports a shift, but account for changes becoming more frequent at longer horizons. Modestly tighten one-day ranges and widen three- and especially seven-day ranges primarily on the upside, where misses are too frequent. Set bounds from each price\u2019s horizon-specific move frequency and magnitude, allowing for recurring jumps without letting isolated extremes inflate every range."
+   },
+   {
+    "day": "2026-10-25",
+    "n_resolved": 1169,
+    "lesson": "Keep midpoints at the current price unless price-specific evidence supports a shift, while recognizing that changes become more likely over longer horizons. Modestly tighten one-day ranges and widen three-day and especially seven-day ranges mainly on the upside, where coverage falls short. Calibrate bounds to each price\u2019s horizon-specific change frequency and move distribution, accounting for recurring jumps without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-26",
+    "n_resolved": 1243,
+    "lesson": "Keep midpoints at the current price unless price-specific evidence supports a shift, and calibrate each horizon using that price\u2019s historical change frequency and move distribution. Modestly tighten one-day ranges, but widen three-day and especially seven-day ranges primarily on the upside to correct persistent undercoverage. Account for recurring jumps where supported by history without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-28",
+    "n_resolved": 1354,
+    "lesson": "Keep midpoints at the current price unless price-specific evidence supports a shift, and calibrate ranges to each price\u2019s historical change frequency and move sizes at each horizon. Modestly tighten one-day ranges, but widen three-day and especially seven-day ranges primarily on the upside to address persistent undercoverage. Allow for jumps where the price\u2019s history supports them without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-29",
+    "n_resolved": 1465,
+    "lesson": "Keep midpoints at the current price unless price-specific evidence supports a shift, and calibrate each horizon\u2019s bounds to that price\u2019s historical change frequency, move sizes, and directional tails. Modestly tighten one-day ranges while widening three-day and especially seven-day ranges, primarily on the upside, to correct persistent longer-horizon undercoverage. Account for jumps where the price\u2019s history warrants them without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-31",
+    "n_resolved": 1526,
+    "lesson": "Keep midpoints at the current price unless price-specific evidence supports a shift, and calibrate bounds to each price\u2019s historical move frequency, size, and direction at each horizon. Modestly tighten one-day ranges, but widen three-day and especially seven-day ranges primarily on the upside to address persistent longer-horizon undercoverage. Allow for jumps where the price\u2019s history warrants them rather than inflating all ranges in response to a few extreme misses."
+   },
+   {
+    "day": "2026-11-02",
+    "n_resolved": 1635,
+    "lesson": "Keep midpoints at the current price unless price-specific evidence supports a shift, and calibrate each horizon\u2019s bounds to that price\u2019s historical move frequency, magnitude, and direction. Tighten one-day ranges modestly, but widen three-day and especially seven-day ranges, primarily on the upside, to correct persistent undercoverage. Account for jumps where the price\u2019s history warrants them without widening every range in response to a few extreme misses."
+   },
+   {
+    "day": "2026-11-03",
+    "n_resolved": 1709,
+    "lesson": "Anchor midpoints to the current price unless price-specific evidence supports a shift, and calibrate each horizon to that price\u2019s historical move frequency, size, and direction. Tighten one-day ranges modestly, but widen three-day and especially seven-day ranges, mainly on the upside, to correct persistent undercoverage. Allow for jumps where the price\u2019s history warrants them without letting a few extreme misses inflate every range."
+   }
+  ],
+  "combiner": [
+   {
+    "day": "2026-09-27",
+    "n_resolved": 74,
+    "lesson": "Overall coverage is near target, but misses are concentrated above the ranges, so modestly raise upper bounds and trim unnecessary downside allowance rather than widening both sides. Keep the current price as the default midpoint for sticky series, but do not let agreement among flat forecasts erase upside jump risk; favor upward signals only when supported by the price history. Increase upside allowance with horizon, while avoiding broad ranges unsupported by observed movement."
+   },
+   {
+    "day": "2026-09-30",
+    "n_resolved": 148,
+    "lesson": "Calibrate by horizon: one-day ranges are slightly overconservative, while three-day ranges need more upper-tail allowance without sacrificing downside protection against occasional cuts. Keep the current price as the midpoint for sticky series, but use observed move frequency and jump sizes to set bounds rather than treating agreement among flat reference forecasts as evidence of negligible risk. Widen selectively as the horizon and evidence of instability increase, rather than inflating every range or extrapolating unsupported directional signals."
+   },
+   {
+    "day": "2026-10-03",
+    "n_resolved": 259,
+    "lesson": "Keep one-day forecasts tightly anchored to the current price, but increase uncertainty substantially at longer horizons, especially on the upside while preserving downside jump protection. Weight drift, replay, and model forecasts by their fit to observed stickiness, move frequency, and jump behavior; agreement on flatness is not independent evidence that jump risk is negligible, and unsupported downward projections should not exclude the current price. Calibrate bounds by horizon and price behavior rather than widening everything to cover isolated extreme misses."
+   },
+   {
+    "day": "2026-10-06",
+    "n_resolved": 370,
+    "lesson": "Keep one-day forecasts tightly anchored to the current price rather than widening them indiscriminately, but substantially broaden three- and seven-day ranges, especially their upper bounds, to correct persistent undercoverage and upside misses. Move longer-horizon middles away from flatness when supported by recurring movement or repricing evidence, and weight drift, replay, and model forecasts by their demonstrated fit to stickiness, direction, and jumps rather than treating agreement as independent confirmation. Calibrate tails by horizon and price behavior, preserving downside protection without letting a few extreme jumps dictate every range."
+   },
+   {
+    "day": "2026-10-09",
+    "n_resolved": 481,
+    "lesson": "Keep one-day forecasts tightly anchored for sticky prices, but widen three- and especially seven-day ranges asymmetrically upward to address persistent longer-horizon undercoverage and excess upside misses. Shift longer-horizon middles when recurring direction or repricing evidence supports it, weighting drift, replay, and pretrained forecasts by demonstrated fit to the price\u2019s behavior rather than treating their agreement as independent evidence. Calibrate bounds by horizon and movement regime, preserving downside coverage and allowing for jumps without letting a few extreme events inflate every range."
+   },
+   {
+    "day": "2026-10-12",
+    "n_resolved": 592,
+    "lesson": "Keep one-day forecasts tightly anchored for sticky prices, but widen three- and especially seven-day ranges, more on the upside while also correcting downside undercoverage. Move longer-horizon middles away from unchanged prices when recurring directional or repricing evidence supports it, weighting the reference forecasts by demonstrated fit to the price\u2019s behavior rather than treating agreement as independent confirmation. Calibrate by horizon and movement regime, allowing for jump risk where supported without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-16",
+    "n_resolved": 740,
+    "lesson": "Slightly tighten one-day ranges for sticky prices, but widen three- and especially seven-day ranges, primarily upward while also correcting downside undercoverage. Shift longer-horizon middles when sustained directional or repricing evidence supports it, weighting drift, list replay, and pretrained forecasts by their demonstrated fit to the price\u2019s movement regime rather than counting agreement as independent evidence. Calibrate coverage separately by horizon and regime, allowing for supported jump risk without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-18",
+    "n_resolved": 764,
+    "lesson": "Slightly tighten one-day ranges for sticky prices, but widen three- and especially seven-day ranges, predominantly upward while also improving downside coverage. Move longer-horizon middles away from unchanged prices when directional or repricing evidence warrants it, weighting drift, list replay, and pretrained forecasts by demonstrated performance in the relevant regime rather than treating agreement as independent evidence. Calibrate tail risk separately by horizon and regime, allowing for plausible jumps without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-19",
+    "n_resolved": 875,
+    "lesson": "Slightly tighten one-day ranges where prices are sticky, but widen three- and especially seven-day ranges, chiefly upward while preserving adequate downside coverage. At longer horizons, move middles off unchanged prices when supported by directional or repricing evidence, weighting the reference forecasts by demonstrated horizon- and regime-specific reliability rather than treating agreement as independent confirmation. Calibrate jump risk separately from routine movement so plausible repricing is covered without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-21",
+    "n_resolved": 949,
+    "lesson": "Slightly tighten one-day ranges for sticky prices, but widen three-day and especially seven-day ranges, with substantially more upper-tail allowance while retaining sufficient downside coverage. Move longer-horizon middles away from unchanged prices when supported by directional or repricing evidence, and weight reference forecasts by demonstrated horizon- and regime-specific reliability rather than agreement alone. Model routine moves and discrete repricing separately, using price-specific jump evidence to avoid both missing plausible jumps and inflating every range because of rare extremes."
+   },
+   {
+    "day": "2026-10-22",
+    "n_resolved": 1023,
+    "lesson": "Modestly tighten one-day ranges for sticky prices, widen three-day ranges on both sides, and widen seven-day ranges especially upward to correct persistent upper-tail misses. Move longer-horizon middles away from unchanged prices when supported by directional or repricing evidence, weighting the reference forecasts by demonstrated horizon- and regime-specific reliability rather than agreement alone. Distinguish routine variation from discrete repricing, allowing for plausible jumps where supported without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-25",
+    "n_resolved": 1169,
+    "lesson": "Modestly tighten one-day ranges where prices are sticky, widen three-day ranges on both sides, and widen seven-day ranges more substantially, especially upward, to correct horizon-dependent undercoverage. Keep unchanged-price middles when persistence is supported, but shift longer-horizon middles when credible directional or repricing evidence warrants it; weigh reference forecasts by demonstrated horizon- and regime-specific reliability rather than agreement alone. Model routine variation separately from discrete repricing risk so plausible jumps affect the appropriate tails without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-26",
+    "n_resolved": 1243,
+    "lesson": "Modestly tighten one-day ranges for stable prices, widen three-day ranges on both sides, and widen seven-day ranges more substantially with extra room above to correct persistent upside undercoverage. Retain unchanged-price middles when persistence is supported, but do not carry that anchor mechanically into longer horizons; weigh drift, replay, and pretrained forecasts by horizon-specific reliability and evidence of changing conditions, not agreement alone. Separate routine variation from discrete repricing risk, allowing credible jumps to shape the tails without widening every forecast because of a few extreme misses."
+   },
+   {
+    "day": "2026-10-28",
+    "n_resolved": 1354,
+    "lesson": "Keep one-day ranges tight for stable series, but widen three-day ranges on both sides and seven-day ranges more substantially, especially above, to correct horizon-dependent undercoverage. Use unchanged-price middles only when persistence is supported, and weigh drift, replay, and pretrained forecasts by demonstrated reliability at each horizon rather than agreement or inertia. Distinguish routine variation from discrete repricing risk, letting credible jump evidence shape asymmetric tails without allowing a few extreme misses to inflate every range."
+   },
+   {
+    "day": "2026-10-29",
+    "n_resolved": 1465,
+    "lesson": "Keep one-day ranges tight for stable series, modestly trimming excess coverage, while widening three-day ranges on both sides and seven-day ranges substantially, especially upward. Use unchanged-price middles only when persistence is supported at that horizon, and weight drift, replay, and pretrained forecasts by demonstrated reliability rather than agreement alone. Separate routine variation from discrete repricing risk, using credible jump evidence to shape asymmetric tails without letting a few extreme misses inflate every range."
+   },
+   {
+    "day": "2026-10-31",
+    "n_resolved": 1526,
+    "lesson": "Keep one-day ranges tight, modestly reducing excess coverage, but widen three-day ranges on both sides and seven-day ranges more substantially, especially upward. Reassess unchanged-price middles as the horizon lengthens, weighting drift, replay, and pretrained forecasts by demonstrated horizon-specific reliability rather than agreement alone. Distinguish routine variation from discrete repricing risk, using credible evidence of jumps to set asymmetric tails without letting rare extreme misses inflate every range."
+   },
+   {
+    "day": "2026-11-02",
+    "n_resolved": 1635,
+    "lesson": "Keep one-day ranges tight and trim excess coverage selectively, but widen three-day ranges on both sides and seven-day ranges more substantially, especially upward. As the horizon lengthens, challenge unchanged-price middles and weigh drift, replay, and pretrained forecasts by demonstrated reliability and evidence of persistence or repricing, not agreement alone. Account for discrete jumps with evidence-based asymmetric tails rather than inflating every range to cover rare extremes."
+   },
+   {
+    "day": "2026-11-03",
+    "n_resolved": 1709,
+    "lesson": "Keep one-day ranges tight and selectively trim excess coverage, widen three-day ranges on both sides, and widen seven-day ranges more substantially with extra room upward. At longer horizons, challenge unchanged-price middles and weight drift, replay, and pretrained forecasts by demonstrated horizon-specific reliability and evidence of persistence or repricing rather than agreement alone. Model discrete jumps with evidence-based, asymmetric tails without letting a few extreme misses inflate every range."
+   }
+  ],
+  "risk_spotter": [
+   {
+    "day": "2026-09-27",
+    "n_resolved": 74,
+    "lesson": "Overall coverage is near target, but misses are entirely upward, so shift some range allowance from the lower tail to the upper tail rather than widening every forecast. Keep stable-price forecasts tight without treating recent stability as certainty, and allow more upside over longer horizons when offer turnover, recent jumps, or cross-list discrepancies suggest repricing risk. Move the midpoint only when evidence supports a lasting change, distinguishing temporary spikes from persistent resets."
+   },
+   {
+    "day": "2026-09-30",
+    "n_resolved": 148,
+    "lesson": "Reallocate excess lower-tail allowance toward upside at short horizons, and increase longer-horizon upside protection where offer turnover, recent jumps, or cross-list discrepancies signal repricing risk. Keep quiet-price ranges tight but nonzero, allowing downside snapbacks as well as upward resets rather than assuming stability or extrapolating a one-day move. Shift midpoints only when evidence supports a persistent change, and widen selectively with horizon and jump risk rather than across the board."
+   },
+   {
+    "day": "2026-10-03",
+    "n_resolved": 259,
+    "lesson": "Tighten routine one-day ranges, especially excess downside allowance, but expand three- and seven-day upside protection to address repeated upward misses. Use recent jumps, offer arrivals or disappearances, and cross-list discrepancies to identify discrete repricing risk, allowing both upward resets and downward snapbacks rather than extrapolating the latest move. Keep stable-price ranges narrow and shift midpoints only when evidence supports persistence, widening selectively with horizon and jump risk."
+   },
+   {
+    "day": "2026-10-06",
+    "n_resolved": 370,
+    "lesson": "Keep routine one-day ranges tight, trimming excess downside allowance, but increase upside protection substantially with horizon because longer-range misses are persistently skewed upward. Use offer arrivals or disappearances, recent jumps, and discrepancies across comparable listings to distinguish lasting repricing from temporary spikes, shifting midpoints when persistence is supported and allowing snapbacks when it is not. Reserve wide, asymmetric ranges for evidence of discrete jump risk rather than widening every stable price to cover rare extremes."
+   },
+   {
+    "day": "2026-10-09",
+    "n_resolved": 481,
+    "lesson": "Keep routine one-day ranges tight and trim excess downside allowance, but expand upside protection progressively at longer horizons, where upward misses are frequent rather than merely isolated extremes. Move midpoints upward when offer changes, sustained repricing, or discrepancies across comparable listings support it, instead of anchoring automatically to the current price. Treat recent jumps as possible regime changes or temporary spikes, using evidence of persistence versus reversal to set asymmetric bounds without widening every stable price indiscriminately."
+   },
+   {
+    "day": "2026-10-12",
+    "n_resolved": 592,
+    "lesson": "Keep stable one-day ranges tight and trim excess downside allowance, but increase upside protection substantially with horizon, since longer-term upward misses are frequent rather than isolated extremes. Shift midpoints upward when sustained repricing, disappearing low offers, or discrepancies across comparable listings support it, rather than anchoring to the current price. Treat fresh jumps and unusual offers as potential regime changes or reversals, using persistence and offer availability to set asymmetric bounds without widening every forecast indiscriminately."
+   },
+   {
+    "day": "2026-10-16",
+    "n_resolved": 740,
+    "lesson": "Tighten one-day ranges modestly, especially on the downside, but expand longer-horizon upside protection substantially: repeated upward misses show that uncertainty grows faster than the current ranges allow. Move midpoints away from the latest quote when persistent repricing, disappearing cheap offers, or comparable listings support a shift. Distinguish temporary jumps and anomalous offers from durable changes using persistence and availability, allowing for snapbacks without widening every forecast indiscriminately."
+   },
+   {
+    "day": "2026-10-18",
+    "n_resolved": 764,
+    "lesson": "Tighten one-day ranges modestly, chiefly on the downside, while expanding three- and especially seven-day upside protection to address the persistent excess of upward misses. Shift midpoints when availability changes, persistent repricing, or comparable listings support a new level rather than anchoring automatically to the latest quote. Use offer turnover and cross-listing discrepancies to distinguish jump risk from temporary spikes and snapbacks, concentrating wider ranges where those signals warrant them."
+   },
+   {
+    "day": "2026-10-19",
+    "n_resolved": 875,
+    "lesson": "Tighten one-day ranges modestly, especially below the current quote, but expand three-day and particularly seven-day upper bounds to correct persistent longer-horizon undercoverage and upward misses. Move midpoints away from the latest quote when sustained repricing, offer turnover, or comparable listings support a different level, while allowing snapback risk after isolated jumps. Reserve substantial jump protection for evidence of unstable availability or outlier quotes rather than widening every forecast indiscriminately."
+   },
+   {
+    "day": "2026-10-21",
+    "n_resolved": 949,
+    "lesson": "Tighten one-day ranges modestly, particularly on the downside, while expanding three-day and especially seven-day upper bounds to address persistent upward misses. Move longer-horizon midpoints away from the current quote when sustained repricing or comparable listings support it, rather than assuming prices will stay flat. Use offer turnover, unusually cheap quotes, and isolated jumps to assess discontinuous repricing or snapback risk, reserving large jump allowances for vulnerable listings rather than widening every range."
+   },
+   {
+    "day": "2026-10-22",
+    "n_resolved": 1023,
+    "lesson": "Tighten one-day ranges modestly on both sides, while widening three-day and especially seven-day upper bounds to correct persistent longer-horizon undercoverage. Move longer-horizon midpoints upward when sustained repricing or comparable offers support it, rather than anchoring mechanically to the current quote. Use offer turnover, outlying quotes, and isolated jumps to distinguish durable repricing from snapback risk, concentrating large jump allowances on vulnerable listings rather than widening every range."
+   },
+   {
+    "day": "2026-10-25",
+    "n_resolved": 1169,
+    "lesson": "Tighten one-day ranges modestly, but widen three-day and especially seven-day ranges asymmetrically upward to address persistent upside misses. Move longer-horizon midpoints away from the current quote when offer turnover and comparable listings support sustained repricing, while treating isolated jumps as potential snapbacks. Reserve large jump allowances for unusually cheap, newly changed, or fragile offers rather than widening all forecasts indiscriminately."
+   },
+   {
+    "day": "2026-10-26",
+    "n_resolved": 1243,
+    "lesson": "Tighten one-day ranges modestly on stable quotes, but widen three-day and especially seven-day ranges, with more room above than below. Move longer-horizon midpoints when offer turnover or comparable listings support sustained repricing, rather than anchoring automatically to the current quote; treat unsupported one-day jumps as potential snapbacks. Reserve large jump allowances for outlying quotes and offers at risk of appearing or disappearing, rather than padding every range."
+   },
+   {
+    "day": "2026-10-28",
+    "n_resolved": 1354,
+    "lesson": "Tighten one-day ranges selectively on stable quotes, but widen three-day and especially seven-day ranges, adding more upside room to address persistent upper-tail misses. Move longer-horizon midpoints away from the current quote when comparable listings or offer turnover support repricing, while allowing snapbacks after unsupported one-day jumps. Reserve large, potentially two-sided jump allowances for outlying quotes and offers likely to appear or disappear rather than widening every forecast."
+   },
+   {
+    "day": "2026-10-29",
+    "n_resolved": 1465,
+    "lesson": "Tighten one-day ranges selectively for stable quotes, but widen three-day and especially seven-day ranges, with more added room above than below to correct persistent longer-horizon undercoverage. Move midpoints away from the current quote when comparable listings and offer turnover support repricing, while allowing reversals after unsupported jumps. Treat unusually cheap or expensive quotes and newly appearing or disappearing offers as potential discontinuities, reserving large, sometimes two-sided jump allowances for those signals rather than padding every forecast."
+   },
+   {
+    "day": "2026-10-31",
+    "n_resolved": 1526,
+    "lesson": "Tighten one-day ranges selectively on stable quotes, but expand three-day and especially seven-day ranges, adding more upside room to address persistent longer-horizon undercoverage. Adjust midpoints when comparable quotes and offer turnover support repricing, while allowing snapbacks after isolated jumps rather than mechanically extrapolating them. Use outlying quotes and newly appearing or disappearing offers to trigger explicit jump scenarios and asymmetric bounds, rather than widening every forecast to accommodate rare extremes."
+   },
+   {
+    "day": "2026-11-02",
+    "n_resolved": 1635,
+    "lesson": "Tighten one-day ranges on stable quotes, but widen three-day and especially seven-day ranges selectively, with more upside room to correct persistent longer-horizon misses. Move midpoints away from the current quote when comparable listings and offer turnover support repricing, while treating isolated jumps as possible snapbacks rather than new trends. Use outlying quotes and appearing or disappearing offers to trigger asymmetric jump scenarios, not blanket widening for rare extremes."
+   },
+   {
+    "day": "2026-11-03",
+    "n_resolved": 1709,
+    "lesson": "Keep one-day ranges tight on stable quotes, but widen three-day and especially seven-day ranges selectively, adding more upside room to address persistent longer-horizon undercoverage. Shift midpoints when comparable listings and offer turnover support sustained repricing; treat isolated jumps and outlying quotes as candidates for snapback rather than automatically extrapolating them. Use newly appearing or disappearing offers to identify asymmetric jump risks, reserving large range expansions for concrete warning signs rather than rare extremes alone."
+   }
+  ]
+ }
+}

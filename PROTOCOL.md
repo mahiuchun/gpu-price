@@ -255,6 +255,10 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       - Expectation, from the reading: the record helps a little or not at all, and the written
         lesson does no better than the record. One run; prompts are not changed after seeing a
         result. A crash is resumed from the last finished day and reported.
+      - Outcome of the one run (10,635 calls, all on the flex tier, an estimated $24; no crash):
+        record against nothing +1.9% (−0.2% to +4.2%), lesson against nothing +2.1% (−0.2% to
+        +4.5%), lesson against record +0.2% (−1.0% to +1.3%). By the rule, neither memory is
+        shown to help. The "nothing" arm against the answers of 14 Nov: −0.6% (−2.1% to +0.8%).
     - **The ML model, a second look** (`gpuval.ml_challenger crossrun`, a Modal T4; written before
       its first run). Same model and version, nothing tuned. Three new arms on the same 3,769
       forecasts as the plain run: `cross` (every scored price observed on the forecast day goes in
@@ -301,6 +305,8 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       every forecast day from 21 Aug to 5 Nov, and to the first crowd's recorded answers on its 19
       days. We will say the rule helps a forecaster only if its 1-day error falls with a 90%
       interval that excludes zero. The 8 and the horizon do not change after the first run.
+      - Outcome of the first run: no gain. It fired on 146 of 2,058 one-day forecasts; engine with
+        the rule against without −0.1% (−0.5% to +0.1%); first crowd −0.2% (−0.9% to +0.2%).
     - **Checks with no rule to fix** (`gpuval.checks`, no AI calls). Counts and splits of results
       that were already recorded: how often ranges held when the price moved, how many prices and
       days carry the pooled figures, each agent alone, the AWS days before and after the agents'

@@ -448,7 +448,7 @@ def fig_agent_memory() -> None:
     if not p.exists():
         return
     b = json.loads(p.read_text())["blocks"]["all days"]
-    fig, (a, c) = plt.subplots(1, 2, figsize=(12, 3.9), gridspec_kw={"width_ratios": [1.25, 1], "wspace": 0.3})
+    fig, (a, c) = plt.subplots(1, 2, figsize=(13, 3.9), gridspec_kw={"width_ratios": [1.25, 1], "wspace": 0.62})
     arms = [("recorded", "No memory\n(answers of 14 Nov)", NEUTRAL), ("none", "No memory\n(asked again)", NEUTRAL),
             ("record", "Own scored\nrecord", BLUE), ("lesson", "Record plus\na written lesson", ORANGE)]
     for i, (k, name, col) in enumerate(arms):
@@ -462,9 +462,10 @@ def fig_agent_memory() -> None:
     a.set_xticks(range(len(arms)), [n for _, n, _ in arms], fontsize=8.5)
     a.axhline(0, color=INK2, linewidth=1)
     a.set_ylabel("Less error than drift\n(bar = estimate, line = 90% interval)")
+    a.set_ylim(0, 24.5)
     a.set_title(f"Each arm against drift ({b['n']:,} forecasts, {b['n_days']} days)", fontsize=10)
     a.grid(axis="x", visible=False)
-    rows = [("none_vs_recorded", "Asked again, against the\nanswers of 14 Nov (no change made)", NEUTRAL),
+    rows = [("none_vs_recorded", "Asked again, against\n14 Nov's answers\n(nothing changed)", NEUTRAL),
             ("record_vs_none", "Own scored record,\nagainst no memory", BLUE), ("lesson_vs_none", "Record plus lesson,\nagainst no memory", ORANGE),
             ("lesson_vs_record", "Lesson, against\nrecord alone", ORANGE)]
     for i, (k, name, col) in enumerate(rows[::-1]):
@@ -474,7 +475,7 @@ def fig_agent_memory() -> None:
         c.text(100 * q["hi90"] + 0.3, i, f"{100 * q['skill']:+.1f}%", va="center", fontsize=9, color=INK)
     c.axvline(0, color=INK2, linewidth=1)
     c.set_yticks(range(len(rows)), [n for _, n, _ in rows[::-1]], fontsize=8.5)
-    c.set_xlabel("Change in error on the same forecasts (right of zero = better)")
+    c.set_xlabel("Less error on the same forecasts, in percent\n(right of zero = better; line = 90% interval)")
     c.set_title("One arm against another", fontsize=10)
     c.grid(axis="y", visible=False)
     c.margins(x=0.18)
