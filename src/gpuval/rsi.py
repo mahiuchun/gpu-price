@@ -51,6 +51,7 @@ EXTRA = {"engine": "the list-replay engine at default settings (no AI)",
          "qwen3_8b_rl": "the open model Qwen3-8B after RL training",
          "qwen3_5_9b_rl": "the open model Qwen3.5-9B after RL training"}
 POOL = ROLES + list(EXTRA)
+PRIOR = "base_rate_keeper_v0"     # the base-rate keeper before the coach rewrote it; only the audit uses it
 RL_RUNS = {"qwen3_8b_rl": "fc1", "qwen3_5_9b_rl": "fc2"}
 
 WALL = "2026-10-20"          # the loop sees no outcome published after this day
@@ -86,10 +87,11 @@ def _agent_rows() -> pd.DataFrame:
         for j in json.loads((data.REPO / "runs" / "agents" / f"{f}.json").read_text()):
             got[(j["series_id"], day_of(j["origin"]))] = {
                 n: (ans[coach.Answers.key(r, f"rec|ours|{j['series_id']}|{j['origin']}")] if n in changed else j["r1"][n])["q"]
-                for n, r in cfg["roles"].items()}
+                for n, r in cfg["roles"].items()} | {PRIOR: j["r1"]["base_rate_keeper"]["q"]}
     for iso in range_memory.COACH_OWN_DAYS + coach.DAYS["exam"]["ours"]:
         for sid in data.headline_ids():
             keys = {n: coach.Answers.key(r, f"ours|{sid}|{iso}") for n, r in cfg["roles"].items()}
+            keys[PRIOR] = coach.Answers.key(base["base_rate_keeper"], f"ours|{sid}|{iso}")
             if all(k in ans for k in keys.values()):
                 got[(sid, day_of(iso))] = {n: ans[k]["q"] for n, k in keys.items()}
     rows = []
@@ -113,7 +115,7 @@ def build_frame() -> pd.DataFrame:
         q = q[q.world == "ours"].assign(origin=lambda d: d.origin.map(day_of))[["series_id", "origin", "h", "trained_lo", "trained_mid", "trained_hi"]]
         q.columns = ["series_id", "origin", "h", f"{name}_lo", f"{name}_mid", f"{name}_hi"]
         f = f.merge(q, on=["series_id", "origin", "h"], how="inner")
-    cols = [f"{m}_{c}" for m in POOL for c in ("lo", "mid", "hi")]
+    cols = [f"{m}_{c}" for m in POOL + [PRIOR] for c in ("lo", "mid", "hi")]
     assert f[cols].notna().all().all() and (f[cols] > 0).all().all()
     days = sorted(f.origin.unique())
     dev = [d for d in days if d < day_of(EXAM_FROM)]
@@ -190,7 +192,8 @@ def paired(g: pd.DataFrame, new: str, old: str, seed: int = 0) -> dict:
     ws = rng.multinomial(ns, np.ones(ns) / ns, size=report.N_BOOT).astype(float)
     wd = rng.multinomial(nd, np.ones(nd) / nd, size=report.N_BOOT).astype(float)
     num, den = np.einsum("bs,sd,bd->b", ws, A, wd), np.einsum("bs,sd,bd->b", ws, B, wd)
-    return {"gain": float(1 - A.sum() / B.sum()), "p_better": float(np.mean(num < den)), "n": int(len(g))}
+    lo, hi = np.nanquantile(1 - num / np.where(den > 0, den, np.nan), [0.05, 0.95])
+    return {"gain": float(1 - A.sum() / B.sum()), "p_better": float(np.mean(num < den)), "lo90": float(lo), "hi90": float(hi), "n": int(len(g))}
 
 
 def _join(new: pd.DataFrame, old: pd.DataFrame, split: str) -> pd.DataFrame:
@@ -381,7 +384,7 @@ def view(bundle: dict, w: pd.DataFrame, frame: pd.DataFrame, ledger: list[dict],
 
 
 # -------------------------------------------------------------------- run ----
-def run(proposer, generations: int, seed: int, name: str, frame: pd.DataFrame | None = None, save: bool = True, log=print) -> dict:
+def run(proposer, generations: int, seed: int, name: str, frame: pd.DataFrame | None = None, save: bool = True, root=None, log=print) -> dict:
     frame = build_frame() if frame is None else frame
     seen = frame[frame.target <= day_of(WALL)]            # the loop is handed no outcome published after the wall
     rng_np = np.random.default_rng(zlib.crc32(f"rsi|{name}|{seed}".encode()))
@@ -415,8 +418,9 @@ def run(proposer, generations: int, seed: int, name: str, frame: pd.DataFrame | 
              "end": {s: _vs_drift(best[best.split == s]) for s in ("practice", "check")}, "bundle": bundle, "kept_edits": edits,
              "ledger": ledger, "usage": proposer.usage()}
     if save:
-        (OUT / name).mkdir(parents=True, exist_ok=True)
-        (OUT / name / "state.json").write_text(json.dumps(state, indent=1))
+        root = OUT if root is None else root
+        (root / name).mkdir(parents=True, exist_ok=True)
+        (root / name / "state.json").write_text(json.dumps(state, indent=1))
     log(f"[{name}] stopped ({stop}): kept {len(edits)} of {len(ledger)}; practice {start['practice']:+.4f} -> {state['end']['practice']:+.4f}, "
         f"check {start['check']:+.4f} -> {state['end']['check']:+.4f} | usage {state['usage']}")
     return state
@@ -430,7 +434,7 @@ def _exam_block(g: pd.DataFrame, cols: dict) -> dict:
             "vs_start": {k: ci(g, c, cols["start"]) for k, c in cols.items() if k != "start"}}
 
 
-def exam(frame: pd.DataFrame | None = None, log=print) -> dict:
+def exam(frame: pd.DataFrame | None = None, root=None, save: bool = True, log=print) -> dict:
     """Every saved run on the fresh days. The whole sequence of days is walked, so the weights on an
     exam day have learned from every outcome published by then; the settings are frozen."""
     frame = build_frame() if frame is None else frame
@@ -444,9 +448,12 @@ def exam(frame: pd.DataFrame | None = None, log=print) -> dict:
            "start_bundle": start_bundle(), "runs": {}}
     alone = {m: report.skill_ci(s.assign(x=cell_loss(s.y, s[f"{m}_lo"], s[f"{m}_mid"], s[f"{m}_hi"])), "x", "loss_drift") for m in POOL}
     out["members_alone_exam_vs_drift"] = alone
+    out["start_on_exam"] = {"vs_drift": report.skill_ci(s, "loss", "loss_drift"), "vs_engine": report.skill_ci(s, "loss", "loss_engine"),
+                            "inside": float(s.inside.mean()), "inside_when_moved": float(s[s.moved].inside.mean())}
     keep = ["series_id", "origin", "h", "target", "y", "last", "moved", "loss_drift", "loss_engine"]
     cells = s[keep].assign(lo_start=s.lo, mid_start=s.mid, hi_start=s.hi, loss_start=s.loss)
-    for path in sorted(OUT.glob("*/state.json")):
+    root = OUT if root is None else root
+    for path in sorted(root.glob("*/state.json")):
         st = json.loads(path.read_text())
         name, edits = st["name"], st["kept_edits"]
         arms = {"start": s, "final": ex(walk(frame, rebuild(edits)))}
@@ -490,8 +497,74 @@ def exam(frame: pd.DataFrame | None = None, log=print) -> dict:
         out["random_control"] = {"runs": len(rnd), "kept_any": int(sum(bool(b["kept"]) for b in out["runs"].values() if b["proposer"] == "random")),
                                  "final_vs_start": {"min": float(min(rnd)), "median": float(np.median(rnd)), "max": float(max(rnd))}}
         log(f"random control, {len(rnd)} runs: final against start on the exam days {min(rnd):+.4f} to {max(rnd):+.4f} (median {np.median(rnd):+.4f})")
-    (data.REPO / "findings" / "data" / "rsi_loop.json").write_text(json.dumps(out, indent=1, default=str))
-    cells.to_parquet(OUT / "exam_cells.parquet", index=False)
+    out["after_the_result"] = audit(frame, [json.loads(p.read_text()) for p in sorted(root.glob("*/state.json"))], log)
+    if save:
+        (data.REPO / "findings" / "data" / "rsi_loop.json").write_text(json.dumps(out, indent=1, default=str))
+        cells.to_parquet(OUT / "exam_cells.parquet", index=False)
+    return out
+
+
+# ------------------------------------------------------------------ audit ----
+def first_crowd_bundle() -> dict:
+    """The crowd as first written: the base-rate keeper before its rewrite, no range stretch."""
+    b = start_bundle()
+    return {**b, "members": [PRIOR if m == "base_rate_keeper" else m for m in ROLES], "range_scale": {str(h): 1.0 for h in HORIZONS}}
+
+
+def _judge(frame: pd.DataFrame, new: dict, old: dict) -> dict:
+    """One change against the bundle before it: the gate's numbers on the loop's days, and the exam."""
+    wn, wo = walk(frame, new), walk(frame, old)
+    p, c, x = (_join(wn, wo, k) for k in ("practice", "check", "exam"))
+    own = {day_of(d) for d in range_memory.COACH_OWN_DAYS}
+    return {"practice": paired(p, "loss_new", "loss_old"), "practice_without_coach_days": paired(p[~p.origin.isin(own)], "loss_new", "loss_old"),
+            "check_gain": float(1 - c.loss_new.sum() / c.loss_old.sum()), "exam": report.skill_ci(x, "loss_new", "loss_old")}
+
+
+def audit(frame: pd.DataFrame, states: list[dict], log=print) -> dict:
+    """Readings made after the result; none of this is part of the test in PROTOCOL.md.
+    (a) Every edit any run proposed, scored on the exam days: what the gate turned away.
+    (b) Would this gate have kept the coach's two changes, which held up on fresh days?"""
+    fm, start = report.fmt_ci, start_bundle()
+    seen: dict = {}
+    for st in states:
+        b = start_bundle()
+        for e in st["ledger"]:
+            if b == start:          # only edits proposed against the starting bundle are comparable
+                seen.setdefault(json.dumps(e["edit"], sort_keys=True), {"edit": e["edit"], "proposers": set()})["proposers"].add(st["proposer"])
+            b = e["bundle_after"]
+    turned_away = []
+    for v in seen.values():
+        cand = apply_edit(start, v["edit"])
+        if cand is not None:
+            turned_away.append({"edit": edit_text(v["edit"]), "kind": v["edit"]["kind"], "proposers": sorted(v["proposers"]), **_judge(frame, cand, start)})
+    turned_away.sort(key=lambda r: -r["practice"]["p_better"])
+    log("\nAFTER THE RESULT (a): every proposed edit, practice confidence and what it did on the exam days")
+    for r in turned_away:
+        log(f"   {r['practice']['p_better']:.2f} | practice {r['practice']['gain']:+.4f} | check {r['check_gain']:+.4f} | exam {fm(r['exam'])} | {r['edit']} ({'/'.join(r['proposers'])})")
+    b0 = first_crowd_bundle()
+    b1 = {**b0, "range_scale": start["range_scale"]}
+    control = {"wider ranges at 3 and 7 days": _judge(frame, b1, b0), "the rewritten agent, on top of the wider ranges": _judge(frame, start, b1),
+               "both changes": _judge(frame, start, b0)}
+    log("AFTER THE RESULT (b): the coach's two kept changes put to this gate")
+    for k, r in control.items():
+        p, q = r["practice"], r["practice_without_coach_days"]
+        log(f"   {k}: practice {p['gain']:+.4f} [{p['lo90']:+.3f}, {p['hi90']:+.3f}], confidence {p['p_better']:.2f} "
+            f"(without the coach's own days {q['gain']:+.4f}, {q['p_better']:.2f}) | check {r['check_gain']:+.4f} | exam {fm(r['exam'])}")
+    # RSI4GPF's own default vote (configs/team_v0.yaml), put on our crowd
+    v = {"eta": 2.0, "decay": 0.05, "w_min": 0.05, "by": "class_h"}
+    sister = {"vote only": _judge(frame, {**start, "vote": v}, start), "vote and widen 0.5": _judge(frame, {**start, "vote": v, "widen": 0.5}, start)}
+    log("AFTER THE RESULT (c): RSI4GPF's default vote settings on our crowd")
+    for k, r in sister.items():
+        log(f"   {k}: practice {r['practice']['gain']:+.4f}, confidence {r['practice']['p_better']:.2f} | check {r['check_gain']:+.4f} | exam {fm(r['exam'])}")
+
+    def count(rows: list[dict]) -> dict:
+        return {"n": len(rows), "better_on_exam": int(sum(r["exam"]["skill"] > 0 for r in rows)),
+                "clearly_better_on_exam": int(sum(r["exam"]["lo90"] > 0 for r in rows)), "clearly_worse_on_exam": int(sum(r["exam"]["hi90"] < 0 for r in rows))}
+
+    out = {"note": "readings made after the result; not part of the pre-stated test", "turned_away": turned_away, "coach_changes_through_this_gate": control,
+           "sister_default_vote": sister, "all_edits": count(turned_away), "by_kind": {k: count([r for r in turned_away if r["kind"] == k]) for k in KINDS},
+           "edits_with_confidence_0.7_or_more": count([r for r in turned_away if r["practice"]["p_better"] >= 0.7])}
+    log(f"   all edits: {out['all_edits']} | by kind: {out['by_kind']} | at confidence 0.7 or more: {out['edits_with_confidence_0.7_or_more']}")
     return out
 
 

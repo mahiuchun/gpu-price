@@ -10,13 +10,14 @@
 - **Three other ways did not.** An AI scientist tuning the engine made it slightly worse on unseen weeks. A small model trained with reinforcement learning to propose engine settings found one change that is not clearly better. Letting the agents read each other's answers did not help.
 - **Learning from its own past forecasts: three ways, one modest result.** We gave the crowd a memory with no AI in it (range width set from its own resolved forecasts), showed each agent its own scored record, and let each agent write itself a lesson from that record. All three found the fault the coach found, ranges too narrow at 3 and 7 days. They cut error by 1.4% to 2.1%, and in each case the likely range includes zero, so none is established. The no-AI memory also recovers 6 of the 8 points that RL training gave Qwen3-8B.
 - **An AI analyst that writes its own tests found three timing patterns that held on data it never saw.** One is a weekday pattern wider than anything we had found by hand: three scored cloud spot prices move almost only on Mondays and Tuesdays. A simple rule built on it did not make the forecasts better.
+- **One loop over the whole forecaster kept nothing, and it was right to.** We took the self-improvement loop of our sister repo, RSI4GPF: generation after generation, an AI proposes one change to how the team is put together (a vote that learns each member's weight, the range width, who votes), and the change is kept only if it has less error in 90% of resamples. It kept none of the AI's 6 proposals and none of 30 random ones. On nine later days none of those edits was clearly better and one was clearly worse. Put to the same gate, the coach's wider ranges would have been kept (section 11).
 - **Five AI agents that read the price list beat the engine.** On our own prices the crowd as first written was 8% ahead on the same forecasts (likely 3% to 14%), and the improved crowd 10% ahead (5% to 14%). We did not show that their different jobs, or the averaging, are the reason: the best single agent scored above the average of the five, and the five middles agree within 0.1% on three forecasts in four.
 - **A ready-made ML model, run in its plainest mode, is unreliable on these prices.** It looked good in the three test weeks, failed in the eight weeks before, and works well on AWS prices. We first ran it one price at a time with default settings; letting the prices read each other and adding facts about the list did not repair it (section 10).
 - **Most movement in a published median is not providers changing prices.** For provider list prices, 66% comes from offers joining or leaving the list, 25% from one or two offers that reprice almost daily, and 9% from everyone else.
 - **Some of that "repricing" is the euro.** One provider prices in euros and its tracking site converts to dollars each morning. Its dollar price changed on 55 of 59 days from Tuesday to Saturday and on 1 of 22 Sundays and Mondays. On 6 Nov it was the middle offer of two scored prices, so those published medians were its price.
 - **Ranges hold far less often when the price moves.** The improved crowd's ranges held the truth 80% of the time on its exam days: 99% when the price did not change and 66% when it did. For the engine the second figure is 49%.
 
-The points above on learning from past forecasts, the analyst, the euro and the ranges, sections 9 and 10, and every note marked "added 15 Nov" were written after the forecast was handed in and after reading the brief's reference list. The forecast file itself is unchanged. The tests in sections 9 and 10 had their rules committed before they first ran; the days they use had all been looked at.
+The points above on learning from past forecasts, the analyst, the single loop, the euro and the ranges, sections 9, 10 and 11, and every note marked "added 15 Nov" were written after the forecast was handed in and after reading the brief's reference list. The forecast file itself is unchanged. The tests in sections 9, 10 and 11 had their rules committed before they first ran; the days they use had all been looked at.
 
 ## The question
 
@@ -188,6 +189,7 @@ In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as 
 | 16 | ML model with prices reading each other and facts about the list | does not beat drift in both periods |
 | 17 | AI analyst writing its own tests in a sealed container | 12 ideas, 5 passed once, 3 passed again on data it never saw |
 | 18 | A weekday rule built on the analyst's confirmed pattern | −0.1% (−0.5% to +0.1%): no gain |
+| 19 | One loop over the whole forecaster, taken from RSI4GPF: a vote that learns, range width, who votes; 6 edits proposed by an AI and 30 at random | none kept; on 9 later days none was clearly better and one was clearly worse |
 
 - **Tuning on ten weeks of data overfits.** The scientist's ideas passed a gate and a hidden check and still did not hold. With hindsight, the best four setting changes would have reached 18%, and they point the opposite way from the past: earlier misses were upward, later ones downward.
 - **The ideas the gate rejected were also informative.** Following other sites' prices for the same GPU cut skill from +0.235 to +0.190. Replacing the engine's middle with the last value cut it from +0.212 to +0.194.
@@ -358,6 +360,44 @@ Each rule was written into PROTOCOL.md and committed before the test first ran (
 - **Where it was wrong it cost.** On three provider lists with short histories it fired 31 times and the price moved in 16: "never moved on that weekday" was eight quiet days, not a schedule.
 - **Reading.** A pattern can be real in timing and still be worth nothing to a forecaster that already keeps its range tight on quiet days. That is the gap between the analyst's kind of test and a forecasting test, and the reason a confirmed idea was not claimed as an improvement.
 
+### 11. One loop over the whole forecaster (added 15 Nov)
+
+![The loop's proposed edits](findings/figures/fig13_rsi_loop.png)
+
+Everything above was a separate test, started by hand. Our sister repo, RSI4GPF (`chengjianglong/gpu-pricing-rsi`), is built the other way round: one loop that runs unattended, trains, validates, keeps or rolls back, changes something and goes again. We took that loop and ran it on our forecaster (`gpuval.rsi`). The rule was committed before the first run (PROTOCOL.md, deviation 13).
+
+**What was taken, and what was changed.**
+
+- **A vote that learns.** In RSI4GPF each member's weight starts equal and is cut each time an outcome is published, by more the worse the member did, then pulled part of the way back to equal. Ours was a plain average. A forecast only uses weights learned from outcomes published by its own day.
+- **The accept test.** A change replaces the current team only if it has less error on the practice days and still has less in at least 90% of resamples. The coach's gate asked only for a 0.5% gain. We kept the coach's hidden check as a second step.
+- **One team of different kinds of member.** The five GPT agents, the engine, and the two open models after RL training can all be given a vote. That is how trained weights enter the same loop as prompts and settings.
+- **Changed: one kind of thing per generation.** In RSI4GPF a new member gets a new learning rate, a new temperature, prompt edits and more training at once, so a gain cannot be traced to its cause. Here the kinds take turns (the vote, the range width, who votes) and each generation is one edit.
+- **The starting point is the forecast we handed in,** as a bundle of settings: the improved crowd's five agents, equal weights, the coach's stretch. `tests/rsi_checks.py` checks that it gives the recorded numbers exactly on all 1,894 forecasts the improved crowd had been scored on. The loop can only move away from it through the gate.
+- **Days.** The 23 days of our prices the improved crowd has answered, in order. The loop saw outcomes up to 20 Oct (14 days: 640 practice forecasts, 653 check). The exam is the 9 days from 21 Oct to 3 Nov (810 forecasts), scored once after every loop had ended.
+
+**Result: nothing was kept.**
+
+| Loop | Edits proposed | Kept | Team after the loop, exam days |
+|---|---|---|---|
+| AI proposer (`gpt-6.1-sol`), one run | 6 | 0 | unchanged: +15.2% against drift (+8% to +22%) |
+| Random edits, five runs | 30 | 0 | unchanged |
+
+- **The AI's six proposals,** with the gain on the practice days and the share of resamples in which the edit had less error: a slow-learning vote per horizon (−0.01%, 44%); wider ranges still, 1.5 and 2.15 at 3 and 7 days (+0.21%, 62%); drop the base-rate keeper (+0.06%, 58%); a faster vote with one set of weights (+0.05%, 79%); widen where the agents disagree (+0.11%, 73%); drop the list reader (+0.40%, 81%). None reached 90%, so the hidden check never ran, and the loop stopped itself after six generations in a row with nothing kept. Cost: six AI calls, about $0.04.
+- **By the rule, the loop did not improve the forecaster.** The forecast file is unchanged.
+
+**Was the gate right? Three readings made after the result** (not part of the test; `uv run python -m gpuval.rsi exam` prints them).
+
+- **None of the edits it turned away was clearly better on the exam days.** The 36 proposals were 30 different edits. Scored on the exam days against the starting team, 7 had less error and 23 had more; none of the 7 has a likely range that excludes zero. One was clearly worse: a fast-learning vote with no floor under the weights (−6.0%, −10% to −2%). The edit that came nearest to passing, dropping the list reader, would have cost 1.5% (−3.8% to +0.4%); the list reader was the best single agent on those days.
+- **A learning vote did not beat equal weights.** Of the 12 vote edits, 11 had more error on the exam days than equal weights. RSI4GPF's own default settings for the vote, put on our crowd: −1.0% (−2.7% to +0.4%). The agents' middles agree too closely, and five weeks is too short a record, for a weight to learn anything that lasts.
+- **The gate can say yes.** Put the coach's two kept changes to it, starting from the crowd as first written. The wider ranges: +1.4% on the practice days, less error in 94% of resamples, hidden check passed, so kept; on the exam days +2.4% (−0.4% to +4.7%). The rewritten agent: +0.7%, 81%, so not kept; on the exam days +0.8% (−0.6% to +2.1%). That matches section 3, where nearly all of the coach's gain was the ranges. Two of the seven practice days were check days in the coach's own gate; with the coach's four days left out the wider ranges reach 85% and would not pass.
+- **One edit points the same way three times and is still not established:** giving Qwen3-8B after RL a vote. Practice +0.9% (72% of resamples), check +1.1%, exam +1.7% (−0.6% to +3.4%). Section 3 found the same for an open model as a sixth agent (+1.4%, −1% to +4%).
+
+**What this says about the loop, here and in RSI4GPF.**
+
+- **The gate is the part worth having.** It let through none of 36 proposals, of which one would have cost 6%, and it would have kept the one earlier change that carried a real gain. The AI scientist's gate (section 5) kept 7 ideas that then did not hold.
+- **It needs more to practise on than either repo gives it.** The one change that passes was worth 1.4% of the error on the 640 practice forecasts. The largest gain among the 30 edits was 0.9%, and it reached 72%. RSI4GPF validates on three dates; in the run its README reports, its two generations reached 71% and 73% and neither was accepted. A loop with this gate is safe on short data, and short data is also why it accepts nothing.
+- **What was not brought over.** RL training inside the loop (an hour or more per training run on a rented GPU), prompt rewrites inside the loop (the coach's lever; each needs about 840 agent calls on these days), RSI4GPF's population of three, and its research notebook. The loop takes any forecaster with recorded answers as a member, so a newly trained model can be given a vote without changing the code.
+
 ## What someone pricing a lease or a loan could use
 
 - **Read a published median with its list.** A move is far more likely to be an offer entering or leaving the sample, or one dynamic pricer, than a change in what providers charge.
@@ -388,10 +428,10 @@ Each rule was written into PROTOCOL.md and committed before the test first ran (
 
 ## Deviations from the protocol
 
-Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent crowd, which was not in the protocol; the ML model, the agents and the extra test periods were added after the blind test; the RL trial was lengthened; the coach and the RL forecaster were added last, and the submission changed from the first crowd to the improved one. On 15 Nov, after the forecast was handed in, we corrected wording in this file and added checks and tests on past data (deviation 12); the forecast file was not touched.
+Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent crowd, which was not in the protocol; the ML model, the agents and the extra test periods were added after the blind test; the RL trial was lengthened; the coach and the RL forecaster were added last, and the submission changed from the first crowd to the improved one. On 15 Nov, after the forecast was handed in, we corrected wording in this file and added checks and tests on past data (deviations 12 and 13); the forecast file was not touched.
 
 ## Reproduce
 
 `bash reproduce.sh` rebuilds the forecast files in about 15 seconds with no AI calls. The main file is rebuilt from the agents' recorded answers (`runs/coach/final_answers.json`; the first crowd's are in `runs/agents/final_answers.json`). The coach's ledger of all ten changes is `runs/coach/state.json`. `bash reproduce.sh --with-backtest` replays the AI scientist's blind test and reproduces its results table exactly.
 
-The notes added on 15 Nov rebuild from recorded files with no AI calls: `uv run python -m gpuval.checks` (about a minute), `uv run python -m gpuval.checks wide` (a few minutes), `uv run python -m gpuval.range_memory` and `uv run python -m gpuval.weekday_rule`. The three tests that called an AI saved every answer, and their tables rebuild from those: `uv run python -m gpuval.agent_memory table`, `uv run python -m gpuval.recall_probe table` and `uv run python -m gpuval.analyst table`. The long view rebuilds with `uv run python longview/longview.py && uv run python longview/resale.py`.
+The notes added on 15 Nov rebuild from recorded files with no AI calls: `uv run python -m gpuval.checks` (about a minute), `uv run python -m gpuval.checks wide` (a few minutes), `uv run python -m gpuval.range_memory` and `uv run python -m gpuval.weekday_rule`. The three tests that called an AI saved every answer, and their tables rebuild from those: `uv run python -m gpuval.agent_memory table`, `uv run python -m gpuval.recall_probe table` and `uv run python -m gpuval.analyst table`. The long view rebuilds with `uv run python longview/longview.py && uv run python longview/resale.py`. The single loop of section 11 rebuilds with no AI calls: `uv run python tests/rsi_checks.py` (the starting bundle is the handed-in forecast), `uv run python -m gpuval.rsi run --proposer replay` (the recorded edits through the gate again) and `uv run python -m gpuval.rsi exam`.

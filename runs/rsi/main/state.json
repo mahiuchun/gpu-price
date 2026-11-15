@@ -1,0 +1,281 @@
+{
+ "name": "main",
+ "proposer": "gpt",
+ "seed": 0,
+ "generations": 12,
+ "stop": "plateau",
+ "start": {
+  "practice": 0.1534332836692568,
+  "check": 0.14680422788925818
+ },
+ "end": {
+  "practice": 0.1534332836692568,
+  "check": 0.14680422788925818
+ },
+ "bundle": {
+  "members": [
+   "list_reader",
+   "repricer_watcher",
+   "base_rate_keeper",
+   "combiner",
+   "risk_spotter"
+  ],
+  "vote": {
+   "eta": 0.0,
+   "decay": 0.05,
+   "w_min": 0.05,
+   "by": "class_h"
+  },
+  "range_scale": {
+   "1": 1.0,
+   "3": 1.25,
+   "7": 1.65
+  },
+  "widen": 0.0
+ },
+ "kept_edits": [],
+ "ledger": [
+  {
+   "n": 1,
+   "kind": "vote",
+   "edit": {
+    "kind": "vote",
+    "eta": 0.5,
+    "decay": 0.1,
+    "w_min": 0.08,
+    "by": "h"
+   },
+   "diagnosis": "The team beats drift, but misses above its range much more often than below, especially at longer horizons. Member scores suggest some persistent differences in accuracy, while only seven practice days makes separate weights for every price kind and horizon prone to overfitting.",
+   "expectation": "Horizon-specific learning should modestly favor members with consistently lower error while pooling evidence across price kinds. Decay and a meaningful weight floor should preserve diversity and limit reactions to a few unusual days; this change is not expected to resolve the asymmetric range misses by itself.",
+   "practice_before": 0.1534332836692568,
+   "practice_gain": -0.00012153444058626839,
+   "p_better": 0.44,
+   "check": "not run",
+   "kept": false,
+   "bundle_after": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   }
+  },
+  {
+   "n": 2,
+   "kind": "range",
+   "edit": {
+    "kind": "range",
+    "range_scale": {
+     "1": 1,
+     "3": 1.5,
+     "7": 2.15
+    },
+    "widen": 0
+   },
+   "diagnosis": "The team beats drift, but its ranges miss too many upward moves at 3 and 7 days, especially for neocloud prices. One-day coverage is already adequate, so widening should focus on the longer horizons.",
+   "expectation": "Wider longer-horizon ranges should reduce costly upward misses while leaving one-day performance unchanged. Because misses are asymmetric, this is a moderate widening rather than an attempt to force 80% coverage through symmetric expansion alone.",
+   "practice_before": 0.1534332836692568,
+   "practice_gain": 0.00207205340347405,
+   "p_better": 0.619,
+   "check": "not run",
+   "kept": false,
+   "bundle_after": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   }
+  },
+  {
+   "n": 3,
+   "kind": "members",
+   "edit": {
+    "kind": "members",
+    "action": "drop",
+    "member": "base_rate_keeper"
+   },
+   "diagnosis": "The team beats drift, but upper-range misses are too frequent, especially at longer horizons. Base_rate_keeper has the weakest standalone score among current members at every horizon, making it the strongest candidate for removal.",
+   "expectation": "Removing the consistently weakest current member should modestly reduce forecast error while preserving diversity among the remaining four. Its effect on the excess upper-range misses is uncertain.",
+   "practice_before": 0.1534332836692568,
+   "practice_gain": 0.0005696590511898858,
+   "p_better": 0.5765,
+   "check": "not run",
+   "kept": false,
+   "bundle_after": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   }
+  },
+  {
+   "n": 4,
+   "kind": "vote",
+   "edit": {
+    "kind": "vote",
+    "eta": 1,
+    "decay": 0.05,
+    "w_min": 0.08,
+    "by": "all"
+   },
+   "diagnosis": "Repricer_watcher and combiner outperform base_rate_keeper at every horizon, suggesting some benefit from unequal weights. The previous horizon-specific update did not help; pooling results across horizons and price kinds should make weight learning less noisy.",
+   "expectation": "Shift weight modestly toward consistently lower-error members using pooled evidence, while retaining diversification through the weight floor and pull toward equal weights.",
+   "practice_before": 0.1534332836692568,
+   "practice_gain": 0.0005483901496151633,
+   "p_better": 0.7855,
+   "check": "not run",
+   "kept": false,
+   "bundle_after": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   }
+  },
+  {
+   "n": 5,
+   "kind": "range",
+   "edit": {
+    "kind": "range",
+    "range_scale": {
+     "1": 1,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.4
+   },
+   "diagnosis": "The team beats drift, but misses are concentrated above the range, particularly at 3 and 7 days. Blanket widening did not show a reliable gain, so disagreement-based widening is a more targeted alternative, though it cannot directly correct the upward bias.",
+   "expectation": "Modestly widen ranges when members disagree while leaving consensus forecasts unchanged, aiming to reduce costly misses without paying for wider ranges everywhere.",
+   "practice_before": 0.1534332836692568,
+   "practice_gain": 0.001144414630355417,
+   "p_better": 0.729,
+   "check": "not run",
+   "kept": false,
+   "bundle_after": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   }
+  },
+  {
+   "n": 6,
+   "kind": "members",
+   "edit": {
+    "kind": "members",
+    "action": "drop",
+    "member": "list_reader"
+   },
+   "diagnosis": "The team beats drift, but misses above its range are concentrated at longer horizons. list_reader scores below repricer_watcher and combiner at every horizon, making its removal a reasonable test, though standalone scores do not establish its ensemble value.",
+   "expectation": "Test whether shifting equal voting weight toward the remaining four members modestly reduces error. Any benefit is uncertain because list_reader may contribute useful diversification.",
+   "practice_before": 0.1534332836692568,
+   "practice_gain": 0.0039607955087545,
+   "p_better": 0.805,
+   "check": "not run",
+   "kept": false,
+   "bundle_after": {
+    "members": [
+     "list_reader",
+     "repricer_watcher",
+     "base_rate_keeper",
+     "combiner",
+     "risk_spotter"
+    ],
+    "vote": {
+     "eta": 0.0,
+     "decay": 0.05,
+     "w_min": 0.05,
+     "by": "class_h"
+    },
+    "range_scale": {
+     "1": 1.0,
+     "3": 1.25,
+     "7": 1.65
+    },
+    "widen": 0.0
+   }
+  }
+ ],
+ "usage": {
+  "calls": 6,
+  "in": 11013,
+  "out": 1850,
+  "flex_calls": 0,
+  "standard_calls": 6,
+  "usd": 0.04
+ }
+}

@@ -1,0 +1,8 @@
+[random_4] start: practice +0.1534, check +0.1468 against drift (640 and 653 forecasts)
+[random_4] gen 1 vote: eta 4, decay 0.05, w_min 0, weights per h | practice -0.0113, confidence 0.12 | check not run | rejected
+[random_4] gen 2 range: stretch 0.8 / 1.562 / 1.32, widen 0.5 | practice -0.0027, confidence 0.33 | check not run | rejected
+[random_4] gen 3 members: drop combiner | practice -0.0021, confidence 0.37 | check not run | rejected
+[random_4] gen 4 vote: eta 0.5, decay 0.2, w_min 0.02, weights per class_h | practice -0.0010, confidence 0.29 | check not run | rejected
+[random_4] gen 5 range: stretch 1.25 / 1.125 / 1.485, widen 0 | practice -0.0025, confidence 0.21 | check not run | rejected
+[random_4] gen 6 members: drop combiner | practice -0.0021, confidence 0.37 | check not run | rejected
+[random_4] stopped (plateau): kept 0 of 6; practice +0.1534 -> +0.1534, check +0.1468 -> +0.1468 | usage {}

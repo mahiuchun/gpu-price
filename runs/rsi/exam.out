@@ -1,0 +1,53 @@
+== main (gpt, 6 generations, kept 0): exam 810 forecasts on 9 days
+   start +0.152 [+0.082, +0.215] | final +0.152 [+0.082, +0.215] against drift
+== random_1 (random, 6 generations, kept 0): exam 810 forecasts on 9 days
+   start +0.152 [+0.082, +0.215] | final +0.152 [+0.082, +0.215] against drift
+== random_2 (random, 6 generations, kept 0): exam 810 forecasts on 9 days
+   start +0.152 [+0.082, +0.215] | final +0.152 [+0.082, +0.215] against drift
+== random_3 (random, 6 generations, kept 0): exam 810 forecasts on 9 days
+   start +0.152 [+0.082, +0.215] | final +0.152 [+0.082, +0.215] against drift
+== random_4 (random, 6 generations, kept 0): exam 810 forecasts on 9 days
+   start +0.152 [+0.082, +0.215] | final +0.152 [+0.082, +0.215] against drift
+== random_5 (random, 6 generations, kept 0): exam 810 forecasts on 9 days
+   start +0.152 [+0.082, +0.215] | final +0.152 [+0.082, +0.215] against drift
+random control, 5 runs: final against start on the exam days +0.0000 to +0.0000 (median +0.0000)
+
+AFTER THE RESULT (a): every proposed edit, practice confidence and what it did on the exam days
+   0.81 | practice +0.0040 | check -0.0023 | exam -0.015 [-0.038, +0.004] | members: drop list_reader (gpt/random)
+   0.79 | practice +0.0005 | check -0.0007 | exam +0.003 [-0.003, +0.011] | vote: eta 1, decay 0.05, w_min 0.08, weights per all (gpt)
+   0.73 | practice +0.0011 | check +0.0015 | exam -0.000 [-0.002, +0.001] | range: stretch 1 / 1.25 / 1.65, widen 0.4 (gpt)
+   0.72 | practice +0.0093 | check +0.0112 | exam +0.017 [-0.006, +0.034] | members: add qwen3_8b_rl (random)
+   0.63 | practice +0.0022 | check +0.0050 | exam +0.001 [-0.018, +0.015] | range: stretch 1.25 / 1.562 / 2.062, widen 0 (random)
+   0.62 | practice +0.0021 | check +0.0042 | exam -0.001 [-0.021, +0.015] | range: stretch 1 / 1.5 / 2.15, widen 0 (gpt)
+   0.58 | practice +0.0006 | check -0.0030 | exam -0.008 [-0.024, +0.010] | members: drop base_rate_keeper (gpt)
+   0.55 | practice +0.0006 | check +0.0028 | exam +0.002 [-0.007, +0.011] | range: stretch 1.25 / 1.125 / 1.815, widen 0 (random)
+   0.52 | practice +0.0000 | check +0.0024 | exam -0.003 [-0.015, +0.007] | range: stretch 1.25 / 1.562 / 1.65, widen 1 (random)
+   0.51 | practice +0.0002 | check +0.0031 | exam +0.001 [-0.018, +0.017] | range: stretch 1.25 / 1 / 2.062, widen 0.25 (random)
+   0.47 | practice -0.0002 | check +0.0011 | exam -0.006 [-0.021, +0.007] | range: stretch 0.8 / 1 / 1.815, widen 0.5 (random)
+   0.44 | practice -0.0001 | check -0.0004 | exam -0.003 [-0.008, +0.002] | vote: eta 0.5, decay 0.1, w_min 0.08, weights per h (gpt)
+   0.44 | practice -0.0006 | check -0.0015 | exam -0.003 [-0.011, +0.006] | range: stretch 1.25 / 1.375 / 1.485, widen 0.25 (random)
+   0.42 | practice -0.0010 | check -0.0026 | exam -0.018 [-0.039, +0.001] | vote: eta 2, decay 0, w_min 0.05, weights per h (random)
+   0.41 | practice -0.0007 | check +0.0006 | exam -0.006 [-0.021, +0.007] | range: stretch 0.8 / 1 / 1.815, widen 0.25 (random)
+   0.41 | practice -0.0005 | check -0.0013 | exam -0.009 [-0.023, +0.004] | vote: eta 1, decay 0.2, w_min 0.02, weights per h (random)
+   0.41 | practice -0.0028 | check -0.0071 | exam -0.003 [-0.019, +0.014] | members: drop risk_spotter (random)
+   0.41 | practice -0.0002 | check -0.0003 | exam -0.002 [-0.007, +0.002] | vote: eta 0.25, decay 0.2, w_min 0.02, weights per h (random)
+   0.37 | practice -0.0021 | check -0.0026 | exam +0.006 [-0.010, +0.020] | members: drop combiner (random)
+   0.37 | practice -0.0015 | check -0.0027 | exam -0.013 [-0.036, +0.011] | vote: eta 0.25, decay 0.02, w_min 0, weights per all (random)
+   0.33 | practice -0.0027 | check -0.0058 | exam -0.015 [-0.030, +0.002] | range: stretch 0.8 / 1.562 / 1.32, widen 0.5 (random)
+   0.32 | practice -0.0029 | check -0.0060 | exam -0.013 [-0.027, +0.002] | range: stretch 0.9 / 1.562 / 1.32, widen 0.25 (random)
+   0.29 | practice -0.0010 | check -0.0008 | exam -0.002 [-0.009, +0.004] | vote: eta 0.5, decay 0.2, w_min 0.02, weights per class_h (random)
+   0.27 | practice -0.0053 | check -0.0074 | exam -0.021 [-0.046, +0.001] | vote: eta 8, decay 0.02, w_min 0.05, weights per class_h (random)
+   0.26 | practice -0.0034 | check +0.0007 | exam +0.005 [-0.009, +0.017] | members: drop repricer_watcher (random)
+   0.26 | practice -0.0022 | check -0.0025 | exam -0.007 [-0.019, +0.004] | vote: eta 4, decay 0.1, w_min 0.1, weights per class_h (random)
+   0.26 | practice -0.0023 | check -0.0023 | exam -0.007 [-0.020, +0.004] | vote: eta 2, decay 0.2, w_min 0.05, weights per class_h (random)
+   0.24 | practice -0.0014 | check -0.0010 | exam -0.003 [-0.013, +0.005] | vote: eta 0.5, decay 0.1, w_min 0.02, weights per class_h (random)
+   0.21 | practice -0.0025 | check -0.0033 | exam -0.003 [-0.012, +0.008] | range: stretch 1.25 / 1.125 / 1.485, widen 0 (random)
+   0.12 | practice -0.0113 | check -0.0117 | exam -0.060 [-0.101, -0.021] | vote: eta 4, decay 0.05, w_min 0, weights per h (random)
+AFTER THE RESULT (b): the coach's two kept changes put to this gate
+   wider ranges at 3 and 7 days: practice +0.0140 [-0.002, +0.030], confidence 0.94 (without the coach's own days +0.0152, 0.85) | check +0.0181 | exam +0.024 [-0.004, +0.047]
+   the rewritten agent, on top of the wider ranges: practice +0.0070 [-0.004, +0.026], confidence 0.81 (without the coach's own days +0.0077, 0.66) | check +0.0078 | exam +0.008 [-0.006, +0.021]
+   both changes: practice +0.0210 [-0.000, +0.047], confidence 0.95 (without the coach's own days +0.0228, 0.85) | check +0.0258 | exam +0.031 [+0.002, +0.059]
+AFTER THE RESULT (c): RSI4GPF's default vote settings on our crowd
+   vote only: practice -0.0032, confidence 0.22 | check -0.0033 | exam -0.010 [-0.027, +0.004]
+   vote and widen 0.5: practice -0.0020, confidence 0.39 | check -0.0017 | exam -0.010 [-0.027, +0.004]
+   all edits: {'n': 30, 'better_on_exam': 7, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 1} | by kind: {'vote': {'n': 12, 'better_on_exam': 1, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 1}, 'range': {'n': 12, 'better_on_exam': 3, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 0}, 'members': {'n': 6, 'better_on_exam': 3, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 0}} | at confidence 0.7 or more: {'n': 4, 'better_on_exam': 2, 'clearly_better_on_exam': 0, 'clearly_worse_on_exam': 0}

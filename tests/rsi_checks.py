@@ -32,7 +32,13 @@ c = c[c.world == "ours"].assign(origin=lambda d: d.origin.map(day_of))
 m = w.merge(c[k + ["impr"]], on=k, how="inner")
 assert len(m) == len(c) == 1415, (len(m), len(c))
 assert np.allclose(m.loss, m.impr, rtol=0, atol=1e-9)
-print(f"1. starting bundle = the improved crowd on {len(e)} exam-day and {len(c)} second-check forecasts")
+# 1c. the audit's "first crowd" bundle is the crowd as first written
+w0 = rsi.walk(f, rsi.first_crowd_bundle())
+m0 = w0.merge(c[k + ["orig"]], on=k, how="inner")
+assert len(m0) == 1415 and np.allclose(m0.loss, m0.orig, rtol=0, atol=1e-9)
+m0 = w0.merge(e[k + ["usd_orig"]], on=k, how="inner")
+assert len(m0) == 479 and np.allclose(m0.loss, m0.usd_orig, rtol=0, atol=1e-9)
+print(f"1. starting bundle = the improved crowd on {len(e)} exam-day and {len(c)} second-check forecasts; first-crowd bundle = the first crowd")
 
 # 2. no outcome from after the forecast day reaches a forecast
 learn = {**start, "members": list(rsi.POOL), "vote": {"eta": 2.0, "decay": 0.05, "w_min": 0.02, "by": "class_h"}, "widen": 0.5}
@@ -62,6 +68,42 @@ assert rsi.apply_edit(start, {"kind": "members", "action": "add", "member": "eng
 edits = [{"kind": "members", "action": "add", "member": "engine"}, {"kind": "vote", "eta": 1, "decay": 0.1, "w_min": 0.0, "by": "h"}]
 assert rsi.rebuild(edits)["members"] == rsi.ROLES + ["engine"] and rsi.rebuild(edits)["vote"]["by"] == "h" and rsi.rebuild([]) == start
 print("3. weights sum to one and respect the floor; edits are clipped; kept edits rebuild the bundle")
+# 4. the path a kept edit takes, which the recorded run never took: with a lower bar in a scratch folder, an edit is
+#    kept, the run replays to the same bundle, and the exam takes the kept edit out again
+import tempfile
+from pathlib import Path
+
+
+class Scripted:
+    kind = "scripted"
+
+    def __init__(self, edits):
+        self.edits = list(edits)
+
+    def propose(self, kind, bundle, view, rng):
+        return self.edits.pop(0), {"diagnosis": "", "expectation": ""}
+
+    def usage(self):
+        return {}
+
+
+script = [{"kind": "vote", "eta": 4, "decay": 0.05, "w_min": 0.0, "by": "h"},
+          {"kind": "range", "range_scale": {"1": 1.0, "3": 1.25, "7": 1.65}, "widen": 0.0},
+          {"kind": "members", "action": "add", "member": "qwen3_8b_rl"}]
+bar, quiet = rsi.ACCEPT_P, lambda *a, **k: None
+with tempfile.TemporaryDirectory() as td:
+    rsi.ACCEPT_P = 0.6
+    try:
+        st = rsi.run(Scripted(script), 3, 0, "scratch", frame=f, root=Path(td), log=quiet)
+        again = rsi.run(rsi.ReplayProposer(st["ledger"]), 3, 0, "scratch", frame=f, save=False, log=quiet)
+        ex = rsi.exam(frame=f, root=Path(td), save=False, log=quiet)["runs"]["scratch"]
+    finally:
+        rsi.ACCEPT_P = bar
+assert [e["kept"] for e in st["ledger"]] == [False, False, True] and st["ledger"][1]["check"] == "not run (no change)"
+assert st["bundle"] == rsi.rebuild(st["kept_edits"]) == again["bundle"] and st["bundle"]["members"][-1] == "qwen3_8b_rl"
+assert abs(ex["vs_start"]["only_1"]["skill"] - ex["vs_start"]["final"]["skill"]) < 1e-12 and abs(ex["vs_start"]["without_1"]["skill"]) < 1e-12
+assert ex["curve"][-1]["kept"] and ex["curve"][0]["exam_vs_drift"] != ex["curve"][-1]["exam_vs_drift"]
+print("4. with a lower bar an edit is kept, the run replays to the same bundle, and the exam takes the kept edit out again")
 print({s: int((f.split == s).sum()) for s in ("practice", "check", "exam", "")}, "forecasts;",
       {s: int(f[f.split == s].origin.nunique()) for s in ("practice", "check", "exam")}, "days")
 print("ok")

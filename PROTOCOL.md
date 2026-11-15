@@ -380,3 +380,14 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       may flatter the start; that works against the loop, not for it. Practice and check days
       share some outcome days. The open models' recorded answers end on 5 Nov, so a bundle that
       includes them cannot forecast 6 Nov without running them again.
+    - Outcome of the one run (commit `dfc473b` holds the rule): the AI proposer's loop kept 0 of
+      6 edits and stopped at the six-in-a-row rule (6 AI calls, about $0.04); the five control
+      loops kept 0 of 30. The largest share of resamples any edit reached was 81%. With nothing
+      kept, the final bundle is the starting bundle (+15.2% against drift on the 810 exam
+      forecasts, +8% to +22%). By the rule above, the loop did not improve the forecaster.
+      Nothing was changed and re-run.
+    - Three readings were added after seeing that result and are labelled so in the findings:
+      every proposed edit scored on the exam days (30 different edits: none clearly better, one
+      clearly worse); the coach's two kept changes put to this gate, starting from the first
+      crowd (the wider ranges pass at 94%, the rewritten agent does not at 81%); and RSI4GPF's
+      default vote settings on our crowd (−1.0%, −2.7% to +0.4%).

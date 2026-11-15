@@ -1,0 +1,8 @@
+[random_1] start: practice +0.1534, check +0.1468 against drift (640 and 653 forecasts)
+[random_1] gen 1 vote: eta 0.25, decay 0.2, w_min 0.02, weights per h | practice -0.0002, confidence 0.41 | check not run | rejected
+[random_1] gen 2 range: stretch 0.8 / 1 / 1.815, widen 0.25 | practice -0.0007, confidence 0.41 | check not run | rejected
+[random_1] gen 3 members: add qwen3_8b_rl | practice +0.0093, confidence 0.72 | check not run | rejected
+[random_1] gen 4 vote: eta 1, decay 0.2, w_min 0.02, weights per h | practice -0.0005, confidence 0.41 | check not run | rejected
+[random_1] gen 5 range: stretch 0.9 / 1.562 / 1.32, widen 0.25 | practice -0.0029, confidence 0.32 | check not run | rejected
+[random_1] gen 6 members: drop repricer_watcher | practice -0.0034, confidence 0.26 | check not run | rejected
+[random_1] stopped (plateau): kept 0 of 6; practice +0.1534 -> +0.1534, check +0.1468 -> +0.1468 | usage {}

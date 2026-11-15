@@ -51,6 +51,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 | Agents **read each other's answers** | ❌ no help |
 | **Memory** of the system's own past forecasts (three kinds) | ➖ 1.4% to 2.1% less error, not established |
 | An **AI analyst** writes its own tests on shuffled data | ➖ found real weekday patterns; a rule built on them did not help |
+| **One loop over the whole forecaster**, taken from our sister repo: a vote that learns, range width, who votes (36 changes proposed) | ➖ kept nothing; none was clearly better on later days, one clearly worse |
 
 ## How it works
 
@@ -107,7 +108,7 @@ Most of the movement is offers joining or leaving the list, not providers changi
 ![Coverage when the price moved](findings/figures/fig11_coverage_when_moved.png)
 
 <details>
-<summary><b>More figures</b>: blind weeks, shuffled worlds, RL runs, range memory, agent memory, the euro (8 more)</summary>
+<summary><b>More figures</b>: blind weeks, shuffled worlds, RL runs, range memory, agent memory, the euro, the single loop (9 more)</summary>
 
 #### The AI scientist on three blind weeks
 ![Blind weeks](findings/figures/fig1_blind_weeks.png)
@@ -132,6 +133,9 @@ Most of the movement is offers joining or leaving the list, not providers changi
 
 #### Agent memory: no memory, a scored record, a record plus a self-written lesson
 ![Agent memory](findings/figures/fig12_agent_memory.png)
+
+#### One loop over the whole forecaster: every edit it proposed, and what the edit did on later days
+![The loop's proposed edits](findings/figures/fig13_rsi_loop.png)
 
 </details>
 
@@ -180,6 +184,7 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | Recall probe | `src/gpuval/recall_probe.py` | Asks the agents' model, with no data shown, what the AWS prices were on its test days. Days after its knowledge ends are the control. |
 | Analyst | `src/gpuval/analyst.py` | An AI writes one analysis function per idea. It runs in a Modal container with no keys and no network, against 39 shuffled copies of the data, and a passed idea must pass again on newer data the analyst never sees. |
 | Weekday rule | `src/gpuval/weekday_rule.py` | Tests whether the weekday pattern the analyst found makes 1-day forecasts better. No AI calls. It does not. |
+| One loop | `src/gpuval/rsi.py` | The self-improvement loop of our sister repo (RSI4GPF) run on this forecaster: a vote that learns each member's weight from its record, a paired accept test, one kind of change per generation, and an exam that takes each kept change out again. It starts from the forecast we handed in and can leave it only through the gate. |
 | AI calls with a meter | `src/gpuval/llm.py` | One helper for the three modules above: cheaper flex tier first, token and cost totals, a budget that stops the run. |
 | Long view | `longview/` | AWS spot rent for H100 and A100 one to three years out (capped at AWS's list price, with hardware-trend paths beside it), and a resale view with a floor. |
 
@@ -213,6 +218,9 @@ uv run python -m gpuval.agent_memory run                            # about 10,6
 uv run python -m gpuval.analyst run                                 # 12 AI calls and a sealed Modal container; `table` re-prints
 uv run python -m gpuval.weekday_rule                                # the rule that follows from the analyst's finding; no keys needed
 uv run python tests/longview_checks.py                              # the long view's ceiling and successor test; no pack needed
+uv run python -m gpuval.rsi run                                     # the single loop: 12 AI calls at most; `--proposer random` is the control
+uv run python -m gpuval.rsi run --proposer replay && uv run python -m gpuval.rsi exam   # recorded edits through the gate again, then the exam; no keys needed
+uv run python tests/rsi_checks.py                                   # the loop's starting bundle is the handed-in forecast; no look-ahead in the vote
 cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
 ```
@@ -234,6 +242,8 @@ and reproduces the blind-test table exactly.
   caused (`answers.json`), the exam and second-check scores, and the improved crowd's 6 Nov answers.
 - `runs/agent_memory/`, `runs/recall/`, `runs/analyst/`: every answer from the three tests added on 15 Nov
   (the analyst's ledger holds each idea's code and its numbers on the real and shuffled data).
+- `runs/rsi/`: the single loop of 15 Nov. One folder per run (`main` is the AI proposer, `random_1` to `random_5` the control) with every
+  proposed edit and the gate's numbers (`state.json`); `exam_cells.parquet` holds the exam-day forecasts.
 - `rl/runs/fc1/`, `rl/runs/fc2/`: training logs and test answers of the two RL-trained forecasters.
 - `rl/runs/modal/`: every Modal training run (log, test answers, scored cells); `findings/data/modal_rl.json` puts them next to the Tinker runs.
 - `docs/pages/`: three explainer pages (how it works, the test periods, the Exa lookups).
