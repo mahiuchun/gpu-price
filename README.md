@@ -34,7 +34,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
   after two changes that a coach AI proposed and tests kept.
   The engine alone is [submission/alt_engine_2026-11-06.csv](submission/alt_engine_2026-11-06.csv).
 - **Test protocol, fixed before the test:** [PROTOCOL.md](PROTOCOL.md)
-- **Slides (24 pages):** [docs/slides/RSI4GPR-slides.pdf](docs/slides/RSI4GPR-slides.pdf)
+- **Slides (24 pages):** [docs/slides/RSI4GPR-slides.pdf](docs/slides/RSI4GPR-slides.pdf) · 10-minute version (10 pages): [docs/slides/RSI4GPR-slides-10min.pdf](docs/slides/RSI4GPR-slides-10min.pdf)
 - **Explainer pages:** [how it works](docs/pages/build-walkthrough.html) · [the test periods](docs/pages/test-periods.html) · [the Exa lookups](docs/pages/exa-status.html)
 
 ## Overview
@@ -443,12 +443,13 @@ uv run python docs/media/make_media.py   # README visuals in docs/media/; reads 
 uv run python longview/answer.py         # the three long-view pictures in docs/media/, and the table; reads longview/out/
 ```
 
-The slide deck's source is in `docs/slides/source/` (one HTML file per slide, plus `deck.json` and `deck.css`).
+The slide deck's source is in `docs/slides/source/` (one HTML file per slide, plus `deck.json` and `deck.css`); the 10-minute version's is in `docs/slides/short/source/`.
 The PDF, the two pipeline images (`docs/media/training_pipeline.png`, `inference_pipeline.png`) and the demo video
 (`docs/media/demo/`) are all made from it:
 
 ```bash
 uv run --no-project --with pillow python docs/slides/render_slides.py   # docs/slides/png/ and RSI4GPR-slides.pdf (needs Chrome)
+uv run --no-project --with pillow python docs/slides/render_slides.py --short   # the 10-minute deck (docs/slides/short/source/)
 python3 docs/media/demo/build_demo.py                                   # the demo video, captions and poster (needs macOS and ffmpeg)
 ```
 

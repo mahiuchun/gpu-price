@@ -1,0 +1,16 @@
+<section id="engine" class="light">
+<div class="head">
+<p class="eyebrow">THE ENGINE · NO AI</p>
+<h2 class="title">Replay what each offer did, then take the middle again</h2>
+</div>
+<div class="row" style="gap:56px; align-items:flex-start">
+<div class="fade" style="--i:1"><img src="/_blob/b0ea5cfca59897ab4190617a8fbe2d88" alt="Animation: today's list of nine offers; past pairs of days are replayed onto it one at a time as offers reprice, leave or rejoin; each replay gives a new median, and the replayed medians pile up into a distribution whose 10th, 50th and 90th percentiles are the forecast." style="width:1060px; height:551px; object-fit:contain; border:1px solid var(--line); border-radius:16px"></div>
+<div class="col" style="flex:1; gap:32px">
+<div class="rule blue-rule rise" style="--i:2"><p class="h3">1 · Start from today’s list</p><p class="small">It knows which offer sits in the middle and how far its neighbours let the middle move.</p></div>
+<div class="rule orange-rule rise" style="--i:3"><p class="h3">2 · Replay past days</p><p class="small">For each past pair of days: who repriced, who left, who rejoined.</p></div>
+<div class="rule rise" style="--i:4"><p class="h3">3 · Read off the range</p><p class="small">The spread of replayed medians gives q10, q50 and q90.</p></div>
+</div>
+</div>
+<div class="footer"><p>Illustrative numbers · src/gpuval/engine.py</p><p class="pn"></p></div>
+<aside>[3:30–4:30] Drift, the reference forecast, replays how the median itself moved. The engine looks underneath: for a horizon of h days it takes every past pair of days, applies to today’s list what each individual offer did between them — repriced, stayed, dropped off, rejoined — and recomputes the median. It is classic historical simulation; nothing is trained. The animation uses illustrative numbers.</aside>
+</section>

@@ -1,0 +1,16 @@
+<section id="three-tests" class="light">
+<div class="head">
+<p class="eyebrow">RESULTS · THREE SEPARATE TESTS</p>
+<h2 class="title">The agents and the engine beat drift in every test</h2>
+</div>
+<div class="row" style="gap:56px; align-items:flex-start">
+<div class="fade" style="--i:1"><img src="/_blob/0bf467dd9f517ea4779e749da50c735b" alt="Grouped bars with 90% intervals, percent less error than drift. Our 37 prices, 8 earlier weeks: engine +8%, ML model −7%, five agents +16%. Our 37 prices, 3 test weeks: engine +8%, ML +9%, agents +15%. AWS spot, 4 years: engine +8%, ML +16%, agents +19%." style="width:1040px; height:570px; object-fit:contain"></div>
+<div class="col" style="flex:1; gap:36px">
+<div class="rule blue-rule rise" style="--i:2"><p class="h3">Engine: about +8%</p><p class="small">The steady base: +8.4%, +7.7% and +7.9%, including 206 weeks of AWS spot.</p></div>
+<div class="rule rise" style="--i:3"><p class="h3">Five agents: +15% to +19%</p><p class="small">Ahead in all three tests, and ahead of the engine on our prices.</p></div>
+<div class="rule orange-rule rise" style="--i:4"><p class="h3">ML model: unreliable</p><p class="small">Chronos-2 run as it comes: −7%, then +9%, then +16% on AWS.</p></div>
+</div>
+</div>
+<div class="footer"><p>Percent less error than drift · FINDINGS.md §1</p><p class="pn"></p></div>
+<aside>[6:45–7:45] One three-week window is thin, so we added the eight weeks before it and four years of AWS spot prices — 19 machine types, 206 weeks, nearly 36,000 forecasts. The engine’s edge is steady at about 8%. The five agents are ahead everywhere at 15% to 19%. The off-the-shelf ML model swings from worse than drift to clearly ahead depending on the period, so we did not rely on it.</aside>
+</section>
