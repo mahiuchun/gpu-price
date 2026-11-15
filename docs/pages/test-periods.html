@@ -358,7 +358,7 @@
   <section>
     <h2>What this means for the file we hand in</h2>
     <ul>
-      <li><strong>Hand in the agents' forecast:</strong> <span class="mono">submission/forecast_2026-11-06.csv</span>, now the main file in the repository. The agents beat drift in all three tests, and on our own prices they clearly beat the engine.</li>
+      <li><strong>Hand in the agents' forecast:</strong> <span class="mono">submission/forecast_2026-11-06.csv</span>, now the main file in the repository. The agents beat drift in all three tests, and on our own prices they clearly beat the engine. Since this page was written, a coach AI made two tested changes to the agents (wider 3- and 7-day ranges, one agent rewritten); the file now holds that improved forecast. See section 8 of the <a href="https://claude.ai/artifact/Fn3qnbPdC4ApCXN9DixuNN">walkthrough page</a>.</li>
       <li><strong>Not an average with the ML model.</strong> It is unreliable on the kind of prices scored tomorrow, even though it is good on AWS prices.</li>
       <li><strong>The engine alone stays the safe fallback:</strong> <span class="mono">submission/alt_engine_2026-11-06.csv</span>. It has the longest clean record.</li>
     </ul>
@@ -368,7 +368,7 @@
     <h2>What to keep in mind</h2>
     <ul>
       <li><strong>Weeks 1 to 8 were not hidden from me.</strong> I designed the engine while looking at data up to 16 Oct. Its settings were not tuned on those weeks, and it scores the same before and after, but only weeks 9 to 11 were blind for it.</li>
-      <li><strong>The agents' model had never seen any of these dates.</strong> Its knowledge ends in April 2026. I wrote the agents' instructions once, after the test weeks had been looked at, and did not change them.</li>
+      <li><strong>The agents' model had never seen any of these dates.</strong> Its knowledge ends in April 2026. I wrote the agents' instructions once, after the test weeks had been looked at, and did not change them. The numbers on this page are for those first instructions.</li>
       <li><strong>The agents were scored on 14 days, not all 77.</strong> Most of those forecasts are 1 and 3 days ahead; only 61 are 7 days ahead.</li>
       <li><strong>Weeks 1 to 4 cover 17 prices,</strong> because one of the two main sites only started on 8 Sep.</li>
       <li><strong>AWS prices are a different kind of price.</strong> AWS sets them itself and they move in small steps. A result there says a method is sound; it does not promise the same on provider lists.</li>
