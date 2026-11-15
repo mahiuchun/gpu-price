@@ -119,5 +119,39 @@ def main() -> int:
     return 0
 
 
+def final(origin: str = data.DATA_END, out: str | None = None) -> int:
+    """The model's numbers for the forecast day itself: `versions/chronos2_quantiles_<origin>.csv`.
+
+        uv run python -m gpuval.ml_challenger final [origin] [out.csv]
+
+    One of the five agents (the one that weighs reference forecasts) is shown these beside drift and
+    the engine (`agents.py --final`). Histories are built exactly as `contexts` builds them for the tests.
+    Added 15 Nov: the file was first written by hand-run code that was not committed."""
+    from .core import HORIZONS
+
+    full = data.build_world(origin)
+    data.assert_walled(full, origin)
+    od = day_of(origin)
+    rows = []
+    for sid, s in full["series"].items():
+        if int(s["days"][-1]) != od:
+            continue
+        ser = pd.Series(s["value"], index=pd.to_datetime([iso_of(d) for d in s["days"]])).asfreq("D").ffill()
+        rows.append(pd.DataFrame({"id": sid, "timestamp": ser.index, "target": ser.to_numpy(float)}))
+    buf = io.BytesIO()
+    pd.concat(rows, ignore_index=True).to_parquet(buf)
+    with modal.enable_output(), app.run():
+        pred = pd.read_parquet(io.BytesIO(chronos_predict.remote(buf.getvalue())))
+    pred["h"] = pd.to_datetime(pred["timestamp"]).map(pd.Timestamp.toordinal) - od
+    q = pred[pred.h.isin(HORIZONS)].rename(columns={"id": "series_id", "0.1": "c10", "0.5": "c50", "0.9": "c90"})
+    q = q[["series_id", "h", "c10", "c50", "c90"]].sort_values(["series_id", "h"])
+    dest = data.REPO / "versions" / f"chronos2_quantiles_{origin}.csv" if out is None else out
+    q.to_csv(dest, index=False)
+    print(f"wrote {dest}: {len(q)} rows, {q.series_id.nunique()} prices")
+    return 0
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import sys
+
+    raise SystemExit(final(*sys.argv[2:4]) if sys.argv[1:2] == ["final"] else main())

@@ -1,0 +1,157 @@
+{
+ "series_in_catalog": 592,
+ "series_rebuilt": 591,
+ "left_out": [
+  "afhubbard.hyperscaler_list.T4.on_demand.median"
+ ],
+ "blocks": {
+  "the 37 scored prices": {
+   "n": 5904,
+   "prices": 37,
+   "engine_vs_drift": {
+    "n_cells": 5904,
+    "n_series": 37,
+    "n_days": 77,
+    "skill": 0.09770809574121075,
+    "lo90": 0.062188267098226266,
+    "hi90": 0.14014546844020406,
+    "excludes_zero": true
+   },
+   "prices_engine_ahead": 34,
+   "prices_engine_behind": 3,
+   "prices_level": 0,
+   "share_of_forecasts_where_price_moved": 0.5674119241192412
+  },
+  "every other price": {
+   "n": 52940,
+   "prices": 476,
+   "engine_vs_drift": {
+    "n_cells": 52940,
+    "n_series": 476,
+    "n_days": 77,
+    "skill": 0.04560631713029284,
+    "lo90": 0.012143033845314994,
+    "hi90": 0.08177446456734372,
+    "excludes_zero": true
+   },
+   "prices_engine_ahead": 160,
+   "prices_engine_behind": 87,
+   "prices_level": 229,
+   "share_of_forecasts_where_price_moved": 0.21163581412920288
+  },
+  "other prices with 3 or more providers": {
+   "n": 6507,
+   "prices": 44,
+   "engine_vs_drift": {
+    "n_cells": 6507,
+    "n_series": 44,
+    "n_days": 77,
+    "skill": 0.02325992317004244,
+    "lo90": -0.005227693582649839,
+    "hi90": 0.07183177991991034,
+    "excludes_zero": false
+   },
+   "prices_engine_ahead": 12,
+   "prices_engine_behind": 2,
+   "prices_level": 30,
+   "share_of_forecasts_where_price_moved": 0.0479483633010604
+  },
+  "other prices that drift ever misses": {
+   "n": 34353,
+   "prices": 281,
+   "engine_vs_drift": {
+    "n_cells": 34353,
+    "n_series": 281,
+    "n_days": 77,
+    "skill": 0.04582551901275933,
+    "lo90": 0.014307162271571605,
+    "hi90": 0.0819588813288005,
+    "excludes_zero": true
+   },
+   "prices_engine_ahead": 160,
+   "prices_engine_behind": 67,
+   "prices_level": 54,
+   "share_of_forecasts_where_price_moved": 0.3261432771519227
+  }
+ },
+ "other_prices_by_kind": {
+  "aggregator_cheapest": {
+   "n": 7751,
+   "prices": 45,
+   "engine_vs_drift": {
+    "n_cells": 7751,
+    "n_series": 45,
+    "n_days": 77,
+    "skill": 0.09636789877822993,
+    "lo90": 0.0408783642761383,
+    "hi90": 0.162063512858895,
+    "excludes_zero": true
+   }
+  },
+  "hyperscaler_list": {
+   "n": 8810,
+   "prices": 66,
+   "engine_vs_drift": {
+    "n_cells": 8810,
+    "n_series": 66,
+    "n_days": 77,
+    "skill": 0.028521442829807064,
+    "lo90": -0.0028772316265901817,
+    "hi90": 0.06001936148599615,
+    "excludes_zero": false
+   }
+  },
+  "hyperscaler_spot": {
+   "n": 6994,
+   "prices": 49,
+   "engine_vs_drift": {
+    "n_cells": 6994,
+    "n_series": 49,
+    "n_days": 77,
+    "skill": 0.02535109240295974,
+    "lo90": -0.013234979142526925,
+    "hi90": 0.07103424570168625,
+    "excludes_zero": false
+   }
+  },
+  "marketplace_ask": {
+   "n": 8718,
+   "prices": 160,
+   "engine_vs_drift": {
+    "n_cells": 8718,
+    "n_series": 160,
+    "n_days": 77,
+    "skill": 0.03979532873717817,
+    "lo90": -0.029274764347471827,
+    "hi90": 0.12408413519663107,
+    "excludes_zero": false
+   }
+  },
+  "neocloud_rate_card": {
+   "n": 15750,
+   "prices": 121,
+   "engine_vs_drift": {
+    "n_cells": 15750,
+    "n_series": 121,
+    "n_days": 77,
+    "skill": 0.05208943344511363,
+    "lo90": 0.0192753388489121,
+    "hi90": 0.09930101228146362,
+    "excludes_zero": true
+   }
+  },
+  "neocloud_spot": {
+   "n": 4917,
+   "prices": 35,
+   "engine_vs_drift": {
+    "n_cells": 4917,
+    "n_series": 35,
+    "n_days": 77,
+    "skill": 0.1361705476897993,
+    "lo90": 0.07012479556578509,
+    "hi90": 0.20334803877307647,
+    "excludes_zero": true
+   }
+  }
+ }
+}

@@ -220,3 +220,21 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
         models before and after RL training (memory: their own forecasts from 24 Sep). "Untrained
         plus memory against trained" asks whether RL taught more than range width.
       - The grid, the minimum memory and the scoring days do not change after the first run.
+      - Outcome of the first run (commit `9563862` holds the rule, `d7ca03a` the numbers):
+        first crowd +14.7% against drift with no stretch, +17.0% with the coach's stretch, +15.9%
+        with the memory; memory against none +1.4% (−1.5% to +4.1%), against the coach −1.4%
+        (−3.2% to +0.2%). Nothing was changed and re-run. Two readings in the findings were made
+        after seeing these numbers and are labelled so: the split of days at 12 Oct, and the share
+        of misses that are zero-width ranges.
+    - **Checks with no rule to fix** (`gpuval.checks`, no AI calls). Counts and splits of results
+      that were already recorded: how often ranges held when the price moved, how many prices and
+      days carry the pooled figures, each agent alone, the AWS days before and after the agents'
+      model's knowledge ends, the prices that supply the coach's gain, offers that leave a list
+      and return, one provider's price by weekday, and the engine on every other daily-median
+      price in the pack. These describe; they were chosen after reading the references and after
+      looking at the data. One of them is a what-if and is labelled so: the ML model with its
+      middle held at the last value.
+    - **Corrections to FINDINGS.md.** Sentences that claimed more than the tests show were reworded
+      (the ML model's numbers do reach one agent; the agents' different jobs and the averaging are
+      not shown to matter; the coach's gain is nearly all range width; the 7-day engine figure is
+      72 forecasts from three days). Each is marked "added 15 Nov" or "corrected" where it stands.

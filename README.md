@@ -38,10 +38,12 @@ their SHA-256. The main file is rebuilt from the agents' recorded answers in
 | RL on Modal | `rl/modal_forecaster.py` | The same training with our own sampling and policy-gradient code on Modal H100s. Each run is a container, so learning rates and random seeds run side by side; the rate is chosen on a watch set, and test prompts are sent without outcomes. |
 | Five AI agents | `src/gpuval/agents.py` | Five agents with different jobs each read a price's list and forecast it directly. |
 | Coach | `src/gpuval/coach.py` | A coach AI proposes one change at a time to the agent crowd. A change is kept only if it helps on practice days and passes a hidden check; fresh exam days decide whether the result is used. The improved crowd is the forecast we hand in. |
-| ML model | `src/gpuval/ml_challenger.py` | Chronos-2, a pretrained time-series model, run as it comes on a Modal GPU for comparison. |
+| ML model | `src/gpuval/ml_challenger.py` | Chronos-2, a pretrained time-series model, run as it comes on a Modal GPU for comparison. One agent (the one that weighs reference forecasts) is shown its numbers; `ml_challenger final` writes them for the forecast day. |
 | More test periods | `src/gpuval/periods.py`, `aws_test.py` | The same forecasters on eleven weekly periods of our prices and on four years of AWS spot prices. |
 | How much room there is | `src/gpuval/headroom.py` | What a perfect forecast, and the best settings chosen with hindsight, would have scored. |
 | What moves a median | `src/gpuval/insight.py` | Splits each day's change in a median into list changes, frequent repricers and rare repricers; rolls the engine forward to see how far its ranges hold. |
+| Range memory | `src/gpuval/range_memory.py` | A forecaster sets its own range width, day by day, from its earlier forecasts whose outcomes are known. No AI calls. Also the control for the RL result: untrained model plus memory against trained model. |
+| Checks on our own claims | `src/gpuval/checks.py` | How often ranges hold when the price moved; how few prices and days carry the pooled figures; each agent alone; the AWS test before and after the model's knowledge ends; the price that follows the euro; the engine on every other price in the pack. No AI calls. |
 | Long view | `longview/` | AWS spot rent for H100 and A100 one to three years out, and a resale view. |
 
 ## Re-run the research (needs keys in `.env`)
@@ -62,6 +64,9 @@ uv run python -m gpuval.coach confirm && uv run python -m gpuval.coach final    
 cd rl && uv run python train_scientist.py --name full --rounds 31   # TINKER_API_KEY
 cd rl && uv run python train_forecaster.py --name fc2 --rounds 60 --base-model Qwen/Qwen3.5-9B && uv run python eval_forecaster.py --name fc2
 uv run python -m gpuval.coach compare                               # every forecaster on the same fresh days
+uv run python -m gpuval.checks && uv run python -m gpuval.checks wide   # checks on the write-up's claims; no keys needed
+uv run python -m gpuval.range_memory                                # range memory and the RL control; no keys needed
+uv run python -m gpuval.ml_challenger final                         # the ML model's numbers for 6 Nov (Modal token)
 cd rl && uv run modal deploy modal_forecaster.py && uv run python modal_forecaster.py launch --plan sweep1   # 8 training runs on Modal GPUs
 cd rl && uv run python modal_forecaster.py collect --plan sweep1 && uv run python modal_forecaster.py summarize
 ```
@@ -91,7 +96,7 @@ the compilation. The pack is not redistributed here. Forecast targets and offer 
 - Hubbard, A. (2026). GPU Price Tracker dataset. https://github.com/alex-hubbard/gpu_price_tracker (CC BY 4.0).
 - GPU rental price data by gpurentalprices.com (https://gpurentalprices.com), licensed under CC BY 4.0.
 - Data: FastGPU GPU cloud pricing dataset (https://fastgpu.co/dataset), CC BY 4.0.
-- "AWS Spot Price History", Eric Pauley (University of Wisconsin-Madison), Zenodo, https://doi.org/10.5281/zenodo.14198917, CC BY 4.0 (long view only).
+- "AWS Spot Price History", Eric Pauley (University of Wisconsin-Madison), Zenodo, https://doi.org/10.5281/zenodo.14198917, CC BY 4.0. Used for the long view, as the second test bed (`aws_test.py`), as the coach's practice and check days, and as the RL forecaster's training prices. No AWS row is an input to a forecast of the 37 prices, but the coach's two kept changes, which are in the forecast we hand in, were chosen partly on AWS days.
 - MLCommons MLPerf Inference and Training results repositories, Apache License 2.0, and Epoch AI,
   'Data on machine learning hardware', https://epoch.ai/data/machine-learning-hardware (long view only).
 

@@ -333,6 +333,115 @@ def fig_modal_rl() -> None:
     _save(fig, "fig8_rl_runs.png")
 
 
+def fig_range_memory() -> None:
+    """The stretch the first crowd's range memory chose day by day, and what it was worth."""
+    p = data.REPO / "findings" / "data" / "range_memory.json"
+    if not p.exists():
+        return
+    rm = json.loads(p.read_text())
+    path = pd.DataFrame(rm["crowd"]["path"])
+    days = sorted(path.day.unique())
+    pos = {d: i for i, d in enumerate(days)}
+    fig, axes = plt.subplots(1, 4, figsize=(13.5, 3.7), gridspec_kw={"width_ratios": [1, 1, 1, 1.25], "wspace": 0.32})
+    for ax, h in zip(axes[:3], (1, 3, 7)):
+        g = path[path.h == h].sort_values("day")
+        g = g[g.n_memory > 0] if h == 7 else g
+        coach = rm["rule"]["coach_stretch"][str(h)]
+        ax.axhline(coach, color=NEUTRAL, linewidth=1.6, linestyle=(0, (4, 3)))
+        ax.text(0.98, coach - 0.07, f"coach, fixed: {coach:g}", ha="right", va="top", fontsize=8.5, color=INK2, transform=ax.get_yaxis_transform())
+        ax.set_xlim(-0.8, len(days) - 0.2)
+        ax.plot([pos[d] for d in g.day], g.stretch, "-o", color=BLUE, linewidth=2, markersize=4.5, markeredgecolor=SURFACE, markeredgewidth=1)
+        last = g.iloc[-1]
+        ax.text(pos[last.day], last.stretch + 0.1, f"{last.stretch:g}", ha="center", va="bottom", fontsize=8.5, color=INK)
+        ax.set_ylim(0.4, 3.2)
+        ticks = list(range(0, len(days), 6))
+        ax.set_xticks(ticks, [f"{int(days[i][8:])} {'Sep' if days[i][5:7] == '09' else 'Oct' if days[i][5:7] == '10' else 'Nov'}" for i in ticks], fontsize=8.5)
+        ax.set_title(f"{h} day{'s' if h > 1 else ''} ahead", fontsize=10)
+        ax.grid(axis="x", visible=False)
+    axes[0].set_ylabel("Range stretch chosen by the memory\n(1 = ranges as the agents gave them)")
+    b = rm["crowd"]["all"]
+    arms = [("raw", "As the agents\ngave it", NEUTRAL), ("coach", "Coach's\nfixed stretch", AQUA), ("mem", "Range\nmemory", BLUE)]
+    ax = axes[3]
+    for i, (k, name, col) in enumerate(arms):
+        q = b["vs_drift"][k]
+        v, lo, hi = 100 * q["skill"], 100 * q["lo90"], 100 * q["hi90"]
+        ax.bar(i, v, 0.6, color=col, edgecolor=SURFACE, linewidth=2)
+        ax.errorbar([i], [v], yerr=[[v - lo], [hi - v]], fmt="none", ecolor=INK, elinewidth=1.2, capsize=3)
+        ax.text(i, hi + 0.8, f"{v:+.1f}%", ha="center", va="bottom", fontsize=9, color=INK)
+        ax.text(i, 1.0, f"inside\n{100 * b['inside'][k]:.0f}%", ha="center", va="bottom", fontsize=8.5, color="white", fontweight="bold")
+    ax.set_xticks(range(3), [n for _, n, _ in arms], fontsize=8.5)
+    ax.axhline(0, color=INK2, linewidth=1)
+    ax.set_ylabel("Less error than drift")
+    ax.set_ylim(0, 26)
+    ax.set_title(f"First crowd, {b['n']:,} forecasts, {b['n_days']} days", fontsize=10)
+    ax.grid(axis="x", visible=False)
+    fig.suptitle("A memory of its own misses: ranges closer to the 80% target, no clear gain in error", x=0.065, ha="left", fontsize=11.5, fontweight="bold", y=1.04)
+    _save(fig, "fig9_range_memory.png")
+
+
+def fig_euro() -> None:
+    """One provider's dollar price follows the euro: it changes after working days only."""
+    p = data.REPO / "findings" / "data" / "checks.json"
+    if not p.exists():
+        return
+    e = json.loads(p.read_text())["euro"]
+    t = e["scaleway_price_changed_by_weekday"]
+    fig, (a, b) = plt.subplots(1, 2, figsize=(11.5, 3.6), gridspec_kw={"width_ratios": [1.5, 1], "wspace": 0.3})
+    names = list(t)
+    vals = [100 * t[d]["changed"] / t[d]["of"] for d in names]
+    a.bar(range(len(names)), vals, 0.62, color=BLUE, edgecolor=SURFACE, linewidth=2)
+    for i, d in enumerate(names):
+        a.text(i, vals[i] + 2, f"{t[d]['changed']} of {t[d]['of']}", ha="center", va="bottom", fontsize=9, color=INK)
+    a.set_xticks(range(len(names)), names)
+    a.set_ylim(0, 112)
+    a.set_yticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
+    a.set_ylabel("Days the price differed\nfrom the day before")
+    a.set_title("Scaleway's dollar price, by weekday of the reading", fontsize=10)
+    a.grid(axis="x", visible=False)
+    f = e["one_day_forecasts_where_scaleway_is_the_middle"]
+    keys = [("target Tue to Sat", "Target day\nTue to Sat"), ("target Sun or Mon", "Target day\nSun or Mon")]
+    v2 = [100 * f[k]["price_moved"] / f[k]["n"] for k, _ in keys]
+    b.bar(range(2), v2, 0.5, color=BLUE, edgecolor=SURFACE, linewidth=2)
+    for i, (k, _) in enumerate(keys):
+        b.text(i, v2[i] + 2, f"{f[k]['price_moved']} of {f[k]['n']}", ha="center", va="bottom", fontsize=9, color=INK)
+    b.set_xticks(range(2), [n for _, n in keys])
+    b.set_ylim(0, 112)
+    b.set_yticks([0, 25, 50, 75, 100], ["0%", "25%", "50%", "75%", "100%"])
+    b.set_ylabel("1-day forecasts where the\npublished price moved")
+    b.set_title("Where Scaleway is the middle offer", fontsize=10)
+    b.grid(axis="x", visible=False)
+    fig.suptitle("A scored price that follows the euro: it moves the morning after a working day", x=0.07, ha="left", fontsize=11.5, fontweight="bold", y=1.03)
+    _save(fig, "fig10_euro_weekday.png")
+
+
+def fig_coverage() -> None:
+    """Truth inside the range, split by whether the price moved at all."""
+    p = data.REPO / "findings" / "data" / "checks.json"
+    if not p.exists():
+        return
+    c = json.loads(p.read_text())["coverage"]["exam_days"]
+    rows = [("drift", "Drift"), ("engine", "Engine"), ("first_crowd", "Five agents, as first written"), ("improved_crowd", "Five agents, after the coach")]
+    fig, ax = plt.subplots(figsize=(9.2, 3.5))
+    y = np.arange(len(rows))[::-1]
+    hgt = 0.34
+    for off, key, col, label in ((hgt / 2 + 0.02, "unchanged", NEUTRAL, f"Price did not change ({c['n'] - c['n_moved']} forecasts)"),
+                                 (-hgt / 2 - 0.02, "moved", BLUE, f"Price moved ({c['n_moved']} forecasts)")):
+        vals = [100 * c[k][key] for k, _ in rows]
+        ax.barh(y + off, vals, height=hgt, color=col, label=label, edgecolor=SURFACE, linewidth=2)
+        for yy, v in zip(y + off, vals):
+            ax.text(v + 1, yy, f"{v:.0f}%", va="center", fontsize=9, color=INK)
+    ax.axvline(80, color=INK2, linewidth=1, linestyle=(0, (4, 3)))
+    ax.text(81, len(rows) - 1.5, "target 80%", fontsize=9, color=INK2, va="center", bbox={"facecolor": SURFACE, "edgecolor": "none", "pad": 1.5})
+    ax.set_yticks(y, [f"{n}\n(all: {100 * c[k]['all']:.0f}%)" for k, n in rows], fontsize=9)
+    ax.set_xlim(0, 108)
+    ax.set_xticks([0, 20, 40, 60, 80, 100], ["0%", "20%", "40%", "60%", "80%", "100%"])
+    ax.set_xlabel("Outcomes that landed inside the forecast range")
+    ax.set_title("An overall figure near 80% hides what happens when the price moves")
+    ax.grid(axis="y", visible=False)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=2, fontsize=9)
+    _save(fig, "fig11_coverage_when_moved.png")
+
+
 def main() -> int:
     rep = json.loads((data.REPO / "runs" / "record" / "report.json").read_text())
     fig_blind_weeks(rep)
@@ -343,6 +452,9 @@ def main() -> int:
     fig_three_tests()
     fig_self_improvement()
     fig_modal_rl()
+    fig_range_memory()
+    fig_euro()
+    fig_coverage()
     return 0
 
 
