@@ -185,3 +185,12 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       was re-run from them with no retraining.
     - Two follow-ups were then started at 1e-4, also before any test-day result: the same recipe on
       Qwen3.5-9B (two seeds), and three times the practice on Qwen3-8B (180 rounds, two seeds).
+    - The first Qwen3.5-9B attempt ran out of GPU memory mid-training and saved nothing. It was
+      restarted with smaller working batches (`micro=8`, `token_budget=70_000`); these change memory
+      use, not the update.
+    - **One follow-up chosen after seeing test-day results** (so it is not blind): the Qwen3.5-9B runs
+      at 1e-4 gave +5.9% and +3.2% on our prices, against +11.3% for the Tinker run of the same model.
+      The Tinker run used 4e-5, so the two differ in learning rate. Written before it started: we
+      re-run Qwen3.5-9B on Modal at 4e-5 with seeds 0 and 1 (seed 0 has the Tinker run's practice
+      prices). Both results are reported whatever they show. If seed 0 lands near +11%, the gap was
+      the learning rate; if it lands near +3% to +6%, the Tinker figure was a lucky run.

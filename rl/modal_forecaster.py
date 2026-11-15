@@ -383,6 +383,8 @@ def plans(lr: float | None = None) -> dict:
                      + [dict(name=f"qwen3_5_9b_s{seed}", base_model="Qwen/Qwen3.5-9B", lr=lr, seed=seed) for seed in (0, 1)],
             # second attempt: the first ran out of memory mid-training (this model's layers need more working memory)
             "newer2": [dict(name=f"qwen3_5_9b_s{seed}", base_model="Qwen/Qwen3.5-9B", lr=lr, seed=seed, micro=8, token_budget=70_000) for seed in (0, 1)],
+            # chosen after seeing newer2's test-day results (PROTOCOL.md, deviation 11): the Tinker run's own learning rate
+            "newer3": [dict(name=f"qwen3_5_9b_lr4e-05_s{seed}", base_model="Qwen/Qwen3.5-9B", lr=4e-5, seed=seed, micro=8, token_budget=70_000) for seed in (0, 1)],
             "longer": [dict(name=f"rounds180_s{seed}", lr=lr, seed=seed, rounds=180, check_every=20) for seed in (0, 1)]}
 
 
@@ -531,7 +533,7 @@ def summarize() -> None:
         out["tinker"][tag] = {"train_usd": l["cost_estimate_usd"], "test_usd": e["cost_estimate_usd"], "train_minutes": l["minutes"],
                               "watch_first64": [c["mean_reward"] for c in l["checks"]],
                               **{w: {k: e["table"][w][k] for k in ("n", "base_vs_drift", "trained_vs_drift", "trained_vs_base", "trained_vs_engine", "engine_vs_drift", "inside")} for w in ("ours", "aws", "all")}}
-    for plan in ("sweep1", "longer", "newer2"):
+    for plan in ("sweep1", "longer", "newer2", "newer3"):
         d = LOCAL / plan
         if not (d / "summary.json").exists():
             continue
