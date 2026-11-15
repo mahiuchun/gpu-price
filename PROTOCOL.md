@@ -255,6 +255,15 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       - Expectation, from the reading: the record helps a little or not at all, and the written
         lesson does no better than the record. One run; prompts are not changed after seeing a
         result. A crash is resumed from the last finished day and reported.
+    - **The ML model, a second look** (`gpuval.ml_challenger crossrun`, a Modal T4; written before
+      its first run). Same model and version, nothing tuned. Three new arms on the same 3,769
+      forecasts as the plain run: `cross` (every scored price observed on the forecast day goes in
+      one batch with cross-learning on; one batch per forecast day, so no later reading of any
+      price is in it), `cov` (one price at a time, plus four past-only facts about its list: the
+      cheapest offer, the lower and upper quartile, the number of offers), and `cross_cov` (both).
+      - We will say an arm repairs the model only if it beats drift in both blocks (the eight
+        earlier weeks and the three test weeks) with 90% intervals that exclude zero. We also
+        report each arm against the plain run and against the engine on the same forecasts.
     - **Checks with no rule to fix** (`gpuval.checks`, no AI calls). Counts and splits of results
       that were already recorded: how often ranges held when the price moved, how many prices and
       days carry the pooled figures, each agent alone, the AWS days before and after the agents'

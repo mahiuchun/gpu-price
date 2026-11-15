@@ -41,6 +41,96 @@ def chronos_predict(context_parquet: bytes, prediction_length: int = 7) -> bytes
     return buf.getvalue()
 
 
+ARMS = ("cross", "cov", "cross_cov")    # the second look, added 15 Nov (PROTOCOL.md, deviation 12)
+COVS = ("cov_cheapest", "cov_lower_quartile", "cov_upper_quartile", "cov_offers")
+
+
+@app.function(image=image, gpu="T4", timeout=3600, memory=16384)
+def chronos_predict_grouped(context_parquet: bytes, arms: list[str], prediction_length: int = 7) -> bytes:
+    """The model run the way its paper also describes: prices that share a forecast day read each
+    other (cross-learning), and facts about the price list go in as past-only covariates. One call
+    per forecast day, so a batch never holds a later reading of any price."""
+    import pandas as pd
+    import torch
+    from chronos import Chronos2Pipeline
+
+    ctx = pd.read_parquet(io.BytesIO(context_parquet))
+    pipe = Chronos2Pipeline.from_pretrained(MODEL, device_map="cuda" if torch.cuda.is_available() else "cpu")
+    covs = [c for c in ctx.columns if c.startswith("cov_")]
+    out = []
+    for arm in arms:
+        for grp, g in ctx.groupby("group"):
+            df = g.drop(columns=["group"] + ([] if "cov" in arm else covs))
+            pred = pipe.predict_df(df, prediction_length=prediction_length, quantile_levels=[0.1, 0.5, 0.9],
+                                   id_column="id", timestamp_column="timestamp", target="target",
+                                   cross_learning="cross" in arm, batch_size=1024)
+            out.append(pred[["id", "timestamp", "0.1", "0.5", "0.9"]].assign(arm=arm))
+    buf = io.BytesIO()
+    pd.concat(out, ignore_index=True).to_parquet(buf)
+    return buf.getvalue()
+
+
+def grouped_contexts(cells: pd.DataFrame, full: dict) -> pd.DataFrame:
+    """Histories up to each forecast day, grouped by that day, with four facts about the list."""
+    rows = []
+    for (sid, origin), _ in cells.groupby(["series_id", "origin"]):
+        s = full["series"][sid]
+        k = int(np.searchsorted(s["days"], origin, side="right"))
+        P = s["P"][:k]
+        with np.errstate(all="ignore"):
+            f = pd.DataFrame({"target": s["value"][:k], COVS[0]: np.nanmin(P, axis=1), COVS[1]: np.nanquantile(P, 0.25, axis=1),
+                              COVS[2]: np.nanquantile(P, 0.75, axis=1), COVS[3]: (~np.isnan(P)).sum(axis=1).astype(float)},
+                             index=pd.to_datetime([iso_of(d) for d in s["days"][:k]]))
+        f = f.asfreq("D").ffill()
+        rows.append(f.reset_index(names="timestamp").assign(id=f"{sid}|{origin}", group=int(origin)))
+    return pd.concat(rows, ignore_index=True)
+
+
+def crossrun() -> int:
+    """Score the three new arms on the same forecasts as the plain run (findings/data/periods_cells.parquet)."""
+    import warnings
+
+    warnings.filterwarnings("ignore", message="All-NaN slice encountered")
+    dest = data.REPO / "findings" / "data"
+    cells = pd.read_parquet(dest / "periods_cells.parquet")
+    full = data.build_world(data.DATA_END)
+    ctx = grouped_contexts(cells, full)
+    buf = io.BytesIO()
+    ctx.to_parquet(buf)
+    print(f"{len(cells)} forecasts, {ctx.id.nunique()} histories in {ctx.group.nunique()} forecast-day batches, {len(ctx)} rows sent", flush=True)
+    with modal.enable_output(), app.run():
+        pred = pd.read_parquet(io.BytesIO(chronos_predict_grouped.remote(buf.getvalue(), list(ARMS))))
+    pred["series_id"] = pred["id"].str.rsplit("|", n=1).str[0]
+    pred["origin"] = pred["id"].str.rsplit("|", n=1).str[1].astype(int)
+    pred["target"] = pd.to_datetime(pred["timestamp"]).map(pd.Timestamp.toordinal)
+    m = cells.copy()
+    for arm in ARMS:
+        q = pred[pred.arm == arm].rename(columns={"0.1": "a10", "0.5": "a50", "0.9": "a90"})[["series_id", "origin", "target", "a10", "a50", "a90"]]
+        j = m[["series_id", "origin", "target"]].merge(q, on=["series_id", "origin", "target"], how="left")
+        assert j.a50.notna().all(), f"{arm}: {int(j.a50.isna().sum())} forecasts missing"
+        a50 = j.a50.clip(lower=1e-6).to_numpy()
+        m[f"{arm}_10"], m[f"{arm}_50"], m[f"{arm}_90"] = np.minimum(j.a10.to_numpy(), a50).clip(1e-6), a50, np.maximum(j.a90.to_numpy(), a50)
+        m[f"loss_{arm}"] = cell_loss(m.y, m[f"{arm}_10"], m[f"{arm}_50"], m[f"{arm}_90"])
+    m.to_parquet(dest / "ml_second_look_cells.parquet", index=False)
+    out = {"model": MODEL, "arms": list(ARMS), "covariates": list(COVS), "blocks": {}}
+    f = report.fmt_ci
+    for name, g in (("8 earlier weeks", m[m.period < "2026-10-16"]), ("3 test weeks", m[m.period >= "2026-10-16"]), ("all 11 weeks", m)):
+        b = {"n": int(len(g)), "plain_vs_drift": report.skill_ci(g, "loss_ml", "loss_drift"), "engine_vs_drift": report.skill_ci(g, "loss_engine", "loss_drift")}
+        for arm in ARMS:
+            b[arm] = {"vs_drift": report.skill_ci(g, f"loss_{arm}", "loss_drift"), "vs_plain": report.skill_ci(g, f"loss_{arm}", "loss_ml"),
+                      "vs_engine": report.skill_ci(g, f"loss_{arm}", "loss_engine"),
+                      "inside": float(((g.y >= g[f"{arm}_10"]) & (g.y <= g[f"{arm}_90"])).mean())}
+        out["blocks"][name] = b
+        print(f"{name} ({b['n']}): plain {f(b['plain_vs_drift'])} | engine {f(b['engine_vs_drift'])}")
+        for arm in ARMS:
+            print(f"   {arm:10s} vs drift {f(b[arm]['vs_drift'])} | vs plain {f(b[arm]['vs_plain'])} | vs engine {f(b[arm]['vs_engine'])} | inside {b[arm]['inside']:.2f}")
+    wk = m.groupby("period")[["loss_drift", "loss_ml"] + [f"loss_{a}" for a in ARMS]].sum()
+    out["weeks_ahead_of_drift"] = {"plain": int((wk.loss_ml < wk.loss_drift).sum()), **{a: int((wk[f"loss_{a}"] < wk.loss_drift).sum()) for a in ARMS}, "weeks": int(len(wk))}
+    print("weeks ahead of drift:", out["weeks_ahead_of_drift"])
+    (dest / "ml_second_look.json").write_text(json.dumps(out, indent=1))
+    return 0
+
+
 def blind_cells() -> tuple[pd.DataFrame, dict]:
     full = data.build_world(data.DATA_END)
     frames = []
@@ -154,4 +244,4 @@ def final(origin: str = data.DATA_END, out: str | None = None) -> int:
 if __name__ == "__main__":
     import sys
 
-    raise SystemExit(final(*sys.argv[2:4]) if sys.argv[1:2] == ["final"] else main())
+    raise SystemExit(final(*sys.argv[2:4]) if sys.argv[1:2] == ["final"] else crossrun() if sys.argv[1:2] == ["crossrun"] else main())
