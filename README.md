@@ -166,10 +166,6 @@ No rule was written before this ran, and each model was run once.
 
 ## How it works
 
-<p align="center">
-  <img src="docs/media/pipeline.svg" alt="Pipeline: the GPU price pack and AWS spot history feed four forecasters (engine, five AI agents, RL-trained open models, Chronos-2). Self-improvement loops (AI scientist, coach, RL training, memory and analyst) change them. A fixed test harness scores everything. The improved agent crowd produces the forecast file." width="900">
-</p>
-
 Each scored price is the **median of one site's list of offers** for one GPU. Drift, the reference forecast, only
 replays how that median moved before. The engine looks underneath it: it replays what each *offer* did over
 past pairs of days (repriced, stayed, left the list, rejoined), applies that to today's list and takes the median
