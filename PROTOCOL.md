@@ -169,3 +169,12 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
     had less error on the exam days (+4.0%, +0.5% to +7.6% on our prices) and on the second check.
     Four agents keep the answers recorded for the first crowd; the rewritten agent was asked again from
     the same facts. The first crowd's file is `submission/other/agents_original_2026-11-06.csv`.
+11. **The RL forecaster was re-run on Modal GPUs** (`rl/modal_forecaster.py`), with our own sampling and
+    policy-gradient code in place of Tinker's service. Written before any Modal run had finished:
+    - Same task, prompts, reward, practice prices (same draw for the same seed), 60 rounds of 16 prices
+      x 8 answers, LoRA rank 32. Our LoRA set-up is not Tinker's, so the learning rate is not
+      comparable; we run four (4e-5, 1e-4, 2.5e-4, 6e-4), each with two random seeds.
+    - The learning rate is chosen on the watch set only (256 later AWS practice prices, dates to
+      20 Feb 2026): the highest average of the round-50 and round-60 watch scores over the two seeds.
+    - Test-day results are reported for all eight runs, with the chosen learning rate marked. Containers
+      are sent test prompts without outcomes; scoring is done locally with the same code as before.
