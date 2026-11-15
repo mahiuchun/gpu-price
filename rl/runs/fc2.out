@@ -1,0 +1,64 @@
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+check before training: mean reward -0.121, readable 1.00
+round   1: mean reward -0.029 | readable 1.00 | spread 0.112
+round   2: mean reward -0.027 | readable 0.99 | spread 0.290
+round   3: mean reward +0.022 | readable 1.00 | spread 0.140
+round   4: mean reward -0.091 | readable 0.98 | spread 0.451
+round   5: mean reward -0.100 | readable 1.00 | spread 0.245
+round   6: mean reward +0.010 | readable 1.00 | spread 0.183
+round   7: mean reward -0.001 | readable 1.00 | spread 0.135
+round   8: mean reward +0.016 | readable 0.99 | spread 0.340
+round   9: mean reward -0.044 | readable 1.00 | spread 0.210
+round  10: mean reward +0.039 | readable 1.00 | spread 0.094 || check on later dates: -0.055 (readable 1.00)
+round  11: mean reward +0.128 | readable 1.00 | spread 0.053
+round  12: mean reward -0.040 | readable 1.00 | spread 0.105
+round  13: mean reward +0.043 | readable 1.00 | spread 0.120
+round  14: mean reward +0.002 | readable 1.00 | spread 0.055
+round  15: mean reward +0.034 | readable 1.00 | spread 0.048
+round  16: mean reward +0.110 | readable 1.00 | spread 0.105
+round  17: mean reward +0.092 | readable 1.00 | spread 0.096
+round  18: mean reward +0.066 | readable 1.00 | spread 0.051
+round  19: mean reward -0.113 | readable 1.00 | spread 0.069
+round  20: mean reward +0.084 | readable 1.00 | spread 0.095 || check on later dates: +0.022 (readable 1.00)
+round  21: mean reward +0.123 | readable 1.00 | spread 0.058
+round  22: mean reward +0.011 | readable 1.00 | spread 0.060
+round  23: mean reward +0.051 | readable 1.00 | spread 0.065
+round  24: mean reward -0.019 | readable 1.00 | spread 0.074
+round  25: mean reward +0.189 | readable 1.00 | spread 0.048
+round  26: mean reward -0.002 | readable 1.00 | spread 0.032
+round  27: mean reward -0.058 | readable 1.00 | spread 0.031
+round  28: mean reward +0.054 | readable 1.00 | spread 0.021
+round  29: mean reward +0.048 | readable 1.00 | spread 0.034
+round  30: mean reward +0.067 | readable 1.00 | spread 0.065 || check on later dates: -0.011 (readable 1.00)
+round  31: mean reward +0.067 | readable 1.00 | spread 0.024
+round  32: mean reward +0.041 | readable 1.00 | spread 0.025
+round  33: mean reward +0.106 | readable 1.00 | spread 0.027
+round  34: mean reward +0.199 | readable 1.00 | spread 0.022
+round  35: mean reward +0.032 | readable 1.00 | spread 0.025
+round  36: mean reward +0.149 | readable 1.00 | spread 0.021
+round  37: mean reward +0.024 | readable 1.00 | spread 0.029
+round  38: mean reward -0.019 | readable 1.00 | spread 0.032
+round  39: mean reward +0.110 | readable 1.00 | spread 0.026
+round  40: mean reward -0.069 | readable 1.00 | spread 0.041 || check on later dates: +0.012 (readable 1.00)
+round  41: mean reward +0.150 | readable 1.00 | spread 0.030
+round  42: mean reward +0.200 | readable 1.00 | spread 0.018
+round  43: mean reward +0.072 | readable 1.00 | spread 0.017
+round  44: mean reward -0.118 | readable 1.00 | spread 0.110
+round  45: mean reward -0.068 | readable 1.00 | spread 0.069
+round  46: mean reward +0.048 | readable 1.00 | spread 0.026
+round  47: mean reward +0.054 | readable 1.00 | spread 0.021
+round  48: mean reward +0.062 | readable 1.00 | spread 0.037
+round  49: mean reward +0.036 | readable 1.00 | spread 0.060
+round  50: mean reward -0.014 | readable 1.00 | spread 0.043 || check on later dates: +0.012 (readable 1.00)
+round  51: mean reward +0.064 | readable 1.00 | spread 0.027
+round  52: mean reward +0.324 | readable 1.00 | spread 0.055
+round  53: mean reward +0.094 | readable 1.00 | spread 0.044
+round  54: mean reward +0.109 | readable 1.00 | spread 0.058
+round  55: mean reward +0.248 | readable 1.00 | spread 0.264
+round  56: mean reward +0.113 | readable 1.00 | spread 0.066
+round  57: mean reward +0.005 | readable 0.98 | spread 0.372
+round  58: mean reward +0.026 | readable 1.00 | spread 0.052
+round  59: mean reward +0.032 | readable 1.00 | spread 0.047
+round  60: mean reward +0.056 | readable 1.00 | spread 0.144 || check on later dates: +0.035 (readable 1.00)
+checkpoint tinker://4dc29330-67eb-504d-b83c-f6aae4702dc1:train:0/sampler_weights/fc2-final
+usage {'prefill_tokens': 1850769, 'sample_tokens': 518480, 'train_tokens': 10432148} cost about $16.235876584

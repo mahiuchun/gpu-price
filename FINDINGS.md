@@ -4,10 +4,11 @@
 
 ## Summary
 
-- **The forecast we hand in is the average of five AI agents.** Each agent reads one price's list of offers and forecasts it directly. In three separate tests the crowd cut error by 15% to 19% against drift.
+- **The forecast we hand in is the average of five AI agents, after two changes that a coach AI proposed and tests kept.** Each agent reads one price's list of offers and forecasts it directly. In three separate tests the crowd as first written cut error by 15% to 19% against drift. The coach's changes cut a further 3% to 4% on days the coach never saw.
 - **A plain calculation that looks inside the price list is the steady base.** Our "engine" cut error by about 8% against drift in all three tests, including 206 weeks of AWS spot prices.
-- **Three ways of making the system improve itself did not work.** An AI scientist tuning the engine made it slightly worse on unseen weeks. A small model trained with reinforcement learning found one change that is not clearly better. Letting the agents read each other's answers did not help.
-- **What did work was different agents with different jobs, averaged.** On our own prices the crowd beat the engine by 8% on the same forecasts (likely 3% to 14%).
+- **Two ways of making the system improve itself held up on fresh days.** A coach AI that rewrites the agent crowd (10 changes proposed, 2 kept). And reinforcement learning that teaches a small open model to forecast: it practised on AWS prices only, and on our prices went from 3–5% to 10–11% less error than drift.
+- **Three other ways did not.** An AI scientist tuning the engine made it slightly worse on unseen weeks. A small model trained with reinforcement learning to propose engine settings found one change that is not clearly better. Letting the agents read each other's answers did not help.
+- **Different agents with different jobs, averaged, beat the engine.** On our own prices the crowd as first written was 8% ahead on the same forecasts (likely 3% to 14%), and the improved crowd 10% ahead (5% to 14%).
 - **A ready-made ML model is unreliable on these prices.** It looked good in the three test weeks, failed in the eight weeks before, and works well on AWS prices.
 - **Most movement in a published median is not providers changing prices.** For provider list prices, 66% comes from offers joining or leaving the list, 25% from one or two offers that reprice almost daily, and 9% from everyone else.
 
@@ -20,15 +21,17 @@ Each scored price is the daily median of one site's list of offers for one GPU. 
 - **Engine.** Drift, the reference forecast, replays how the median itself moved in the past. The engine replays what each offer did over past pairs of days (repriced, stayed, left, joined), applies that to today's list and takes the median again. It is a classic method (historical simulation) with nothing trained. It knows which offer is in the middle and how far its neighbours let the middle move.
 - **AI scientist.** An OpenAI model (`gpt-6.1-sol`) proposes one hypothesis at a time as a change to the engine's 15 settings. A fixed gate keeps an idea only if it helps on past data and passes a hidden check.
 - **Five AI agents.** The same model, used as five forecasters with different jobs: read the list, watch the frequent repricers, keep to base rates, weigh the reference forecasts, look for jumps that may reverse. Each sees the price's last 21 days and today's list around the middle, and returns low, middle and high for 1, 3 and 7 days. The crowd forecast is the average of the five.
+- **Coach.** The same OpenAI model, used to improve the crowd. It sees the crowd's scores and worst misses on practice days and proposes one change at a time: rewrite an agent's instructions, add an agent, drop one, or stretch the ranges. A change is kept only if the crowd improves on the practice days and passes a hidden check on other days.
 - **ML model.** Chronos-2, a pretrained time-series model, used as it comes on a Modal GPU.
-- **RL.** A small open model (Qwen3-8B on Tinker) trained for 1,984 tries to propose engine changes.
+- **RL, two uses.** First, a small open model (Qwen3-8B on Tinker) trained for 1,984 tries to propose engine changes. Second, Qwen3-8B and Qwen3.5-9B each trained for 7,680 tries to forecast directly: the model reads the same facts as the agents and answers with a low, middle and high percent move, and its reward is how much less error it made than drift.
 
 ## How it was tested
 
 - **A blind test fixed in advance.** [PROTOCOL.md](PROTOCOL.md) was committed (`354fc20`) before the run. The AI scientist lived through three weeks one at a time (forecast days 16 Oct to 5 Nov), each step in its own Modal container that held only data up to that day. Five shuffled copies of the data, in which the order of price changes is scrambled, ran alongside.
 - **More periods afterwards.** One three-week window is thin, so we added the eight weeks before it (21 Aug to 15 Oct) and four years of AWS spot prices (19 machine types, 206 weeks, 35,952 forecasts). On AWS the published figure is the median across zones, so zones play the part of providers.
 - **Scoring.** Pinball loss exactly as `starter/scorer.py` computes it; `tests/parity.py` confirms identical numbers. Ranges are 90% intervals from resampling prices and days.
-- **What was and was not blind.** The three test weeks were blind for the engine and the AI scientist. The ML model and the agents were added after those weeks had been looked at. Neither model had seen any of our prices, and the agents' instructions were written once and not changed.
+- **Fresh days for the two later loops.** The coach practised on 6 days and was checked on 5 others (AWS in 2024–25 and our prices before 16 Oct). Its exam was 5 days of our prices in the test weeks that no agent had answered before, and 3 AWS days from July to October 2026, after the model's knowledge ends. A second check used the 14 days and 12 AWS days that the first crowd had answered before the coach existed. The open model practised on AWS prices up to June 2025 and was tested on our prices (43 days) and on AWS Fridays in 2026.
+- **What was and was not blind.** The three test weeks were blind for the engine and the AI scientist. The ML model, the agents, the coach and the RL forecaster were added after those weeks had been looked at. None of the models had seen any of our prices before its test. The first crowd's instructions were written once by hand; after that only the coach changed them.
 
 ## Results
 
@@ -60,9 +63,43 @@ On the same forecasts:
 - **On our prices the agents were ahead in all 7 weeks where they ran.** On AWS they beat drift on all 12 days and were ahead of the engine on 8.
 - **Every one of the five agents beat the engine** on the test days. The best was the one looking for jumps that may reverse (+18.8% against drift), then the list reader (+15.6%).
 - **Seeing each other's answers did not help.** A second round, where each agent read the other four and could revise, scored 1.3% worse (−5% to +3%).
-- **Their ranges are a little narrow.** The truth landed inside 69% of the time; the target is 80%.
+- **Their ranges are a little narrow.** The truth landed inside 69% of the time; the target is 80%. The coach's first kept change addresses this (section 3).
 
-### 3. The engine
+### 3. Two improvement loops that held up
+
+![Two improvement loops](findings/figures/fig7_self_improvement.png)
+
+**A coach AI rewrites the agent crowd.** Percent less error than drift, with the likely range:
+
+| Test | Crowd as first written | After the coach | Improved against first |
+|---|---|---|---|
+| Our prices, 5 fresh exam days (479 forecasts) | +16.4% (+7% to +25%) | +19.8% (+10% to +29%) | +4.0% (+0.5% to +7.6%) |
+| Our prices, 14 other days (1,415) | +14.1% (+10% to +19%) | +17.0% (+12% to +23%) | +3.4% (+1.6% to +5.1%) |
+| AWS, 3 fresh exam days (135) | +22.3% (+5% to +39%) | +26.4% (+9% to +41%) | +5.2% (−3% to +10%) |
+| AWS, 12 other days (501) | +19.2% (+8% to +31%) | +20.6% (+10% to +31%) | +1.8% (−4% to +6%) |
+
+- **Ten changes proposed, two kept.** Kept: stretch the crowd's ranges by 1.25 at 3 days and 1.65 at 7 days; and rewrite the "base-rate keeper" so that it measures how often and how far this price has moved before and trusts a recent trend less at longer horizons. Seven changes did not improve the practice days. One, dropping an agent, improved the practice days (+17.5% to +17.9%) and failed the hidden check.
+- **Most of the gain is the wider ranges.** On the 14 days they account for +2.4% (+0.7% to +4.2%) and the rewritten agent for +1.0% (+0.1% to +2.1%). On the exam days the rewritten agent adds +0.4% (−2% to +3%).
+- **The gain is at 7 days.** On the 14 days: +5.1% at 7 days (+2.5% to +7.9%), +1.9% at 3 days, +0.3% at 1 day.
+- **The ranges are closer to target.** On the exam days the truth landed inside 78% of the time, up from 71%; at 7 days, 76%, up from 61%. The target is 80%.
+- **Against the engine, same forecasts:** +10.8% on the exam days (+2% to +18%) and +9.9% on the 14 days (+5% to +14%).
+- **How these are counted.** This table counts every forecast whose outcome is known by 6 Nov. Sections 1 and 2 count only forecasts that land inside the same test week (910 of the 1,415), which leaves out most 7-day forecasts. On those 910 the improvement is +2.6% (+0.3% to +4.8%).
+
+**RL teaches an open model to forecast.** Percent less error than drift, before and after training:
+
+| Model | Our 37 prices (4,074 forecasts, 43 days) | AWS Fridays in 2026 (784 forecasts, 18 days) |
+|---|---|---|
+| Qwen3-8B | +2.6% → **+10.1%** (+6% to +14%) | −21.2% → **+1.7%** (−4% to +7%) |
+| Qwen3.5-9B | +4.6% → **+11.3%** (+7% to +15%) | −11.8% → **+8.6%** (+3% to +14%) |
+| Engine, same forecasts | +10.1% (+6% to +15%) | +1.3% (−8% to +11%) |
+
+- **Training helped on prices the model never practised on.** After against before on our prices: +7.7% for Qwen3-8B (+4% to +11%) and +7.1% for Qwen3.5-9B (+3% to +10%). It practised on AWS prices only, so the skill carried over to a different kind of price.
+- **It learned how wide to make a range.** The truth landed inside 54% to 60% of the time before training and 79% after.
+- **The newer model is better.** Trained Qwen3.5-9B against trained Qwen3-8B: +1.3% on our prices (−1% to +4%) and +7.0% on AWS (+2% to +11%). It cost about $16 to train, against $5.
+- **Where it stands.** Level with the engine on our prices (+1.3%, −7% to +7%) and behind the GPT crowd: on the 14 days both answered, +12.7% against the crowd's +14.1% as first written and +17.0% after the coach.
+- **As a sixth agent it adds nothing clear.** Added to the improved crowd on the exam days: +1.4% for Qwen3.5-9B (−1% to +4%) and +0.3% for Qwen3-8B. It is not in the forecast.
+
+### 4. The engine
 
 On the three blind weeks (1,196 forecasts) the engine cut error by 7.7% against drift. The gain is at longer horizons: +2.4% at 1 day (−4% to +9%), +7.6% at 3 days (+1% to +16%), +20.7% at 7 days (+11% to +43%, 72 forecasts).
 
@@ -70,7 +107,7 @@ On the three blind weeks (1,196 forecasts) the engine cut error by 7.7% against 
 
 In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as in the real world. Its edge comes from knowing the list, not from any pattern in timing. One weak spot: on the few of our prices that go back to January, mostly four large cloud spot lists, it is no better than drift (−1.8%, −6% to +3%).
 
-### 4. What the system learned across iterations
+### 5. What the system learned across iterations
 
 | Step | What changed | Result on unseen data |
 |---|---|---|
@@ -83,16 +120,21 @@ In the five shuffled worlds the engine beat drift by 6.6% to 10.8%, the same as 
 | 6 | ML model averaged with the engine | +4.9% in the test weeks, −4.1% in the 8 weeks before: does not hold |
 | 7 | Five agents forecasting directly, averaged | 8% better than the engine on our prices |
 | 8 | Agents reading each other's answers | 1.3% worse than working alone |
+| 9 | Coach AI: 10 changes to the crowd proposed, 2 kept (wider ranges at 3 and 7 days, one agent rewritten) | 4.0% better than the first crowd on fresh days (+0.5% to +7.6%); 3.4% on 14 other days |
+| 10 | RL: an open model trained to forecast directly, on AWS prices only | from +3–5% to +10–11% against drift on our prices; level with the engine |
+| 11 | The trained open model added to the crowd as a sixth agent | +1.4% (−1% to +4%): not established; left out |
 
 - **Tuning on ten weeks of data overfits.** The scientist's ideas passed a gate and a hidden check and still did not hold. With hindsight, the best four setting changes would have reached 18%, and they point the opposite way from the past: earlier misses were upward, later ones downward.
 - **The ideas the gate rejected were also informative.** Following other sites' prices for the same GPU cut skill from +0.235 to +0.190. Replacing the engine's middle with the last value cut it from +0.212 to +0.194.
 - **The useful step was a different kind of forecaster,** one that reads the same list but reasons about it case by case.
+- **The loops that held up had more to practise on.** The scientist tuned 15 settings against ten weeks of one history. The coach was scored on 227 price-days of two kinds of price across three years, and the RL forecaster had 7,680 tries on three years of AWS prices. This is our reading of the difference, not something we tested.
+- **What the coach found was mostly a blind spot in our own testing.** The first crowd's 7-day ranges were too narrow (truth inside 53% of the time). Our earlier tables had scored few 7-day forecasts, so we had not seen it.
 
-### 5. The ML model
+### 6. The ML model
 
 Week by week on our prices it swings from −21% to +19% against drift and is above zero in 5 of 11 weeks; two of its three best weeks are test weeks. On AWS prices, with years of history per series, it beats the engine by 10.9% (+1% to +19%). We do not use it in the forecast.
 
-### 6. What moves a published median
+### 7. What moves a published median
 
 ![What moves the median](findings/figures/fig3_what_moves_the_median.png)
 
@@ -102,7 +144,7 @@ Week by week on our prices it swings from −21% to +19% against drift and is ab
 
 Sources: GPUJournal, "Lambda announces GPU price rises of about 15% — B200, H100 and A100 80GB, from Nov 16", 6 Nov 2026, https://gpujournal.ai/story/lambda-announced-rises-nov-16. Crusoe, "Crusoe Cloud pricing", https://www.crusoe.ai/cloud/pricing, as stored on or before 6 Nov 2026 (read through Exa Snapshot). Tracking-site readings are from the data pack.
 
-### 7. Rolling forward, and the 2 to 3 year view
+### 8. Rolling forward, and the 2 to 3 year view
 
 ![Roll forward](findings/figures/fig4_roll_forward.png)
 
@@ -144,12 +186,14 @@ We value a used GPU as the rent it can still earn: rent × utilisation, less run
 
 ## The forecast we submit
 
-`submission/forecast_2026-11-06.csv`: the five agents' average, 111 forecasts. `submission/alt_engine_2026-11-06.csv` is the engine alone, which has the longer and cleaner test record. Other variants we tested are in `submission/other/`.
+`submission/forecast_2026-11-06.csv`: the average of the five agents after the coach's two kept changes, 111 forecasts. Four agents keep the answers they gave for the first crowd; the rewritten agent was asked again from the same facts. Middles moved by more than 0.1% in 17 of the 111 forecasts, and the average range went from 6.2% to 10.8% of the price at 7 days. `submission/other/agents_original_2026-11-06.csv` is the crowd as first written. `submission/alt_engine_2026-11-06.csv` is the engine alone, which has the longer and cleaner test record. Other variants we tested are in `submission/other/`.
 
 ## Limits
 
-- **The agents were tested on samples:** 14 days of our prices and 12 days of AWS. On our prices only 61 of the 910 forecasts are 7 days ahead.
-- **The agents and the ML model were added after the blind test.** Their results come from the same weeks, which had been looked at by then.
+- **The agents were tested on samples:** 19 days of our prices and 15 days of AWS.
+- **The agents, the ML model, the coach and the RL forecaster were added after the blind test.** Their results come from the same weeks, which had been looked at by then. The coach and the open model saw none of their test days, but we chose which days those were.
+- **The coach ran once.** A second run would propose different changes. Its gain is mostly a correction to range width, which a simpler rule could also have found.
+- **The second check of the coach is not fully fresh:** we already knew how the first crowd had scored on those 14 days, though not how the improved crowd would.
 - **The agents' model may have met the AWS years in training,** since its knowledge runs to April 2026. Only one of the twelve AWS days is later.
 - **AWS prices are a different kind of price.** AWS sets them itself and they move in small steps.
 - **The 37 prices were chosen with hindsight to 6 Nov** by the starter kit's rule, and 33 of them have under 90 days of history.
@@ -158,8 +202,8 @@ We value a used GPU as the rent it can still earn: rent × utilisation, less run
 
 ## Deviations from the protocol
 
-Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent crowd, which was not in the protocol; the ML model, the agents and the extra test periods were added after the blind test; the RL trial was lengthened.
+Listed in [PROTOCOL.md](PROTOCOL.md). The main ones: the submission is the agent crowd, which was not in the protocol; the ML model, the agents and the extra test periods were added after the blind test; the RL trial was lengthened; the coach and the RL forecaster were added last, and the submission changed from the first crowd to the improved one.
 
 ## Reproduce
 
-`bash reproduce.sh` rebuilds both forecast files in about 15 seconds with no AI calls. The main file is rebuilt from the agents' recorded answers (`runs/agents/final_answers.json`). `bash reproduce.sh --with-backtest` replays the AI scientist's blind test and reproduces its results table exactly.
+`bash reproduce.sh` rebuilds the forecast files in about 15 seconds with no AI calls. The main file is rebuilt from the agents' recorded answers (`runs/coach/final_answers.json`; the first crowd's are in `runs/agents/final_answers.json`). The coach's ledger of all ten changes is `runs/coach/state.json`. `bash reproduce.sh --with-backtest` replays the AI scientist's blind test and reproduces its results table exactly.

@@ -149,3 +149,23 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
    prices. The engine alone is `submission/alt_engine_2026-11-06.csv`.
 8. **The main forecast is rebuilt from recorded AI answers.** `reproduce.sh` averages the answers saved
    in `runs/agents/final_answers.json`; asking the agents again gives slightly different numbers.
+9. **Two further improvement loops were added last** (14 Nov), neither in the protocol above: a coach AI
+   that proposes changes to the agent crowd (`gpuval.coach`), and RL training of an open model to
+   forecast directly (`rl/train_forecaster.py`). Their rules were fixed in code before their tests ran:
+   - Coach: practice days and hidden-check days are AWS dates in 2024–25 and our prices on 26 Sep, 2, 8
+     and 14 Oct. A change is kept only if total error on the practice days falls by at least 0.5% and
+     error on the check days does not rise, within a small random tolerance of about half a percent
+     (the coach is told only pass or fail). The exam days (our
+     prices on 18, 21, 26, 29 Oct and 2 Nov; AWS on 24 Jul, 21 Aug and 2 Oct 2026) were named in the
+     code before the loop ran, were never shown to the coach, and were scored once, after the loop ended.
+   - RL forecaster: trained on AWS dates up to 30 Jun 2025, watched on AWS dates to 20 Feb 2026, tested
+     on our prices from 24 Sep to 5 Nov and on AWS Fridays from 27 Feb 2026. One training run per
+     model, 60 rounds, no settings tuned on the test.
+   - Added after the exam had been read: the second check of the coach on the 14 days and 12 AWS days
+     the first crowd had already answered; the split of the gain between the two kept changes; and the
+     trial of the trained open model as a sixth agent (weight one sixth, set after seeing it on those
+     14 days and before scoring it on the exam days).
+10. **The submission changed from the first crowd to the improved crowd,** because the improved crowd
+    had less error on the exam days (+4.0%, +0.5% to +7.6% on our prices) and on the second check.
+    Four agents keep the answers recorded for the first crowd; the rewritten agent was asked again from
+    the same facts. The first crowd's file is `submission/other/agents_original_2026-11-06.csv`.

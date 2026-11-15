@@ -227,6 +227,48 @@ def fig_three_tests() -> None:
     _save(fig, "fig6_three_tests.png")
 
 
+def fig_self_improvement() -> None:
+    """The two improvement loops that held up: the coach's changes to the agent crowd, and RL training
+    of an open model. Everything is scored on days the loop never saw."""
+    c, r = data.REPO / "runs" / "coach", data.REPO / "rl" / "runs"
+    if not (c / "confirm.json").exists() or not (r / "fc1" / "eval.json").exists():
+        return
+    exam, conf = json.loads((c / "exam.json").read_text()), json.loads((c / "confirm.json").read_text())
+    fig, (a, b) = plt.subplots(1, 2, figsize=(12.5, 4.4), gridspec_kw={"width_ratios": [1.15, 1]})
+
+    def bars(ax, xs, vals, col, label, w, alpha=1.0, hatch=None):
+        v = np.array([100 * q["skill"] for q in vals]); lo = np.array([100 * q["lo90"] for q in vals]); hi = np.array([100 * q["hi90"] for q in vals])
+        ax.bar(xs, v, w, color=col, label=label, edgecolor=SURFACE, linewidth=2, alpha=alpha, hatch=hatch)
+        ax.errorbar(xs, v, yerr=[v - lo, hi - v], fmt="none", ecolor=INK, elinewidth=1.2, capsize=3)
+        for xx, vv, hh in zip(xs, v, hi):
+            ax.text(xx, max(hh, vv, 0) + 1.0, f"{vv:+.0f}%", ha="center", va="bottom", fontsize=9, color=INK)
+
+    blocks = [("Our prices\n5 fresh exam days", exam["ours"]), ("Our prices\n14 other days", conf["our prices, all 14 days"]),
+              ("AWS\n3 fresh exam days", exam["aws"]), ("AWS\n12 other days", conf["AWS, 12 days"])]
+    x = np.arange(len(blocks)); w = 0.36
+    bars(a, x - w / 2 - 0.01, [k["original_vs_drift"] for _, k in blocks], NEUTRAL, "Five agents as first written", w)
+    bars(a, x + w / 2 + 0.01, [k["improved_vs_drift"] for _, k in blocks], AQUA, "After the coach's two kept changes", w)
+    a.set_xticks(x, [f"{n}\n({k['n']:,} forecasts)" for n, k in blocks], fontsize=8.5)
+    a.axhline(0, color=INK2, linewidth=1)
+    a.set_ylabel("Less error than drift\n(bar = estimate, line = 90% interval)")
+    a.set_title("A coach AI rewrites the agent crowd")
+    a.grid(axis="x", visible=False)
+    a.legend(loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=2, fontsize=9)
+
+    runs = [(n, col, json.loads((r / d / "eval.json").read_text())["table"]) for n, col, d in (("Qwen3-8B", BLUE, "fc1"), ("Qwen3.5-9B", ORANGE, "fc2")) if (r / d / "eval.json").exists()]
+    groups = [("ours", "Our 37 prices\n(never trained on)"), ("aws", "AWS, Fridays in 2026\n(after the training dates)")]
+    x = np.arange(len(groups)); w = 0.8 / (2 * len(runs))
+    for i, (name, col, t) in enumerate(runs):
+        bars(b, x + (2 * i - len(runs) + 0.5) * (w + 0.01), [t[g]["base_vs_drift"] for g, _ in groups], col, f"{name} before training", w, alpha=0.4, hatch="//")
+        bars(b, x + (2 * i - len(runs) + 1.5) * (w + 0.01), [t[g]["trained_vs_drift"] for g, _ in groups], col, f"{name} after RL training", w)
+    b.set_xticks(x, [f"{lab}\n({runs[0][2][g]['n']:,} forecasts)" for g, lab in groups], fontsize=8.5)
+    b.axhline(0, color=INK2, linewidth=1)
+    b.set_title("RL training teaches an open model to forecast")
+    b.grid(axis="x", visible=False)
+    b.legend(loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=2, fontsize=9)
+    _save(fig, "fig7_self_improvement.png")
+
+
 def main() -> int:
     rep = json.loads((data.REPO / "runs" / "record" / "report.json").read_text())
     fig_blind_weeks(rep)
@@ -235,6 +277,7 @@ def main() -> int:
     fig_rollforward()
     fig_rl()
     fig_three_tests()
+    fig_self_improvement()
     return 0
 
 

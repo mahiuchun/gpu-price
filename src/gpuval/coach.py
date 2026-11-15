@@ -354,41 +354,49 @@ def exam() -> None:
     print("truth inside range: original", round(out["inside"]["original"], 3), "| improved", round(out["inside"]["improved"], 3), "| usage", answers.usage)
 
 
-def compare(rl_name: str = "fc1") -> None:
+OPEN_MODELS = {"qwen3_8b": "fc1", "qwen3_5_9b": "fc2"}  # RL runs in rl/runs/
+
+
+def compare() -> None:
     """One table on the exam days: every forecaster on exactly the same forecasts."""
     from . import report
 
     m = pd.read_parquet(OUT / "exam_cells.parquet")
-    q = pd.read_parquet(data.REPO / "rl" / "runs" / rl_name / "eval_cells.parquet")[["id", "h", "base", "trained", "rel_base", "rel_trained", "trained_lo", "trained_mid", "trained_hi"]]
-    m = m.merge(q, on=["id", "h"], how="inner")
-    w = 1.0 / (int(m.n_agents.iloc[0]) + 1)  # the trained open model joins the crowd as one more agent
-    mix = {c: np.exp((1 - w) * np.log(m[f"i_{c}"]) + w * np.log(m[f"trained_{c}"])) for c in ("lo", "mid", "hi")}
-    m["usd_plus"] = [cell_loss(y, min(a, b), b, max(c, b)) for y, a, b, c in zip(m.y, mix["lo"], mix["mid"], mix["hi"])]
-    m["rel_plus"] = m.usd_plus / m["last"]
-    names = {"engine": ("usd_engine", "engine"), "gpt_crowd_original": ("usd_orig", "rel_orig"), "gpt_crowd_improved": ("usd_impr", "rel_impr"),
-             "open_model_before_rl": ("base", "rel_base"), "open_model_after_rl": ("trained", "rel_trained"),
-             "gpt_improved_plus_open_model": ("usd_plus", "rel_plus")}
+    names = {"engine": ("usd_engine", "engine"), "gpt_crowd_original": ("usd_orig", "rel_orig"), "gpt_crowd_improved": ("usd_impr", "rel_impr")}
+    w = 1.0 / (int(m.n_agents.iloc[0]) + 1)  # a trained open model joins the crowd as one more agent
+    for tag, run_name in OPEN_MODELS.items():
+        path = data.REPO / "rl" / "runs" / run_name / "eval_cells.parquet"
+        if not path.exists():
+            continue
+        q = pd.read_parquet(path)[["id", "h", "base", "trained", "trained_lo", "trained_mid", "trained_hi"]]
+        m = m.merge(q.rename(columns={c: f"{tag}_{c}" for c in q.columns if c not in ("id", "h")}), on=["id", "h"], how="inner")
+        mix = {c: np.exp((1 - w) * np.log(m[f"i_{c}"]) + w * np.log(m[f"{tag}_trained_{c}"])) for c in ("lo", "mid", "hi")}
+        m[f"{tag}_plus"] = [cell_loss(y, min(a, b), b, max(c, b)) for y, a, b, c in zip(m.y, mix["lo"], mix["mid"], mix["hi"])]
+        for c in ("base", "trained", "plus"):
+            m[f"rel_{tag}_{c}"] = m[f"{tag}_{c}"] / m["last"]
+        names.update({f"{tag}_before_rl": (f"{tag}_base", f"rel_{tag}_base"), f"{tag}_after_rl": (f"{tag}_trained", f"rel_{tag}_trained"),
+                      f"gpt_improved_plus_{tag}": (f"{tag}_plus", f"rel_{tag}_plus")})
     out = {}
-    for wname, g, k in (("ours", m[m.world == "ours"], 0), ("aws", m[m.world == "aws"], 1), ("all", m, 1)):
+    for wname, g in (("ours", m[m.world == "ours"]), ("aws", m[m.world == "aws"]), ("all", m)):
         k = 0 if wname != "all" else 1
         ref = ("usd_drift", "drift")[k]
+        ci = lambda a, b: report.skill_ci(g, names[a][k], names[b][k])
         out[wname] = {"n": int(len(g)), "n_days": int(g.id.str.split("|").str[2].nunique()),
                       "vs_drift": {name: report.skill_ci(g, cols[k], ref) for name, cols in names.items()},
-                      "improved_vs_original": report.skill_ci(g, names["gpt_crowd_improved"][k], names["gpt_crowd_original"][k]),
-                      "after_rl_vs_before_rl": report.skill_ci(g, names["open_model_after_rl"][k], names["open_model_before_rl"][k]),
-                      "after_rl_vs_gpt_improved": report.skill_ci(g, names["open_model_after_rl"][k], names["gpt_crowd_improved"][k]),
-                      "gpt_improved_vs_engine": report.skill_ci(g, names["gpt_crowd_improved"][k], names["engine"][k]),
-                      "plus_open_model_vs_improved": report.skill_ci(g, names["gpt_improved_plus_open_model"][k], names["gpt_crowd_improved"][k]),
-                      "plus_open_model_vs_original": report.skill_ci(g, names["gpt_improved_plus_open_model"][k], names["gpt_crowd_original"][k])}
+                      "improved_vs_original": ci("gpt_crowd_improved", "gpt_crowd_original"), "gpt_improved_vs_engine": ci("gpt_crowd_improved", "engine"),
+                      "open_models": {tag: {"after_vs_before": ci(f"{tag}_after_rl", f"{tag}_before_rl"), "after_vs_gpt_improved": ci(f"{tag}_after_rl", "gpt_crowd_improved"),
+                                            "after_vs_engine": ci(f"{tag}_after_rl", "engine"), "as_sixth_agent_vs_improved": ci(f"gpt_improved_plus_{tag}", "gpt_crowd_improved")}
+                                      for tag in OPEN_MODELS if f"{tag}_after_rl" in names}}
     (data.REPO / "findings" / "data" / "fresh_days.json").write_text(json.dumps(out, indent=1))
     f = report.fmt_ci
     for wname, b in out.items():
         print(f"\n== {wname}: {b['n']} forecasts on {b['n_days']} fresh days, percent less error than drift")
         for name, v in b["vs_drift"].items():
-            print(f"  {name:22s} {f(v)}")
-        print(f"  improved crowd vs original crowd {f(b['improved_vs_original'])} | open model after vs before {f(b['after_rl_vs_before_rl'])} "
-              f"| open model vs improved crowd {f(b['after_rl_vs_gpt_improved'])} | improved crowd vs engine {f(b['gpt_improved_vs_engine'])}")
-        print(f"  adding the open model to the improved crowd: vs improved {f(b['plus_open_model_vs_improved'])} | vs original {f(b['plus_open_model_vs_original'])}")
+            print(f"  {name:32s} {f(v)}")
+        print(f"  improved crowd vs original crowd {f(b['improved_vs_original'])} | improved crowd vs engine {f(b['gpt_improved_vs_engine'])}")
+        for tag, v in b["open_models"].items():
+            print(f"  {tag}: after vs before {f(v['after_vs_before'])} | vs improved crowd {f(v['after_vs_gpt_improved'])} | vs engine {f(v['after_vs_engine'])} "
+                  f"| as a sixth agent, vs improved crowd {f(v['as_sixth_agent_vs_improved'])}")
 
 
 def _recorded_jobs() -> list[dict]:
