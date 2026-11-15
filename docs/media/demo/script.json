@@ -1,58 +1,58 @@
 [
   {
     "slide": "cover",
-    "text": "RSI4GPR: a crew of AI agents and one coach AI, with recursive self-improvement, for GPU price forecasting. It forecasts thirty-seven posted GPU prices one, three and seven days ahead, and tests which kinds of AI help make those forecasts better on data the system has not seen."
+    "text": "This is RSI4GPR: a crew of AI agents and one coach AI, with recursive self-improvement, for GPU price forecasting. We forecast thirty-seven GPU rental prices, one, three and seven days ahead. And we test which kinds of AI really help, on data the system has never seen."
   },
   {
     "slide": "question",
-    "text": "Each published price is the middle of a list of offers. So we asked two questions. Does looking at the whole list beat looking at the median alone? And which kinds of AI help survive a fair test?"
+    "text": "Here's the thing about these prices. Each one is just the middle of a list of offers. So we asked two questions. Does looking at the whole list beat looking at the median alone? And which kinds of AI help actually survive a fair test?"
   },
   {
     "slide": "headline",
-    "text": "The headline. The forecast we hand in made twenty percent less error than drift, the reference forecast, on days no model had seen. That is every forecaster, scored on the same four hundred and seventy-nine fresh forecasts."
+    "text": "Let's start with the answer. The forecast we hand in made twenty percent less error than drift, the standard baseline, on days no model had seen. That's every forecaster, scored on the same four hundred and seventy-nine fresh forecasts."
   },
   {
     "slide": "median",
-    "text": "The key insight. Two thirds of the movement in a published median comes from offers joining or leaving the list, not from providers changing their prices."
+    "text": "Why does that work? Because two thirds of the movement in a published median isn't providers changing prices at all. It's offers joining or leaving the list."
   },
   {
     "slide": "engine",
-    "text": "So our engine replays what each offer did on past days, applies that to today's list, and takes the middle again. The spread of those replayed middles is the forecast range."
+    "text": "So our engine looks underneath. It replays what each offer did on past days, applies that to today's list, and takes the middle again. The spread of those replays is the forecast range."
   },
   {
     "clip": "engine",
-    "text": "Here it is step by step. Offers reprice, leave, or rejoin. Each replay gives a new median, and together they form the forecast."
+    "text": "Here it is in action. Offers reprice, drop off, or come back. Each replay gives a new median, and together, they build the forecast."
   },
   {
     "slide": "agents",
-    "text": "On top of the engine sit five AI agents, each with one job: a list reader, a repricer watcher, a base-rate keeper, a reference weigher and a jump spotter. Their forecasts are averaged."
+    "text": "On top of that, we have a crew of five AI agents, each with one job. A list reader, a repricer watcher, a base-rate keeper, a reference weigher, and a jump spotter. We average their forecasts."
   },
   {
     "slide": "crowd-flow",
-    "text": "Training is a recursive self-improvement loop. Each round, the crowd forecasts practice days and a verifier scores it. A coach AI proposes one change. A second verifier keeps it only if practice days improve and hidden check days do not get worse. The verifiers are fixed code the AI cannot change. Ten rounds, then a final exam on unseen days: four percent better than the first crowd."
+    "text": "Now, the recursive part. In training, the crew forecasts some practice days, and a verifier scores it. Then a coach AI proposes one change. A second verifier keeps that change only if practice days get better, and hidden check days don't get worse. The verifiers are fixed code. The AI can't touch them. After ten rounds, a final exam on unseen days: four percent better than where we started."
   },
   {
     "slide": "inference",
-    "text": "At inference the crowd is frozen. For each price, the five agents read the facts, their answers are averaged, and the ranges are stretched. One pass per price, one hundred and eleven forecasts."
+    "text": "At inference time, the crew is frozen. For each price, the five agents read the facts, we average their answers, and stretch the ranges. One pass per price, a hundred and eleven forecasts in all."
   },
   {
     "slide": "rigor",
-    "text": "The test was written down before the results existed: a committed protocol, a time machine that only sees past data, shuffled worlds as a placebo, and exam days no model had seen."
+    "text": "And we wrote the test down before we had any results. A committed protocol. A time machine that only sees the past. Shuffled data as a placebo. And exam days no model had seen."
   },
   {
     "slide": "three-tests",
-    "text": "Across three separate tests, the engine beat drift by about eight percent, and the five agents by fifteen to nineteen percent."
+    "text": "Across three separate tests, the engine beat drift by about eight percent. The five agents beat it by fifteen to nineteen."
   },
   {
     "slide": "scorecard",
-    "text": "Not every idea worked. Of seven ways to make the system improve itself, two held up: the coach, and reinforcement learning that teaches a small model to forecast. Three did not, and two were not established."
+    "text": "But not every idea worked. We tried seven ways to make the system improve itself. Two held up: the coach, and reinforcement learning that teaches a small model to forecast. Three didn't. And two, we just can't call yet."
   },
   {
     "slide": "ranges",
-    "text": "One honest caveat. Ranges held the truth eighty percent of the time overall, but only sixty-six percent of the time when the price actually moved."
+    "text": "One honest caveat. Our ranges held the truth eighty percent of the time overall. But when the price actually moved, that drops to sixty-six percent."
   },
   {
     "slide": "close",
-    "text": "Three things to remember. Look inside the list. Five AI agents plus a coach cut error by twenty percent on unseen days. And most self-improvement ideas fail a fair test. The verifier is what makes the loop trustworthy."
+    "text": "So, three things to remember. Look inside the list. A crew of AI agents plus a coach cut error by twenty percent on unseen days. And most self-improvement ideas fail a fair test. The verifier is what makes the loop worth trusting. Thanks for watching."
   }
 ]

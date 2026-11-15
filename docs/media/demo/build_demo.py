@@ -3,9 +3,10 @@
     python3 docs/slides/render_slides.py        # slide PNGs in docs/slides/png/ (needs Pillow: uv run --with pillow)
     python3 docs/media/demo/build_demo.py       # -> docs/media/demo/gpu-price-demo.mp4, demo.srt, poster.jpg
 
-Needs macOS (the `say` voice Samantha) and ffmpeg. Narration: docs/media/demo/script.json.
+Needs macOS `say` and ffmpeg. Set VOICE and RATE to change the narrator. Narration: docs/media/demo/script.json.
 """
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -15,7 +16,11 @@ from pathlib import Path
 REPO = str(Path(__file__).resolve().parents[3])
 PNG = f"{REPO}/docs/slides/png"
 V = tempfile.mkdtemp()
-LEAD, TAIL, X = 0.5, 0.8, 0.6  # silence before/after each line; crossfade length
+LEAD, TAIL, X = 0.3, 0.45, 0.6  # silence before/after each line; crossfade length
+# Voice: any `say -v '?'` name. A Premium or Enhanced voice (System Settings > Accessibility >
+# Spoken Content > Manage Voices) sounds far more natural, e.g. VOICE="Zoe (Premium)".
+VOICE = os.environ.get("VOICE", "Samantha")
+RATE = os.environ.get("RATE", "192")  # words per minute
 TITLE = "RSI4GPR: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting"
 
 
@@ -34,7 +39,12 @@ t = 0.0
 for i, s in enumerate(segs):
     spoken = s["text"].replace("RSI4GPR", "R S I 4 G P R")
     open(f"{V}/n{i:02d}.txt", "w").write(spoken)
-    run(["say", "-v", "Samantha", "-r", "175", "-f", f"{V}/n{i:02d}.txt", "-o", f"{V}/n{i:02d}.aiff"])
+    run(["say", "-v", VOICE, "-r", RATE, "-f", f"{V}/n{i:02d}.txt", "-o", f"{V}/n{i:02d}.raw.aiff"])
+    # trim the voice's own leading/trailing silence, then even out loudness
+    run(["ffmpeg", "-y", "-loglevel", "error", "-i", f"{V}/n{i:02d}.raw.aiff", "-af",
+         "silenceremove=start_periods=1:start_threshold=-50dB,areverse,"
+         "silenceremove=start_periods=1:start_threshold=-50dB,areverse,"
+         "highpass=f=80,loudnorm=I=-18:TP=-2:LRA=7", "-ar", "48000", f"{V}/n{i:02d}.aiff"])
     d = dur(f"{V}/n{i:02d}.aiff")
     L = round(LEAD + d + TAIL + X, 3)
     starts.append(t); lens.append(L); durs.append(d)
