@@ -4,6 +4,7 @@
     uv run python -m gpuval.rsi run --proposer random --seed 1 --name random_1   # control: random changes
     uv run python -m gpuval.rsi run --proposer replay        # repeat the recorded loop, no AI calls
     uv run python -m gpuval.rsi exam                         # every run on the fresh days, with attribution
+    uv run python -m gpuval.rsi fresh                        # the follow-up on days the crowd had never answered (`fresh-ask` makes the AI calls)
 
 Our other loops were separate tests, each started by hand. This one runs unattended: generation
 after generation it proposes a change, tests it against the current team, keeps it or rolls
@@ -568,16 +569,113 @@ def audit(frame: pd.DataFrame, states: list[dict], log=print) -> dict:
     return out
 
 
+# ------------------------------------------------------------------ fresh ----
+FRESH_EDIT = {"kind": "members", "action": "add", "member": "qwen3_8b_rl"}     # the one edit that was ahead three times
+FRESH_BUDGET_USD = 18.0
+
+
+def fresh_days() -> list[str]:
+    """Days of our prices on which the open models were scored and no agent was ever asked."""
+    q = pd.read_parquet(data.REPO / "rl" / "runs" / "fc1" / "eval_cells.parquet")
+    return sorted(set(q[q.world == "ours"].origin) - set(range_memory.SCORE_DAYS) - set(range_memory.COACH_OWN_DAYS))
+
+
+def fresh_ask(workers: int = 48) -> None:
+    """Ask the improved crowd, once, about the fresh days. Same model, effort, instructions and facts as its other answers."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    from dotenv import load_dotenv
+    from openai import OpenAI
+
+    from . import agents
+    from .llm import Meter, ask_json
+
+    load_dotenv(data.REPO / ".env")
+    client, meter = OpenAI(), Meter(FRESH_BUDGET_USD)
+    path = OUT / "fresh_answers.json"
+    saved = json.loads(path.read_text()) if path.exists() else {"answers": {}, "usage": None}
+    roles = json.loads((coach.OUT / "state.json").read_text())["config"]["roles"]
+    items = coach.build_items({"fresh": {"ours": fresh_days()}})
+    todo = [(n, it) for it in items.values() for n in roles if f"{n}|{it['series_id']}|{it['day']}" not in saved["answers"]]
+    print(f"{len(items)} price-days on {len(fresh_days())} days; {len(todo)} calls to make", flush=True)
+
+    def one(job):
+        n, it = job
+        user = it["facts"] + ("\n" + agents.refs_text(it["refs"]) if roles[n]["refs"] else "") + "\n\nGive your forecast."
+        ans = ask_json(client, agents.MODEL, agents.EFFORT, coach.SYSTEM.format(role=roles[n]["instruction"]), user, agents.SCHEMA, "forecast", meter, flex=False)
+        return f"{n}|{it['series_id']}|{it['day']}", {"q": {str(h): list(v) for h, v in agents.clean(ans, it["last"]).items()}, "reason": ans.get("reason", "")}
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        for i, (key, ans) in enumerate(ex.map(one, todo), 1):
+            saved["answers"][key] = ans
+            if i % 500 == 0 or i == len(todo):
+                saved["usage"] = meter.summary()
+                path.write_text(json.dumps(saved))
+                print(f"  {i} of {len(todo)} | {meter.summary()}", flush=True)
+
+
+def fresh_frame() -> pd.DataFrame:
+    store = json.loads((OUT / "fresh_answers.json").read_text())["answers"]
+    by: dict = {}
+    for key, a in store.items():
+        n, sid, iso = key.split("|")
+        by.setdefault((sid, day_of(iso)), {})[n] = a["q"]
+    rows = []
+    for (sid, o), q in by.items():
+        if set(q) == set(ROLES):
+            for h in HORIZONS:
+                row = {"series_id": sid, "origin": o, "h": h}
+                for n in ROLES:
+                    row[f"{n}_lo"], row[f"{n}_mid"], row[f"{n}_hi"] = (float(v) for v in q[n][str(h)])
+                rows.append(row)
+    f = range_memory.truth_cells(data.build_world(data.DATA_END)).merge(pd.DataFrame(rows), on=["series_id", "origin", "h"], how="inner")
+    f["engine_lo"], f["engine_mid"], f["engine_hi"] = f.e_lo, f.e_mid, f.e_hi
+    for name, run_name in RL_RUNS.items():
+        q = pd.read_parquet(data.REPO / "rl" / "runs" / run_name / "eval_cells.parquet")
+        q = q[q.world == "ours"].assign(origin=lambda d: d.origin.map(day_of))[["series_id", "origin", "h", "trained_lo", "trained_mid", "trained_hi"]]
+        q.columns = ["series_id", "origin", "h", f"{name}_lo", f"{name}_mid", f"{name}_hi"]
+        f = f.merge(q, on=["series_id", "origin", "h"], how="inner")
+    f["split"], f["moved"] = "fresh", np.abs(f.y - f["last"]) > 1e-9
+    return f.sort_values(["origin", "series_id", "h"]).reset_index(drop=True)
+
+
+def fresh_table(log=print) -> dict:
+    """The handed-in team against the same team with a trained open model given a vote, on the fresh days."""
+    f, fm, ci = fresh_frame(), report.fmt_ci, report.skill_ci
+    add = lambda *ms: rebuild([{"kind": "members", "action": "add", "member": m} for m in ms])
+    arms = {"five": start_bundle(), "plus_qwen3_8b_rl": rebuild([FRESH_EDIT]), "plus_qwen3_5_9b_rl": add("qwen3_5_9b_rl"), "plus_both": add("qwen3_8b_rl", "qwen3_5_9b_rl")}
+    w = {k: walk(f, b) for k, b in arms.items()}
+    g = f[["series_id", "origin", "h", "target", "loss_drift", "loss_engine"]].copy()
+    for k in arms:
+        g[f"loss_{k}"] = w[k].loss.to_numpy()
+    for m in RL_RUNS:
+        g[f"loss_{m}"] = cell_loss(f.y, f[f"{m}_lo"], f[f"{m}_mid"], f[f"{m}_hi"]).to_numpy()
+    out = {"rule": {"edit": edit_text(FRESH_EDIT), "days": fresh_days()}, "n": int(len(g)), "n_days": int(g.origin.nunique()), "n_prices": int(g.series_id.nunique()),
+           "vs_drift": {k: ci(g, f"loss_{k}", "loss_drift") for k in [*arms, *RL_RUNS, "engine"]},
+           "vs_five": {k: ci(g, f"loss_{k}", "loss_five") for k in arms if k != "five"},
+           "by_h": {int(h): ci(gh, "loss_plus_qwen3_8b_rl", "loss_five") for h, gh in g.groupby("h")},
+           "inside": {k: float(w[k].inside.mean()) for k in arms}, "inside_when_moved": {k: float(w[k][w[k].moved].inside.mean()) for k in arms},
+           "usage": json.loads((OUT / "fresh_answers.json").read_text())["usage"]}
+    p = out["vs_five"]["plus_qwen3_8b_rl"]
+    out["helps_by_the_rule"] = bool(p["skill"] > 0 and p["excludes_zero"])
+    log(f"FRESH DAYS: {out['n']} forecasts, {out['n_prices']} prices, {out['n_days']} days the crowd had never answered")
+    for k, v in out["vs_drift"].items():
+        log(f"   {k:20s} against drift {fm(v)}" + (f" | against the five {fm(out['vs_five'][k])} | inside {out['inside'][k]:.3f}" if k in out["vs_five"] else ""))
+    log(f"   by horizon, six against five: " + "; ".join(f"{h}d {fm(v)}" for h, v in out["by_h"].items()) + f" | helps by the rule: {out['helps_by_the_rule']} | usage {out['usage']}")
+    (data.REPO / "findings" / "data" / "rsi_fresh.json").write_text(json.dumps(out, indent=1, default=str))
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["run", "exam"])
+    ap.add_argument("cmd", choices=["run", "exam", "fresh-ask", "fresh"])
     ap.add_argument("--proposer", choices=["gpt", "random", "replay"], default="gpt")
     ap.add_argument("--generations", type=int, default=12)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--name", default="main")
     a = ap.parse_args(argv)
-    if a.cmd == "exam":
-        exam()
+    if a.cmd in ("exam", "fresh-ask", "fresh"):
+        {"exam": exam, "fresh-ask": fresh_ask, "fresh": fresh_table}[a.cmd]()
         return 0
     if a.proposer == "replay":
         rec = json.loads((OUT / a.name / "state.json").read_text())

@@ -390,5 +390,17 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       clearly worse); the coach's two kept changes put to this gate, starting from the first
       crowd (the wider ranges pass at 94%, the rewritten agent does not at 81%); and one more
       setting of the vote, which no loop proposed (−1.0%, −2.7% to +0.4%).
+    - **One follow-up, on days the crowd had never answered** (written before it ran; about
+      3,400 AI calls, stopped by code at an estimated $18). One edit was ahead on the practice,
+      check and exam days without passing the gate: giving Qwen3-8B after RL a vote. The improved
+      crowd is asked, once, about the 20 days from 25 Sep to 5 Nov on which the open models were
+      scored and no agent was ever asked (675 price-days, 1,775 forecasts), with the same model,
+      effort, instructions and facts as its other answers. Compared on those forecasts: the team
+      we handed in (five agents, equal weights, the coach's stretch) and the same team with
+      Qwen3-8B after RL as a sixth equal member. We will say the edit helps only if the six have
+      less error than the five with a 90% interval that excludes zero (dollars, resampled by
+      price and target day). Reported beside it, outside the rule: Qwen3.5-9B as the sixth
+      member, and both open models. These days are fresh for the crowd; the open models' own
+      scores on them were already known. One run; the forecast file is not changed.
     - The opening paragraph of this item was shortened after the run. The rule itself, every
       point from "What can change" to "Weaknesses known before the run", is as first committed.
