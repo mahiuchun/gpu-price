@@ -313,13 +313,22 @@
         <div class="bar-row"><div class="lab">Engine, same forecasts</div><div class="track"><div class="fill" style="width:50.5%"></div><span class="val" style="left:50.5%">10.1%</span></div></div>
         <div class="axis"><span></span><div><span>0%</span><span>10%</span><span>20%</span></div></div>
       </div>
-      <figcaption>How much less error than drift on our 37 prices, 24 Sep to 5 Nov (4,074 forecasts). The models never practised on any of these prices.</figcaption>
+      <figcaption>The first training run of each model. How much less error than drift on our 37 prices, 24 Sep to 5 Nov (4,074 forecasts). The models never practised on any of these prices.</figcaption>
+    </figure>
+    <figure>
+      <div class="bars" role="img" aria-label="Repeat training runs on Modal, error cut compared with drift on our 37 prices. Qwen3-8B, six more runs: between 5.4 and 10.1 percent. Qwen3.5-9B, two more runs: 3.2 and 5.9 percent.">
+        <div class="bar-row"><div class="lab"><strong>Qwen3-8B, six more runs</strong></div><div class="track"><div class="fill main" style="left:27%;width:23.5%"></div><span class="val" style="left:50.5%">5.4% to 10.1%</span></div></div>
+        <div class="bar-row"><div class="lab"><strong>Qwen3.5-9B, two more runs</strong></div><div class="track"><div class="fill main" style="left:16%;width:13.5%"></div><span class="val" style="left:29.5%">3.2% and 5.9%</span></div></div>
+        <div class="axis"><span></span><div><span>0%</span><span>10%</span><span>20%</span></div></div>
+      </div>
+      <figcaption>The same training repeated on Modal GPUs with other random starts. Each bar spans the lowest to the highest result.</figcaption>
     </figure>
     <ul>
       <li><strong>How it practised.</strong> The model read the same facts as the agents and gave a forecast. It got a point score for how much closer it was than drift. It did this 7,680 times on old AWS prices, and its weights were nudged toward the answers that scored well.</li>
       <li><strong>It then worked on our prices,</strong> a different kind of price it had never seen: from about 3% to about 10% less error than drift.</li>
-      <li><strong>The newer model, Qwen3.5-9B, is a bit better.</strong> On AWS prices from 2026 it is clearly better: 8.6% against 1.7%. It cost about $16 to train, against $5.</li>
-      <li><strong>It is as good as our engine, and behind the GPT agents.</strong> Adding it to the agents as a sixth voice did not clearly help, so it is not in the forecast.</li>
+      <li><strong>Repeating the training gave 5% to 10%, not a fixed 10%.</strong> We trained Qwen3-8B six more times on Modal GPUs. The exact repeat of the first run gave 10.1% again. Runs with a different random start gave 5% to 8%. Every run beat the untrained model.</li>
+      <li><strong>The newer model, Qwen3.5-9B, did not repeat its first result.</strong> Two more runs gave 6% and 3%, about where it started (5%). Those two used a different training setting from the first run, so we are running it once more like for like.</li>
+      <li><strong>At its best it is as good as our engine, and behind the GPT agents.</strong> Adding it to the agents as a sixth voice did not clearly help, so it is not in the forecast.</li>
     </ul>
   </section>
 

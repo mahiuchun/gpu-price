@@ -270,31 +270,38 @@ def fig_self_improvement() -> None:
 
 
 def fig_modal_rl() -> None:
-    """Every RL training run of the open model, Tinker and Modal, on the same test days: how much the
-    result depends on the random seed, the learning rate and the amount of practice."""
+    """Every RL training run of the open models, Tinker and Modal, on the same test days: how much the
+    result depends on the random seed, the learning rate, the amount of practice and the model."""
     path = data.REPO / "findings" / "data" / "modal_rl.json"
     if not path.exists():
         return
     d = json.loads(path.read_text())
     runs = d["runs"]
-    cols = []  # (label, colour, [(seed, block)])
-    t8 = d["tinker"]["Qwen/Qwen3-8B"]
-    cols.append(("Untrained", NEUTRAL, [(None, {w: {"trained_vs_drift": t8[w]["base_vs_drift"]} for w in ("ours", "aws")})]))
-    cols.append(("Tinker\n1 run", BLUE, [(0, t8)]))
-    for lr in sorted({r["lr"] for r in runs if r["plan"] == "sweep1"}):
+
+    def rate(lr: float) -> str:
         mant, exp = f"{lr:.1e}".split("e")
-        rate = f"{float(mant):g}e{int(exp)}"
+        return f"{float(mant):g}e{int(exp)}"
+
+    def untrained(t: dict) -> list:
+        return [(None, {w: {"trained_vs_drift": t[w]["base_vs_drift"]} for w in ("ours", "aws")})]
+
+    cols = []  # (label, colour, [(seed, block)])
+    t8, t9 = d["tinker"]["Qwen/Qwen3-8B"], d["tinker"]["Qwen/Qwen3.5-9B"]
+    cols.append(("Untrained", NEUTRAL, untrained(t8)))
+    cols.append(("Tinker\nrate 4e-5\n1 run", BLUE, [(0, t8)]))
+    for lr in sorted({r["lr"] for r in runs if r["plan"] == "sweep1"}):
         tag = "\n(chosen)" if abs(lr - d["chosen_lr"]) < 1e-12 else ""
-        cols.append((f"Modal\nrate {rate}{tag}", BLUE, [(r["seed"], r) for r in runs if r["plan"] == "sweep1" and r["lr"] == lr]))
+        cols.append((f"Modal\nrate {rate(lr)}{tag}", BLUE, [(r["seed"], r) for r in runs if r["plan"] == "sweep1" and r["lr"] == lr]))
     longer = [(r["seed"], r) for r in runs if r["plan"] == "longer"]
     if longer:
-        cols.append(("Modal\n3x practice", BLUE, longer))
-    t9 = d["tinker"]["Qwen/Qwen3.5-9B"]
-    cols.append(("Qwen3.5-9B\nTinker\n1 run", ORANGE, [(0, t9)]))
-    newer = [(r["seed"], r) for r in runs if r["plan"] == "newer2"]
-    if newer:
-        cols.append(("Qwen3.5-9B\nModal", ORANGE, newer))
-    fig, axes = plt.subplots(1, 2, figsize=(15, 5), sharey=False)
+        cols.append(("Modal\nrate 1e-4\n3x practice", BLUE, longer))
+    split = len(cols)  # Qwen3-8B to the left, Qwen3.5-9B to the right
+    cols.append(("Untrained", NEUTRAL, untrained(t9)))
+    cols.append(("Tinker\nrate 4e-5\n1 run", ORANGE, [(0, t9)]))
+    nine = [r for r in runs if r["base_model"].endswith("Qwen3.5-9B")]
+    for lr in sorted({r["lr"] for r in nine}):
+        cols.append((f"Modal\nrate {rate(lr)}", ORANGE, [(r["seed"], r) for r in nine if r["lr"] == lr]))
+    fig, axes = plt.subplots(2, 1, figsize=(12.5, 9.6), sharex=True)
     for ax, w, title in ((axes[0], "ours", "Our 37 prices (never practised on)"), (axes[1], "aws", "AWS, Fridays in 2026")):
         for i, (label, col, members) in enumerate(cols):
             for j, (seed, b) in enumerate(sorted(members, key=lambda m: (m[0] is None, m[0]))):
@@ -303,20 +310,26 @@ def fig_modal_rl() -> None:
                 left = len(members) > 1 and j == 0  # the first of a pair is labelled on its left, so labels never meet
                 ax.errorbar([x], [100 * q["skill"]], yerr=[[100 * (q["skill"] - q["lo90"])], [100 * (q["hi90"] - q["skill"])]], fmt="none", ecolor=INK2, elinewidth=1.1, capsize=2.5)
                 ax.scatter([x], [100 * q["skill"]], s=62, color=col, marker="o" if seed in (None, 0) else "s", edgecolor=SURFACE, linewidth=1.5, zorder=3)
-                ax.text(x + (-0.09 if left else 0.09), 100 * q["skill"], f"{100 * q['skill']:+.0f}", fontsize=8, va="center", ha="right" if left else "left", color=INK)
+                ax.text(x + (-0.09 if left else 0.09), 100 * q["skill"], f"{100 * q['skill']:+.0f}", fontsize=8.5, va="center", ha="right" if left else "left", color=INK)
         eng = 100 * t8[w]["engine_vs_drift"]["skill"]
         ax.axhline(eng, color=AQUA, linewidth=1.3, linestyle="--")
         ax.text(1.005, eng, f"engine\n{eng:+.0f}%", color=INK2, fontsize=8.5, va="center", ha="left", transform=ax.get_yaxis_transform(), clip_on=False)
         ax.axhline(0, color=INK2, linewidth=1)
-        ax.set_xticks(range(len(cols)), [c[0] for c in cols], fontsize=8)
-        ax.set_xlim(-0.6, len(cols) - 0.4)
+        ax.axvline(split - 0.5, color=INK2, linewidth=0.8, linestyle=":")
+        for x0, name in ((-0.5, "Qwen3-8B"), (split - 0.5, "Qwen3.5-9B")):
+            ax.text(x0 + 0.08, 0.985, name, transform=ax.get_xaxis_transform(), fontsize=9.5, fontweight="bold", color=INK2, va="top", ha="left")
+        ax.set_xticks(range(len(cols)), [c[0] for c in cols], fontsize=8.5)
+        ax.set_xlim(-0.5, len(cols) - 0.5)
+        lo, hi = ax.get_ylim()
+        ax.set_ylim(lo, hi + 0.08 * (hi - lo))  # room for the model names
         ax.set_title(title)
+        ax.set_ylabel("Less error than drift, %")
         ax.grid(axis="x", visible=False)
-    axes[0].set_ylabel("Less error than drift, %\n(dot = one training run, line = 90% interval)")
-    axes[0].scatter([], [], s=62, color=BLUE, marker="o", label="first random seed (same practice prices as the Tinker run)")
-    axes[0].scatter([], [], s=62, color=BLUE, marker="s", label="second random seed")
-    axes[0].legend(loc="upper center", bbox_to_anchor=(1.08, -0.22), ncol=2, fontsize=9)
-    fig.subplots_adjust(wspace=0.2)
+    axes[1].scatter([], [], s=62, color=INK2, marker="o", label="one training run, first random seed (same practice prices as the Tinker run)")
+    axes[1].scatter([], [], s=62, color=INK2, marker="s", label="second random seed")
+    axes[1].plot([], [], color=INK2, linewidth=1.1, label="90% interval")
+    axes[1].legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=3, fontsize=9)
+    fig.subplots_adjust(hspace=0.16)
     _save(fig, "fig8_rl_runs.png")
 
 
