@@ -1,0 +1,16 @@
+<section id="rl-runs" class="alt">
+<div class="head">
+<p class="eyebrow">RESULTS · REINFORCEMENT LEARNING</p>
+<h2 class="title">RL helps, but one run is not a result</h2>
+</div>
+<div class="row" style="gap:56px; align-items:flex-start">
+<div class="fade" style="--i:1"><img src="/_blob/dc33b328be33648200f86fc9507efa5f" alt="Every RL training run, two panels. On our 37 prices Qwen3-8B runs range from 0% to +10% against drift and Qwen3.5-9B from +3% to +11%; untrained +3% and +5%. On AWS Fridays in 2026 results range from −21% to +9%; higher learning rates collapse." style="width:740px; height:593px; object-fit:contain; background:#FCFCFB; border-radius:16px"></div>
+<div class="col" style="flex:1; gap:40px">
+<div class="rule blue-rule rise" style="--i:2"><p class="h3">Seeds move the answer</p><p class="body">Same settings, a different random seed: +10.1% became +6.5% on our prices.</p></div>
+<div class="rule orange-rule rise" style="--i:3"><p class="h3">The learning rate matters most</p><p class="body">Higher rates gave nothing on our prices and fell far behind drift on AWS.</p></div>
+<div class="rule rise" style="--i:4"><p class="h3">Many runs at once on Modal</p><p class="body">Our own sampling and policy-gradient code on H100s, one container per run, rate chosen on a watch set.</p></div>
+</div>
+</div>
+<div class="footer"><p>rl/modal_forecaster.py · FINDINGS.md §3</p><p class="pn"></p></div>
+<aside>Every RL training run we made, on Tinker and on Modal, with two random seeds where we had them. The lesson is variance. The same settings with a different seed moved the result from +10% to +6.5%. High learning rates gave no gain on our prices and collapsed on AWS. Read single-run RL numbers with that in mind; the two models end roughly level.</aside>
+</section>

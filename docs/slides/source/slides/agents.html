@@ -1,0 +1,22 @@
+<section id="agents" class="alt">
+<div class="head">
+<p class="eyebrow">OUR APPROACH · FIVE AI AGENTS + COACH</p>
+<h2 class="title">Five AI agents read the list; a coach AI rewrites the crowd</h2>
+</div>
+<div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:24px">
+<div class="card rise" style="--i:0"><p class="h3" style="font-size:32px">List reader</p><p class="small">reads the offers around the middle</p></div>
+<div class="card rise" style="--i:1"><p class="h3" style="font-size:32px">Repricer watcher</p><p class="small">tracks offers that change often</p></div>
+<div class="card rise" style="--i:2"><p class="h3" style="font-size:32px">Base-rate keeper</p><p class="small">keeps to how often and how far prices move</p></div>
+<div class="card rise" style="--i:3"><p class="h3" style="font-size:32px">Reference weigher</p><p class="small">weighs drift, engine and ML numbers</p></div>
+<div class="card rise" style="--i:4"><p class="h3" style="font-size:32px">Jump spotter</p><p class="small">looks for jumps that may reverse</p></div>
+</div>
+<p class="small" style="margin-top:-8px">Each sees the price’s last 21 days and today’s list, and returns low, middle and high for 1, 3 and 7 days. The crowd forecast is the average of the five.</p>
+<div class="card rise" style="--i:5; flex-direction:row; gap:64px; align-items:center; border:2px solid var(--green-fill)">
+<p class="h3" style="width:360px">The coach loop</p>
+<div class="stat"><p class="mid">10</p><p class="small">changes proposed</p></div>
+<div class="stat"><p class="mid good">+3–4%</p><p class="small">more on unseen days</p></div>
+<p class="small" style="flex:1">Kept: wider ranges at 3 and 7 days (most of the gain), and a rewritten base-rate keeper.</p>
+</div>
+<div class="footer"><p>src/gpuval/agents.py · src/gpuval/coach.py</p><p class="pn"></p></div>
+<aside>The forecast we hand in comes from here. Five agents built on the same model, each with a different job, forecast each price directly from the facts. The coach sees the crowd’s scores and worst misses on practice days and proposes one change at a time: rewrite an agent, add one, drop one, or stretch the ranges. Of ten proposals, two passed the gate. The two kept changes were wider ranges at 3 and 7 days, which carry nearly all of the gain, and a rewritten base-rate keeper. The next slide shows how the pieces connect.</aside>
+</section>

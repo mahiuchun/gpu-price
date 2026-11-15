@@ -22,6 +22,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
   after two changes that a coach AI proposed and tests kept.
   The engine alone is [submission/alt_engine_2026-11-06.csv](submission/alt_engine_2026-11-06.csv).
 - **Test protocol, fixed before the test:** [PROTOCOL.md](PROTOCOL.md)
+- **Slides (21 pages):** [docs/slides/RSI4GPR-slides.pdf](docs/slides/RSI4GPR-slides.pdf)
 - **Explainer pages:** [how it works](docs/pages/build-walkthrough.html) · [the test periods](docs/pages/test-periods.html) · [the Exa lookups](docs/pages/exa-status.html)
 
 ## Contents
@@ -275,9 +276,16 @@ uv run python -m gpuval.figures          # findings/figures/*.png
 uv run python docs/media/make_media.py   # README visuals in docs/media/; reads only files in this repo
 ```
 
-The two pipeline images (`docs/media/training_pipeline.png`, `inference_pipeline.png`) and the demo video
-(`docs/media/demo/`) are exported from the project's slide deck. The video's narration is
-`docs/media/demo/script.json`, read by the macOS `say` voice Samantha.
+The slide deck's source is in `docs/slides/source/` (one HTML file per slide, plus `deck.json` and `deck.css`).
+The PDF, the two pipeline images (`docs/media/training_pipeline.png`, `inference_pipeline.png`) and the demo video
+(`docs/media/demo/`) are all made from it:
+
+```bash
+uv run --no-project --with pillow python docs/slides/render_slides.py   # docs/slides/png/ and RSI4GPR-slides.pdf (needs Chrome)
+python3 docs/media/demo/build_demo.py                                   # the demo video, captions and poster (needs macOS and ffmpeg)
+```
+
+The video's narration is `docs/media/demo/script.json`, read by the macOS `say` voice Samantha.
 
 ## Data and attribution
 

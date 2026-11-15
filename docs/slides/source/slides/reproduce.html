@@ -1,0 +1,25 @@
+<section id="reproduce" class="dark">
+<div class="head">
+<p class="eyebrow">REPRODUCE IT</p>
+<h2 class="title">Rebuild the forecast in 15 seconds, with no AI calls</h2>
+</div>
+<div class="row" style="gap:56px; align-items:flex-start">
+<div class="card rise" style="--i:1; width:1040px; gap:8px; padding:40px 48px; background:#0D1720">
+<p class="code"><span class="c"># the forecast files; no AI calls, no Modal, no network</span></p>
+<p class="code">bash reproduce.sh</p>
+<p class="code" style="margin-top:20px"><span class="c"># also replay the recorded ideas through the blind test</span></p>
+<p class="code">bash reproduce.sh --with-backtest</p>
+<p class="code" style="margin-top:20px"><span class="c"># checks on the write-up’s claims; no keys needed</span></p>
+<p class="code">uv run python -m gpuval.checks</p>
+<p class="code" style="margin-top:20px"><span class="c"># figures and README visuals</span></p>
+<p class="code">uv run python -m gpuval.figures</p>
+<p class="code">uv run python docs/media/make_media.py</p>
+</div>
+<div class="col" style="flex:1; gap:36px">
+<div class="rule rise" style="--i:2"><p class="h3">Scorer checked first</p><p class="small">The script confirms the repo’s scoring matches the starter kit, then prints each file’s SHA-256.</p></div>
+<div class="rule rise" style="--i:3"><p class="h3">Every answer is saved</p><p class="small">runs/ holds every agent, coach and scientist answer, so the forecast rebuilds exactly.</p></div>
+</div>
+</div>
+<div class="footer"><p>Needs uv and the unchanged data pack · README.md</p><p class="pn"></p></div>
+<aside>Everything in this deck can be rebuilt. The main script needs only uv and the data pack; it checks scorer parity, rebuilds the forecast from the recorded agent answers and prints hashes. The backtest flag replays the AI scientist’s recorded ideas through the blind test and reproduces its table exactly. Fresh AI runs need keys and will not repeat word for word, which is why every answer is saved.</aside>
+</section>
