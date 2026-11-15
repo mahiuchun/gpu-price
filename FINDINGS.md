@@ -211,7 +211,8 @@ Corrected and extended on 15 Nov:
 ![A scored price that follows the euro](findings/figures/fig10_euro_weekday.png)
 
 - **It decides scored prices.** Scaleway is the middle offer of that site's L4 list on all 86 days (three offers on 6 Nov), so the published L4 median is a euro price in dollars: it moved on 56 of 61 days from Tuesday to Saturday and on 1 of 22 Sundays and Mondays. On 6 Nov it was also the middle of the nine-offer H100 SXM list ($3.5539). Scaleway accounts for 10 of the 42 frequent repricers outside AWS.
-- **Neither the engine nor the agents know the weekday or the currency.** Where Scaleway is the middle offer, the price moved in 0 of 29 one-day forecasts that land on a Sunday or Monday, and in 69 of 74 that land from Tuesday to Saturday. A flat forecast has zero error on the first group; drift and the engine both pay for a range there. A check for anyone holding the 7 to 13 Nov prices: that site's L4 price on Monday 9 Nov should equal Saturday 7 Nov's.
+- **The weekday matters beyond the euro** (added 15 Nov, found by the analyst of section 10). Three more scored prices, cloud spot lists full of Google offers, moved on 54 of 189 Monday and Tuesday readings and on 7 of 495 others.
+- **Neither the engine nor the agents know the weekday or the currency.** Where Scaleway is the middle offer, the price moved in 0 of 29 one-day forecasts that land on a Sunday or Monday, and in 69 of 74 that land from Tuesday to Saturday. A flat forecast has zero error on the first group; drift and the engine both pay for a range there, though a small one: a simple weekday rule won nothing overall (section 10). A check for anyone holding the 7 to 13 Nov prices: that site's L4 price on Monday 9 Nov should equal Saturday 7 Nov's.
 - **A quarter of the offers that leave a list come straight back** (added 15 Nov). The 66% share for list changes counts every exit and entry as real. Of the 74 exits from provider lists, 19 were back within three readings, 15 of them at the same price, which reads like a missed reading and not a withdrawn offer. 50 never came back (6 of those left within the last three readings, too late to tell). gpurentalprices says it carries a provider's rows forward when a fetch fails; 1.2% of its rows in the pack carry a fetch time from an earlier day.
 
 Sources: GPUJournal, "Lambda announces GPU price rises of about 15% — B200, H100 and A100 80GB, from Nov 16", 6 Nov 2026, https://gpujournal.ai/story/lambda-announced-rises-nov-16. Crusoe, "Crusoe Cloud pricing", https://www.crusoe.ai/cloud/pricing, as stored on or before 6 Nov 2026 (read through Exa Snapshot). gpurentalprices, "Methodology", https://gpurentalprices.com/methodology, read 15 Nov 2026. GPU Price Tracker's method note and FastGPU's dataset card are in the pack (`licences/`). Tracking-site readings are from the data pack.
@@ -307,6 +308,29 @@ Each rule was written into PROTOCOL.md and committed before the test first ran (
 
 - **Neither change repairs it.** No version beats drift in both periods. Letting prices read each other is better than the plain run in the earlier weeks (+4.4%, +0.9% to +7.7%) and no different in the test weeks. It is then ahead of drift in 7 of 11 weeks, up from 5.
 - **It stays behind the engine where it was behind:** by 11.5% in the earlier weeks (−23% to −4%) with both changes. "Unreliable on these prices" stands for this model in these modes. Histories of a few dozen days, most of them flat, give it little to work with.
+
+**An analyst that writes its own test** (`gpuval.analyst`, 12 AI calls, about 11 cents). The AI scientist of section 5 could only turn the engine's 15 dials. Here the same model writes code: for each idea, one function that measures a pattern in when prices change. It was given a plain description of the data and no hint from our own findings.
+
+- **How an idea is judged.** Its function is run on the real data and on 39 shuffled copies, in which each offer keeps its price changes but their order in time is scrambled. An idea passes if the real number lies outside all 39. That happens by luck one time in twenty, so a passed idea is confirmed only if it passes again on newer data (8 Oct to 6 Nov) that the analyst never saw and that was not touched until it had finished.
+- **Where it runs.** The AI is called from our machine. Its code runs in a container that is given the data and nothing else: no keys, no network. The shuffles, the pass rule and the newer data stay outside its reach.
+
+| | Ideas |
+|---|---|
+| Proposed, and ran without error | 12 |
+| Passed on the data to 7 Oct | 5 |
+| Passed again on the newer data | 3 |
+
+- **Three patterns held twice.** Offers are repriced more on weekdays than at weekends. An offer that changes price is unusually likely to change again two to four days later. One provider's price changes arrive together across its different GPUs.
+- **Two passed once and then failed:** "price cuts arrive in market-wide waves" and "a price change tends to reverse the next day". The second look is what caught them. In the first AI scientist's test nothing that was kept held up on later weeks (section 5); here the gate threw out two of five before anything was claimed.
+- **It found the weekday pattern without being told, and the pattern is wider than the one we found by hand.** We expected all three to be the euro effect of section 7 seen from three sides. They are not only that: with that provider's offers taken out, all three still pass in both periods (a reading made after the result). Counting by provider shows why. Google Cloud's spot offers changed price on 42% of Monday readings and 17% of Tuesday readings, and almost never from Friday to Sunday (42,726 changes). AWS spot offers change a little less at weekends (67% of offers a day, against 72%).
+- **Three scored prices move almost only on Mondays and Tuesdays.** On one site's cloud spot lists for the A100 40GB, A100 80GB and V100, half or more of the offers are Google's. Their published price moved on 54 of 189 Monday and Tuesday readings, and on 7 of 495 readings on other days. We cannot tell from the pack whether Google reprices early in the week or the collector's catalogue is refreshed then.
+
+**Does that pattern make a better forecast? Not with a simple rule** (`gpuval.weekday_rule`, no AI calls). The rule, written down before it was run: for a 1-day forecast, if this price has never moved into the weekday being forecast, in at least 8 past cases, say "no change" with no range.
+
+- **No gain.** It fired on 146 of 2,058 one-day forecasts. The engine with the rule against the engine without: −0.1% (−0.5% to +0.1%). For the first crowd: −0.2% (−0.9% to +0.2%).
+- **Where it was right there was nothing left to win.** On the three cloud spot lists it fired 94 times and the price moved once. But the engine's error there was already close to zero: its ranges are tight when a history is flat.
+- **Where it was wrong it cost.** On three provider lists with short histories it fired 31 times and the price moved in 16: "never moved on a Thursday" was eight quiet Thursdays, not a schedule.
+- **Reading.** A pattern can be real in timing and still be worth nothing to a forecaster that already keeps its range tight on quiet days. That is the gap between the analyst's kind of test and a forecasting test, and the reason a confirmed idea was not claimed as an improvement.
 
 ## What someone pricing a lease or a loan could use
 

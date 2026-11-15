@@ -281,6 +281,31 @@ def weekday_by_provider(full: dict, top: int = 8) -> dict:
     return out
 
 
+def weekday_published(full: dict, min_moves: int = 10, share: float = 0.85) -> dict:
+    """Scored prices whose published value moves on two weekdays and hardly ever on the other five."""
+    out = {"prices": {}, "together": {"on_those_two_weekdays": [0, 0], "on_other_weekdays": [0, 0]}}
+    for sid, s in full["series"].items():
+        days, v = s["days"], s["value"]
+        ok = np.diff(days) == 1
+        mv = (np.abs(np.diff(v)) > 1e-9) & ok
+        wd = (days[1:] + 6) % 7
+        moves = np.array([int(mv[wd == d].sum()) for d in range(7)])
+        n = np.array([int(ok[wd == d].sum()) for d in range(7)])
+        if moves.sum() < min_moves:
+            continue
+        top = np.argsort(-moves, kind="stable")[:2]
+        if moves[top].sum() / moves.sum() < share:
+            continue
+        rest = [d for d in range(7) if d not in top]
+        out["prices"][sid.replace(".median", "")] = {"weekdays": [WEEKDAYS[d] for d in sorted(top)], "moved_on_them": [int(moves[top].sum()), int(n[top].sum())],
+                                                      "moved_on_other_days": [int(moves[rest].sum()), int(n[rest].sum())],
+                                                      "by_weekday": {WEEKDAYS[d]: [int(moves[d]), int(n[d])] for d in range(7)}}
+        t = out["together"]
+        t["on_those_two_weekdays"][0] += int(moves[top].sum()); t["on_those_two_weekdays"][1] += int(n[top].sum())
+        t["on_other_weekdays"][0] += int(moves[rest].sum()); t["on_other_weekdays"][1] += int(n[rest].sum())
+    return out
+
+
 def aws_flat_zones() -> dict:
     """The AWS archive holds price changes, not readings, so a zone that stops changing is carried
     forward for ever. We cannot tell a flat price from a zone that has gone."""
@@ -372,7 +397,7 @@ def main() -> int:
     out = {"coverage": coverage(exam, cells, rec), "weight": weight(rec), "single_agents": single_agents(test, periods),
            "ml_per_price": ml_per_price(periods), "aws_knowledge": aws_knowledge(exam_all.assign(origin=exam_all.id.str.split("|").str[2].map(day_of))),
            "coach_gain": coach_gain(exam), "exits": exits(full), "euro": euro(full, cells, movers),
-           "weekday_by_provider": weekday_by_provider(full), "aws_flat_zones": aws_flat_zones()}
+           "weekday_by_provider": weekday_by_provider(full), "weekday_published": weekday_published(full), "aws_flat_zones": aws_flat_zones()}
     (OUT / "checks.json").write_text(json.dumps(out, indent=1, default=str))
 
     c = out["coverage"]["exam_days"]
@@ -417,6 +442,10 @@ def main() -> int:
         r3 = lambda x: "-" if x is None else f"{x:.3f}"
         print(f"  {p:16s} {v['changes']:7d} changes | Mon-Fri {r3(v['mon_to_fri'])} | Sat-Sun {r3(v['sat_sun'])} | "
               + " ".join(f"{d} {x:.2f}" if x is not None else f"{d} -" for d, x in v["by_weekday"].items()))
+    print("\nPUBLISHED PRICES THAT MOVE ON TWO WEEKDAYS ONLY (85% or more of their moves):")
+    for sid, v in out["weekday_published"]["prices"].items():
+        print(f"  {sid:58s} {'+'.join(v['weekdays'])}: moved {v['moved_on_them'][0]} of {v['moved_on_them'][1]}; other days {v['moved_on_other_days'][0]} of {v['moved_on_other_days'][1]}")
+    print("  together:", out["weekday_published"]["together"])
     print("\nAWS FLAT ZONES:", out["aws_flat_zones"])
     print("\nwrote", (OUT / "checks.json").relative_to(data.REPO))
     return 0
