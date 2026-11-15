@@ -503,13 +503,58 @@ def collect(plan: str) -> None:
     (d / "summary.json").write_text(json.dumps(summary, indent=1))
 
 
+H100_USD_PER_HOUR = 3.95  # modal.com/pricing, read 14 Nov 2026 ($0.001097 per second)
+
+
+def summarize() -> None:
+    """One file with every Modal run next to the Tinker runs: findings/data/modal_rl.json."""
+    import eval_forecaster as ev
+    import forecast_env as env
+    from gpuval import coach, data, report
+
+    out = {"gpu_usd_per_hour": H100_USD_PER_HOUR, "runs": [], "tinker": {}}
+    for tag, run_name in (("Qwen/Qwen3-8B", "fc1"), ("Qwen/Qwen3.5-9B", "fc2")):
+        e, l = json.loads((HERE / "runs" / run_name / "eval.json").read_text()), json.loads((HERE / "runs" / run_name / "log.json").read_text())
+        out["tinker"][tag] = {"train_usd": l["cost_estimate_usd"], "test_usd": e["cost_estimate_usd"], "train_minutes": l["minutes"],
+                              "watch_first64": [c["mean_reward"] for c in l["checks"]],
+                              **{w: {k: e["table"][w][k] for k in ("n", "base_vs_drift", "trained_vs_drift", "trained_vs_base", "trained_vs_engine", "engine_vs_drift", "inside")} for w in ("ours", "aws", "all")}}
+    for plan in ("sweep1", "longer", "newer"):
+        d = LOCAL / plan
+        if not (d / "summary.json").exists():
+            continue
+        for name, b in json.loads((d / "summary.json").read_text()).items():
+            r = json.loads((d / f"{name}.json").read_text())
+            minutes = (r["checks"][-1]["minutes"] if r["checks"] else 0) + (r.get("eval_minutes") or 0) if r.get("eval_done_separately") else r.get("total_minutes")
+            c = b["cfg"]
+            out["runs"].append({"plan": plan, "name": name, "base_model": c["base_model"], "lr": c["lr"], "seed": c["seed"], "rounds": c["rounds"],
+                                "watch": {str(k["round"]): k["mean_reward"] for k in b["checks"]}, "collapsed": sum("grad_norm" not in x for x in r["rounds"]) > len(r["rounds"]) / 4,
+                                "gpu": b["gpu"], "gpu_minutes": minutes, "usd": round(minutes * H100_USD_PER_HOUR / 60, 2),
+                                **{w: {k: b["table"][w][k] for k in ("n", "base_vs_drift", "trained_vs_drift", "trained_vs_base", "trained_vs_engine", "engine_vs_drift", "inside")} for w in ("ours", "aws", "all")}})
+    sw = [r for r in out["runs"] if r["plan"] == "sweep1"]
+    by_lr = {}
+    for r in sw:
+        by_lr.setdefault(r["lr"], []).append((r["watch"]["50"] + r["watch"]["60"]) / 2)
+    out["watch_rule"] = {f"{lr:g}": statistics.fmean(v) for lr, v in by_lr.items()}
+    out["chosen_lr"] = max(by_lr, key=lambda lr: statistics.fmean(by_lr[lr]))
+    out["total_usd"] = round(sum(r["usd"] for r in out["runs"]), 2)
+    (data.REPO / "findings" / "data" / "modal_rl.json").write_text(json.dumps(out, indent=1))
+    f = report.fmt_ci
+    print(f"chosen learning rate (watch set): {out['chosen_lr']:g}  {out['watch_rule']}")
+    for tag, t in out["tinker"].items():
+        print(f"Tinker {tag:16s} ours {f(t['ours']['base_vs_drift'])} -> {f(t['ours']['trained_vs_drift'])} | aws {f(t['aws']['base_vs_drift'])} -> {f(t['aws']['trained_vs_drift'])} | ${t['train_usd'] + t['test_usd']:.2f}")
+    for r in out["runs"]:
+        print(f"Modal  {r['name']:16s} {r['base_model'].split('/')[1]:11s} lr {r['lr']:<7g} s{r['seed']} r{r['rounds']:<3d} | ours {f(r['ours']['trained_vs_drift'])} (vs before {f(r['ours']['trained_vs_base'])}) "
+              f"| aws {f(r['aws']['trained_vs_drift'])} | inside {r['ours']['inside']['trained']:.2f} | {r['gpu_minutes']:.0f} min ${r['usd']:.2f}{' | COLLAPSED' if r['collapsed'] else ''}")
+    print("Modal total: $", out["total_usd"])
+
+
 if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["launch", "launch-eval", "collect"])
-    ap.add_argument("--plan", required=True)
+    ap.add_argument("cmd", choices=["launch", "launch-eval", "collect", "summarize"])
+    ap.add_argument("--plan")
     ap.add_argument("--lr", type=float)
     a = ap.parse_args()
     sys.path.insert(0, str(HERE))
-    {"launch": lambda: launch(a.plan, a.lr), "launch-eval": lambda: launch_eval(a.plan, a.lr), "collect": lambda: collect(a.plan)}[a.cmd]()
+    {"launch": lambda: launch(a.plan, a.lr), "launch-eval": lambda: launch_eval(a.plan, a.lr), "collect": lambda: collect(a.plan), "summarize": summarize}[a.cmd]()
