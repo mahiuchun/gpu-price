@@ -467,6 +467,7 @@ The loop stopped itself after four rollbacks in a row: 9 minutes, about $11, plu
 - **The gate stopped it early.** After 8 rounds the loop kept +8.4%; the earlier run, left to train for 60 rounds, reached +11.3%. Generation 5 scored highest of all on the watch set and was better than the kept weights in 86% of resamples, short of the 90% it needed. After the first big step, what 8 more rounds add is smaller than the noise in 128 watch price-days. It is the same lesson as with the vote: this gate is safe, and it needs more to judge on (a larger watch set, or longer generations) before it will let a slow gain through.
 - **Where the kept weights stand.** Level with the engine on our prices (−2.0%, −11% to +4%) and behind the GPT crowd on the 14 days both answered (−5.5%, −16% to +1%).
 - **Not yet joined up.** The kept weights are not yet a voting member of the team in the loop above; that is one more edit of the "who votes" kind.
+- **The same loop also runs on Modal GPUs** (`rl/modal_forecaster.py`, commands `rsi-launch` and `rsi-collect`; see `rl/README.md`). A short trial on Qwen3.5-9B ran end to end: two generations of one round each, both rolled back, and the saved weights were the untrained ones, as they should be. One full run (five generations of 8 rounds) was started at 1:21 PM on 15 Nov and had not finished when this was written, so there is no Modal result to report.
 
 **What this says about the loop.**
 
