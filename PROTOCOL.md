@@ -264,6 +264,29 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       - We will say an arm repairs the model only if it beats drift in both blocks (the eight
         earlier weeks and the three test weeks) with 90% intervals that exclude zero. We also
         report each arm against the plain run and against the engine on the same forecasts.
+      - Outcome of the first run: no arm repairs the model. In the eight earlier weeks `cross`
+        scored −2.4% against drift (−11% to +4%) and `cross_cov` −2.1%; in the test weeks +8.4%
+        and +8.8%, with intervals that include zero. Cross-learning was better than the plain run
+        in the earlier weeks (+4.4%, +0.9% to +7.7%) and no different in the test weeks.
+    - **Recall probe, outcome of the first run:** 212 questions. The model said it remembered
+      none of them and answered "don't know" to every week-later question. Its price guesses were
+      no closer to their own date than to other dates (p = 0.12 before April 2026, 0.37 after).
+      By the rule above, no recall was found.
+    - **An analyst that writes its own test** (`gpuval.analyst`, 12 AI calls and a Modal CPU
+      container; written before its first run). The agents' model, at medium effort, proposes 12
+      ideas one at a time about when or in what order prices and lists change, each as a Python
+      function that returns one number. It is given a neutral description of the data and no
+      hint from our own findings.
+      - Its code runs in a container with no keys and no network, on the real data and on 39
+        shuffled copies (`data.make_placebo`, seeds 1 to 39). Discovery uses data up to 7 Oct:
+        an idea passes if the real number is outside all 39 shuffled ones. The analyst is told
+        each result.
+      - Confirmation uses 8 Oct to 6 Nov, is never shown to the analyst, and is run once after
+        its last idea, only for ideas that passed: confirmed if the real number is again outside
+        all 39 shuffled ones (seeds 101 to 139) on the same side.
+      - By luck an idea passes discovery 1 time in 20 and both steps about 1 time in 800. We
+        report every idea, passed or not. A confirmed idea is a pattern in timing, not yet a
+        better forecast.
     - **Checks with no rule to fix** (`gpuval.checks`, no AI calls). Counts and splits of results
       that were already recorded: how often ranges held when the price moved, how many prices and
       days carry the pooled figures, each agent alone, the AWS days before and after the agents'
