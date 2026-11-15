@@ -69,6 +69,7 @@ the same facts, the same five jobs, the same averaging.
 | gpt-6-astra | +16.6% | +20.7% | 74% → 80% | $12.01 |
 | Claude Sonnet 5.5 | +19.3% | +18.9% | 82% → 87% | $5.77 |
 | Claude Opus 5.5 | +22.0% | +22.7% | 80% → 86% | $11.45 |
+| **Qwen3.5-9B after RL** (one prompt, no agents) | **+15.4%** | not run | 81% | about $16 to train |
 
 <sub>Percent less error than drift on the same 479 forecasts (37 prices, 5 days). "Ranges held" is how often the truth fell inside the range, first written → with the coach's changes; the aim is 80%. Likely ranges and caveats are in [FINDINGS.md §11](FINDINGS.md#11-other-models-added-15-nov).</sub>
 
@@ -76,8 +77,10 @@ the same facts, the same five jobs, the same averaging.
   cost 17 cents. None is clearly better or worse than `gpt-6.1-sol`. Only the untrained open model fell clearly behind.
 - **The coach's two changes carry over to the other GPT models and to the open model, but not to Claude.** They were
   chosen while working with `gpt-6.1-sol`. Claude's ranges already held about 80% of the time, so widening them added nothing.
-- **RL still earns its place on the open model.** Qwen3.5-9B after RL has 10% less error than five untrained agents on
-  the same base model (likely 2% to 16%).
+- **RL puts the 9B open model level with the cheaper API models.** Qwen3.5-9B after RL, answering one prompt with no
+  agents, cut error by 15% against drift on the same 479 forecasts (likely 3% to 24%). That is level with the three GPT
+  models as first written (15% to 17%) and behind Claude Opus (22%; the gap is 8%, likely 0% to 16%). Untrained, the
+  same model scored 4% with one prompt and 6% as five agents.
 
 No rule was written before this ran, and each model was run once.
 
