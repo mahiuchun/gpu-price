@@ -1,0 +1,13 @@
+{
+ "model": "Qwen/Qwen3.5-9B",
+ "effort": "low",
+ "usd": 0.6541320479999999,
+ "calls": 1361,
+ "input_tokens": 1532247,
+ "output_tokens": 240964,
+ "thinking_tokens": 0,
+ "flex_calls": 0,
+ "retries": 0,
+ "bad_answers": 251,
+ "flat_answers": 53
+}

@@ -331,3 +331,24 @@ Written after the for-the-record run (commit `354fc20` holds the protocol as it 
       (the ML model's numbers do reach one agent; the agents' different jobs and the averaging are
       not shown to matter; the coach's gain is nearly all range width; the 7-day engine figure is
       72 forecasts from three days). Each is marked "added 15 Nov" or "corrected" where it stands.
+
+13. **The five agents on five other models (15 Nov). No rule was written before this ran.**
+    `runs/other_models/`, FINDINGS.md section 11. The crowd's 479 exam forecasts of our prices were
+    asked of Qwen3.5-9B (untrained), gpt-6-luna, gpt-6-astra, Claude Sonnet 5.5 and Claude Opus 5.5.
+    Unlike the tests under 12, nothing about this was fixed in writing first. What earlier choices
+    had already fixed: the 479 forecasts, the facts shown, the agents' instructions (as first
+    written, and with the coach's two kept changes), the averaging and the scoring code. What was
+    decided as the work went:
+    - The five models were named before any of the crowd's answers on them had been scored, apart
+      from a two-price trial of three of the runs. Claude Fable 5.2 was priced and not run.
+    - Low reasoning effort for every API model, the setting the crowd was built with.
+    - For Qwen, which runs on a service that cannot force an answer format: the format is given in
+      words, an unreadable answer is asked for once more, and a missing final brace is put back.
+      The brace repair was added after a first pass had marked 53 of 1,110 answers unreadable;
+      those 53 were asked again.
+    - "Truth inside the range" is counted on ranges rounded to 6 decimals, as a forecast file
+      holds them. This was settled after the first numbers were out: unrounded, the average of
+      five identical answers can sit a hair off the value itself, and an unchanged price then
+      counts as a miss. Error figures are not affected.
+    - Each model was run once. Every run that was made is reported, and all comparisons are in
+      `runs/other_models/table.json`.

@@ -1,0 +1,12 @@
+{
+ "model": "gpt-6-luna",
+ "effort": "low",
+ "usd": 0.17041864999999984,
+ "calls": 1110,
+ "input_tokens": 1063103,
+ "output_tokens": 469054,
+ "thinking_tokens": 328498,
+ "flex_calls": 1110,
+ "retries": 0,
+ "bad_answers": 0
+}
