@@ -16,8 +16,16 @@ coach.crowd_forecast); only the model call changes. Reasoning effort is low, as 
 --dry asks nothing: it rebuilds the prompts, checks them against the recorded run (the same price-days, the same
 outcomes, and the recorded gpt-6.1-sol answers scored through this file give the recorded numbers) and prints sizes.
 
-Answers are saved after every agent, so a stopped run continues where it left off. Each call is priced from the
-token counts the API returns; a call that could take the total past --cap is not sent.
+Saving. Answers and the spend ledger are written as a set of instructions goes along and again when it ends,
+including when it ends on an error or the spending limit, so a stopped run continues where it left off and its
+spend still counts. A folder holds one model at one reasoning effort: a run with other settings is refused.
+
+Spending limit. Each call is priced from the token counts the API returns. Before a call is sent, the most it
+could cost is set aside: every byte of the prompt counted as a token, an allowance for what the API adds, the
+largest answer allowed (--max-out), and no flex discount. If the money spent, plus what is set aside for calls
+still running, plus this call's share would pass --cap, the call is not sent and the run stops. So --cap needs
+room above the expected spend for as many calls as run at once (the run prints the amount). A call that fails
+without returning token counts is not metered.
 """
 from __future__ import annotations
 
@@ -26,7 +34,7 @@ import json
 import os
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 import pandas as pd
@@ -46,7 +54,9 @@ PRICE = {
     "claude-fable-5-2": {"prefill": 8.00, "cached": 0.20, "cache_write": 10.00, "sample": 40.00},
     "Qwen/Qwen3.5-9B": {"prefill": 0.30, "cached": 0.06, "cache_write": 0.30, "sample": 0.807},  # Tinker, base model, no training
 }
-MAX_OUT = 8000  # a guard only: answers are about 250 tokens
+MAX_OUT = 8000  # largest answer allowed, hidden reasoning included; answers are about 250 tokens (--max-out)
+INPUT_ALLOWANCE = 2000  # tokens set aside for what the API adds to a prompt (answer format, chat template)
+SAVE_EVERY = 25  # answers between saves within one set of instructions
 # Tinker cannot force the answer format, so an open model is told the format in words. An answer that still cannot be
 # read is asked for once more; if that fails too the agent's answer is "no change from today's price".
 OPEN_FORMAT = ('\nReply with one JSON object and nothing else, in exactly this form: {"h1": {"low": 0.0, "mid": 0.0, "high": 0.0}, '
@@ -105,8 +115,9 @@ def main() -> None:
     ap.add_argument("--env", required=True)
     ap.add_argument("--model")
     ap.add_argument("--dry", action="store_true")
-    ap.add_argument("--out", help="folder for answers and spend (default: <model> next to this file)")
-    ap.add_argument("--cap", type=float, default=1.0)
+    ap.add_argument("--out", help="folder for answers and spend (default: <model> next to this file, with _<effort> added unless low)")
+    ap.add_argument("--cap", type=float, default=1.0, help="spending limit in USD for this folder, earlier runs included")
+    ap.add_argument("--max-out", type=int, default=MAX_OUT, help="largest answer allowed, in tokens; the spending limit sets this much aside per call")
     ap.add_argument("--effort", default="low")
     ap.add_argument("--tier", default="flex", choices=["flex", "standard"])
     ap.add_argument("--workers", type=int, default=16)
@@ -163,17 +174,27 @@ def main() -> None:
                   f"-> about {chars * tok / ch / 1e6:.3f}M input tokens for all {len(jobs)} calls")
         return
 
-    out = Path(a.out) if a.out else HERE / a.model.split("/")[-1]
+    out = Path(a.out) if a.out else HERE / (a.model.split("/")[-1] + ("" if a.effort == "low" else f"_{a.effort}"))
     out.mkdir(parents=True, exist_ok=True)
     store = Store(out / "answers.json")
+    ledger_path = out / "spend.json"
+    # One folder holds one model at one effort. Saved answers are keyed by instructions and price-day only, so
+    # answers from other settings would be reused without a word.
+    if ledger_path.exists():
+        ledger = json.loads(ledger_path.read_text())
+        if (ledger.get("model"), ledger.get("effort")) != (a.model, a.effort):
+            raise SystemExit(f"{out} holds answers from {ledger.get('model')} at effort {ledger.get('effort')}; this run asks for "
+                             f"{a.model} at effort {a.effort}. Give another folder with --out.")
+    elif store.d:
+        raise SystemExit(f"{out} holds answers but no spend.json, so the model and effort they came from are unknown. Give another folder with --out.")
+    else:
+        ledger = {"model": a.model, "effort": a.effort, "usd": 0.0, "calls": 0, "input_tokens": 0, "output_tokens": 0,
+                  "thinking_tokens": 0, "flex_calls": 0, "retries": 0, "bad_answers": 0}
     if a.redo_unreadable:
         drop = [k for k, v in store.d.items() if v.get("unreadable")]
         for k in drop:
             del store.d[k]
         print(f"asking again for {len(drop)} answers that were recorded as unreadable", flush=True)
-    ledger_path = out / "spend.json"
-    ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else {"model": a.model, "effort": a.effort, "usd": 0.0, "calls": 0, "input_tokens": 0,
-                                                                                 "output_tokens": 0, "thinking_tokens": 0, "flex_calls": 0, "retries": 0, "bad_answers": 0}
     price = PRICE[a.model]
     claude, open_model = a.model.startswith("claude-"), "/" in a.model
     wanted = "ANTHROPIC_API_KEY" if claude else "TINKER_API_KEY" if open_model else "OPENAI_API_KEY"
@@ -196,7 +217,15 @@ def main() -> None:
         client = sdk.OpenAI(max_retries=0, timeout=900)
     retryable = (sdk.RateLimitError, sdk.APITimeoutError, sdk.APIConnectionError, sdk.InternalServerError)
     lock = threading.Lock()
-    state_ = {"in_flight": 0, "guess": 0.003 * price["sample"]}
+    room_freed = threading.Condition(lock)
+    state_ = {"set_aside": 0.0, "running": 0}  # USD set aside for the calls that are running, and how many there are
+
+    def most(system: str, user: str) -> float:
+        """The most one call can cost. A token is at least one byte, so the prompt's bytes bound its tokens; the
+        input is priced at the dearest input rate and the answer at its largest allowed size, with no flex discount."""
+        n_in = len((system + user + (OPEN_FORMAT if open_model else "")).encode()) + INPUT_ALLOWANCE
+        n_out = OPEN_MAX_TOKENS if open_model else a.max_out
+        return (n_in * max(price["prefill"], price["cache_write"]) + n_out * price["sample"]) / 1e6
 
     def call(system: str, user: str, attempt: int) -> tuple[str, dict]:
         if open_model:
@@ -210,7 +239,7 @@ def main() -> None:
                                                               "usd": (len(ids) * price["prefill"] + len(got) * price["sample"]) / 1e6}
         if claude:
             # no fallback model on a refusal: another model's answer would not be this model's score
-            r = client.messages.create(model=a.model, max_tokens=MAX_OUT, system=system, messages=[{"role": "user", "content": user}],
+            r = client.messages.create(model=a.model, max_tokens=a.max_out, system=system, messages=[{"role": "user", "content": user}],
                                        output_config={"effort": a.effort, "format": {"type": "json_schema", "schema": agents.SCHEMA}})
             u = r.usage
             cached, write = int(u.cache_read_input_tokens or 0), int(u.cache_creation_input_tokens or 0)
@@ -218,7 +247,7 @@ def main() -> None:
             return "".join(b.text for b in r.content if b.type == "text"), {
                 "in": u.input_tokens + cached + write, "out": u.output_tokens, "usd": usd, "flex": 0,
                 "think": int(getattr(getattr(u, "output_tokens_details", None), "thinking_tokens", 0) or 0)}
-        kw = {"model": a.model, "reasoning": {"effort": a.effort}, "max_output_tokens": MAX_OUT, "prompt_cache_options": {"mode": "explicit"},
+        kw = {"model": a.model, "reasoning": {"effort": a.effort}, "max_output_tokens": a.max_out, "prompt_cache_options": {"mode": "explicit"},
               "input": [{"role": "system", "content": system}, {"role": "user", "content": user}],
               "text": {"format": {"type": "json_schema", "name": "forecast", "schema": agents.SCHEMA, "strict": True}}}
         if a.tier == "flex" and attempt < 4:
@@ -236,15 +265,26 @@ def main() -> None:
     def one(job):
         role, it = job
         system, user = prompt(role, it)
-        last, unread = None, 0
+        last, unread, w = None, 0, most(system, user)
         for attempt in range(12):
-            with lock:
-                if ledger["usd"] + (state_["in_flight"] + 1) * state_["guess"] > a.cap:
-                    raise BudgetExceeded(f"spent ${ledger['usd']:.3f} with {state_['in_flight']} calls in flight; cap ${a.cap}")
-                state_["in_flight"] += 1
+            with room_freed:
+                while True:
+                    if ledger["usd"] + w > a.cap:  # it would not fit even with nothing else running
+                        raise BudgetExceeded(f"spent ${ledger['usd']:.4f} and the next call could cost ${w:.4f}; cap ${a.cap}")
+                    if ledger["usd"] + (state_["set_aside"] if state_["running"] else 0.0) + w <= a.cap:
+                        break
+                    room_freed.wait()  # a running call will cost less than was set aside for it; wait for it, then look again
+                state_["set_aside"] += w
+                state_["running"] += 1
             try:
                 text, c = call(system, user, attempt)
-            except retryable as e:
+            except BaseException as e:
+                with room_freed:
+                    state_["set_aside"] -= w
+                    state_["running"] -= 1
+                    room_freed.notify_all()
+                if not isinstance(e, retryable):
+                    raise
                 last = e
                 try:
                     asked = float(e.response.headers.get("retry-after", 0))
@@ -254,17 +294,16 @@ def main() -> None:
                 with lock:
                     ledger["retries"] += 1
                 continue
-            finally:
-                with lock:
-                    state_["in_flight"] -= 1
-            with lock:
+            with room_freed:  # what was set aside becomes what was spent, in one step
+                state_["set_aside"] -= w
+                state_["running"] -= 1
+                room_freed.notify_all()
                 ledger["usd"] += c["usd"]
                 ledger["calls"] += 1
                 ledger["input_tokens"] += c["in"]
                 ledger["output_tokens"] += c["out"]
                 ledger["thinking_tokens"] += c["think"]
                 ledger["flex_calls"] += c["flex"]
-                state_["guess"] = max(state_["guess"], 3 * ledger["usd"] / ledger["calls"]) if ledger["calls"] < 20 else 3 * ledger["usd"] / ledger["calls"]
             try:
                 ans = read_open_answer(text) if open_model else json.loads(text)
                 return it["id"], {"q": {str(h): list(v) for h, v in agents.clean(ans, it["last"]).items()}, "reason": str(ans.get("reason", ""))}
@@ -279,16 +318,49 @@ def main() -> None:
         raise RuntimeError(f"no usable answer after 12 tries: {last}")
 
     todo_items = items[: a.limit] if a.limit else items
-    print(f"{a.model}, effort {a.effort}, {a.workers} parallel calls, cap ${a.cap}, already spent ${ledger['usd']:.4f}", flush=True)
+    room = a.workers * max(most(*prompt(r, it)) for r, it in jobs)
+    print(f"{a.model}, effort {a.effort}, {a.workers} parallel calls, cap ${a.cap}, already spent ${ledger['usd']:.4f}; "
+          f"up to ${room:.2f} is set aside for calls that are running, and calls wait their turn when the cap is that close", flush=True)
+
+    def save() -> None:
+        with lock:
+            store.path.write_text(json.dumps(store.d))
+            ledger_path.write_text(json.dumps(ledger, indent=1))
+
     for name, role in roles.values():
         todo = [(role, it) for it in todo_items if coach.Answers.key(role, it["id"]) not in store.d]
         t0, before = time.time(), ledger["usd"]
         if todo:
-            with ThreadPoolExecutor(max_workers=a.workers) as ex:
-                for iid, ans in ex.map(one, todo):
+            futures, kept, stopped = [], set(), None
+
+            def keep(fut) -> None:
+                if fut not in kept and fut.done() and not fut.cancelled() and fut.exception() is None:
+                    iid, ans = fut.result()
                     store.d[coach.Answers.key(role, iid)] = ans
-            store.path.write_text(json.dumps(store.d))
-            ledger_path.write_text(json.dumps(ledger, indent=1))
+                    kept.add(fut)
+
+            try:
+                with ThreadPoolExecutor(max_workers=a.workers) as ex:
+                    futures = [ex.submit(one, job) for job in todo]
+                    try:
+                        for n, fut in enumerate(as_completed(futures), 1):
+                            fut.result()  # the first failure stops the run here
+                            keep(fut)
+                            if n % SAVE_EVERY == 0:
+                                save()
+                    except BaseException:
+                        for fut in futures:
+                            fut.cancel()  # send nothing new; calls already running finish as the pool closes
+                        raise
+            except BudgetExceeded as e:
+                stopped = str(e)
+            finally:  # every answer that was paid for is kept, and the spend with it, however the set ended
+                for fut in futures:
+                    keep(fut)
+                save()
+            if stopped:
+                raise SystemExit(f"stopped at the spending limit while asking {name}: {stopped}. {len(store.d)} answers and the spend are saved "
+                                 f"in {out}; run again with a higher --cap to continue.")
         print(f"  {name:18s} {len(todo):4d} calls, ${ledger['usd'] - before:.4f}, {time.time() - t0:.0f} s | total ${ledger['usd']:.4f} "
               f"({ledger['retries']} retries, {ledger['bad_answers']} bad answers)", flush=True)
 
