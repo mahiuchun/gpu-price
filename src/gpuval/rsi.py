@@ -29,7 +29,7 @@ The starting bundle is the forecast we handed in (five agents, equal weights, th
 stretch); `tests/rsi_checks.py` checks that it reproduces those numbers exactly. Everything is
 rebuilt from recorded answers. The only AI calls are the proposer's, one per generation.
 
-The rule (days, gate, kinds, bounds, how the exam is read) is in PROTOCOL.md, deviation 13,
+The rule (days, gate, kinds, bounds, how the exam is read) is in PROTOCOL.md, deviation 14,
 committed before the first run.
 """
 from __future__ import annotations

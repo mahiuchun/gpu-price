@@ -1,0 +1,12 @@
+{
+ "model": "claude-opus-5-5",
+ "effort": "low",
+ "usd": 11.447992000000001,
+ "calls": 1110,
+ "input_tokens": 1796323,
+ "output_tokens": 213135,
+ "thinking_tokens": 8887,
+ "flex_calls": 0,
+ "retries": 0,
+ "bad_answers": 0
+}
