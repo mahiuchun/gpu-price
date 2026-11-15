@@ -7,9 +7,6 @@
 >   only if practice days get better and hidden check days get no worse.
 > - **Result:** 20% less error than drift on days no model had seen (likely 10% to 28%). The coach's changes add 4%.
 >   A plain engine with no AI is a steady 8% ahead of drift in all three tests.
-> - **The 2 to 3 year question** (argued, not scored): by October 2029 an H100 rents for about $2.54 an hour on AWS
->   spot and resells for about $2,300; an A100 rents for about $1.24 and resells for a few hundred dollars. The ranges
->   are wide: [see the view](#the-2-to-3-year-view-h100-and-a100-rent-and-resale).
 > - **Honest caveats:** only 2 of 7 ways of making the system improve itself held up. Ranges hold 80% of the time
 >   overall, but 66% when the price actually moves.
 > - **Try it:** `bash reproduce.sh` rebuilds the forecast in about 15 seconds, with no AI calls. Or watch the
@@ -33,6 +30,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 </p>
 
 - **Findings:** [FINDINGS.md](FINDINGS.md)
+- **The 2 to 3 year view:** [H100 and A100 rent and resale to October 2029](#the-2-to-3-year-view-h100-and-a100-rent-and-resale)
 - **Forecast file:** [submission/forecast_2026-11-06.csv](submission/forecast_2026-11-06.csv), the average of five AI agents
   after two changes that a coach AI proposed and tests kept.
   The engine alone is [submission/alt_engine_2026-11-06.csv](submission/alt_engine_2026-11-06.csv).
@@ -284,8 +282,12 @@ Most list prices are expected to hold. The wide ranges are on the marketplace an
 ## The 2 to 3 year view: H100 and A100 rent and resale
 
 The brief opens with a question that cannot be scored: *what will H100 and A100 GPUs resell for, and what will cloud
-rentals cost, in 2–3 years?* This is our argued answer, with ranges. It comes from the two long-view models in
-`longview/`, run on prices up to 31 October 2026.
+rentals cost, in 2–3 years?* This is our argued answer, from the two long-view models in `longview/`, run on prices
+up to 31 October 2026.
+
+**Our answer for October 2029: an H100 rents for about $2.54 an hour on AWS spot and resells for about $2,300. An
+A100 rents for about $1.24 an hour and resells for about $300.** That is 34% and 41% below today's rent, and 81% and
+94% below today's used price. Every range is wide.
 
 | GPU | When | Rent low | **Rent middle** | Rent high | Resale low | **Resale middle** | Resale high |
 |---|---|---|---|---|---|---|---|
@@ -296,59 +298,43 @@ rentals cost, in 2–3 years?* This is our argued answer, with ranges. It comes 
 | A100 | Oct 2028 (+2 years) | $0.75 | **$1.24** | $2.63 | $150 | **$1,300** (26% of today's) | $4,500 |
 | A100 | Oct 2029 (+3 years) | $0.74 | **$1.24** | $2.57 | $150 | **$300** (6% of today's) | $1,800 |
 
-<sub>Rent: AWS spot, USD per GPU-hour, median across zones (`p5.48xlarge` for the H100, `p4d.24xlarge` for the A100). Resale: USD for one used bare GPU module. Low and high are the 10% and 90% points. These are two different kinds of price and are never joined into one series. The $340, the two $150s and the A100's $300 are a floor (1% to 2% of launch price), not a forecast.</sub>
-
-### Why rent should fall first
+<sub>Rent: AWS spot, USD per GPU-hour, median across zones (`p5.48xlarge` for the H100, `p4d.24xlarge` for the A100). Resale: USD for one used bare GPU module. These are two different kinds of price and are never joined into one series. The $340, the two $150s and the A100's $300 are a floor (1% to 2% of launch price), not a forecast.</sub>
 
 ![Today's AWS spot rent against each chip's usual level and AWS's list price. H100: usual level $2.53, now $3.86 (52% above usual), list price $7.64. A100: usual level $1.28, now $2.12 (66% above usual), list price $3.29.](docs/media/longview_levels.png)
 
-- **Both chips rent far above where they usually sit.** The H100 is 52% above the middle of its own price history and
-  the A100 66%. The rise came between July and October 2026 (H100 $2.13 to $3.86, A100 $1.69 to $2.12), with AWS's
-  list price unchanged.
-- **A spot price has a ceiling.** Since AWS cut its list prices in June 2025, no zone has traded above list: 0 of
-  22,102 zone-days for the two chips. So no path in our outlook may pass $7.64 for the H100 or $3.29 for the A100.
-
-### Rent
+Both chips rent far above where they usually sit: the H100 52% above the middle of its own price history, the A100
+66%. The rise came between July and October 2026, with AWS's list price unchanged. That list price is a ceiling:
+since AWS cut it in June 2025, no zone has traded above it (0 of 22,102 zone-days for the two chips).
 
 ![H100 and A100 AWS spot rent to October 2029. H100: now $3.86; middle $2.56 in October 2028 and $2.54 in October 2029; range $0.94 to $6.89; $1.63 if rent fell a steady 25% a year. A100: now $2.12; middle $1.24 in both years; range $0.74 to $2.57; $0.89 at 25% a year. The AWS list price is drawn as a ceiling.](docs/media/longview_rent.png)
 
-- **Middle: the 2026 rise fades.** `longview.py` simulates 20,000 futures one day at a time, drawing each day's
-  change from past days that looked alike. The middle path falls back to about the usual level within a year (H100
-  −30%, A100 −40%) and is flat after that.
-- **Low and high: ranges widened until they passed each chip's own test.** Replayed from every month-start on
-  record, the first ranges were too narrow. They were widened until they caught 80% of past outcomes: by a third for
-  the A100, and about doubled at each end for the H100, which is why its range is so wide.
-- **If the rise does not fade,** the H100's middle is $3.64 in two years and $3.54 in three, and the A100's $1.88
-  and $1.73. Four years of A100 history favour the fade. For the H100 the tests cannot choose.
-- **If cheaper computing keeps pulling old chips down (dashed line),** a steady fall of 25% a year puts the H100 at
-  $2.17 and $1.63, and the A100 at $1.19 and $0.89. Our middle is flat after year one, so if that pull continues it
-  is too high at three years.
-
-### Resale
-
 ![H100 and A100 used-module resale price to October 2029. H100: now $12,000 (published range $10,000 to $14,000); middle $8,400 in 2027, $5,400 in 2028 and $2,300 in 2029; range in 2029 $340 to $10,800. A100: now $5,050 (published range $4,700 to $5,400); middle $2,900, $1,300 and $300; range in 2029 $150 to $1,800.](docs/media/longview_resale.png)
 
-- **Today's price is published. The rest is modelled.** A used H100 module sells for $10,000 to $14,000 and an A100
-  80GB for $4,700 to $5,400 (American Compute, GPU Prices, October 2026, https://www.amcompute.com/gpu-prices). We
-  start from the midpoints.
-- **Middle: today's price times the share of its value the GPU has left.** `resale.py` values a GPU as the rent it
-  can still earn: rent × utilisation, less running cost, over its remaining earning life, discounted. On that, an
-  H100 keeps 45% of today's price in two years and 19% in three, which is 16% and 7% of its launch price.
-- **The A100 runs out of earning life.** It keeps 26% of today's price in two years. By late 2029 the model has it
-  at the end of its earning life, and the $300 is the floor.
-- **The tops are probably out of reach.** They need rents near AWS's list price for years.
-- **On a steady 25% yearly fall in rent,** the H100's middle is $3,600 in two years and $1,300 in three.
-
-### How far to trust it, and how to use it
-
-- **Tested to about six months.** One year rests on 2 to 4 separate stretches of history, and three years is
-  untested. The resale evidence is four publishers. Nothing here is scored against the 7 to 13 November prices.
+- **Middle case: the 2026 rise fades.** We simulate 20,000 futures one day at a time, drawing each day's change
+  from past days that looked alike. Rent falls back to about its usual level within a year (H100 −30%, A100 −40%)
+  and is flat after that.
+- **Low and high cases:** the 10% and 90% points, widened until they caught 80% of each chip's own past outcomes.
+  The H100's had to be about doubled at each end, which is why its range is so wide. No path may pass AWS's list
+  price ($7.64 and $3.29).
+- **If the rise does not fade,** the H100 rents for $3.54 in October 2029 and the A100 for $1.73. Four years of
+  A100 history favour the fade. For the H100 the tests cannot choose.
+- **If cheaper computing keeps pulling old chips down (dashed lines),** a steady fall of 25% a year gives $1.63 for
+  the H100 and $0.89 for the A100 in October 2029. Our middle is flat after year one, so if that pull continues it
+  is too high.
+- **Resale:** today's published used price times the share of its value the GPU has left. Today's price is $12,000
+  for an H100 module and $5,050 for an A100 80GB (American Compute, GPU Prices, October 2026,
+  https://www.amcompute.com/gpu-prices). Value is the rent the GPU can still earn: rent × utilisation, less running
+  cost, over its remaining earning life, discounted. The H100 keeps 45% in two years and 19% in three. The A100
+  reaches the end of its earning life by late 2029, so its $300 is the floor. The high cases need rents near AWS's
+  list price for years and are probably out of reach.
 - **For a lessor or lender:** set residual values and collateral against the low case, not the middle: $500 for an
   H100 in two years and $340 in three. And watch AWS spot as a share of AWS's list price. For the H100 it was about
   0.3 from mid-2025 to early 2026 and 0.51 on 31 October. The middle case is that share falling back.
+- **How far to trust it:** the rent model is tested to about six months. One year rests on 2 to 4 separate
+  stretches of history, three years is untested, and the resale evidence is four publishers. None of this is scored
+  against the 7 to 13 November prices.
 
-The full argument, the tests and every assumption are in [longview/LONGVIEW.md](longview/LONGVIEW.md),
-[longview/RESALE.md](longview/RESALE.md) and [FINDINGS.md §8](FINDINGS.md#8-rolling-forward-and-the-2-to-3-year-view).
+Every assumption and test: [longview/LONGVIEW.md](longview/LONGVIEW.md) and [longview/RESALE.md](longview/RESALE.md).
 To rebuild: `uv run python longview/longview.py && uv run python longview/resale.py && uv run python longview/answer.py`.
 
 ## Reproduce the forecasts
