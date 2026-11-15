@@ -1,0 +1,89 @@
+{
+ "args": {
+  "base_model": "Qwen/Qwen3.5-9B",
+  "lr": 4e-05,
+  "seed": 0,
+  "rounds": 1,
+  "prompts": 8,
+  "samples": 8,
+  "lora_rank": 32,
+  "lora_alpha": 32,
+  "micro": 8,
+  "check_every": 10,
+  "check_samples": 4,
+  "eval_samples": 8,
+  "max_new": 90,
+  "gen_batch": 16,
+  "token_budget": 70000,
+  "plan": "rsi",
+  "name": "smoke9b",
+  "generations": 2,
+  "plateau": 4,
+  "minutes": 12.0,
+  "watch_answers": 2,
+  "watch": {
+   "n": 16,
+   "answers": 2,
+   "from": "2025-07-04",
+   "to": "2026-02-20"
+  }
+ },
+ "base_model": "Qwen/Qwen3.5-9B",
+ "gpu": "NVIDIA H100 80GB HBM3",
+ "watch": {
+  "n": 16,
+  "answers": 2,
+  "from": "2025-07-04",
+  "to": "2026-02-20"
+ },
+ "accept_p": 0.9,
+ "start": {
+  "watch": -0.1042300132290703,
+  "readable": 1.0
+ },
+ "generations": [
+  {
+   "generation": 1,
+   "from_generation": 0,
+   "learning_rate": 4e-05,
+   "rounds": [
+    -0.0924
+   ],
+   "train_reward": -0.0924,
+   "watch": -0.11623031728371504,
+   "watch_kept_before": -0.1042300132290703,
+   "gain": -0.012000304054644736,
+   "p_better": 0.3575,
+   "readable": 1.0,
+   "accepted": false,
+   "kept_generation": 0,
+   "next_learning_rate": 2e-05,
+   "seconds": 64
+  },
+  {
+   "generation": 2,
+   "from_generation": 0,
+   "learning_rate": 2e-05,
+   "rounds": [
+    -0.0828
+   ],
+   "train_reward": -0.0828,
+   "watch": -0.09481708053620283,
+   "watch_kept_before": -0.1042300132290703,
+   "gain": 0.00941293269286747,
+   "p_better": 0.618,
+   "readable": 1.0,
+   "accepted": false,
+   "kept_generation": 0,
+   "next_learning_rate": 4e-05,
+   "seconds": 51
+  }
+ ],
+ "stop": "generations",
+ "checkpoint": "rsi/smoke9b/adapter",
+ "kept_generation": 0,
+ "kept_watch": -0.1042300132290703,
+ "cost_estimate_usd": 0.16,
+ "minutes": 2.5,
+ "finished": true
+}

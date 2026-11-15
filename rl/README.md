@@ -62,3 +62,16 @@ The cookbook's RL code (`recipes/rl_loop.py`, `rl/train.py`) is this same loop: 
 - With one update per fresh batch the sampler equals the learner (gap under 0.01 nats per token), so `ppo` and `cispo` should match `importance_sampling`; both were accepted and improved in 2-update runs.
 - Checkpoints are big: 0.37 GB per rank-32 sampler checkpoint, 1.1 GB per training state; the free plan caps at 100 checkpoints or 100 GB. `Trainer.save` defaults to a 7-day TTL. Today's 13 checkpoints all expire within 24 hours.
 - Small groups (2-8 per prompt) make the mean a noisy baseline; a median baseline gained up to 4.6 points at group size 2 (arxiv:2601.22582 - Paper Lantern, 107 papers surveyed). Not implemented here.
+
+## The self-improvement loop on Modal GPUs
+`rsi_forecaster.py` runs the loop on Tinker; `modal_forecaster.py` runs the same loop in one GPU container (function `rsi`). Each generation trains for 8 rounds from the kept LoRA weights, answers a fixed watch set (128 later AWS price-days x 4 answers), and replaces the kept weights only if the watch score is higher and stays higher in at least 90% of 2,000 resamples of the price-days. Otherwise the kept weights are restored from a copy held in memory and the learning rate is halved or doubled within 1e-5 to 1.6e-4. Our own 37 prices are not used.
+
+    cd rl
+    uv run modal deploy modal_forecaster.py                                   # once, and after any change to the container code
+    uv run python modal_forecaster.py rsi-launch --name rsi_m1 --generations 5 --rounds 8 --plateau 4 --minutes 100   # returns at once
+    uv run python modal_forecaster.py rsi-collect --name rsi_m1               # the generations so far, or the finished log
+
+- Set `GPUVAL_RL_APP=<another name>` on all three commands to deploy under a second app name and leave the first app alone.
+- `rsi-collect` writes the finished log to `runs/modal/rsi/<name>.json`, with the fields of the Tinker log (`start`, `generations`, `stop`, `kept_generation`, `kept_watch`, `minutes`) plus `gpu` and `cost_estimate_usd` (container minutes x the GPU's hourly price). While the loop is running it prints the log the container writes to the volume after every generation.
+- The kept adapter is saved on the volume `gpuval-rl-out` at `rsi/<name>/adapter` after each acceptance and at the end.
+- Differences from the Tinker loop: the training round is this file's own (per-price baseline, advantages rescaled to unit spread), and a rollback starts a fresh Adam optimizer.
