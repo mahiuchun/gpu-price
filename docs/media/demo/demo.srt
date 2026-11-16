@@ -1,215 +1,215 @@
 1
-00:00:00,300 --> 00:00:08,089
-This is RSI4GPR: a crew of AI agents and one coach AI, with recursive self-improvement, for GPU price forecasting.
+00:00:00,300 --> 00:00:08,109
+This is RSI4GPF: a crew of AI agents and one coach AI, with recursive self-improvement, for GPU price forecasting.
 
 2
-00:00:08,089 --> 00:00:13,282
+00:00:08,109 --> 00:00:13,315
 We forecast thirty-seven GPU rental prices, one, three and seven days ahead.
 
 3
-00:00:13,282 --> 00:00:18,543
+00:00:13,315 --> 00:00:18,589
 And we test which kinds of AI really help, on data the system has never seen.
 
 4
-00:00:19,293 --> 00:00:21,256
+00:00:19,339 --> 00:00:21,302
 Here's the thing about these prices.
 
 5
-00:00:21,256 --> 00:00:23,874
+00:00:21,302 --> 00:00:23,920
 Each one is just the middle of a list of offers.
 
 6
-00:00:23,874 --> 00:00:25,292
+00:00:23,920 --> 00:00:25,338
 So we asked two questions.
 
 7
-00:00:25,292 --> 00:00:28,783
+00:00:25,338 --> 00:00:28,829
 Does looking at the whole list beat looking at the median alone?
 
 8
-00:00:28,783 --> 00:00:31,837
+00:00:28,829 --> 00:00:31,883
 And which kinds of AI help actually survive a fair test?
 
 9
-00:00:32,587 --> 00:00:34,196
+00:00:32,633 --> 00:00:34,242
 Let's start with the answer.
 
 10
-00:00:34,196 --> 00:00:40,863
+00:00:34,242 --> 00:00:40,909
 The forecast we hand in made twenty percent less error than drift, the standard baseline, on days no model had seen.
 
 11
-00:00:40,863 --> 00:00:46,035
+00:00:40,909 --> 00:00:46,081
 That's every forecaster, scored on the same four hundred and seventy-nine fresh forecasts.
 
 12
-00:00:46,785 --> 00:00:47,768
+00:00:46,831 --> 00:00:47,814
 Why does that work?
 
 13
-00:00:47,768 --> 00:00:52,732
+00:00:47,814 --> 00:00:52,778
 Because two thirds of the movement in a published median isn't providers changing prices at all.
 
 14
-00:00:52,732 --> 00:00:54,801
+00:00:52,778 --> 00:00:54,847
 It's offers joining or leaving the list.
 
 15
-00:00:55,551 --> 00:00:57,281
+00:00:55,597 --> 00:00:57,327
 So our engine looks underneath.
 
 16
-00:00:57,281 --> 00:01:02,974
+00:00:57,327 --> 00:01:03,020
 It replays what each offer did on past days, applies that to today's list, and takes the middle again.
 
 17
-00:01:02,974 --> 00:01:05,764
+00:01:03,020 --> 00:01:05,810
 The spread of those replays is the forecast range.
 
 18
-00:01:06,514 --> 00:01:07,843
+00:01:06,560 --> 00:01:07,889
 Here it is in action.
 
 19
-00:01:07,843 --> 00:01:10,312
+00:01:07,889 --> 00:01:10,358
 Offers reprice, drop off, or come back.
 
 20
-00:01:10,312 --> 00:01:14,744
+00:01:10,358 --> 00:01:14,790
 Each replay gives a new median, and together, they build the forecast.
 
 21
-00:01:15,494 --> 00:01:19,606
+00:01:15,540 --> 00:01:19,652
 On top of that, we have a crew of five AI agents, each with one job.
 
 22
-00:01:19,606 --> 00:01:25,351
+00:01:19,652 --> 00:01:25,397
 A list reader, a repricer watcher, a base-rate keeper, a reference weigher, and a jump spotter.
 
 23
-00:01:25,351 --> 00:01:26,984
+00:01:25,397 --> 00:01:27,030
 We average their forecasts.
 
 24
-00:01:27,734 --> 00:01:29,235
+00:01:27,780 --> 00:01:29,281
 Now, the recursive part.
 
 25
-00:01:29,235 --> 00:01:34,050
+00:01:29,281 --> 00:01:34,096
 In training, the crew forecasts some practice days, and a verifier scores it.
 
 26
-00:01:34,050 --> 00:01:36,302
+00:01:34,096 --> 00:01:36,348
 Then a coach AI proposes one change.
 
 27
-00:01:36,302 --> 00:01:43,056
+00:01:36,348 --> 00:01:43,102
 A second verifier keeps that change only if practice days get better, and hidden check days don't get worse.
 
 28
-00:01:43,056 --> 00:01:44,870
+00:01:43,102 --> 00:01:44,916
 The verifiers are fixed code.
 
 29
-00:01:44,870 --> 00:01:46,370
+00:01:44,916 --> 00:01:46,416
 The AI can't touch them.
 
 30
-00:01:46,370 --> 00:01:51,936
+00:01:46,416 --> 00:01:51,982
 After ten rounds, a final exam on unseen days: four percent better than where we started.
 
 31
-00:01:52,686 --> 00:01:55,064
+00:01:52,732 --> 00:01:55,110
 At inference time, the crew is frozen.
 
 32
-00:01:55,064 --> 00:02:01,134
+00:01:55,110 --> 00:02:01,180
 For each price, the five agents read the facts, we average their answers, and stretch the ranges.
 
 33
-00:02:01,134 --> 00:02:04,763
+00:02:01,180 --> 00:02:04,809
 One pass per price, a hundred and eleven forecasts in all.
 
 34
-00:02:05,513 --> 00:02:08,739
+00:02:05,559 --> 00:02:08,785
 And we wrote the test down before we had any results.
 
 35
-00:02:08,739 --> 00:02:10,017
+00:02:08,785 --> 00:02:10,063
 A committed protocol.
 
 36
-00:02:10,017 --> 00:02:12,391
+00:02:10,063 --> 00:02:12,437
 A time machine that only sees the past.
 
 37
-00:02:12,391 --> 00:02:14,034
+00:02:12,437 --> 00:02:14,080
 Shuffled data as a placebo.
 
 38
-00:02:14,034 --> 00:02:15,981
+00:02:14,080 --> 00:02:16,027
 And exam days no model had seen.
 
 39
-00:02:16,731 --> 00:02:21,006
+00:02:16,777 --> 00:02:21,052
 Across three separate tests, the engine beat drift by about eight percent.
 
 40
-00:02:21,006 --> 00:02:23,721
+00:02:21,052 --> 00:02:23,767
 The five agents beat it by fifteen to nineteen.
 
 41
-00:02:24,471 --> 00:02:26,074
+00:02:24,517 --> 00:02:26,120
 But not every idea worked.
 
 42
-00:02:26,074 --> 00:02:29,404
+00:02:26,120 --> 00:02:29,450
 We tried seven ways to make the system improve itself.
 
 43
-00:02:29,404 --> 00:02:34,954
+00:02:29,450 --> 00:02:34,000
 Two held up: the coach, and reinforcement learning that teaches a small model to forecast.
 
 44
-00:02:34,954 --> 00:02:35,756
+00:02:34,000 --> 00:02:35,802
 Three didn't.
 
 45
-00:02:35,756 --> 00:02:37,729
+00:02:35,802 --> 00:02:37,775
 And two, we just can't call yet.
 
 46
-00:02:38,479 --> 00:02:39,484
+00:02:38,525 --> 00:02:39,530
 One honest caveat.
 
 47
-00:02:39,484 --> 00:02:42,888
+00:02:39,530 --> 00:02:42,934
 Our ranges held the truth eighty percent of the time overall.
 
 48
-00:02:42,888 --> 00:02:46,627
+00:02:42,934 --> 00:02:46,673
 But when the price actually moved, that drops to sixty-six percent.
 
 49
-00:02:47,377 --> 00:02:49,136
+00:02:47,423 --> 00:02:49,182
 So, three things to remember.
 
 50
-00:02:49,136 --> 00:02:50,410
+00:02:49,182 --> 00:02:50,456
 Look inside the list.
 
 51
-00:02:50,410 --> 00:02:55,021
+00:02:50,456 --> 00:02:55,067
 A crew of AI agents plus a coach cut error by twenty percent on unseen days.
 
 52
-00:02:55,021 --> 00:02:57,994
+00:02:55,067 --> 00:02:58,040
 And most self-improvement ideas fail a fair test.
 
 53
-00:02:57,994 --> 00:03:01,088
+00:02:58,040 --> 00:03:01,134
 The verifier is what makes the loop worth trusting.
 
 54
-00:03:01,088 --> 00:03:02,301
+00:03:01,134 --> 00:03:02,347
 Thanks for watching.

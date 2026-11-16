@@ -1,12 +1,12 @@
-# RSI4GPR: 10-minute talk script
+# RSI4GPF: 10-minute talk script
 
-The spoken script for the 10-minute deck ([PDF](RSI4GPR-slides-10min.pdf)). The same text is in each slide's speaker
+The spoken script for the 10-minute deck ([PDF](RSI4GPF-slides-10min.pdf)). The same text is in each slide's speaker
 notes. About 1104 words: at a relaxed pace, with pauses and slide changes, it runs about 10 minutes.
 Times are cues, not limits; slide 6, the training loop, is the one to take your time on.
 
-## 1. RSI4GPR  <sub>0:00–0:55</sub>
+## 1. RSI4GPF  <sub>0:00–0:55</sub>
 
-Hi everyone. This is RSI4GPR: a crew of AI agents and one coach AI, with recursive self-improvement, for GPU price forecasting. We forecast thirty-seven posted GPU rental prices, one, three and seven days ahead. And alongside the forecast, we asked a harder question: which kinds of AI help actually survive when you test them on data the system has never seen? I’ll give you the answer up front. The forecast we handed in made twenty percent less error than the standard baseline on fresh days. In the next ten minutes: why this matters, how it works, and what held up.
+Hi everyone. This is RSI4GPF: a crew of AI agents and one coach AI, with recursive self-improvement, for GPU price forecasting. We forecast thirty-seven posted GPU rental prices, one, three and seven days ahead. And alongside the forecast, we asked a harder question: which kinds of AI help actually survive when you test them on data the system has never seen? I’ll give you the answer up front. The forecast we handed in made twenty percent less error than the standard baseline on fresh days. In the next ten minutes: why this matters, how it works, and what held up.
 
 ## 2. Thin prices, and AI that can fool itself  <sub>0:55–2:13</sub>
 

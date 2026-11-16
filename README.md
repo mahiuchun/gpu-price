@@ -1,6 +1,6 @@
-# RSI4GPR: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting
+# RSI4GPF: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting
 
-> **TL;DR** RSI4GPR forecasts 37 posted GPU rental prices 1, 3 and 7 days ahead, from 6 November 2026, using a
+> **TL;DR** RSI4GPF forecasts 37 posted GPU rental prices 1, 3 and 7 days ahead, from 6 November 2026, using a
 > crew of five AI agents, each with one job, whose forecasts are averaged. The crew is not hand-tuned. A coach AI
 > improves it through recursive self-improvement: each round it proposes one change, and fixed verifiers that the
 > AI cannot alter keep the change only if practice days get better and hidden check days get no worse. On days no
@@ -24,7 +24,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
 (likely range 10% to 28%).
 
 <p align="center">
-  <a href="docs/media/demo/gpu-price-demo.mp4"><img src="docs/media/demo/poster.jpg" alt="RSI4GPR demo video, 3 minutes: the question, the engine, the five AI agents, the training loop with verifiers, the inference pipeline and the results. Click to play." width="640"></a>
+  <a href="docs/media/demo/gpu-price-demo.mp4"><img src="docs/media/demo/poster.jpg" alt="RSI4GPF demo video, 3 minutes: the question, the engine, the five AI agents, the training loop with verifiers, the inference pipeline and the results. Click to play." width="640"></a>
   <br><sub><b>▶ 3-minute demo</b> (narrated, captions embedded): <a href="docs/media/demo/gpu-price-demo.mp4">gpu-price-demo.mp4</a> · <a href="docs/media/demo/script.json">narration script</a> · <a href="docs/media/demo/demo.srt">captions</a></sub>
 </p>
 
@@ -34,7 +34,7 @@ On days that neither the agents nor the coach had seen, it made 20% less error t
   after two changes that a coach AI proposed and tests kept.
   The engine alone is [submission/alt_engine_2026-11-06.csv](submission/alt_engine_2026-11-06.csv).
 - **Test protocol, fixed before the test:** [PROTOCOL.md](PROTOCOL.md)
-- **Slides (24 pages):** [docs/slides/RSI4GPR-slides.pdf](docs/slides/RSI4GPR-slides.pdf) · 10-minute version (10 pages): [docs/slides/RSI4GPR-slides-10min.pdf](docs/slides/RSI4GPR-slides-10min.pdf) and its [talk script](docs/slides/RSI4GPR-talk-script-10min.md)
+- **Slides (24 pages):** [docs/slides/RSI4GPF-slides.pdf](docs/slides/RSI4GPF-slides.pdf) · 10-minute version (10 pages): [docs/slides/RSI4GPF-slides-10min.pdf](docs/slides/RSI4GPF-slides-10min.pdf) and its [talk script](docs/slides/RSI4GPF-talk-script-10min.md)
 - **Explainer pages:** [how it works](docs/pages/build-walkthrough.html) · [the test periods](docs/pages/test-periods.html) · [the Exa lookups](docs/pages/exa-status.html)
 
 ## Overview
@@ -54,7 +54,7 @@ the system has never seen.
 
 ### Proposed solution
 
-RSI4GPR has two parts, kept apart on purpose:
+RSI4GPF has two parts, kept apart on purpose:
 
 1. **A crew of five AI agents forecasts.** Each agent has one job: read the list around the middle offer, watch the
    offers that reprice often, keep to base rates, weigh the reference forecasts, or look for jumps that may reverse.
@@ -448,7 +448,7 @@ The PDF, the two pipeline images (`docs/media/training_pipeline.png`, `inference
 (`docs/media/demo/`) are all made from it:
 
 ```bash
-uv run --no-project --with pillow python docs/slides/render_slides.py   # docs/slides/png/ and RSI4GPR-slides.pdf (needs Chrome)
+uv run --no-project --with pillow python docs/slides/render_slides.py   # docs/slides/png/ and RSI4GPF-slides.pdf (needs Chrome)
 uv run --no-project --with pillow python docs/slides/render_slides.py --short   # the 10-minute deck (docs/slides/short/source/)
 python3 docs/media/demo/build_demo.py                                   # the demo video, captions and poster (needs macOS and ffmpeg)
 ```
