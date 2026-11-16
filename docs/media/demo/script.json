@@ -1,7 +1,7 @@
 [
   {
     "slide": "cover",
-    "text": "This is RSI4GPR: a crew of AI agents and one coach AI, with recursive self-improvement, for GPU price forecasting. We forecast thirty-seven GPU rental prices, one, three and seven days ahead. And we test which kinds of AI really help, on data the system has never seen."
+    "text": "This is RSI4GPF: a crew of AI agents and one coach AI, with recursive self-improvement, for GPU price forecasting. We forecast thirty-seven GPU rental prices, one, three and seven days ahead. And we test which kinds of AI really help, on data the system has never seen."
   },
   {
     "slide": "question",

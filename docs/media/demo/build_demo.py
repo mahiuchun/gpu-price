@@ -21,7 +21,7 @@ LEAD, TAIL, X = 0.3, 0.45, 0.6  # silence before/after each line; crossfade leng
 # Spoken Content > Manage Voices) sounds far more natural, e.g. VOICE="Zoe (Premium)".
 VOICE = os.environ.get("VOICE", "Daniel")
 RATE = os.environ.get("RATE", "192")  # words per minute
-TITLE = "RSI4GPR: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting"
+TITLE = "RSI4GPF: A Crew of AI Agents and One Coach AI with Recursive Self-Improvement for GPU Price Forecasting"
 
 
 def run(cmd):
@@ -37,7 +37,7 @@ segs = json.load(open(f"{REPO}/docs/media/demo/script.json"))
 starts, lens, durs = [], [], []
 t = 0.0
 for i, s in enumerate(segs):
-    spoken = s["text"].replace("RSI4GPR", "R S I 4 G P R")
+    spoken = s["text"].replace("RSI4GPF", "R S I 4 G P F")
     open(f"{V}/n{i:02d}.txt", "w").write(spoken)
     run(["say", "-v", VOICE, "-r", RATE, "-f", f"{V}/n{i:02d}.txt", "-o", f"{V}/n{i:02d}.raw.aiff"])
     # trim the voice's own leading/trailing silence, then even out loudness

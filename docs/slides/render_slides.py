@@ -1,7 +1,7 @@
 """Render a slide deck to PNGs and a PDF, using images from this repo.
 
-    python3 docs/slides/render_slides.py                 # full deck (docs/slides/source/) -> docs/slides/RSI4GPR-slides.pdf
-    python3 docs/slides/render_slides.py --short         # 10-minute deck (docs/slides/short/source/) -> RSI4GPR-slides-10min.pdf
+    python3 docs/slides/render_slides.py                 # full deck (docs/slides/source/) -> docs/slides/RSI4GPF-slides.pdf
+    python3 docs/slides/render_slides.py --short         # 10-minute deck (docs/slides/short/source/) -> RSI4GPF-slides-10min.pdf
     python3 docs/slides/render_slides.py crowd-flow ...  # only these slides (PNGs only)
 
 Needs Google Chrome (or set CHROME=/path/to/chrome) and Pillow (uv run --with pillow).
@@ -23,7 +23,7 @@ ARGS = [a for a in sys.argv[1:] if a != "--short"]
 DECK_DIR = REPO / "docs" / "slides" / ("short" if SHORT else "")
 SRC = DECK_DIR / "source"
 OUT = DECK_DIR / "png"
-PDF = REPO / "docs" / "slides" / ("RSI4GPR-slides-10min.pdf" if SHORT else "RSI4GPR-slides.pdf")
+PDF = REPO / "docs" / "slides" / ("RSI4GPF-slides-10min.pdf" if SHORT else "RSI4GPF-slides.pdf")
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 # images uploaded to the deck, by asset id -> file in this repo
